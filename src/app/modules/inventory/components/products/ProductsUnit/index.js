@@ -18,7 +18,7 @@ export default class Lists extends List {
     this.service = ProductsUnitService;
     this.localStorageKey = Enum.LOCAL_SCHEMA.UNIT;
     this.action = ProductsUnitAction;
-    this.RESET_CONSTANT = Constant.RESET_PRODUCTS_UNIT;
+    this.RESET_CONSTANT = Constant.RESET_UNIT;
   }
 
   componentWillUpdate(nextProps) {

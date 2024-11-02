@@ -1,0 +1,30 @@
+.ant-btn.receive {
+    background-color: #87d068
+}
+
+.ant-btn.receive:hover,
+.ant-btn.receive:focus,
+.ant-btn.receive:active,
+.ant-btn.receive.active {
+    background: #8cde69 !important
+}
+
+/* .ant-btn:hover,
+.ant-btn:focus {
+    color: white !important
+} */
+
+/* search button */
+.main-search-button button {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    top: 16px;
+}
+
+.main-search-button span {
+    position: relative;
+    top: 2px;
+    right: 4px; 
+    color: white !important;
+}

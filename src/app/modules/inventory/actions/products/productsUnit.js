@@ -13,7 +13,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE_PRODUCTS_UNIT,
+        type: Constant.ARCHIVE_UNIT,
         payload: UnitService.archive(ids)
       });
     };
@@ -21,7 +21,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_PRODUCTS_UNIT,
+        type: Constant.ADD_UNIT,
         payload: UnitService.add(data)
       });
     };
@@ -29,7 +29,7 @@ export default {
   update: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_PRODUCTS_UNIT,
+        type: Constant.UPDATE_UNIT,
         payload: UnitService.update(data)
       });
     };
@@ -37,7 +37,7 @@ export default {
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PRODUCTS_UNIT,
+        type: Constant.RESET_UNIT,
         payload: null
       });
     };
@@ -53,7 +53,7 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_PRODUCTS_UNIT_FORM,
+        type: Constant.SHOW_UNIT_FORM,
         payload: data
       });
     };

@@ -1,0 +1,61 @@
+.main-upload span.icon-upload {
+    font-size: 35pt;
+    color: #838383;
+}
+
+.main-upload .upload-extension-title {
+    font-size: 5.25pt;
+}
+
+.main-upload .upload-file-title {
+    font-size: 7.5pt;
+}
+
+.main-upload .upload-file-title span {
+    color:blue;
+    text-decoration: underline;
+}
+
+.main-upload .ant-upload.ant-upload-select-picture-card {
+    border: 2px dashed #d9d9d9;
+    background-color: white;
+}
+
+.wrap-upload .ant-form-item-control-wrapper {
+    padding-top: 5px !important
+}
+
+.main-upload .ant-upload-list-picture-card .ant-upload-list-item {
+    border: 2px dashed #d9d9d9;
+    background-color: white;
+    width: 100%;
+    height: 180px
+}
+
+.ant-upload-list-picture-card .ant-upload-list-item-thumbnail,
+.ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
+    width: auto;
+    margin: auto
+}
+
+.ant-upload-list-picture .ant-upload-list-item-error, .ant-upload-list-picture-card .ant-upload-list-item-error {
+    border-color: #f5222d !important;
+}
+
+.upload-image-with-crop .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+    left: 0;
+}
+
+.ant-modal-crop-image .ant-modal-header {
+    padding: 16px 24px !important;
+}
+
+.ant-modal-crop-image .ant-modal-title {
+    text-align: left;
+    font-size: 18px;
+}
+
+.ant-modal-crop-image .ant-btn-primary {
+    background: #093163;
+    border: #093163;
+}

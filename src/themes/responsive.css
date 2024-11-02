@@ -1,0 +1,363 @@
+/* 
+##Device = Desktops, Laptops, Tablets, Ipads (landscape)
+##Screen = B/w start from 768px
+*/
+@media (min-width: 768px) {
+  .wrap-client-login {
+    width: 632px !important
+  }
+
+  .inner-client-login {
+    display: flex
+  }
+
+  .wrap-client-login .blog-login,
+  .wrap-client-login {
+    min-height: 452px
+  }
+
+  .wrap-client-login .blog-login {
+    padding: 20px 20px;
+    width: 377px  !important;
+  }
+
+  .wrap-client-login .wrap-blog-logo {
+    width: 257px !important
+  }
+
+  /* MAKE FIX POS RIGHT HAND SIDE */
+  #retail-sale #right-block {
+    width:400px;
+    max-width: none;
+    flex: none
+  }
+
+  #retail-sale #left-block {
+    flex-grow: 1;
+    flex: 1;
+    max-width: none
+  }
+}
+
+/* ----------- iPad Pro ----------- */
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 1024px) 
+  and (max-device-width: 1366px) 
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 1024px) 
+  and (max-device-width: 1366px) 
+  and (orientation: portrait) 
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 1024px) 
+  and (max-device-width: 1366px) 
+  and (orientation: landscape) 
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+}
+
+/* 
+##Device = All ipad device
+##Screen = B/w 481px to 1366px
+*/
+/* Portrait and Landscape */
+@media only screen
+/* and (min-device-width: 768px) //Comment here away to allow work ipad and mobile
+and (max-device-width: 1366px) */
+and (max-device-width: 1024px)
+and (-webkit-min-device-pixel-ratio: 1.5) {
+  .wrap-client-login .wrap-blog-logo {
+    text-align: center
+  }
+
+  .mini-sidebar #sidebar {
+    display: block !important
+  }
+
+  .mini-sidebar #center-container {
+    margin-left: 0px !important;
+    -webkit-transition: margin-left .1s;
+    -khtml-transition: margin-left .1s;
+    -moz-transition: margin-left .1s;
+    -ms-transition: margin-left .1s;
+    transition: margin-left .1s;
+  }
+
+  #sidebar {
+    width: 70px !important;
+    position: absolute
+  }
+
+  #retail-sale {
+    overflow: auto !important
+  }
+
+  #sidebar,
+  .wrap-title,
+  .store-logo {
+    display: none !important
+  }
+
+  .store-name #mobile-logo {
+    display: block !important
+  }
+
+  .ant-layout-content {
+    margin-left: 0 !important;
+    -webkit-transition: margin-left .1s;
+    -khtml-transition: margin-left .1s;
+    -moz-transition: margin-left .1s;
+    -ms-transition: margin-left .1s;
+    transition: margin-left .1s;
+    transition: margin-left .1s
+  }
+
+  .wrap-header {
+    margin-left: 0 !important
+  }
+
+  .main-search {
+    visibility: hidden
+  }
+
+  .wrap-filter .main-search-layout [class^="col-"]{
+    padding-left: 8px;
+    padding-right: 8px
+  }
+
+  .wrap-card .card .card-body {
+    height: 95px
+  }
+
+  .wrap-card [class^="icon-"] {
+    font-size: 36pt
+  }
+
+  .wrap-card .total {
+    font-size: 10pt
+  }
+
+  .wrap-card .price {
+    font-size: 16pt
+  }
+
+  /*============= POS SALE ============== */
+  #retail-sale .product-order-list .product-order-item-detail {
+    padding: 0 !important
+  }
+
+  #retail-sale #wrap-payment .payment .col-md-6 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important
+  }
+
+  #retail-sale #wrap-payment .payment .grand-total .grand-total-title {
+    float: left
+  }
+
+  #retail-sale #wrap-payment .payment .grand-total .grand-total-value {
+    float: right;
+    font-size: 12pt !important
+  }
+
+  .wrap-client-login-auto-height {
+    height: auto !important
+  }
+
+  /* TO MAKE PRODUCT LIST SALE POS SCROLLALE */
+  #retail-sale #right-block .product-order-list {
+    overflow-y: scroll;
+  }
+
+  /* PRODUCT FORM */
+  .create-product-column-left,
+  .create-product-column-right {
+    border-right: none !important;
+    min-width: 100%
+  }
+
+}
+
+/* 
+##Device = All ipad device
+##Screen = B/w 481px to 1366px
+*/
+/* Portrait */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1366px)
+and (-webkit-min-device-pixel-ratio: 1.5)
+and (orientation: portrait) {
+  html {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    margin-top: 25px;
+    left: 0;
+  }
+}
+
+
+/* 
+##Device = All smart phone device
+##Screen = B/w 481px to 767px
+*/
+@media (max-width: 767px) {
+  .wrap-client-login {
+    height: 300px
+  }
+
+  .blog-login .header {
+    display: none
+  }
+
+  .wrap-client-login {
+    padding-left: 15px !important;
+    padding-right: 15px !important
+  }
+
+  .inner-client-login {
+    width: 100%
+  }
+
+  .inner-client-login  .blog-login {
+    padding: 20px 15px;
+    min-height: 225px
+  }
+
+  .inner-client-login .blog-login .ant-form-item-label {
+    display: none
+  }
+
+  .wrap-client-login .wrap-blog-logo {
+    padding: 25px 0
+  }
+
+  .main-radio-acc .ant-radio-button-wrapper {
+    width: 100% !important
+  }
+
+  .wrap-client-login-auto-height {
+    height: auto !important
+  }
+
+  .header .user-account .title-user,
+  .header .header-right .btn-update-now {
+    display: none
+  }
+
+  #retail-sale .wrap-receipt-type .receipt-type .park-receipt {
+    padding-left: 5px !important
+  }
+
+  #retail-sale #right-block {
+    padding-left: 0;
+    margin-top: 15px
+  }
+
+  #retail-sale #right-block .product-order-list {
+    min-height: 300px
+  }
+
+  /* Form Input and Label */
+  .ant-form label,
+  .ant-btn,
+  .ant-table-body table tr th,
+  .ant-table-header table tr th,
+  .ant-table-body table tr td,
+  .ant-pagination,
+  .breadcrumb ul li a,
+  .ant-input,
+  .ant-select,
+  .ant-badge .ant-badge-status-text,
+  #sum-menu ul li,
+  #sum-menu div.title,
+  .ant-select-dropdown,
+  .ant-tag {
+    font-size: 8pt !important
+  }
+
+  .ant-form-horizontal .ant-form-item {
+    margin-bottom: 0 !important
+  }
+
+  .ant-form-item-label {
+    padding-bottom: 0
+  }
+
+  .mobile-pagination {
+    margin-top: 15px
+  }
+}
+  
+/* 
+##Device = Low Resolution Tablets, Mobiles (Landscape)
+##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .wrap-button-action {
+    display: flex;
+    flex-direction: row
+  }
+
+  .wrap-filter {
+    display: none
+  }
+
+  .wrap-filter .main-search-layout [class^="col-"] {
+    padding-left: 15px;
+    padding-right: 15px
+  }
+
+  .wrap-btn-search {
+    margin-top: 15px
+  }
+
+  .wrap-filter .main-search-layout [class^="col-"] {
+    padding-left: 15px;
+    padding-right: 15px
+  }
+}
+  
+/* 
+##Device = Most of the Smartphones Mobiles (Portrait)
+##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .wrap-button-action {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+  }
+  .wrap-button-action .action-button-right .anticon {
+    font-size: 20pt;
+    box-shadow: 0 0px 0px 0 rgba(0,0,0,0.5)
+  }
+
+  .wrap-button-action .action-button-right .ant-btn{
+    min-width: 42px;
+    padding-left: 5px;
+    padding-right: 5px
+  }
+
+  .wrap-filter .main-search-layout [class^="col-"] {
+    padding-left: 15px;
+    padding-right: 15px
+  }
+
+  .wrap-btn-search {
+    margin-top: 15px
+  }
+}

@@ -1,0 +1,23 @@
+{
+   "compilerOptions": {
+     "baseUrl": "src",
+     "paths": {
+         "@components/*": ["components/*"],
+         "@layout/*": ["layout/*"],
+         "@helper/*": ["helper/*"],
+         "@enums/*": ["enums/*"],
+         "@services/*": ["services/*"],
+         "@themes/*": ["themes/*"],
+         "@common/*": ["app/modules/common/*"],
+         "@dashboards/*": ["pages/Dashboard/*"],
+         "@sales/*": ["pages/Sales/*"],
+         "@purchases/*": ["pages/Purchasing/*"],
+         "@inventories/*": ["pages/Inventory/*"],
+         "@finances/*": ["pages/Finance/*"],
+         "@reports/*": ["pages/Reports/*"],
+         "@settings/*": ["pages/Setting/*"],
+         "@redux/*": ["redux/*"]
+      }
+   },
+   "include": ["src"]
+}

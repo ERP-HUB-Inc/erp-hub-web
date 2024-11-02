@@ -1,0 +1,50 @@
+import React from "react";
+import { Form, Input } from "antd";
+
+const { TextArea } = Input;
+
+export default class TextAreas extends React.Component {
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    return (
+      <Form.Item label={this.props.label} className="wrap-textarea" style={this.props.style}>
+        {
+          getFieldDecorator(this.props.name, {rules: [
+            {
+              required: this.props.required,
+              message: this.props.errorRequired
+            },
+            {
+              min: this.props.min,
+              message: this.props.errorLenght
+            },
+            {
+              validator: this.props.validator
+            }
+          ],
+          initialValue: this.props.data})(
+            <TextArea
+              placeholder={this.props.placeholder}
+              rows={this.props.rows}
+              cols={this.props.cols}
+              style={this.props.inputStyle}
+              onKeyUp={this.props.handleKeyUp}
+              onChange={this.props.onChange}
+              disabled={this.props.disabled}
+            />
+          )
+        }
+       
+      </Form.Item>
+    );
+  }
+}
+
+TextAreas.defaultProps = {
+  name: "name",
+  type: "text",
+  max: 255,
+  rows: 4,
+  required: false
+};
+

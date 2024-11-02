@@ -3,10 +3,10 @@ import moment from "moment";
 import {
   Translate,
   setActiveLanguage,
-  getActiveLanguage
-} from "react-localize-redux";
+  getActiveLanguage,
+  connect
+} from "@redux/index";
 import CSVReader from "react-csv-reader";
-import {connect} from "react-redux";
 import {
   CSVLink,
   CSVDownload
@@ -27,8 +27,9 @@ import {
   NavLink,
   Link
 } from "react-router-dom";
-import 
-{ 
+import {
+  Cards,
+  BreadcrumbTitle,
   CTable,
   TableExpand,
   SubTable,
@@ -67,17 +68,10 @@ import
   C3Chart,
   MessageV2
 } from "../elements/ant-ui";
-import {
-  BreadcrumbTitle,
-  Cards
-} from "../elements/react-strap";
-import Util from "../util";
-import Enum from "../enums";
-import HttpCode from "../constants/error";
+import Util from "@helper/util";
+import Enum from "@enums/index";
+import HttpCode from "@enums/http-status";
 import ConstantAuth from "../constants/authentication";
-import "./layout/styles/Style.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "font-awesome/css/font-awesome.css";
 import {
   Layout,
   Menu,
@@ -98,6 +92,9 @@ import {
   Breadcrumb,
   Input
 } from "antd";
+import "@themes/style.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "font-awesome/css/font-awesome.css";
 
 const Panel = Collapse.Panel;
 const { Option } = Select;
@@ -108,7 +105,7 @@ const CheckboxGroup = Checkbox.Group;
 
 const InputGroup = Input.Group;
 
-export default class Component extends React.Component {
+export default class Component extends React.PureComponent {
   constructor(props) {
     super(props);
 

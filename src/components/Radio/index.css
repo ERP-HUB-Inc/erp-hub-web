@@ -1,0 +1,93 @@
+.ant-radio-group .ant-radio-wrapper {
+    display: table !important;
+    padding: 7px 0px !important;
+}
+
+.main-radio .ant-radio-button-wrapper {
+    height: 70px;
+    width: 98px;	
+    background-color: #FFFFFF;
+    border: 1px solid #CDCCCC;
+    border-radius: 0;
+    margin-right: 3px;
+}
+
+.main-radio .ant-radio-button-wrapper {
+    margin-right: 16px
+}
+
+.main-radio .ant-radio-button-wrapper:last-child {
+    margin-right: 0px;
+}
+
+.main-radio .ant-radio-button-wrapper-checked::before {
+    background-color: none !important;
+}
+
+.main-radio .ant-radio-button-wrapper-checked {
+    box-shadow: -1px 0 0 0 #4D4F5C !important;
+    border-left: none !important;
+}
+
+.main-radio .ant-radio-button-wrapper-checked {
+    border: 1px solid #4D4F5C;
+}
+
+.main-radio .radio-group {
+    text-align: center;
+}
+
+.main-radio .radio-title {
+    color: #4D4F5C;
+    font-size: 11pt;
+    font-weight: 500;
+}
+
+.main-radio .language {
+    font-size: 8pt;
+    text-align: center;
+    line-height: 12pt;
+    color: #9A9A9A;
+    white-space: pre-line
+}
+
+.main-ant-wrapper .ant-radio-wrapper {
+    margin-right: 25px !important;
+}
+
+.ant-radio-inner:after {
+    background-color: #093163 !important;
+}
+
+.ant-radio-checked .ant-radio-inner {
+    border-color: #093163 !important;
+}
+
+.disabled-click {
+    opacity: 0.3
+}
+
+.confirm-delete.confirm-receive-po-partial  .ant-modal {
+    width: 476px !important;
+}
+
+.confirm-receive-po .ant-radio-button-wrapper {
+    width: 50% !important;
+    padding-left: 5px;
+    padding-right: 5px
+}
+
+.confirm-receive-po .radio-group {
+    position: relative;
+    top: 25px
+}
+
+.confirm-receive-po .radio-group .language {
+    font-size: 10pt
+}
+
+.confirm-receive-po .ant-form-item {
+    margin-bottom: 0 !important
+}
+
+

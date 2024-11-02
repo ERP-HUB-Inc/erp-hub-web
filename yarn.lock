@@ -1960,6 +1960,13 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
+"@types/reactstrap@^8.7.1":
+  version "8.7.1"
+  resolved "https://registry.npmjs.org/@types/reactstrap/-/reactstrap-8.7.1.tgz"
+  integrity sha512-IgJRzJUhkzCj/J714FSbLnGTfaSk7n7QPytaJeBgvlN6AEkIYJEPbEB0dPqCsQ4mChKySgUm0P3OWSuuK///+g==
+  dependencies:
+    reactstrap "*"
+
 "@types/scheduler@*":
   version "0.16.2"
   resolved "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.2.tgz"
@@ -12489,7 +12496,7 @@ react@*, "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0-0 || ^
     object-assign "^4.1.1"
     prop-types "^15.6.2"
 
-reactstrap@^5.0.0-alpha.4:
+reactstrap@*, reactstrap@^5.0.0-alpha.4:
   version "5.0.0"
   resolved "https://registry.npmjs.org/reactstrap/-/reactstrap-5.0.0.tgz"
   integrity sha512-y0eju/LAK7gbEaTFfq2iW92MF7/5Qh0tc1LgYr2mg92IX8NodGc03a+I+cp7bJ0VXHAiLy0bFL9UP89oSm4cBg==

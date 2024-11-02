@@ -1,0 +1,11 @@
+.ant-input-number {
+  width: 100%;
+}
+
+.ant-input-number-input {
+  transition: all 0s linear !important
+}
+
+.hide-input-number-tool .ant-input-number-handler-wrap {
+  display: none !important
+}

@@ -1,0 +1,10 @@
+.ant-tooltip-inner {
+    font-size: 8pt;
+    color: #093163 !important;
+    background-color: rgba(255, 255, 255, 0.75) !important
+}
+
+.ant-tooltip-placement-top .ant-tooltip-arrow {
+    
+    border-top-color: rgba(222, 217, 217, 0.75) !important
+}

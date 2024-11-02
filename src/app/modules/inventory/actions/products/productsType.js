@@ -5,7 +5,7 @@ export default {
   fetch: (limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_PRODUCTS_TYPE,
+        type: Constant.REQUEST_CATEGORY,
         payload: ProductsTypeService.lists(limit, offset, sortField, sortOrder)
       });
     };
@@ -13,7 +13,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE_PRODUCTS_TYPE,
+        type: Constant.ARCHIVE_CATEGORY,
         payload: ProductsTypeService.archive(ids)
       });
     };
@@ -21,7 +21,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_PRODUCTS_TYPE,
+        type: Constant.ADD_CATEGORY,
         payload: ProductsTypeService.add(data)
       });
     };
@@ -29,12 +29,12 @@ export default {
   update: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_PRODUCTS_TYPE,
+        type: Constant.UPDATE_CATEGORY,
         payload: ProductsTypeService.update(data)
       });
     };
   },
-  reset: (RESET_CONSTANT = Constant.RESET_PRODUCTS_TYPE) => {
+  reset: (RESET_CONSTANT = Constant.RESET_CATEGORY) => {
     return dispatch => {
       return dispatch({
         type: RESET_CONSTANT,
@@ -45,7 +45,7 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_PRODUCTS_TYPE_FORM,
+        type: Constant.SHOW_CATEGORY_FORM,
         payload: data
       });
     };
@@ -53,7 +53,7 @@ export default {
   requestAndShowForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.DETAIL_PRODUCTS_TYPE,
+        type: Constant.DETAIL_CATEGORY,
         payload: ProductsTypeService.detail(data.id)
       });
     };

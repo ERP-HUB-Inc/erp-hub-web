@@ -102,6 +102,11 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
+    const Item = Loadable({
+      loader: () => import("../pages/Inventory/Items"),
+      loading: () => <StartUp />,
+    });
+
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
     const isPOSPage = window.location.pathname === "/pos";
@@ -169,9 +174,9 @@ export default class SiderDemo extends React.Component {
                           </span>
                         }
                       >
-                        <Menu.Item key="41"><Link to="/items">Items</Link></Menu.Item>
-                        <Menu.Item key="42"><Link to="/transfer">Transfers</Link></Menu.Item>
-                        <Menu.Item key="43"><Link to="/adjustment">Adjustment</Link></Menu.Item>
+                        <Menu.Item key="41"><Link to="/inventories/items">Items</Link></Menu.Item>
+                        <Menu.Item key="42"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
+                        <Menu.Item key="43"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item>
                       </SubMenu>
 
                       <SubMenu
@@ -290,6 +295,11 @@ export default class SiderDemo extends React.Component {
                     <Route path="/vendors" component={Vendor} />
                     <Route path="/vendors/create" component={Vendor} />
                     <Route path="/vendors/update/:id" component={Vendor} />
+
+                    <Route path="/inventories/items" component={Item} />
+                    <Route path="/inventories/transfers" component={Vendor} />
+                    <Route path="/inventories/adjustments" component={Vendor} />
+
                     <Route path="/" component={Dashboard} />
                   </Switch>
                 </Content>

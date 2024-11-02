@@ -14,29 +14,29 @@ export default combineReducers({
   },
   archive: (state = InitialState.archive(), action) => {
     const constants = [
-      Constant.ARCHIVE_PRODUCTS_UNIT_PENDING,
-      Constant.ARCHIVE_PRODUCTS_UNIT_REJECTED,
-      Constant.ARCHIVE_PRODUCTS_UNIT_FULFILLED
+      Constant.ARCHIVE_UNIT_PENDING,
+      Constant.ARCHIVE_UNIT_REJECTED,
+      Constant.ARCHIVE_UNIT_FULFILLED
     ];
     return reducer.archive(state, action, constants);
   },
   add: (state = InitialState.add(), action) => {
     const constants = [
-      Constant.ADD_PRODUCTS_UNIT_PENDING,
-      Constant.ADD_PRODUCTS_UNIT_REJECTED,
-      Constant.ADD_PRODUCTS_UNIT_FULFILLED,
-      Constant.SHOW_PRODUCTS_UNIT_FORM,
-      Constant.RESET_PRODUCTS_UNIT
+      Constant.ADD_UNIT_PENDING,
+      Constant.ADD_UNIT_REJECTED,
+      Constant.ADD_UNIT_FULFILLED,
+      Constant.SHOW_UNIT_FORM,
+      Constant.RESET_UNIT
     ];
     return reducer.add(state, action, constants);
   },
   update: (state = InitialState.update(), action) => {
     const constants = [
-      Constant.UPDATE_PRODUCTS_UNIT_PENDING,
-      Constant.UPDATE_PRODUCTS_UNIT_REJECTED,
-      Constant.UPDATE_PRODUCTS_UNIT_FULFILLED,
-      Constant.SHOW_PRODUCTS_UNIT_FORM,
-      Constant.RESET_PRODUCTS_UNIT
+      Constant.UPDATE_UNIT_PENDING,
+      Constant.UPDATE_UNIT_REJECTED,
+      Constant.UPDATE_UNIT_FULFILLED,
+      Constant.SHOW_UNIT_FORM,
+      Constant.RESET_UNIT
     ];
     return reducer.update(state, action, constants);
   }

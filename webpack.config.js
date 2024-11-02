@@ -15,6 +15,25 @@ module.exports = {
     filename: "[name].[hash].js",
     publicPath: "/"
   },
+  resolve: {
+    alias: {
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@layout': path.resolve(__dirname, 'src/layout'),
+      '@helper': path.resolve(__dirname, 'src/helper'),
+      '@enums': path.resolve(__dirname, 'src/enums'),
+      '@services': path.resolve(__dirname, 'src/services'),
+      '@themes': path.resolve(__dirname, 'src/themes'),
+      '@common': path.resolve(__dirname, 'src/app/modules/common'),
+      '@dashboards': path.resolve(__dirname, 'src/pages/Dashboard'),
+      '@sales': path.resolve(__dirname, 'src/pages/Sales'),
+      '@purchases': path.resolve(__dirname, 'src/pages/Purchasing'),
+      '@inventories': path.resolve(__dirname, 'src/pages/Inventory'),
+      '@finances': path.resolve(__dirname, 'src/pages/Finance'),
+      '@reports': path.resolve(__dirname, 'src/pages/Reports'),
+      '@settings': path.resolve(__dirname, 'src/pages/Setting'),
+      '@redux': path.resolve(__dirname, 'src/redux')
+    }
+  },
   optimization: {
     splitChunks: {
       chunks: "all"
@@ -76,6 +95,6 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     inline: false,
-    port: 8008
+    port: 3000
   }
 };

@@ -1,5 +1,7 @@
 import "./App.css";
 export * from "./Table";
+export * from "./Breadcrumb";
+export * from "./Card";
 export * from "./Noteicon";
 export * from "./Select";
 export * from "./Select/selectSearch";

@@ -89,7 +89,7 @@ export default {
       "អ្នកផ្គត់ផ្គង់"
    ],
 
-   "col_products_unit": [
+   "col_UNIT": [
       "Unit",
       "ឯកតា"
    ],

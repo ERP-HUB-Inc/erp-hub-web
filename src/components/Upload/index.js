@@ -1,0 +1,38 @@
+import React from "react";
+import PicturesUpload from "./upload";
+
+export class UploadImg extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.rules = [
+      {
+        required : this.props.required,
+        message: this.props.errorRequired
+      }
+    ];
+  }
+
+  render() {
+    return (
+      <PicturesUpload 
+        customerButtonUpload={this.props.customerButtonUpload}
+        name={ this.props.name }
+        form={this.props.form}
+        label={this.props.label}
+        rules={this.rules}
+        data={this.props.data}
+        fileList={this.props.fileList}
+        endPoint={this.props.endPoint}
+        endPointDelete={this.props.endPointDelete}
+        accessToken={this.props.accessToken}
+        beforeUpload={this.props.beforeUpload}
+        handleCardChange={this.handleCardChange}
+        responseAfterUpload={this.props.responseAfterUpload}
+        className={this.props.className}
+      />
+    );
+  }   
+}
+
+

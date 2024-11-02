@@ -1,0 +1,953 @@
+import React from "react";
+import {
+  Spin,
+  Button,
+  Tag,
+  Input,
+  Tooltip,
+  Icon
+} from "antd";
+import {
+  Translate
+} from "react-localize-redux";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import FormComposite from "./FormComposite";
+import FormVariant from "./FormVariant";
+import Enum from "@enums/index";
+import Util from "@helper/util";
+import {
+  InputText,
+  Select,
+  SelectSearch,
+  UploadImageCrop
+} from "@components/index";
+import ProductAction from "../redux/action";
+import CategoryService from "@services/CategoryService";
+import BrandService from "@services//BrandService";
+import UnitService from "@services/UnitService";
+import ProductService from "@services/ProductService";
+import VendorService from "@services/VendorService";
+import ExchangeRateService from "@services/ExchangeRateService";
+import BaseModal from "@layout/BaseModal";
+import Exchange from "./ExchangeMoneyFunc";
+import "./index.css";
+
+function SelectBrand(props) {
+  const limit = 15;
+  const {formData} = props;
+  const [loading, setLoading] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false || !formData.brand);
+  const [brands, setBrands] = React.useState([]);
+  let timeout = null;
+  const onSearchBrand = search => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (search) {
+        setLoading(true);
+        BrandService.get(limit, 0, "", "", "", JSON.stringify({column: ["name"], value: search}))
+        .then(response => {
+          if (response && response.data) {
+            setBrands(response.data.data);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      }
+    }, 1000);
+  };
+
+  return <div style={{display: "flex", alignItems: "center"}}>
+      <InputText
+        name="brandName"
+        label={<Translate id="text_brand" />}
+        data={formData.brand ? formData.brand.name : ""}
+        disabled={true}
+        className={isEdit ? "hidden" : ""}
+        form={props.form} />
+      <SelectSearch
+        name="brandId"
+        label={<Translate id="text_brand" />}
+        placeholder={props.placeholder}
+        notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
+        valueKey="id"
+        dataSource={brands}
+        form={props.form}
+        className={!isEdit ? "hidden" : ""}
+        onSearch={onSearchBrand} />
+      
+      {
+        formData.brand && 
+        <Button onClick={() => setIsEdit(!isEdit)} style={{marginLeft: 10, marginTop: 15}}>{isEdit ? <Translate id="text_back" /> : <Translate id="text_edit" />}</Button>
+      }
+    </div>;
+}
+
+function SelectCategory(props) {
+  const limit = 15;
+  const {formData} = props;
+  const [loading, setLoading] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false || !formData.productType);
+  const [categories, setCategories] = React.useState([]);
+  let timeout = null;
+  const onSearchCategory = search => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (search) {
+        setLoading(true);
+        CategoryService.get(limit, 0, "", "", "", JSON.stringify({column: ["name", "namekm"], value: search}))
+        .then(response => {
+          if (response && response.data) {
+            setCategories(response.data.data);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      }
+    }, 1000);
+  };
+
+  return <div style={{display: "flex", alignItems: "center"}}>
+      <InputText
+        name="productTypeName"
+        label={<Translate id="text_category" />}
+        data={formData.productType ? formData.productType.name : ""}
+        disabled={true}
+        form={props.form}
+        className={isEdit ? "hidden" : ""} />
+      <SelectSearch
+        name="categoryId"
+        label={<Translate id="text_category" />}
+        placeholder={props.placeholder}
+        notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
+        valueKey="id"
+        dataSource={categories}
+        form={props.form}
+        className={!isEdit ? "hidden" : ""}
+        onSearch={onSearchCategory} />
+        {
+          formData.productType && 
+          <Button onClick={() => setIsEdit(!isEdit)} style={{marginLeft: 10, marginTop: 15}}>{isEdit ? <Translate id="text_back" /> : <Translate id="text_edit" />}</Button>
+        }
+    </div>;
+}
+
+function SelectUnit(props) {
+  const limit = 15;
+  const {formData} = props;
+  const [loading, setLoading] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false || !formData.unit);
+  const [units, setUnits] = React.useState([]);
+  let timeout = null;
+  const onSearchUnit = search => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (search) {
+        setLoading(true);
+        UnitService.get(limit, 0, "", "", "", JSON.stringify({column: ["name"], value: search}))
+        .then(response => {
+          if (response && response.data) {
+            setUnits(response.data.data);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      }
+    }, 1000);
+  };
+
+  return <div style={{display: "flex", alignItems: "center"}}>
+      <InputText
+        name="unitName"
+        label={<Translate id="text_unit" />}
+        data={formData.unit ? formData.unit.name : ""}
+        disabled={true}
+        className={isEdit ? "hidden" : ""}
+        form={props.form} />
+      <SelectSearch
+        name="defaultUnitId"
+        label={<Translate id="text_unit" />}
+        placeholder={props.placeholder}
+        notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
+        valueKey="id"
+        dataSource={units}
+        form={props.form}
+        className={!isEdit ? "hidden" : ""}
+        onSearch={onSearchUnit} />
+        {
+          formData.unit && 
+          <Button onClick={() => setIsEdit(!isEdit)} style={{marginLeft: 10, marginTop: 15}}>
+            {isEdit ? <Translate id="text_back" /> : <Translate id="text_edit" />}
+          </Button>
+        }
+    </div>;
+}
+
+function SelectOwner(props) {
+  const limit = 15;
+  const {formData} = props;
+  const [loading, setLoading] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false || !formData.seller);
+  const [owners, setOwners] = React.useState([]);
+  let timeout = null;
+  const onSearchOwner = search => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (search) {
+        setLoading(true);
+        VendorService.get(limit, 0, "", "", "", JSON.stringify({column: ["name"], value: search}))
+        .then(response => {
+          if (response && response.data) {
+            setOwners([{id: "", name: "N/A"}].concat(response.data.data));
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      }
+    }, 1000);
+  };
+
+  return <div style={{display: "flex", alignItems: "center"}}>
+      <InputText
+        name="ownerName"
+        label={<Translate id="text_owner" />}
+        data={formData.seller ? formData.seller.name : ""}
+        disabled={true}
+        className={isEdit ? "hidden" : ""}
+        form={props.form} />
+      <SelectSearch
+        name="sellerId"
+        label={<Translate id="text_owner" />}
+        placeholder={props.placeholder}
+        notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
+        valueKey="id"
+        dataSource={owners}
+        form={props.form}
+        className={!isEdit ? "hidden" : ""}
+        onSearch={onSearchOwner} />
+        {
+          formData.unit && 
+          <Button onClick={() => setIsEdit(!isEdit)} style={{marginLeft: 10, marginTop: 15}}>
+            {isEdit ? <Translate id="text_back" /> : <Translate id="text_edit" />}
+          </Button>
+        }
+    </div>;
+}
+
+function SelectCondition(props) {
+  const [conditions, setConditions] = React.useState([]);
+
+  React.useEffect(() => {
+    ProductService.getFormData()
+    .then(response => {
+      if (response.data && response.data.data) {
+        setConditions(response.data.data.conditions);
+      }
+    });
+  }, []);
+
+  return <Select
+      name="conditionId"
+      label={<Translate id="text_condition" />}
+      placeholder={props.placeholder}
+      defaultValue={props.defaultValue}
+      valueKey="id"
+      dataSource={conditions}
+      form={props.form}
+  />;
+}
+
+export default class FormItem extends BaseModal {
+  constructor(props) {
+    super(props);
+    this.state = {
+      productsType: [],
+      productTypeIndex: 0, // for condition three type starndard, variant, composite
+      isAutoGenerateBarcode: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
+      isRequireInputBarcode: true,
+      isSetFocusBarcode: false,
+      isComponentNotYetUpdated: true,
+      isComponentNotYetLoadedWillUpdate: true,
+      productOptionClassDisabled: "",
+      description: "",
+      specification: "",
+      tags: [],
+      conditions: [],
+      inputVisible: false,
+      editCostVisible: false,
+      inputValue: "",
+      exchangeRate: null
+    };
+
+    this.TAB_PRODUCT_COST_LOG = 3;
+
+    this.TAB_PRODUCT_LOG = 4;
+    this.exchangeRate = 1;
+
+    this.productTypeContent = "";
+    
+    this.productTypes = [
+      {
+        name: <this.Translate id="radio_box_product_standard" />,
+        description: <this.Translate id="radio_box_product_standard_description" />,
+        value: Enum.PRODUCT_STANDARD
+      },
+      {
+        name: <this.Translate id="radio_box_product_variant" />,
+        description: <this.Translate id="radio_box_product_variant_description" />,
+        value: Enum.PRODUCT_VARIANT
+      },
+      // {
+      //   name: <this.Translate id="radio_box_product_composite" />,
+      //   description: <this.Translate id="radio_box_product_composite_description" />,
+      //   value: Enum.PRODUCT_COMPOSITE
+      // }
+    ];
+
+    this.serialTypes = [
+      {
+        name: <this.Translate id="text_yes" />,
+        value: Enum.SERIAL_TYPE.STANDARD
+      },
+      {
+        name: <this.Translate id="text_no" />,
+        value: Enum.SERIAL_TYPE.NON_INVENTORY
+      }
+    ];
+
+    this.typesOfProduct = [
+      {
+        name: <this.Translate id="input_product_good" />,
+        value: Enum.TYPE_OF_PRODUCT.GOOD
+      },
+      {
+        name: <this.Translate id="input_product_raw_material" />,
+        value: Enum.TYPE_OF_PRODUCT.RAW_MATERIAL
+      }
+    ];
+
+    this.onChange = this.onChange.bind(this);
+    this.onCangeIsAutoGenerateCode = this.onCangeIsAutoGenerateCode.bind(this);
+    this.onChangeTab = this.onChangeTab.bind(this);
+    this.getProductImageFromCallBack = this.getProductImageFromCallBack.bind(this);
+    this.handleChangeType = this.handleChangeType.bind(this);
+  }
+
+  componentDidMount() {
+    const {formData} = this.props;
+    if (formData.tag && formData.tag.length){
+      this.setState({tags: formData.tag.split(",")});
+    }
+
+    const {currency, currencyId}  = this.Util.getSetting();
+
+    if (currency !== "$"){
+      ExchangeRateService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
+        const data1 = data.data;
+        if (data1 && data1.length){
+          this.setState({exchangeRate: data1[data1.length-1].value});
+          this.props.setExchangeRateCallBack(data1[data1.length-1].value);
+        }
+      });
+    } else {
+      this.setState({exchangeRate: 1});
+    }
+  }
+
+  getProductImageFromCallBack(value) {
+    this.props.form.setFieldsValue({image: value});
+  } 
+
+  onChangeTab(activeKey) {
+    const {dispatch, formData} = this.props;
+    const productVariantId = formData.productVariants.length > 0 ? formData.productVariants[0].id : "";
+    if ((activeKey - this.TAB_PRODUCT_COST_LOG) === 0) {
+      dispatch(ProductAction.fetchCostLog(productVariantId, 100));
+    } else if ((activeKey - this.TAB_PRODUCT_LOG) === 0) {
+      dispatch(ProductAction.fetchLog(productVariantId, 100));
+    }
+  }
+
+  onChange(e) {
+    this.setState({
+      productTypeIndex: e.target.value
+    });
+
+    if (e.target.value === Enum.PRODUCT_VARIANT) {
+      this.setState({
+        isAutoGenerateBarcode: this.Enum.GENERATE_PRODUCT_CODE.AUTO
+      });
+    } else {
+      this.setState({
+        isAutoGenerateBarcode: this.props.form.getFieldValue("isAutoGenerateBarcode")
+      });
+    }
+  }
+
+  onCangeIsAutoGenerateCode(value) {
+    if (value === this.Enum.GENERATE_PRODUCT_CODE.AUTO) {
+      this.props.form.setFieldsValue({
+        barcode: ""
+      });
+    }
+
+    this.setState({
+      isAutoGenerateBarcode: value,
+      isRequireInputBarcode: value === this.Enum.GENERATE_PRODUCT_CODE.MANAUL
+    });
+
+    this.props.dispatch(ProductAction.switchTypeOfGenerateSKU(value));
+  }
+
+  handleChangeType(value) {
+    if (value === Enum.TYPE_OF_PRODUCT.RAW_MATERIAL) {
+      this.setState({productOptionClassDisabled: "disabled-click"});
+    } else {
+      this.setState({productOptionClassDisabled: ""});
+    }
+  }
+
+  handleEditCost(productVariantId, newCost) {
+    ProductService.editProductCost(productVariantId, newCost)
+    .finally(() => this.setState({editCostVisible: false}));
+  }
+
+  handleClose = removedTag => {
+    const tags = this.state.tags.filter(tag => tag !== removedTag);
+    this.setState({ tags });
+    this.props.callBackGetProductTags(tags);
+  };
+
+  showInput = () => {
+    this.setState({ inputVisible: true }, () => this.input.focus());
+  };
+
+  handleInputChange = e => {
+    this.setState({ inputValue: e.target.value });
+  };
+
+  handleInputConfirm = () => {
+    const { inputValue } = this.state;
+    let { tags } = this.state;
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      tags = [...tags, inputValue];
+    }
+    this.setState({
+      tags,
+      inputVisible: false,
+      inputValue: "",
+    });
+    this.props.callBackGetProductTags(tags);
+  };
+
+  saveInputRef = input => (this.input = input);
+
+  getPrecisionByCurrency(length=2){
+    return this.Util.getSetting().currency === "$"  ? length :  0;
+  }
+
+  render() {
+    const { tags, inputVisible, inputValue, exchangeRate } = this.state;
+    const {
+      dispatch,
+      form,
+      locale,
+      formData,
+      productSearch,
+      variantAttributeAdd
+    } = this.props;
+
+    const currentUser = this.getCurrentUser();
+    
+    if (this.state.productsType) {
+      this.state.productsType.forEach((productTypeValue, productTypeIndex) => {
+        this.state.productsType[productTypeIndex].name = productTypeValue.name;
+        this.state.productsType[productTypeIndex].namekm = productTypeValue.namekm;
+        this.state.productsType[productTypeIndex].namebm = productTypeValue.namebm;
+      });
+    }
+
+    let productTypeBox = Enum.PRODUCT_STANDARD;
+    if (formData.id) {
+      productTypeBox = formData.productOption;
+    } else {
+      productTypeBox = this.state.productTypeIndex;
+    }
+
+
+    const image = {
+      uid: "-1",
+      name: formData.image,
+      status: "done",
+      url: this.Util.getProductImage(formData.image).url
+    };
+
+    return (<this.Row id="wrap-product-form">
+        <this.Col md="6" className="create-product-column-left">
+          <this.Row>
+            <this.Col md="8" className="form-group">
+                <this.InputText
+                  name="name"
+                  label={<this.Translate id="text_product_name" />}
+                  data={formData.name}
+                  placeholder={this.CATranslate("text_product_name", locale)}
+                  errorRequired={<this.Translate id="error_require_name" />}
+                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  isAutoFocus={true}
+                  required={true}
+                  form={form}
+                />
+              </this.Col>
+
+            <this.Col md="4" className="form-group hidden">
+                <this.InputText
+                  name="namekm"
+                  label={<this.Translate id="text_product_name" />}
+                  data={formData.namekm}
+                  placeholder={this.CATranslate("text_product_name", locale)}
+                  errorRequired={<this.Translate id="error_require_name" />}
+                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  form={form}
+                  suffix={this.getLanguageIcon("km")}/>
+              </this.Col>
+
+            <this.Col md="4" className="form-group">
+                <this.Select
+                  name="serialType"
+                  label={
+                    <span>
+                      <this.Translate id="text_manage_stock" />&nbsp;
+                      <this.Tooltip title="Do you want your product calculate stock or not?">
+                        <this.Icon type="question-circle-o" />
+                      </this.Tooltip>
+                    </span>
+                  }
+                  placeholder={this.CATranslate("text_do_you_want_manage_stock", locale)}
+                  dataSource={this.serialTypes}
+                  defaultValue={formData.serialType}
+                  errorRequired={<this.Translate id="error_require_serial_type" />}
+                  disabled={formData.id != null}
+                  required={true}
+                  form={form}/>
+              </this.Col>
+              
+            <this.Col md="4">
+                <div className="ant-col ant-form-item-label">
+                    <label htmlFor="unitName" className="ant-form-item-required"><this.Translate id="text_barcode" /></label>
+                  </div>
+                <div id="wrap-input-barcode" style={{display: "flex", alignItems: "center"}}>
+                  <SelectSearch
+                    name="isAutoGenerateBarcode"
+                    defaultValue={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+                    disabled={formData.id != null}
+                    dataSource={[
+                      {
+                        value: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
+                        name: <this.Translate id="input_product_enter_custom_code" />}, 
+                      { 
+                        value: this.Enum.GENERATE_PRODUCT_CODE.AUTO,
+                        name: <this.Translate id="input_product_auto_generate_code" />
+                      }
+                    ]}
+                    form={form}
+                    onChange={this.onCangeIsAutoGenerateCode}
+                    className="barcode-option" />
+                  <this.InputText
+                    name="barcode"
+                    data={Util.getProductBarcode(formData)}
+                    placeholder={this.CATranslate("text_barcode", locale)}
+                    required={this.state.isRequireInputBarcode}
+                    errorRequired={<this.Translate id="error_require_sku" />}
+                    max={20}
+                    form={form}
+                    disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
+                  </div>
+            </this.Col>
+
+            <this.Col md="4" className="form-group">
+              <SelectUnit formData={formData} placeholder={this.CATranslate("text_unit", locale)} form={form} />
+            </this.Col>
+
+            <this.Col md="4">
+              <SelectCondition
+                defaultValue={formData.conditionId}
+                placeholder={this.CATranslate("text_select_condition", locale)}
+                form={form} />
+            </this.Col>
+
+            <this.Col md="6">
+              <this.Checkboxs
+                name="enableDescription"
+                label={<this.Translate id="text_enable_pro_des_imei_serial_number" />}
+                defaultValue={formData.enableDescription}
+                form={this.props.form} />
+            </this.Col>
+
+            <this.Col md="6" className="form-group" style={{textAlign: "right", paddingRight: 8}}>
+              <this.Checkboxs
+                name="isSplittable"
+                label={<this.Translate id="text_splittable" />}
+                defaultValue={formData.isSplittable}
+                form={this.props.form} />
+            </this.Col>
+
+            <this.Col md="4" className="form-group">
+              <this.InputNumber
+                name="price"
+                label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
+                data={Exchange.dollarToRiel(Util.getProductPrice(formData), exchangeRate)}
+                precision={this.getPrecisionByCurrency()}
+                isAutoSelect={true}
+                placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                errorRequired={<this.Translate id="error_require_price" />}
+                max={99999999}
+                form={form} />
+            </this.Col>
+
+            <this.Col md="4" className="form-group">
+              <this.InputNumber
+                name="wholePrice"
+                label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
+                data={Exchange.dollarToRiel(Util.getProductWholeSalePrice(formData), exchangeRate)}
+                isAutoSelect={true}
+                precision={this.getPrecisionByCurrency()}
+                placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                errorRequired={<this.Translate id="error_require_price" />}
+                max={99999999}
+                form={form} />
+            </this.Col>
+
+            <this.Col md="4" className="form-group">
+              <this.InputNumber
+                name="distributePrice"
+                label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
+                data={Exchange.dollarToRiel(Util.getProductDistributePrice(formData), exchangeRate)}
+                precision={this.getPrecisionByCurrency()}
+                isAutoSelect={true}
+                placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                errorRequired={<this.Translate id="error_require_price" />}
+                max={99999999}
+                form={form} />
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<Translate id="text_warranty" />} key="1">
+                  <this.Row>
+                    <this.Col md="6">
+                      <div style={{display: "flex"}}>
+                        <this.InputNumber
+                          name="warrantyDuration"
+                          label={<this.Translate id="text_warranty" />}
+                          placeholder={this.CATranslate("text_warranty", this.props.locale)}
+                          data={formData.warrantyDuration}
+                          isAutoSelect={true}
+                          precision={0}
+                          form={form}
+                        />
+                        <this.Select
+                          name="warrantyDurationType"
+                          dataSource={[{name: <Translate id="text_day" />, value: "DAY"}, {name: <Translate id="text_week" />, value: "WEEK"}, {name: <Translate id="text_month" />, value: "MONTH"}, {name: <Translate id="text_year" />, value: "YEAR"}]}
+                          defaultValue={formData.warrantyDurationType}
+                          style={{marginTop: 25, marginLeft: 5}}
+                          form={form}
+                        />
+                      </div>
+                    </this.Col>
+                  </this.Row>
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<this.Translate id="text_description" />} key="description">
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={formData.description ? formData.description : "<p></p>"}
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      this.props.form.setFieldsValue({
+                        description: data
+                      });
+                      this.setState({ description: data });
+                    }}
+                  />
+                  <this.InputText name="description" data={form.description} form={form} className="hidden" max={null} />
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<this.Translate id="text_specification" />} key="specification">
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={formData.specification ? formData.specification : "<p></p>"}
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      this.props.form.setFieldsValue({
+                        specification: data
+                      });
+                      this.setState({ description: data });
+                    }}
+                  />
+                  <this.InputText name="specification" data={form.specification} form={form} className="hidden" max={null} />
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<this.Translate id="text_web_display" />} key="3">
+                  <this.Row>
+                    <this.Col md="6">
+                      <this.Checkboxs
+                        name="isFeatured"
+                        label={<this.Translate id="text_featured_product" />}
+                        defaultValue={formData.isFeatured ? true : false}
+                        form={this.props.form} />
+                    </this.Col>
+                    <this.Col md="6">
+                      <this.Checkboxs
+                        name="isPublic"
+                        label={<this.Translate id="text_avialable_on_ecommerce" />}
+                        defaultValue={formData.isPublic ? true : false}
+                        form={this.props.form} />
+                    </this.Col>
+                    <this.Col md="12" style={{marginBottom: 15, display: "flex", alignItems: "center"}}>
+                      <div className="ant-col ant-form-item-label">
+                        <label htmlFor="isFeatured" ><this.Translate id="text_product_tag" /></label>
+                      </div>
+                      <div>
+                          {tags.map((tag) => {
+                            const isLongTag = tag.length > 20;
+                            const tagElem = (
+                                <Tag  key={tag} style={{marginBottom: 5, marginTop: 5}} closable={true} onClose={() => this.handleClose(tag)}>
+                                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                                </Tag>
+                            );
+                            return isLongTag ? (
+                                <Tooltip title={tag} key={tag}>
+                                  {tagElem}
+                                </Tooltip>
+                            ) : (
+                                tagElem
+                            );
+                          })}
+                          {inputVisible && (
+                              <Input
+                                  ref={this.saveInputRef}
+                                  type="text"
+                                  size="small"
+                                  style={{ width: 78 }}
+                                  value={inputValue}
+                                  onChange={this.handleInputChange}
+                                  onBlur={this.handleInputConfirm}
+                                  onPressEnter={this.handleInputConfirm}
+                              />
+                          )}
+                          {!inputVisible && (
+                              <Tag onClick={this.showInput} style={{ background: "#fff", borderStyle: "dashed" }}>
+                                <Icon type="plus" /> New Tag
+                              </Tag>
+                          )}
+                        </div>
+                    </this.Col>
+                  </this.Row>
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<Translate id="text_other" />} key="2">
+                  <this.Row>
+                    <this.Col md="4">
+                        <SelectCategory
+                          formData={formData}
+                          placeholder={this.CATranslate("text_category", locale)}
+                          form={form}/>
+                    </this.Col>
+                    <this.Col md="4">
+                      <SelectBrand
+                        placeholder={this.CATranslate("text_brand", locale)}
+                        form={form}
+                        formData={formData} />
+                    </this.Col>
+                    <this.Col md="4">
+                      <this.Select
+                        name="type"
+                        label={<this.Translate id="text_type" />}
+                        dataSource={this.typesOfProduct}
+                        defaultValue={formData.type !== "" ? formData.type : this.typesOfProduct[0].value}
+                        disabled={formData.id != null}
+                        onChange={this.handleChangeType}
+                        form={form}/>
+                    </this.Col>
+                    <this.Col md="4" className="form-group">
+                      <div style={{display: "flex", alignItems: "center"}}>
+                        <this.InputNumber
+                          name="costDisplay"
+                          label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
+                          data={Exchange.dollarToRiel(Util.getProductCost(formData), exchangeRate)}
+                          precision={this.getPrecisionByCurrency()}
+                          placeholder={this.CATranslate("text_cost_placeholder", locale)}
+                          isAutoSelect={true}
+                          disabled={!this.state.editCostVisible}
+                          form={form} />
+                        
+                        {
+                          formData.productOption === 0 && 
+                          <Button type={this.state.editCostVisible ? "danger" : "default"} onClick={() => this.state.editCostVisible ? this.handleEditCost(Util.getProductVariantId(formData), parseFloat(this.props.form.getFieldValue("costDisplay"))) : this.setState({editCostVisible: true})} style={{marginLeft: 10, marginTop: 15}}>{this.state.editCostVisible ? <Translate id="text_save" /> : <Translate id="text_edit" />}</Button>
+                        }
+                      </div>
+                    </this.Col>
+                    <this.Col md="4">
+                      <this.InputNumber
+                        name="reorderPoint"
+                        label={<this.Translate id="text_alert_quantity" />}
+                        data={formData.reorderPoint === 0 ? null : formData.reorderPoint}
+                        placeholder={this.CATranslate("input_product_re_order_point_placeholder", locale)}
+                        max={9999999}
+                        form={form}/>
+                    </this.Col>
+                    <this.Col md="4">
+                      <SelectOwner
+                        formData={formData}
+                        placeholder={this.CATranslate("text_owner", locale)}
+                        form={form}
+                      />
+                    </this.Col>
+                    <this.Col md="4" style={{ display: "flex", alignItems: "center", paddingTop: 20 }}>
+                      <this.Switchs
+                        name="isAvialableSale"
+                        label={<this.Translate id="input_product_is_avialable_sale" />}
+                        checked={formData.isAvialableSale}
+                        form={form} />
+                    </this.Col>
+                  </this.Row>
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12">
+              {/* <this.UploadImg
+                name="image"    
+                label={<this.Translate id="text_image" />}
+                data={{file: image}}
+                fileList={[image]}
+                endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+                endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+                accessToken={this.Util.getAccessToken()}
+                form={form}/> */}
+
+              <UploadImageCrop 
+                name="image"
+                label={<this.Translate id="text_image" />}
+                data={{file: image}}
+                fileList={[image]}
+                endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+                endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+                accessToken={this.Util.getAccessToken()}
+                locale={locale}
+                form={form} />
+            </this.Col>
+          </this.Row> 
+        </this.Col>
+        <this.Col md="6" className="create-product-column-right">
+          <this.RadioBox
+            className="main-radio-acc product-type"
+            name="productOption"
+            type="radio"
+            defaultValue={formData.productOption}
+            disabled={formData.id != null || this.state.productOptionClassDisabled !== ""}
+            form={form}
+            onSelect={this.onSelect}
+            onChange={this.onChange}>
+            { this.productTypes.map((productType, key) => 
+              <this.RadioChildBox
+                key={key}
+                title={productType.name}
+                language={productType.description}
+                value={productType.value}
+                className={productType.value === productTypeBox || formData.id == null ? productType.value !== Enum.PRODUCT_STANDARD ? this.state.productOptionClassDisabled : "" : "disabled-click"} /> 
+            ) 
+            }
+          </this.RadioBox>
+          <div className="product-type-content">
+            {
+              productTypeBox === Enum.PRODUCT_VARIANT ?
+                <FormVariant
+                  currentUser={currentUser}
+                  dispatch={dispatch}
+                  form={form}
+                  locale={locale}
+                  formData={formData}
+                  exchangeRate={exchangeRate}
+                  getPrecisionByCurrency={(length)=>this.getPrecisionByCurrency(length)}
+                  switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+                  productVariantArchive={this.props.productVariantArchive}
+                  productVariantCheckStatus={this.props.productVariantCheckStatus}
+                  productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+                  productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
+                  callBackGetProductAttribute={this.props.callBackGetProductAttribute}
+                  callBackGetProductVariant={this.props.callBackGetProductVariant}
+                  handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
+                  handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
+                  productVariants={formData.productVariants}
+                  productAttributes={formData.productAttributes}
+                  variantAttributes={this.props.variantAttributes}
+                  variantAttributeAdd={variantAttributeAdd}
+                  handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>
+                :
+                productTypeBox === Enum.PRODUCT_COMPOSITE ?
+                  <FormComposite
+                    dispatch={dispatch}
+                    form={form}
+                    locale={locale}
+                    productPackageToProduct={formData.productPackageToProduct}
+                    productSearch={productSearch} />
+                  :
+                  ""
+            }
+          </div>
+        </this.Col>
+      </this.Row>
+    );
+  }
+}
+
+FormItem.defaultProps = {
+  formData: {
+    name:"",
+    description:"",
+    defaultUnitId: "",
+    brandId: "",
+    categoryId: "",
+    serialType: "",
+    isAutoGenerateBarcode: Enum.GENERATE_PRODUCT_CODE.MANAUL,
+    barcode: "",
+    type: "",
+    productOption: Enum.PRODUCT_STANDARD,
+    reorderPoint: null,
+    factoryCost: null,
+    shippingFee: null,
+    cost: null,
+    markup: null,
+    price: null,
+    isAvialableSale: 1,
+    isPublic: 0,
+    tags: [],
+    productVariants: [],
+    productAttributes: [],
+    productPackageToProduct: [],
+    productDescriptions:[],
+    status: 1
+  },
+  tagList: []
+};

@@ -1,0 +1,79 @@
+.ant-table-content {
+    margin-top: 15px;
+    /* border-top: 0.5px solid #f1efef; */
+}
+
+.ant-table-placeholder {
+    padding: 10px 16px !important
+}
+
+tr:nth-child(odd) {
+    background-color: #faf9f9;
+}
+
+
+.ant-table-expanded-row .ant-table table tbody tr:nth-child(odd) {
+    background-color: rgb(255, 255, 255)
+}
+
+.ant-table-expanded-row td {
+    background-color: white;
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.ant-table-expanded-row td:last-child {
+    padding-right: 0 !important
+}
+
+.ant-table-body table tr td {
+    color: #4D4F5C;
+    font-size: 10pt;
+    font-weight: 400;
+}
+
+.ant-table-thead>tr>th {
+    font-weight: 400 !important;
+    border-top: 0px
+}
+
+
+.ant-table-tbody>tr.ant-table-row>td,
+.ant-table-thead>tr.trant-table-row>th {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important
+}
+
+.ant-table-tbody>tr.ant-table-row>td,
+.ant-table-thead>tr.ant-table-row>th {
+    padding-left: 14px !important;
+    padding-right: 14px !important
+}
+
+.ant-table-footer .item {
+    padding-right: 5px
+}
+
+.ant-table-tbody>tr:hover>td {
+    background: #95ddff1a !important;
+}
+
+tr.ant-table-expanded-row,
+tr.ant-table-expanded-row:hover,
+.ant-table-tbody>tr.ant-table-expanded-row:hover>td {
+    background: white !important
+}
+
+.sub-table .ant-table-content {
+    margin-top: 0;
+}
+
+
+.ant-table-footer {
+    text-align: right;
+}
+
+.hidden {
+    display: none !important
+}
