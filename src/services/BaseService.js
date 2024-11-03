@@ -78,7 +78,7 @@ export default class BaseService extends Service {
    ) {
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+         url: `${this.baseUrl}?limit=${limit ? limit : 0}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId ? locationId : 0}`,  
          data: this.data,
          headers: this.header
       });
@@ -87,7 +87,7 @@ export default class BaseService extends Service {
    archive(ids) {
       this.setHeader();
       return this.DELETE({  
-         url: `${this.baseUrl}/archive/${ids}`,
+         url: `${this.baseUrl}/${ids}`,
          data: this.data,
          headers: this.header
       });
@@ -96,7 +96,7 @@ export default class BaseService extends Service {
    add(data) {
       this.setHeader();
       return this.POST({
-         url: `${this.baseUrl}/create`, 
+         url: `${this.baseUrl}`, 
          data: {
          ...data,
          isSystem: 0
@@ -109,7 +109,7 @@ export default class BaseService extends Service {
       this.setHeader();
       const {id} = data;
       return this.PUT({
-         url: `${this.baseUrl}/update/${id}`,
+         url: `${this.baseUrl}/${id}`,
          data: {
          ...data
          },

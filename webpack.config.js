@@ -10,6 +10,7 @@ var SRC_DIR = path.resolve(__dirname, "src");
 
 module.exports = {
   entry: SRC_DIR + "/index.js?v=1238238",
+  mode: 'development',
   output: {
     path: DIST_DIR + "/",
     filename: "[name].[hash].js",
@@ -21,6 +22,7 @@ module.exports = {
       '@layout': path.resolve(__dirname, 'src/layout'),
       '@helper': path.resolve(__dirname, 'src/helper'),
       '@enums': path.resolve(__dirname, 'src/enums'),
+      '@router': path.resolve(__dirname, 'src/router'),
       '@services': path.resolve(__dirname, 'src/services'),
       '@themes': path.resolve(__dirname, 'src/themes'),
       '@common': path.resolve(__dirname, 'src/app/modules/common'),
@@ -43,10 +45,10 @@ module.exports = {
     fs: "empty"
   },
   plugins: [
-    new Dotenv({path: "./.env.prod"}),
+    new Dotenv({path: "./.env"}),
     new CleanWebpackPlugin(["dist"]),
     new HtmlWebpackPlugin({
-      title: "POS",
+      title: "ERP HUB",
       favicon: "./public/favicon.ico",
       template: "./public/index.html",
       chunksSortMode: "none",
@@ -81,6 +83,24 @@ module.exports = {
         }]
       },
       {
+        test: /\.less$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { 
+            loader: 'less-loader',
+            options: {
+              modifyVars: {
+                'primary-color': '#1DA57A',
+                'link-color': '#1DA57A',
+                'border-radius-base': '2px',
+              },
+              javascriptEnabled: true,
+            }
+          },
+        ]
+      },
+      {
         test: /\.(woff(2)?|ttf|jpeg|eot|jpg|gif|png|svg)(\?v=\d+\.\d+\.\d+)?$/,
         use: [{
           loader: "file-loader",
@@ -95,6 +115,8 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     inline: false,
+    compress: true,
+    hot: true,
     port: 3000
   }
 };

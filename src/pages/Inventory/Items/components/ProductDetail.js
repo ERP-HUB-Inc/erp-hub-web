@@ -8,7 +8,7 @@ import {
 } from "antd";
 
 import {Translate} from "@redux/index";
-import { createBrowserHistory as history } from "history";
+import history from "@router/index";
 import ProductService from "@services/ProductService";
 import ProductDetailOption from "./ProductDetailOption";
 import ProductDetailStockInformation from "./ProductDetailStockInformation";
@@ -24,7 +24,7 @@ export default function ProductDetail(props) {
   React.useEffect(() => {
     const params = new URLSearchParams(props.location.search);
     setLoading(true);
-    ProductService.detail(props.match.params.id, params.get("productOption"), true)
+    ProductService.getById(props.match.params.id, params.get("productOption"), true)
     .then(response => {
       if (response.data) {
         setData(response.data.data);
@@ -36,7 +36,7 @@ export default function ProductDetail(props) {
   }, []);
 
   function handleButtonUpdate() {
-    history.push(`/products/update/${props.match.params.id}?${params.get("productOption")}`);
+    history.push(`/inventories/items/update/${props.match.params.id}?${params.get("productOption")}`);
   }
   
   function handleMenuClick(e) {

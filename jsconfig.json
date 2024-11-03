@@ -6,6 +6,7 @@
          "@layout/*": ["layout/*"],
          "@helper/*": ["helper/*"],
          "@enums/*": ["enums/*"],
+         "@router/*": ["router/*"],
          "@services/*": ["services/*"],
          "@themes/*": ["themes/*"],
          "@common/*": ["app/modules/common/*"],

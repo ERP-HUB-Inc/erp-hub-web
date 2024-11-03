@@ -56,12 +56,12 @@ export default class ProductList extends List {
                const menu = (
                   <Menu>
                      <Menu.Item key={1}>
-                        <this.Link to={`/products/detail/${record.id}?productOption=${record.productOption}`}>
+                        <this.Link to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}>
                            <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                         </this.Link>
                      </Menu.Item>
                      <Menu.Item key={2}>
-                        <this.Link to={`/products/update/${record.id}?productOption=${record.productOption}`}>
+                        <this.Link to={`/inventories/items/create/${record.id}?productOption=${record.productOption}`}>
                            <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                         </this.Link>
                      </Menu.Item>
@@ -283,7 +283,7 @@ export default class ProductList extends List {
    }
 
    showFormEdit(rowData) {
-      history.push(`/products/update/${rowData.id}?productOption=${rowData.productOption}`);
+      history.push(`/inventories/items/update/${rowData.id}?productOption=${rowData.productOption}`);
    }
 
    handleClone() {

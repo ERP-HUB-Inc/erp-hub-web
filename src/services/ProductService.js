@@ -4,8 +4,7 @@ class ProductService extends BaseService {
 
    constructor() {
       super();
-      this.module = "products";
-      this.baseUrl = `${this.baseUrl}/${this.module}`;
+      this.baseUrl = `${this.baseUrl}/products`;
       this.initializeRoute();
    }
 
@@ -73,7 +72,7 @@ class ProductService extends BaseService {
       const languageId = this.getLanguageId();
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}&searchFor=${searchFor}&isSearchingBarcode=${isSearchingBarcode}`,  
+         url: `${this.baseUrl}/dropdown?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}&searchFor=${searchFor}&isSearchingBarcode=${isSearchingBarcode}`,  
          data: this.data,
          headers: this.header
       });

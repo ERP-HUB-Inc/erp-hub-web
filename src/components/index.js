@@ -55,6 +55,7 @@ export * from "./Radio";
 export * from "./Radio/RadioBox";
 export * from "./Radio/RadioNormal";
 export * from "./Select";
+export * from "./Select/SelectSearch";
 export * from "./Spin";
 export * from "./Switch";
 export * from "./Table";

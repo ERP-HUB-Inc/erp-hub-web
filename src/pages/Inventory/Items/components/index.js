@@ -9,7 +9,7 @@ import {
   Table,
   Pagination
 } from "antd";
-import {createBrowserHistory as history} from "history";
+import history from "@router/index";
 import Exchange from "./ExchangeMoneyFunc";
 import EditStock from "./EditStock";
 import Datatable from "@layout/Datatable";
@@ -48,19 +48,19 @@ export default class ProductList extends Datatable {
       ];
       this.columns = [
          {
-            title: <this.Translate id="text_product_name" />,
+            title: <this.Translate id="text_item_name" />,
             dataIndex: "name",
             key: "name",
             render: (name, record) => {
                const menu = (
                   <Menu>
                      <Menu.Item key={1}>
-                        <this.Link to={`/products/detail/${record.id}?productOption=${record.productOption}`}>
+                        <this.Link to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}>
                            <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                         </this.Link>
                      </Menu.Item>
                      <Menu.Item key={2}>
-                        <this.Link to={`/products/update/${record.id}?productOption=${record.productOption}`}>
+                        <this.Link to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}>
                            <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                         </this.Link>
                      </Menu.Item>
@@ -119,7 +119,7 @@ export default class ProductList extends Datatable {
             width: 130,
             align: "right",
             render: (quantity, record) => {
-               quantity = this.getQTY(record);
+               quantity = this.calculateTotalQuantity(record);
                return `${quantity} ${record.unit.name}`;
             }
          },
@@ -150,7 +150,7 @@ export default class ProductList extends Datatable {
       ];
       this.formCreate = <FormCreate/>;
       this.callBackOnShowEditForm = this.showFormEdit;
-      this.columnExpend = new ColumnExpand(this.props, this.handleConfirm); 
+      // this.columnExpend = new ColumnExpand(this.props, this.handleConfirm); 
       this.fetchingProp = "products";
       this.isShowExpandable = true;
       this.rowClassName = record => record.productOption !== Enum.PRODUCT_VARIANT ? "standard-product-row" : "";
@@ -160,7 +160,7 @@ export default class ProductList extends Datatable {
       this.action = ProductAction;
       this.RESET_CONSTANT = Constant.RESET_PRODUCT;
       this.handleClone = this.handleClone.bind(this);
-      this.pathName = "/products/list";
+      this.pathName = "/inventories/items";
       this.timer = null;
    }
 
@@ -176,7 +176,7 @@ export default class ProductList extends Datatable {
 
          this.props.dispatch(ProductAction.fetchLocation());
 
-         CategoryService.lists(500, 0, "name", "ASC")
+         CategoryService.get(500, 0, "name", "ASC")
          .then(response => {
             if (response && response.data) {
                this.setState({productTypes: response.data.data});
@@ -260,7 +260,7 @@ export default class ProductList extends Datatable {
          offset = (offset - 1) * limit;
          // this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey, locationId));
          this.setState({loading: true});
-         ProductService.lists(limit, offset, "", "", filter, searchKey, locationId)
+         ProductService.get(limit, offset, "", "", filter, searchKey, locationId)
          .then(response => {
             if (response.data) {
                this.setState({
@@ -274,15 +274,15 @@ export default class ProductList extends Datatable {
 
    renderButtonAddNew() {
       return (
-         <this.Link to="/products/create" className="ant-btn info" style={{marginRight: 15}}>
-         <span className="icon-add icon-padding-right"></span>
-         <this.Translate id="text_add_new" />
+         <this.Link to="/inventories/items/create" className="ant-btn ant-btn-primary" style={{marginRight: 15}}>
+            <span className="icon-add icon-padding-right"></span>
+            <this.Translate id="text_add_new" />
          </this.Link>
       );
    }
 
    showFormEdit(rowData) {
-      history.push(`/products/update/${rowData.id}?productOption=${rowData.productOption}`);
+      history.push(`/inventories/items/update/${rowData.id}?productOption=${rowData.productOption}`);
    }
 
    handleClone() {
@@ -291,7 +291,7 @@ export default class ProductList extends Datatable {
       }
    }
 
-   getQTY(record) {
+   calculateTotalQuantity(record) {
       let quantity = 0;
       let isNotFilterByLocation = true;
       record["productVariants"].forEach(productVariant => {
@@ -478,7 +478,7 @@ export default class ProductList extends Datatable {
                <div className="table-wrapper">
                   <Row>
                      <Col span={3} style={{marginBottom: 0}}>
-                        <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_product" /></h3>
+                        <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_items" /></h3>
                      </Col>
                      <Col span={21} style={{display: "flex", justifyContent: "flex-end"}}>
                            <this.InputText
@@ -520,7 +520,7 @@ export default class ProductList extends Datatable {
                      columns={this.columns}
                      rowClassName={this.rowClassName}
                      locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-                     expandedRowRender={this.expandedRender}
+                     // expandedRowRender={this.expandedRender}
                      onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
                      loading={this.state.loading} />
 
@@ -549,7 +549,7 @@ const exchangeAndFormatToRiel = (price) => {
 const currencyIsDollar = commonUtil.getSetting().currency === "$";
 const exchangeAndFormatCurrency = currencyIsDollar ? exchangeAndFormatToDollar : exchangeAndFormatToRiel;
 
-class ColumnExpand extends List {
+class ColumnExpand extends Datatable {
    constructor(props) {
       super(props);
       this.colorStockStatus = ["#4cb64c", "#f3a638"];
@@ -598,7 +598,7 @@ class ColumnExpand extends List {
                   ]
                };
                
-               let quantity = this.getQTY(virtaulProduct);
+               let quantity = this.calculateTotalQuantity(virtaulProduct);
                
                let colorIndex = 0;
                if (quantity === 0) {
@@ -634,7 +634,7 @@ class ColumnExpand extends List {
       ];
    }
 
-   getQTY(record) {
+   calculateTotalQuantity(record) {
       let quantity = record.quantity;
       let isNotFilterByLocation = true;
       record["productVariants"].forEach(productVariant => {

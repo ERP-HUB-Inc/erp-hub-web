@@ -5,17 +5,19 @@ import {
   Tag,
   Input,
   Tooltip,
-  Icon
+  Icon,
+  Row,
+  Col
 } from "antd";
 import {
   Translate
-} from "react-localize-redux";
+} from "@redux/index";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import FormComposite from "./FormComposite";
 import FormVariant from "./FormVariant";
 import Enum from "@enums/index";
-import Util from "@helper/util";
+import Util from "@helper/item";
 import {
   InputText,
   Select,
@@ -292,40 +294,40 @@ export default class FormItem extends BaseModal {
     
     this.productTypes = [
       {
-        name: <this.Translate id="radio_box_product_standard" />,
-        description: <this.Translate id="radio_box_product_standard_description" />,
+        name: <Translate id="radio_box_product_standard" />,
+        description: <Translate id="radio_box_product_standard_description" />,
         value: Enum.PRODUCT_STANDARD
       },
       {
-        name: <this.Translate id="radio_box_product_variant" />,
-        description: <this.Translate id="radio_box_product_variant_description" />,
+        name: <Translate id="radio_box_product_variant" />,
+        description: <Translate id="radio_box_product_variant_description" />,
         value: Enum.PRODUCT_VARIANT
       },
       // {
-      //   name: <this.Translate id="radio_box_product_composite" />,
-      //   description: <this.Translate id="radio_box_product_composite_description" />,
+      //   name: <Translate id="radio_box_product_composite" />,
+      //   description: <Translate id="radio_box_product_composite_description" />,
       //   value: Enum.PRODUCT_COMPOSITE
       // }
     ];
 
     this.serialTypes = [
       {
-        name: <this.Translate id="text_yes" />,
+        name: <Translate id="text_yes" />,
         value: Enum.SERIAL_TYPE.STANDARD
       },
       {
-        name: <this.Translate id="text_no" />,
+        name: <Translate id="text_no" />,
         value: Enum.SERIAL_TYPE.NON_INVENTORY
       }
     ];
 
     this.typesOfProduct = [
       {
-        name: <this.Translate id="input_product_good" />,
+        name: <Translate id="input_product_good" />,
         value: Enum.TYPE_OF_PRODUCT.GOOD
       },
       {
-        name: <this.Translate id="input_product_raw_material" />,
+        name: <Translate id="input_product_raw_material" />,
         value: Enum.TYPE_OF_PRODUCT.RAW_MATERIAL
       }
     ];
@@ -486,41 +488,41 @@ export default class FormItem extends BaseModal {
       url: this.Util.getProductImage(formData.image).url
     };
 
-    return (<this.Row id="wrap-product-form">
-        <this.Col md="6" className="create-product-column-left">
-          <this.Row>
-            <this.Col md="8" className="form-group">
+    return (<Row gutter={[16, 16]} id="wrap-product-form">
+        <Col md={24} className="create-product-column-left">
+          <Row gutter={[16, 16]}>
+            <Col md={24} className="form-group">
                 <this.InputText
                   name="name"
-                  label={<this.Translate id="text_product_name" />}
+                  label={<Translate id="text_product_name" />}
                   data={formData.name}
                   placeholder={this.CATranslate("text_product_name", locale)}
-                  errorRequired={<this.Translate id="error_require_name" />}
-                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  errorRequired={<Translate id="error_require_name" />}
+                  errorLenght={<Translate id="input_error_products_name" />}
                   isAutoFocus={true}
                   required={true}
                   form={form}
                 />
-              </this.Col>
+            </Col>
 
             <this.Col md="4" className="form-group hidden">
                 <this.InputText
                   name="namekm"
-                  label={<this.Translate id="text_product_name" />}
+                  label={<Translate id="text_product_name" />}
                   data={formData.namekm}
                   placeholder={this.CATranslate("text_product_name", locale)}
-                  errorRequired={<this.Translate id="error_require_name" />}
-                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  errorRequired={<Translate id="error_require_name" />}
+                  errorLenght={<Translate id="input_error_products_name" />}
                   form={form}
                   suffix={this.getLanguageIcon("km")}/>
-              </this.Col>
+            </this.Col>
 
             <this.Col md="4" className="form-group">
                 <this.Select
                   name="serialType"
                   label={
                     <span>
-                      <this.Translate id="text_manage_stock" />&nbsp;
+                      <Translate id="text_manage_stock" />&nbsp;
                       <this.Tooltip title="Do you want your product calculate stock or not?">
                         <this.Icon type="question-circle-o" />
                       </this.Tooltip>
@@ -529,7 +531,7 @@ export default class FormItem extends BaseModal {
                   placeholder={this.CATranslate("text_do_you_want_manage_stock", locale)}
                   dataSource={this.serialTypes}
                   defaultValue={formData.serialType}
-                  errorRequired={<this.Translate id="error_require_serial_type" />}
+                  errorRequired={<Translate id="error_require_serial_type" />}
                   disabled={formData.id != null}
                   required={true}
                   form={form}/>
@@ -537,7 +539,7 @@ export default class FormItem extends BaseModal {
               
             <this.Col md="4">
                 <div className="ant-col ant-form-item-label">
-                    <label htmlFor="unitName" className="ant-form-item-required"><this.Translate id="text_barcode" /></label>
+                    <label htmlFor="unitName" className="ant-form-item-required"><Translate id="text_barcode" /></label>
                   </div>
                 <div id="wrap-input-barcode" style={{display: "flex", alignItems: "center"}}>
                   <SelectSearch
@@ -547,10 +549,10 @@ export default class FormItem extends BaseModal {
                     dataSource={[
                       {
                         value: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
-                        name: <this.Translate id="input_product_enter_custom_code" />}, 
+                        name: <Translate id="input_product_enter_custom_code" />}, 
                       { 
                         value: this.Enum.GENERATE_PRODUCT_CODE.AUTO,
-                        name: <this.Translate id="input_product_auto_generate_code" />
+                        name: <Translate id="input_product_auto_generate_code" />
                       }
                     ]}
                     form={form}
@@ -561,7 +563,7 @@ export default class FormItem extends BaseModal {
                     data={Util.getProductBarcode(formData)}
                     placeholder={this.CATranslate("text_barcode", locale)}
                     required={this.state.isRequireInputBarcode}
-                    errorRequired={<this.Translate id="error_require_sku" />}
+                    errorRequired={<Translate id="error_require_sku" />}
                     max={20}
                     form={form}
                     disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
@@ -582,7 +584,7 @@ export default class FormItem extends BaseModal {
             <this.Col md="6">
               <this.Checkboxs
                 name="enableDescription"
-                label={<this.Translate id="text_enable_pro_des_imei_serial_number" />}
+                label={<Translate id="text_enable_pro_des_imei_serial_number" />}
                 defaultValue={formData.enableDescription}
                 form={this.props.form} />
             </this.Col>
@@ -590,7 +592,7 @@ export default class FormItem extends BaseModal {
             <this.Col md="6" className="form-group" style={{textAlign: "right", paddingRight: 8}}>
               <this.Checkboxs
                 name="isSplittable"
-                label={<this.Translate id="text_splittable" />}
+                label={<Translate id="text_splittable" />}
                 defaultValue={formData.isSplittable}
                 form={this.props.form} />
             </this.Col>
@@ -598,12 +600,12 @@ export default class FormItem extends BaseModal {
             <this.Col md="4" className="form-group">
               <this.InputNumber
                 name="price"
-                label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
+                label={<span><Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
                 data={Exchange.dollarToRiel(Util.getProductPrice(formData), exchangeRate)}
                 precision={this.getPrecisionByCurrency()}
                 isAutoSelect={true}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
-                errorRequired={<this.Translate id="error_require_price" />}
+                errorRequired={<Translate id="error_require_price" />}
                 max={99999999}
                 form={form} />
             </this.Col>
@@ -611,12 +613,12 @@ export default class FormItem extends BaseModal {
             <this.Col md="4" className="form-group">
               <this.InputNumber
                 name="wholePrice"
-                label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
+                label={<span><Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
                 data={Exchange.dollarToRiel(Util.getProductWholeSalePrice(formData), exchangeRate)}
                 isAutoSelect={true}
                 precision={this.getPrecisionByCurrency()}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
-                errorRequired={<this.Translate id="error_require_price" />}
+                errorRequired={<Translate id="error_require_price" />}
                 max={99999999}
                 form={form} />
             </this.Col>
@@ -624,12 +626,12 @@ export default class FormItem extends BaseModal {
             <this.Col md="4" className="form-group">
               <this.InputNumber
                 name="distributePrice"
-                label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
+                label={<span><Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
                 data={Exchange.dollarToRiel(Util.getProductDistributePrice(formData), exchangeRate)}
                 precision={this.getPrecisionByCurrency()}
                 isAutoSelect={true}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
-                errorRequired={<this.Translate id="error_require_price" />}
+                errorRequired={<Translate id="error_require_price" />}
                 max={99999999}
                 form={form} />
             </this.Col>
@@ -642,7 +644,7 @@ export default class FormItem extends BaseModal {
                       <div style={{display: "flex"}}>
                         <this.InputNumber
                           name="warrantyDuration"
-                          label={<this.Translate id="text_warranty" />}
+                          label={<Translate id="text_warranty" />}
                           placeholder={this.CATranslate("text_warranty", this.props.locale)}
                           data={formData.warrantyDuration}
                           isAutoSelect={true}
@@ -665,7 +667,7 @@ export default class FormItem extends BaseModal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
-                <this.Panel header={<this.Translate id="text_description" />} key="description">
+                <this.Panel header={<Translate id="text_description" />} key="description">
                   <CKEditor
                     editor={ClassicEditor}
                     data={formData.description ? formData.description : "<p></p>"}
@@ -684,7 +686,7 @@ export default class FormItem extends BaseModal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
-                <this.Panel header={<this.Translate id="text_specification" />} key="specification">
+                <this.Panel header={<Translate id="text_specification" />} key="specification">
                   <CKEditor
                     editor={ClassicEditor}
                     data={formData.specification ? formData.specification : "<p></p>"}
@@ -703,25 +705,25 @@ export default class FormItem extends BaseModal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
-                <this.Panel header={<this.Translate id="text_web_display" />} key="3">
+                <this.Panel header={<Translate id="text_web_display" />} key="3">
                   <this.Row>
                     <this.Col md="6">
                       <this.Checkboxs
                         name="isFeatured"
-                        label={<this.Translate id="text_featured_product" />}
+                        label={<Translate id="text_featured_product" />}
                         defaultValue={formData.isFeatured ? true : false}
                         form={this.props.form} />
                     </this.Col>
                     <this.Col md="6">
                       <this.Checkboxs
                         name="isPublic"
-                        label={<this.Translate id="text_avialable_on_ecommerce" />}
+                        label={<Translate id="text_avialable_on_ecommerce" />}
                         defaultValue={formData.isPublic ? true : false}
                         form={this.props.form} />
                     </this.Col>
                     <this.Col md="12" style={{marginBottom: 15, display: "flex", alignItems: "center"}}>
                       <div className="ant-col ant-form-item-label">
-                        <label htmlFor="isFeatured" ><this.Translate id="text_product_tag" /></label>
+                        <label htmlFor="isFeatured" ><Translate id="text_product_tag" /></label>
                       </div>
                       <div>
                           {tags.map((tag) => {
@@ -782,7 +784,7 @@ export default class FormItem extends BaseModal {
                     <this.Col md="4">
                       <this.Select
                         name="type"
-                        label={<this.Translate id="text_type" />}
+                        label={<Translate id="text_type" />}
                         dataSource={this.typesOfProduct}
                         defaultValue={formData.type !== "" ? formData.type : this.typesOfProduct[0].value}
                         disabled={formData.id != null}
@@ -793,7 +795,7 @@ export default class FormItem extends BaseModal {
                       <div style={{display: "flex", alignItems: "center"}}>
                         <this.InputNumber
                           name="costDisplay"
-                          label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
+                          label={<span><Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
                           data={Exchange.dollarToRiel(Util.getProductCost(formData), exchangeRate)}
                           precision={this.getPrecisionByCurrency()}
                           placeholder={this.CATranslate("text_cost_placeholder", locale)}
@@ -810,7 +812,7 @@ export default class FormItem extends BaseModal {
                     <this.Col md="4">
                       <this.InputNumber
                         name="reorderPoint"
-                        label={<this.Translate id="text_alert_quantity" />}
+                        label={<Translate id="text_alert_quantity" />}
                         data={formData.reorderPoint === 0 ? null : formData.reorderPoint}
                         placeholder={this.CATranslate("input_product_re_order_point_placeholder", locale)}
                         max={9999999}
@@ -826,7 +828,7 @@ export default class FormItem extends BaseModal {
                     <this.Col md="4" style={{ display: "flex", alignItems: "center", paddingTop: 20 }}>
                       <this.Switchs
                         name="isAvialableSale"
-                        label={<this.Translate id="input_product_is_avialable_sale" />}
+                        label={<Translate id="input_product_is_avialable_sale" />}
                         checked={formData.isAvialableSale}
                         form={form} />
                     </this.Col>
@@ -838,7 +840,7 @@ export default class FormItem extends BaseModal {
             <this.Col md="12">
               {/* <this.UploadImg
                 name="image"    
-                label={<this.Translate id="text_image" />}
+                label={<Translate id="text_image" />}
                 data={{file: image}}
                 fileList={[image]}
                 endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
@@ -848,7 +850,7 @@ export default class FormItem extends BaseModal {
 
               <UploadImageCrop 
                 name="image"
-                label={<this.Translate id="text_image" />}
+                label={<Translate id="text_image" />}
                 data={{file: image}}
                 fileList={[image]}
                 endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
@@ -857,9 +859,9 @@ export default class FormItem extends BaseModal {
                 locale={locale}
                 form={form} />
             </this.Col>
-          </this.Row> 
-        </this.Col>
-        <this.Col md="6" className="create-product-column-right">
+          </Row> 
+        </Col>
+        <Col md={24} className="create-product-column-right">
           <this.RadioBox
             className="main-radio-acc product-type"
             name="productOption"
@@ -916,8 +918,8 @@ export default class FormItem extends BaseModal {
                   ""
             }
           </div>
-        </this.Col>
-      </this.Row>
+        </Col>
+      </Row>
     );
   }
 }

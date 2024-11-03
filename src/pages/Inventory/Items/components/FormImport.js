@@ -13,7 +13,7 @@ import {
 } from "@components/index";
 import { Translate } from "@redux/index";
 import axios from "axios";
-import {createBrowserHistory as history} from "history";
+import history from "@router/index";
 import Util from "@helper/util";
 import Enums from "@enums/index";
 

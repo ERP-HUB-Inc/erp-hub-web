@@ -1,7 +1,7 @@
 import React from "react";
-import {connect} from "react-redux";
-import {Form} from "antd";
-import ProductPage from "./components/index";
+import { connect } from "@redux/index";
+import { Form } from "antd";
+import ProductPage from "./components";
 
 function ProductContainer(props) {
   return <ProductPage {...props} />;
@@ -26,7 +26,6 @@ function mapStateToProps(state) {
     storeLanguage: state.reducer.storeLanguage.request,
     locations: state.reducer.location.request,
     variantAttributes: state.reducer.variantAttribute.request,
-    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

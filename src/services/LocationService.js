@@ -18,7 +18,7 @@ class LocationService extends BaseService {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/useracess?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+      url: `${this.baseUrl}/useracess?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId ? locationId : 0}`,  
       data: this.data,
       headers: this.header
     });

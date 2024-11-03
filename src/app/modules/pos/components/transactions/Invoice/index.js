@@ -34,7 +34,7 @@ import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTempla
 import ReceiptTemplateService from "../../../../pos/services/settings/ReceiptTemplateService";
 import InventoryEnum from "../../../../inventory/enums";
 import Component  from "../../../../common/components/Component";
-import history from "../../../../common/router/history";
+import history from "@router/index";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import ReceiptTemplate from "../receipt/template";
 import PrivilegeService from "../../../services/settings/PrivilegeService";

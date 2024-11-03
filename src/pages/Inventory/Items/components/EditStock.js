@@ -43,13 +43,15 @@ class EditStock extends React.Component {
    componentDidMount() {
       LocationService.listsLocationAccess(10)
       .then(response => {
-         if (response && response.data) {
+         if (response && response.data && response.data.data) {
             const locations = response.data.data;
-            const defaultLocation = locations.find(location => location.isDefault === 1);
-            this.setState({
-               locations,
-               locationId: defaultLocation ? defaultLocation.id : null
-            });
+            if (locations) {
+               const defaultLocation = locations.find(location => location.isDefault === 1);
+               this.setState({
+                  locations,
+                  locationId: defaultLocation ? defaultLocation.id : null
+               });
+            }
          }
       });
    }

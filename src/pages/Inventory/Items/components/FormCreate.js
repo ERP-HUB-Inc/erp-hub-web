@@ -6,7 +6,7 @@ import {
 import sweetalert from "sweetalert";
 import BaseComponent from "@components/BaseComponent";
 import FormItem from "./FormItem";
-import {createBrowserHistory as history} from "history";
+import history from "@router/index";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
 import FormCreateBrand from "@inventories/Brand/FormCreate";

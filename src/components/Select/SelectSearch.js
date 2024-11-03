@@ -1,9 +1,9 @@
-import React from "react";
-import {Translate} from "react-localize-redux";
-import Element from "../../common/Element";
+import React from "react"
+import {Form, Select} from "antd"
+import {Translate} from "@redux/index"
 import "./index.css";
 
-export class SelectSearch extends Element {
+export class SelectSearch extends React.Component {
   constructor(props) {
     super(props);
     this.rules = {rules: [{ required: this.props.required, message: this.props.errorRequired }]};
@@ -13,16 +13,26 @@ export class SelectSearch extends Element {
     }
   }
 
+  getName = (value) => {
+    if (this.props.nestedName && this.props.nestedName in value && value[this.props.nestedName]) {
+      if (Array.isArray(value[this.props.nestedName]) && value[this.props.nestedName].length > 0) {
+        value[this.props.nestedName] = value[this.props.nestedName][0];
+      }
+      return value[this.props.nestedName][this.props.nameKey];
+    }
+    return value[this.props.nameKey];
+  }
+
   render() {
     const {getFieldDecorator} = this.props.form;
     return (
-      <this.FormItem
+      <Form.Item
         label={this.props.label}
         className={this.props.className}
         help={this.props.help}>
         {
           getFieldDecorator(this.props.name, this.rules)(
-            <this.Select
+            <Select
               placeholder={this.props.placeholder}
               disabled={this.props.disabled}
               notFoundContent={this.props.notFoundContent}
@@ -36,7 +46,7 @@ export class SelectSearch extends Element {
               showSearch>
               { 
                 this.props.addNew !=null ?
-                  <this.Option
+                  <Select.Option
                     key={1}
                     value={1}
                     className="add-new-item"
@@ -44,20 +54,20 @@ export class SelectSearch extends Element {
                     <div className="not-for-selected">
                       <span className="icon-add"></span> {this.props.textAddNew}
                     </div>
-                  </this.Option>
+                  </Select.Option>
                   : "" 
               }  
               {
                 this.props.dataSource && this.props.dataSource.map((value, index) =>
-                  <this.Option key={index} value={value[this.props.valueKey]}>
+                  <Select.Option key={index} value={value[this.props.valueKey]}>
                     {this.props.customOptionName ? this.props.customOptionName() : this.getName(value)}
-                    </this.Option>
+                    </Select.Option>
                 )
               }
-            </this.Select>
+            </Select>
           )
         }
-      </this.FormItem>
+      </Form.Item>
     );
   }  
 }

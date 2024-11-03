@@ -3,7 +3,7 @@ import "moment/min/locales";
 import "moment/locale/en-ca";
 import _ from "lodash";
 import swal from "sweetalert";
-import { createBrowserHistory as history } from "history";
+import history from "@router/index";
 import Enum from "../enums";
 
 export default class Util {

@@ -36,7 +36,7 @@ export default function ProductDetail(props) {
   }, []);
 
   function handleButtonUpdate() {
-    history.push(`/products/update/${props.match.params.id}?${params.get("productOption")}`);
+    history.push(`/inventories/items/update/${props.match.params.id}?${params.get("productOption")}`);
   }
   
   function handleMenuClick(e) {

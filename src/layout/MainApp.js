@@ -106,6 +106,18 @@ export default class SiderDemo extends React.Component {
       loader: () => import("../pages/Inventory/Items"),
       loading: () => <StartUp />,
     });
+    const NewItem = Loadable({
+      loader: () => import("../pages/Inventory/Items/FormCreate"),
+      loading: () => <StartUp />,
+    });
+    const EditItem = Loadable({
+      loader: () => import("../pages/Inventory/Items/FormUpdate"),
+      loading: () => <StartUp />,
+    });
+    const ViewItem = Loadable({
+      loader: () => import("../pages/Inventory/Items/components/ProductDetail"),
+      loading: () => <StartUp />,
+    });
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
@@ -292,10 +304,13 @@ export default class SiderDemo extends React.Component {
                     <Route path="/purchase-orders/update/:id" component={UpdatePurchaseOrder} />
                     <Route path="/purchase-orders" component={PurchaseOrder} />
 
-                    <Route path="/vendors" component={Vendor} />
                     <Route path="/vendors/create" component={Vendor} />
                     <Route path="/vendors/update/:id" component={Vendor} />
+                    <Route path="/vendors" component={Vendor} />
 
+                    <Route path="/inventories/items/create" component={NewItem} />
+                    <Route path="/inventories/items/update/:id" component={EditItem} />
+                    <Route path="/inventories/items/view/:id" component={ViewItem} />
                     <Route path="/inventories/items" component={Item} />
                     <Route path="/inventories/transfers" component={Vendor} />
                     <Route path="/inventories/adjustments" component={Vendor} />

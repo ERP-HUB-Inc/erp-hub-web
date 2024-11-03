@@ -3,8 +3,8 @@ import {
   isMobile,
   isMobileOnly
 } from "react-device-detect";
-import {Pagination} from "antd";
-import Component  from "../app/modules/common/components/Component";
+import {Button, Pagination} from "antd";
+import Component  from "@components/BaseComponent";
 import menuSource from "../app/modules/common/components/layout/SiderBar/datasource";
 import BaseService from "../app/modules/common/services/BaseService";
 import PrivilegeAction from "../app/modules/pos/action/settings/privilege";
@@ -454,15 +454,14 @@ export default class Datatable extends Component {
 
   renderButtonAddNew() {
     return (
-      <this.Button
-        type="info"
-        id="btnAdd"
+      <Button
+        type="primary"
         className="mg-right"
         disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
         onClick={this.handleShowFormAdd}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
-      </this.Button>
+      </Button>
     );
   }
 

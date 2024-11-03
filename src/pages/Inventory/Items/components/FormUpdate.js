@@ -9,7 +9,7 @@ import FormCreateOption from "@inventories/Option/FormCreate";
 import FormCreateTax from "@settings/Tax/FormCreate";
 import BaseComponent from "@components/BaseComponent";
 import FormItem from "./FormItem";
-import {createBrowserHistory as history} from "history";
+import history from "@router/index";
 import ProductAction from "../redux/action";
 import Enum from "@enums/index";
 import Exchange from "./ExchangeMoneyFunc";

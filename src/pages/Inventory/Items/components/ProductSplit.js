@@ -8,7 +8,7 @@ import {
     Descriptions
 } from "antd";
 import sweetalert from "sweetalert";
-import { createBrowserHistory as history } from "history";
+import history from "@router/index";
 import DropDownSearch from "./DropDownSearch";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";

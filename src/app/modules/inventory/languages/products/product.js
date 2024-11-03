@@ -4,6 +4,11 @@ export default {
       "ផលិតផល"
    ],
 
+   "text_items": [
+      "Items",
+      "មុខទំនិញ"
+   ],
+
    "text_promotion": [
       "Promotion",
       "ប៉្រូម៉ូសិន"
@@ -17,6 +22,11 @@ export default {
    "text_product_name": [
       "Product Name",
       "ឈ្មោះផលិតផល"
+   ],
+
+   "text_item_name": [
+      "Item Name",
+      "ឈ្មោះមុខទំនិញ"
    ],
 
    "text_edit_product": [
