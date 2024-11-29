@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, InputNumber as AntdInputNumber } from "antd";
+import { Form, InputNumber as AntdInputNumber, Tooltip, Icon } from "antd";
 
 export default class InputNumber extends React.Component {
   constructor(props) {
@@ -65,7 +65,16 @@ export default class InputNumber extends React.Component {
     const {getFieldDecorator} = this.props.form;
     return (
       <Form.Item
-        label={this.props.label}
+        label={<React.Fragment>
+          {this.props.label}
+          {
+            this.props.tooltip && 
+            <Tooltip placement="right" title={this.props.tooltip}>
+              <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
+            </Tooltip>
+          }
+          </React.Fragment>
+        }
         validateStatus={this.props.validateStatus}
         help={this.props.errorMsg}
         style={this.props.style}

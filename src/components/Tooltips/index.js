@@ -1,6 +1,5 @@
 import React from "react";
 import {Tooltip} from "antd";
-import "./index.css"; 
 
 
 export class Tooltips extends React.Component {

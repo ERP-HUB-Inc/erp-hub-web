@@ -41,6 +41,7 @@ export class InputNumber extends React.Component {
         name={this.props.name}
         placeholder={this.props.placeholder}
         label={this.props.label}
+        tooltip={this.props.tooltip}
         errorRequired={this.props.errorRequired}
         errorLength={this.props.errorLength}
         isUnsign={this.props.isUnsign}
@@ -80,6 +81,7 @@ InputNumber.defaultProps = {
   precision: 2,
   errorLength: "The number allow maximum 9999 999 999.",
   required: false,
+  isAutoSelect: true,
   errorRequired: "Field required"
 };
 

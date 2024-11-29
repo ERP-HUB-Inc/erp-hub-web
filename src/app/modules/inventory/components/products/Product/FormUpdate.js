@@ -243,8 +243,8 @@ export default class ProductUpdate extends Component {
                 paddingRight: 0
             }}
             onBack={() => history.goBack()}
-            title={<this.Translate id="text_product" />}
-            subTitle={<this.Translate id="text_edit_product" />}
+            title={<this.Translate id="text_item" />}
+            subTitle={<this.Translate id="text_edit_item" />}
             extra={[
               <this.Button key="1" htmlType="submit" loading={this.props.productUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
                 <this.Translate id="text_save" />(Ctrl+s)

@@ -222,7 +222,7 @@ class SplitProduct extends Component {
                     <this.Row>
                         <this.Col md="12">
                             <Descriptions title={<this.Translate id="text_product_description" />} style={{marginBottom: 15}}>
-                                <Descriptions.Item label={<this.Translate id="text_product_name" />}>
+                                <Descriptions.Item label={<this.Translate id="text_item_name" />}>
                                     {product.name}
                                 </Descriptions.Item>
                                 <Descriptions.Item label={<this.Translate id="text_barcode" />}>
@@ -267,7 +267,7 @@ class SplitProduct extends Component {
                                 rowClassName={(record) => record.status === this.Enum.ARCHIVE ? "hidden" : ""}
                                 columns={[
                                     {
-                                        title: <this.Translate id="text_product_name" />,
+                                        title: <this.Translate id="text_item_name" />,
                                         dataIndex: "name",
                                         key: "name",
                                         render: (name, record, index) => {

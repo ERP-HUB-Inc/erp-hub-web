@@ -1,5 +1,6 @@
 import React from "react";
-import { Form, Select as AntdSelect } from "antd"
+import PropTypes from "prop-types";
+import { Form, Select as AntdSelect, Tooltip, Icon } from "antd"
 import "./index.css";
 
 const { Option } = AntdSelect;
@@ -45,7 +46,18 @@ export class Select extends React.Component {
 
     return (
       <Form.Item
-        label={this.props.label}
+        label={<React.Fragment>
+          {this.props.label}
+          {
+            this.props.tooltip && 
+            <Tooltip placement="right" title={this.props.tooltip}>
+              <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
+            </Tooltip>
+          }
+          </React.Fragment>
+        }
+        tooltip={this.props.tooltip}
+        labelAlign="left"
         help={this.props.help}
         className={this.props.className}
         style={this.props.style}
@@ -79,6 +91,7 @@ export class Select extends React.Component {
 }
 
 Select.defaultProps = {
+  label: PropTypes.string.isRequired,
   required: false,
   errorRequired: "Please select",
   valueKey: "value",

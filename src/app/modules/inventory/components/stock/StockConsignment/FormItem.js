@@ -45,14 +45,14 @@ class FormItem extends React.PureComponent {
   util = new Util();
   entryColumn = [
     {
-      title: <Translate id="text_product_name" />,
+      title: <Translate id="text_item_name" />,
       dataIndex: "productName",
       key: "productName",
       render: (productName, record, index) => {
         return <React.Fragment>
           <InputText
             name={`productName[${index}]`}
-            placeholder={`${stringTranslate("text_product_name", this.props.locale)}`}
+            placeholder={`${stringTranslate("text_item_name", this.props.locale)}`}
             data={`${productName} ${record.variantName ? record.variantName : ""}`}
             handleOnFocus={(e) => e.target.select()}
             form={this.props.form} />

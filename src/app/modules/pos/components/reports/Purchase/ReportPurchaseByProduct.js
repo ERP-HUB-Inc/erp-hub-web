@@ -257,7 +257,7 @@ function ReportPurchaseByProduct() {
               render: (text, record, index) => index + 1
             },
             {
-              title: <Translate id="text_product_name" />,
+              title: <Translate id="text_item_name" />,
               dataIndex: "productName",
               key: "productName",
               render: (productName, record) => {

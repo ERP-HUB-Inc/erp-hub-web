@@ -457,7 +457,7 @@ export default class FormStep1 extends React.Component  {
                   rowClassName={((record) => record.status === `${Enum.ARCHIVE}` ? "hidden" : "")}
                   columns={[
                     {
-                      title: <Translate id="text_product_name" />,
+                      title: <Translate id="text_item_name" />,
                       dataIndex: "productName",
                       key: "name",
                       render: (productName, record) => {

@@ -236,7 +236,7 @@ export class UploadImageCrop extends React.Component {
         <div className="ant-upload-text">
           <div className="upload-extension-title">. JPG  . PNG . GIF</div>
           <div className="upload-file-title">
-                  You can also upload files by <br/>
+            Click or drag file to this area to upload <br/>
             <span>clicking here </span>
           </div>
         </div>

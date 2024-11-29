@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   Form,
   PageHeader
 } from "antd";
@@ -213,11 +214,21 @@ export default class ProductCreate extends BaseComponent {
       storeLanguage
     } = this.props;
 
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+
     return <div style={{marginBottom: 25}}>
       <Form autoComplete="off" onSubmit={this.handleSubmit}>
         <PageHeader
           style={{
-              backgroundColor: "#f7f7f7",
               paddingLeft: 0,
               paddingRight: 0
           }}
@@ -225,9 +236,9 @@ export default class ProductCreate extends BaseComponent {
           title={<this.Translate id="text_product" />}
           subTitle={<this.Translate id="text_new_product" />}
           extra={[
-            <this.Button htmlType="submit" loading={productAdd.adding} key={0} className="info" style={{marginLeft: 15}} id="btnSubmit">
+            <Button htmlType="submit" loading={productAdd.adding} key={0} type="primary" style={{marginLeft: 15}} id="btnSubmit">
               <this.Translate id="text_save" />(Ctrl+s)
-            </this.Button>
+            </Button>
           ]} />
         <FormItem
           form={form}
@@ -258,7 +269,8 @@ export default class ProductCreate extends BaseComponent {
           variantAttributes={variantAttributes}
           variantAttributeAdd={variantAttributeAdd}
           handleAddVariantAttribute={this.handleAddOption}
-          productSearch={productSearch} />
+          productSearch={productSearch}
+        />
       </Form>
     </div>;
   }

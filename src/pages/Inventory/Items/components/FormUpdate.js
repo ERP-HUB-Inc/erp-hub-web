@@ -25,7 +25,7 @@ export default class ProductUpdate extends BaseComponent {
       exchangeRate: 1,
     };
 
-    this.title = <this.Translate id="text_product" />;
+    this.title = <this.Translate id="text_item" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
@@ -236,13 +236,12 @@ export default class ProductUpdate extends BaseComponent {
         <Form autoComplete="off" onSubmit={this.handleSubmit}>
           <PageHeader
             style={{
-                backgroundColor: "#f7f7f7",
                 paddingLeft: 0,
                 paddingRight: 0
             }}
             onBack={() => history.goBack()}
-            title={<this.Translate id="text_product" />}
-            subTitle={<this.Translate id="text_edit_product" />}
+            title={<this.Translate id="text_item" />}
+            subTitle={<this.Translate id="text_edit_item" />}
             extra={[
               <this.Button key="1" htmlType="submit" loading={this.props.productUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
                 <this.Translate id="text_save" />(Ctrl+s)

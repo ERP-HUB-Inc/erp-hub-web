@@ -93,7 +93,7 @@ export default class OpenSaleRegistrationList extends List {
         render: (id,record,index) => index + 1
       },
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         dataIndex: "product",
         key: "product"
       },

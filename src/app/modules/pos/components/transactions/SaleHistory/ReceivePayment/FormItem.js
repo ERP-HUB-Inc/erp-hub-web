@@ -13,7 +13,7 @@ export default class FormItem extends Modal {
     };
     this.columns = [
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         dataIndex: "productVariant",
         key: "name",
         render: productVariant => {

@@ -41,7 +41,7 @@ export default class PrintPriceTag extends List {
     };
     this.columns = [
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         dataIndex: "productDescriptions",
         width: 200,
         key: "name",

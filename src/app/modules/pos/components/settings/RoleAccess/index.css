@@ -6,23 +6,6 @@
 
 .ant-collapse-item {
     position: relative;
-} 
-
-.main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow{
-    left: auto;
-    right: 10px;
-}
-
-.main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header {
-    padding: 12px 0 12px 40px !important;
-    font-size: 9pt;
-    color: #4D4F5C;
-    font-weight: 500;
-}
-
-.main-role-access .ant-collapse {
-    padding: 8px;
-    background-color: white;
 }
 
 .main-role-access .ant-checkbox-group .ant-checkbox-group-item {
@@ -35,28 +18,13 @@
     font-weight: bold;
 }
 
-.ant-collapse-content > .ant-collapse-content-box {
-    padding-top: 1
-}
-
 .main-role-access .ant-collapse-header {
     border-bottom: 1px solid white;
     background-color: #FAFAFA !important;
 } 
 
-.main-role-access .ant-collapse-content > .ant-collapse-content-box {
-    padding-top: 0px;
-    padding-bottom: 10px;
-    padding-left: 40px
-}
-
 .main-role-access .ant-collapse-content {
     border-top: none !important;
-}
-
-.main-role-access .ant-collapse {
-    border: 1px solid #ECECEC;
-    border-radius: 0;
 }
 
 /* input text */

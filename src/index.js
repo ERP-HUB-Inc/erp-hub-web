@@ -3,6 +3,7 @@ import "babel-polyfill";
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
+import { ConfigProvider } from "antd"
 import 'antd/dist/antd.css';
 // import App from "./app/modules/common/containers/App";
 import App from "./layout/MainApp";
@@ -14,7 +15,9 @@ store = new Localization(store);
 
 render(
   <Provider store={store}>
-    <App />
+    <ConfigProvider getPrefixCls={() => {}}>
+      <App />
+    </ConfigProvider>
   </Provider>,
   document.getElementById("root")
 );

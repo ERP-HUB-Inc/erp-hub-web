@@ -94,7 +94,7 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         key: "productName",
         width: 250,
         render: (text, record) => Util.getProductNameV2(record),
@@ -145,7 +145,7 @@ class Column extends List {
         dataIndex: "type",
         key: "type",
         width: 150,
-        render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good" /> : <this.Translate id="input_product_raw_material" />,
+        render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="text_final_goods" /> : <this.Translate id="text_raw_material" />,
         sorter: true
       },
       this.columnStatus

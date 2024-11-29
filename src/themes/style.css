@@ -71,10 +71,6 @@ html,
     margin-bottom: 0 !important
 }
 
-.ant-table-tbody tr td .ant-form-item-control {
-    line-height: 1 !important
-}
-
 .ant-table-footer {
     font-weight: 500;
     padding: 10px 16px !important;
@@ -83,10 +79,6 @@ html,
     padding-right: 8px;
     display: flex;
     justify-content: flex-end
-}
-
-.ant-table-footer .ant-form-horizontal .ant-form-item {
-    margin-bottom: 0 !important
 }
 
 .ant-table-footer .total-title {
@@ -104,11 +96,6 @@ html,
 .ant-table-footer .grandTotal input {
     text-align: right;
     padding-right: 0
-}
-
-.ant-table-footer .grandTotal .ant-form-item-control {
-    line-height: 0;
-    top: -5px
 }
 
 .ant-table-footer .wrap-table-footer {
@@ -249,10 +236,6 @@ html,
     content: "";
 }
 
-.ant-form-horizontal .ant-form-item {
-    margin-bottom: 10px
-}
-
 /*==================INPUT=============*/
 .ant-input {
     border-radius: 3px
@@ -364,10 +347,6 @@ html,
 
 .main-radio-acc .ant-radio-button-wrapper:last-child {
     margin-right: 0px;
-}
-
-.main-radio-acc .radio-group {
-    text-align: center;
 }
 
 .main-radio-acc .radio-title {
@@ -505,24 +484,16 @@ color: #4D4F5C;
 
 .ant-layout-content {
     padding: 15px;
-    background:#F7F7F7;
     margin-left: 80px;
     z-index: 0;
-    /* margin-top: 62px; */
     margin-top: 40px;
-    /* display: flex; */
-    /* height: 100% */
 }
 
 .content-list {
     width: 100%;
-    /* display: flex; */
-    /* flex-direction: column */
 }
 
 .ant-layout {
-    background:#F7F7F7;
-    height: 100%;
     position: relative
 }
 
@@ -533,10 +504,6 @@ color: #4D4F5C;
 .ant-layout-header {
     line-height: normal !important;
     width: 100%;
-}
-
-.ant-collapse > .ant-collapse-item {
-    border: none;
 }
 
 .hidden {
@@ -869,4 +836,9 @@ color: #4D4F5C;
 
 .anticon {
     vertical-align: 0 !important
+}
+
+/* CUSTOM V2 */
+.ant-collapse-content > .ant-collapse-content-box {
+    padding: 30px;
 }

@@ -44,7 +44,7 @@ export default class PO extends BaseModal {
         }
       },
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         dataIndex: "productName",
         key: "productName",
         render: (productName, record) => {

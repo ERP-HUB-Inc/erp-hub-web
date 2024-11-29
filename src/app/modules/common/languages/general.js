@@ -570,7 +570,7 @@ export default {
   text_meta_title: ["Meta Title", "ចំណងជើងមេតា"],
   text_meta_tag_description: ["Meta Tag Description", "ការពិពណ៌នាអំពីស្លាកមេតា"],
   text_meta_tag_keyword: ["Meta Tag Keyword", "ពាក្យគន្លឹះ ស្លាកមេតា"],
-  text_product_name: ["Product Name", "ឈ្មោះ​ផលិតផល"],
+  text_item_name: ["Product Name", "ឈ្មោះ​ផលិតផល"],
   text_product_detail: ["Product Detail", "ផលិតផលលម្អិត"],
   text_facebook: ["Facebook", "Facebook"],
   text_telegram: ["Telegram", "Telegram"],

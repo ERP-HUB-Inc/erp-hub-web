@@ -19,19 +19,14 @@ export default {
       "តម្លៃប៉្រូម៉ូសិន"
    ],
 
-   "text_product_name": [
-      "Product Name",
-      "ឈ្មោះផលិតផល"
-   ],
-
    "text_item_name": [
       "Item Name",
       "ឈ្មោះមុខទំនិញ"
    ],
 
-   "text_edit_product": [
-      "Edit Product",
-      "កែប្រែផលិតផល"
+   "text_edit_item": [
+      "Edit Item",
+      "កែប្រែមុខទំនិញ"
    ],
 
    "text_new_product": [
@@ -80,17 +75,17 @@ export default {
    ],
 
    "text_retial_price": [
-      "Price",
+      "Selling Price (Retail)",
       "តម្លៃលក់រាយ"
    ],
 
    "text_whole_price": [
-      "Whole Price",
+      "Wholesale Price",
       "តម្លៃលក់ដុំ"
    ],
 
    "text_distribute_price": [
-      "Distr. Price",
+      "Price to Distributors",
       "តម្លៃតំណាងចែកចាយ"
    ],
 
@@ -129,12 +124,12 @@ export default {
       "តាមដានផលិតផល"
    ],
 
-   "input_product_enter_custom_code": [
+   "text_custom": [
       "Custom",
       "Custom"
    ],
 
-   "input_product_auto_generate_code": [
+   "text_auto": [
       "Auto",
       "Auto"
    ],
@@ -255,11 +250,6 @@ export default {
       "0.00"
    ],
 
-   "input_product_price_placeholder": [
-      "0.00",
-      "0.00"
-   ],
-
    "input_product_upload_image": [
       "You can also upload files by",
       "​អ្នក​អាច upload file ដោយ"
@@ -345,12 +335,12 @@ export default {
       "អាជ្ញាប័ណ្ណ"
    ],
 
-   "input_product_good": [
-      "Goods",
+   "text_final_goods": [
+      "Final Goods",
       "ផលិតផលសំរេច"
    ],
 
-   "input_product_raw_material": [
+   "text_raw_material": [
       "Raw Material",
       "វត្ថុធាតុដើម"
    ],
@@ -471,7 +461,7 @@ export default {
    ],
 
    "text_select_condition": [
-      "Select Condition",
+      "Select item condition...",
       "ជ្រើសរើសលក្ខខណ្ឌ"
    ],
 
@@ -552,7 +542,7 @@ export default {
    ],
 
    "text_splittable": [
-      "Allow split for retail sale",
+      "Allow Split for Retail Sale",
       "អនុញ្ញាតឱ្យបំបែកឬពុសជ្រៀកសម្រាប់លក់បាន"
    ],
 

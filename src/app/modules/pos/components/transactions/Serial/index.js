@@ -30,7 +30,7 @@ class SerialList extends Component {
     this.pageSize = 50;
     this.columnsByInvoice = [
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         dataIndex: "productName",
         key: "productName"
       },
@@ -76,7 +76,7 @@ class SerialList extends Component {
     ];
     this.columnsByInstallment = [
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         dataIndex: "productName",
         key: "productName"
       },

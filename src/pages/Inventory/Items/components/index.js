@@ -6,6 +6,7 @@ import {
   Icon,
   Row,
   Col,
+  Checkbox,
   Table,
   Pagination
 } from "antd";
@@ -97,19 +98,29 @@ export default class ProductList extends Datatable {
             render: (text, record) => Util.getProductBarcode(record)
          },
          {
-            title: <this.Translate id="text_stock_type" />,
+            title: <this.Translate id="text_category" />,
+            dataIndex: "category",
+            key: "category",
+            width: 140,
+            render: category => category.name
+         },
+         {
+            title: <this.Translate id="text_manage_stock" />,
             dataIndex: "serialType",
             key: "serialType",
             width: 150,
+            align: "center",
             render: serialType => {
+               let checked = false
                let stockTypeStr = <this.Translate id="text_other" />;
                if (serialType === Enum.SERIAL_TYPE.STANDARD) {
+                  checked = true
                   stockTypeStr = <this.Translate id="text_inventory" />;
                } else if (serialType === Enum.SERIAL_TYPE.NON_INVENTORY) {
                   stockTypeStr = <this.Translate id="text_non_inventory" />;
                }
 
-               return stockTypeStr;
+               return <Checkbox checked={checked} />;
             }
          },
          {
@@ -131,22 +142,22 @@ export default class ProductList extends Datatable {
             align: "center",
             render: (text, record) => exchangeAndFormatCurrency(Util.getProductPrice(record))
          },
-         {
-            title: <this.Translate id="text_whole_price" />,
-            key: "wholePrice",
-            dataIndex: "wholePrice",
-            width: 150,
-            align: "center",
-            render: (text, record) => exchangeAndFormatCurrency(Util.getProductWholeSalePrice(record))
-         },
-         {
-            title: <this.Translate id="text_distribute_price" />,
-            key: "distributePrice",
-            dataIndex: "distributePrice",
-            width: 170,
-            align: "center",
-            render: (text, record) => exchangeAndFormatCurrency(Util.getProductDistributePrice(record))
-         }
+         // {
+         //    title: <this.Translate id="text_whole_price" />,
+         //    key: "wholePrice",
+         //    dataIndex: "wholePrice",
+         //    width: 150,
+         //    align: "center",
+         //    render: (text, record) => exchangeAndFormatCurrency(Util.getProductWholeSalePrice(record))
+         // },
+         // {
+         //    title: <this.Translate id="text_distribute_price" />,
+         //    key: "distributePrice",
+         //    dataIndex: "distributePrice",
+         //    width: 170,
+         //    align: "center",
+         //    render: (text, record) => exchangeAndFormatCurrency(Util.getProductDistributePrice(record))
+         // }
       ];
       this.formCreate = <FormCreate/>;
       this.callBackOnShowEditForm = this.showFormEdit;
@@ -237,7 +248,7 @@ export default class ProductList extends Datatable {
    }
 
    fetchList(withPagination = false) {
-         let searchKey = "";
+         let search = "";
          let filter = {};
          let locationId = 0;
          let limit = this.pageSize;
@@ -246,13 +257,13 @@ export default class ProductList extends Datatable {
 
          if (params.get("limit")) limit = Number(params.get("limit"));
          if (params.get("current")) offset = Number(params.get("current"));
-         if (params.get("search")) searchKey = JSON.stringify({ column: this.columnFilterWithKey, value: params.get("search") });
+         if (params.get("search")) search = params.get("search");
          if (params.get("categoryId")) filter = JSON.stringify({categoryId: params.get("categoryId")});
          if (params.get("locationId")) locationId = Number(params.get("locationId"));
 
          if (!withPagination) {
             offset = 1;
-            this.setState({current: 1});
+            this.setState({ current: 1 });
             params.delete("current");
             this.Util.pushParamsToURL(this.pathName, params.toString());
          }
@@ -260,7 +271,7 @@ export default class ProductList extends Datatable {
          offset = (offset - 1) * limit;
          // this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey, locationId));
          this.setState({loading: true});
-         ProductService.get(limit, offset, "", "", filter, searchKey, locationId)
+         ProductService.get({ limit, offset, filter, search, locationId })
          .then(response => {
             if (response.data) {
                this.setState({
@@ -275,7 +286,6 @@ export default class ProductList extends Datatable {
    renderButtonAddNew() {
       return (
          <this.Link to="/inventories/items/create" className="ant-btn ant-btn-primary" style={{marginRight: 15}}>
-            <span className="icon-add icon-padding-right"></span>
             <this.Translate id="text_add_new" />
          </this.Link>
       );
@@ -351,10 +361,24 @@ export default class ProductList extends Datatable {
    }
 
    buttonActionCollection() {
-      return <div style={{marginTop: 3}}>
-         {this.renderButtonAddNew()}
-         {this.renderButtonImport()}
-      </div>;
+      return <Dropdown.Button type="primary" onClick={() => console.log("Hello World")} overlay={(
+            <Menu onClick={() => console.log("Hello World")}>
+               <Menu.Item key="1">
+                  <Icon type="user" />
+                  Import
+               </Menu.Item>
+               <Menu.Item key="2">
+                  <Icon type="user" />
+                  Export
+               </Menu.Item>
+               <Menu.Item key="3">
+                  <Icon type="user" />
+                  3rd item
+               </Menu.Item>
+            </Menu>
+         )}>
+            <this.Translate id="text_add_new" />
+      </Dropdown.Button>;
    }
 
    handleSearch = (e) => {
@@ -477,17 +501,18 @@ export default class ProductList extends Datatable {
             <div style={{height: "100%", marginTop: 10}}>
                <div className="table-wrapper">
                   <Row>
-                     <Col span={3} style={{marginBottom: 0}}>
+                     <Col md={3} style={{marginBottom: 0}}>
                         <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_items" /></h3>
                      </Col>
-                     <Col span={21} style={{display: "flex", justifyContent: "flex-end"}}>
+                     <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
                            <this.InputText
                               name="key"
                               placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
                               form={this.props.form}
                               style={{width: 314, marginBottom: 0}}
                               onChange={this.handleSearch}
-                              allowClear={true} />
+                              allowClear={true}
+                           />
                            <this.Select
                               name="categoryId"
                               placeholder={this.CATranslate("text_all_categories", this.props.locale)}
@@ -498,7 +523,8 @@ export default class ProductList extends Datatable {
                               form={this.props.form}
                               style={{width: 180, marginLeft: 15, marginBottom: 0}}
                               onChange={this.handleChangeCategory}
-                              defaultValue={null} />
+                              defaultValue={null}
+                           />
                            <this.Select
                               name="locationId"
                               dataSource={this.locationList.concat(this.props.locations.list)}
@@ -507,8 +533,12 @@ export default class ProductList extends Datatable {
                               form={this.props.form}
                               style={{width: 180, margin: "0 15px"}}
                               onChange={this.handleChangeLocation}
-                              defaultValue={0} />
-                           {this.buttonActionCollection()}
+                              defaultValue={0}
+                              allowClear={true}
+                           />
+                           <this.Link to="/inventories/items/create" className="ant-btn ant-btn-primary" style={{marginRight: 15}}>
+                              <this.Translate id="text_add_new" />
+                           </this.Link>
                      </Col>
                   </Row>
 

@@ -9,7 +9,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT,
-        payload: ProductService.get(limit, offset, sortField, sortOrder, filter, searchKey, locationId)
+        payload: ProductService.get({ limit, offset, sortField, sortOrder, filter, searchKey, locationId })
       });
     };
   },
@@ -17,7 +17,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_LOCATION,
-        payload: LocationService.get(limit, offset, sortField, sortOrder, filter, searchKey, locationId)
+        payload: LocationService.get({ limit, offset, sortField, sortOrder, filter, searchKey, locationId })
       });
     };
   },

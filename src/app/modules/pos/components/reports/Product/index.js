@@ -263,7 +263,7 @@ export default function ReportProduct() {
                   dataSource={data ? data : []}
                   columns={[
                     {
-                      title: <Translate id="text_product_name" />,
+                      title: <Translate id="text_item_name" />,
                       dataIndex: "name",
                       key: "name",
                       render: (text, record) => {

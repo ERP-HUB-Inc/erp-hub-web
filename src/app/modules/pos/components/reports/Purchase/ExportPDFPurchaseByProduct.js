@@ -80,7 +80,7 @@ export default function  ExportPDFPurcaseByProduct() {
                   <thead>
                       <tr>
                           <th style={{textAlign: "center"}}>#</th>
-                          <th><Translate id="text_product_name" /></th>
+                          <th><Translate id="text_item_name" /></th>
                           <th><Translate id="text_barcode" /></th>
                           <th><Translate id="text_purchase_date" /></th>
                           <th><Translate id="text_supplier" /></th>

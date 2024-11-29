@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Radio } from "antd"
-import "./index.css";
 
 export class RadioBox extends React.Component {
   constructor(props){

@@ -134,7 +134,7 @@ export default function FormStep3(props) {
           title: "Count List",
           children: [
             {
-              title: <Translate id="text_product_name" />,
+              title: <Translate id="text_item_name" />,
               dataIndex: "productName",
               key: "name",
               render: (productName, record) => {

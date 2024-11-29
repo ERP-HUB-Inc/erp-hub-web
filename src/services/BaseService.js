@@ -12,6 +12,20 @@ export default class BaseService extends Service {
       };
    }
 
+   bindQueryParam(option) {
+      const queryParams = [];
+   
+      if (option.limit) queryParams.push(`limit=${option.limit}`)
+      if (option.offset) queryParams.push(`offset=${option.offset}`);
+      if (option.sortField) queryParams.push(`sortField=${option.sortField}`);
+      if (option.sortOrder) queryParams.push(`sortOrder=${option.sortOrder}`);
+      if (option.filter) queryParams.push(`filter=${option.filter}`);
+      if (option.search) queryParams.push(`search=${option.search}`);
+      if (option.locationId) queryParams.push(`sortOrder=${option.locationId}`);
+   
+      return queryParams.map((param, index) => index === 0 ? param : `&${param}`).join('');
+   }
+
    POST(option = {
       url: "",
       headers: {},
@@ -66,19 +80,18 @@ export default class BaseService extends Service {
       });
    }
 
-   get(
+   get(option = {
       limit,
       offset,
       sortField,
       sortOrder,
-      filter, // {"column1": [value1, value2], "column2": [value1, value2]}
-      searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
-      rangFilter,// {"column": "createdAtt", "value": [1, 100]}
+      filter,
+      search,
       locationId
-   ) {
+   }) {
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}?limit=${limit ? limit : 0}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId ? locationId : 0}`,  
+         url: `${this.baseUrl}?${this.bindQueryParam(option)}`,  
          data: this.data,
          headers: this.header
       });

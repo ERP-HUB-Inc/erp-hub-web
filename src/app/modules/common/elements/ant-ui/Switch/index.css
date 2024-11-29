@@ -2,11 +2,6 @@
     line-height: 1
 }
 
-.main-switch .ant-form-item,
-.main-switch .ant-form-item-control {
-    line-height: 0
-}
-
 .main-switch .ant-form-item-label label { 
     position: absolute; 
     color: #4D4F5C;

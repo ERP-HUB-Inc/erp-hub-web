@@ -28,11 +28,6 @@
     margin-bottom: -23px;
 }
 
-
-.customerType .ant-radio-group > label.ant-radio-wrapper { 
-    width: 150px;
-}
-
 .customer-profile-card {
     min-height: 78vh;
     border-radius: 5px;

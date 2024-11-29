@@ -1,6 +1,6 @@
 import React from "react";
 import Element from "../../common/Element";
-import "./index.css";
+
 export class RadioBox extends Element {
   constructor(props){
     super(props);

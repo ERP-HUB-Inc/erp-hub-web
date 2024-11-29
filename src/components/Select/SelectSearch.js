@@ -41,6 +41,7 @@ export class SelectSearch extends React.Component {
               dropdownClassName="wrap-select-search"
               onSearch={this.props.onSearch}
               onChange={this.props.onChange}
+              allowClear
               filterOption={false}
               // filterOption={(value, option) => option.props.children.toString().toLowerCase().indexOf(value.toLowerCase()) >= 0}
               showSearch>

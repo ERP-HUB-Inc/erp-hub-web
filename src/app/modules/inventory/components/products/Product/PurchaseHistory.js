@@ -34,7 +34,7 @@ export default function PurchaseHistory({id}) {
          key: "locationName",
       },
       {
-         title: <Translate id="text_product_name" />,
+         title: <Translate id="text_item_name" />,
          dataIndex: "productName",
          key: "productName",
       },

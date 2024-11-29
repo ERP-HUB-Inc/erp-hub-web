@@ -25,18 +25,18 @@ class ProductService extends BaseService {
       });
    }
 
-   get(
+   get(option = {
       limit,
       offset,
       sortField,
       sortOrder,
-      filter, // {"column1": [value1, value2], "column2": [value1, value2]}
-      searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
+      filter,
+      search,
       locationId
-   ) {
+   }) {
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+         url: `${this.baseUrl}?${this.bindQueryParam(option)}`,  
          data: this.data,
          headers: this.header
       });

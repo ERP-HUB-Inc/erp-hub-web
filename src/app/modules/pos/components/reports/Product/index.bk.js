@@ -18,7 +18,7 @@ export default class ProductList extends List {
     this.colorStockStatus = ["#4cb64c", "#f3a638", "#c72727"];
     this.columns = [
       {
-        title: <this.Translate id="text_product_name" />,
+        title: <this.Translate id="text_item_name" />,
         dataIndex: "name",
         key: "name",
         render: (text, record) => {
