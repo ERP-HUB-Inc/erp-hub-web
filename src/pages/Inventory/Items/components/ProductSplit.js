@@ -4,6 +4,7 @@ import {
     Form,
     Button,
     Spin,
+    Select,
     PageHeader,
     Descriptions
 } from "antd";
@@ -28,7 +29,7 @@ class SplitProduct extends Component {
 
     componentDidMount() {
         this.fetchProduct(this.Util.getLocationId());
-        LocationService.lists()
+        LocationService.get()
         .then(response => {
             if (response.data) {
                 this.setState({locations: response.data.data});
@@ -193,25 +194,22 @@ class SplitProduct extends Component {
         return <div style={{marginBottom: 25}} id="product-split">
             <Spin size="large" tip={<this.Translate id="text_spliting" />} spinning={this.state.submitting}>
                 <PageHeader
-                    style={{
-                        backgroundColor: "#f7f7f7",
-                        paddingLeft: 0,
-                        paddingRight: 0
-                    }}
                     onBack={() => history.goBack()}
-                    title={<this.Translate id="text_slit_product" />}
+                    title={<this.Translate id="text_slit_item" />}
                     subTitle={<this.Translate id="text_slit_product_for_retail_sale" />}
                     extra={[
                         <div style={{display: "flex", alignItems: "center"}} key="1">
-                            <this.Select
-                            name="locationId"
-                            placeholder={this.CATranslate("text_location", this.props.locale)}
-                            dataSource={this.state.locations}
-                            defaultValue={this.Util.getLocationId()}
-                            valueKey="id"
-                            form={this.props.form}
-                            className="filter-location"
-                            onChange={locationId => this.fetchProduct(locationId)} />
+                            <Select
+                              placeholder={this.CATranslate("text_location", this.props.locale)}
+                              defaultValue={this.Util.getLocationId()}
+                              onChange={locationId => this.fetchProduct(locationId)}
+                           >
+                              {
+                                 this.state.locations.map((item, key) => 
+                                    <Select.Option key={key} value={item.id}>{item.name}</Select.Option>
+                                 )
+                              }
+                           </Select>
                             <Button type="primary" icon="scissor" style={{width: 120, marginLeft: 15}} onClick={() => this.handleSubmit()}>
                                 <this.Translate id="text_split" />
                             </Button>

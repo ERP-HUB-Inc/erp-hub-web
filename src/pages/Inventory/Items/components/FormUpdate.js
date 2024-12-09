@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Button,
   Form,
   Spin,
   PageHeader
@@ -173,10 +174,10 @@ export default class ProductUpdate extends BaseComponent {
         }
 
         productVariants.map( (variant) => {
-        variant.price  = Exchange.rielToDollar(variant.price, this.exchangeRate);
-        variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
-        variant.wholePrice = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
-        return variant;
+          variant.price  = Exchange.rielToDollar(variant.price, this.exchangeRate);
+          variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
+          variant.wholePrice = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
+          return variant;
         });
 
         values["variantProducts"] = productVariants;
@@ -243,9 +244,9 @@ export default class ProductUpdate extends BaseComponent {
             title={<this.Translate id="text_item" />}
             subTitle={<this.Translate id="text_edit_item" />}
             extra={[
-              <this.Button key="1" htmlType="submit" loading={this.props.productUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <Button key="1" htmlType="submit" loading={this.props.productUpdate.updating} type="primary" style={{marginLeft: 15}} id="btnSubmit">
                 <this.Translate id="text_save" />(Ctrl+s)
-              </this.Button>
+              </Button>
             ]}
         />
           <FormItem

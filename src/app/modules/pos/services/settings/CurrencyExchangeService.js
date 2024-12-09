@@ -12,7 +12,7 @@ class CurrencyExchangeService extends BaseService {
    getExchangeRate(filter) {
       this.setHeader();
       return this.GET({
-         url: `${this.baseUrl}/lists?limit=1&filter=${filter}&languageId=${this.getLanguageId()}`,
+         url: `${this.baseUrl}/lists?limit=1&filter=${filter}`,
          data: this.data,
          headers: this.header
       });

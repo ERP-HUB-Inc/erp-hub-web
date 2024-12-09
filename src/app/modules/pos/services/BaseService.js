@@ -31,7 +31,7 @@ export default class BaseService extends Service {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}&type=${type}`,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&locationId=${locationId}&type=${type}`,  
       data: this.data,
       headers: this.header
     });
@@ -44,7 +44,7 @@ export default class BaseService extends Service {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists?filter=${filter}&rangFilter=${rangFilter}&type=${type}&languageId=${this.getLanguageId()}`,  
+      url: `${this.baseUrl}/lists?filter=${filter}&rangFilter=${rangFilter}&type=${type}`,  
       data: this.data,
       headers: this.header
     });

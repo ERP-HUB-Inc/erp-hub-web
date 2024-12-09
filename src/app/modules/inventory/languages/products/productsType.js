@@ -20,7 +20,7 @@ export default {
   ],
 
   "text_all_categories": [
-    "All Categories",
+    "All categories",
     "ប្រភេទទាំងអស់"
   ]
 };

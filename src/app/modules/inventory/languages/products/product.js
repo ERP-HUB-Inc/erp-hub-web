@@ -300,13 +300,13 @@ export default {
       "ទំនិញគិតស្តុក"
    ],
 
-   "text_slit_product": [
-      "Split Product",
+   "text_slit_item": [
+      "Split Item",
       "បំបែកផលិតផល"
    ],
 
    "text_slit_product_for_retail_sale": [
-      "Split product for retail sale",
+      "Split item for retail sale",
       "បំបែកផលិតផលសម្រាប់លក់រាយ"
    ],
 

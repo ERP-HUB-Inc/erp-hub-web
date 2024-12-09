@@ -8,6 +8,8 @@ import {
   Col,
   Checkbox,
   Table,
+  Select,
+  Input,
   Pagination
 } from "antd";
 import history from "@router/index";
@@ -66,8 +68,8 @@ export default class ProductList extends Datatable {
                         </this.Link>
                      </Menu.Item>
                      <Menu.Item key={3} className={record.isSplittable ? "" : "hidden"}>
-                        <this.Link to={`/products/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
-                           <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_product" />
+                        <this.Link to={`/inventories/items/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
+                           <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_item" />
                         </this.Link>
                      </Menu.Item>
                      <Divider style={{marginTop: 4, marginBottom: 4}} />
@@ -138,26 +140,10 @@ export default class ProductList extends Datatable {
             title: <this.Translate id="text_retial_price" />,
             key: "price",
             dataIndex: "price",
-            width: 150,
-            align: "center",
+            width: 180,
+            align: "right",
             render: (text, record) => exchangeAndFormatCurrency(Util.getProductPrice(record))
          },
-         // {
-         //    title: <this.Translate id="text_whole_price" />,
-         //    key: "wholePrice",
-         //    dataIndex: "wholePrice",
-         //    width: 150,
-         //    align: "center",
-         //    render: (text, record) => exchangeAndFormatCurrency(Util.getProductWholeSalePrice(record))
-         // },
-         // {
-         //    title: <this.Translate id="text_distribute_price" />,
-         //    key: "distributePrice",
-         //    dataIndex: "distributePrice",
-         //    width: 170,
-         //    align: "center",
-         //    render: (text, record) => exchangeAndFormatCurrency(Util.getProductDistributePrice(record))
-         // }
       ];
       this.formCreate = <FormCreate/>;
       this.callBackOnShowEditForm = this.showFormEdit;
@@ -505,38 +491,43 @@ export default class ProductList extends Datatable {
                         <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_items" /></h3>
                      </Col>
                      <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
-                           <this.InputText
-                              name="key"
+                           <Input
                               placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
                               form={this.props.form}
                               style={{width: 314, marginBottom: 0}}
                               onChange={this.handleSearch}
                               allowClear={true}
                            />
-                           <this.Select
-                              name="categoryId"
+
+                           <Select
+                              showSearch
+                              allowClear
                               placeholder={this.CATranslate("text_all_categories", this.props.locale)}
-                              dataSource={this.categoriesList.concat(this.state.productTypes)}
-                              valueKey="id"
-                              nameKey="name"
-                              allowClear={true}
-                              form={this.props.form}
-                              style={{width: 180, marginLeft: 15, marginBottom: 0}}
                               onChange={this.handleChangeCategory}
-                              defaultValue={null}
-                           />
-                           <this.Select
-                              name="locationId"
-                              dataSource={this.locationList.concat(this.props.locations.list)}
-                              valueKey="id"
-                              nameKey="name"
-                              form={this.props.form}
-                              style={{width: 180, margin: "0 15px"}}
-                              onChange={this.handleChangeLocation}
+                              style={{ width: 180, marginLeft: 15 }}
+                           >
+                              {
+                                 this.categoriesList.concat(this.state.productTypes).map((item, key) => 
+                                    <Option value={item.id}>{item.name}</Option>
+                                 )
+                              }
+                           </Select>
+
+                           <Select
+                              showSearch
+                              allowClear
+                              placeholder={this.CATranslate("text_all_categories", this.props.locale)}
                               defaultValue={0}
-                              allowClear={true}
-                           />
-                           <this.Link to="/inventories/items/create" className="ant-btn ant-btn-primary" style={{marginRight: 15}}>
+                              onChange={this.handleChangeLocation}
+                              style={{ width: 180, margin: "0 15px" }}
+                           >
+                              {
+                                 this.locationList.concat(this.props.locations.list).map((item, key) => 
+                                    <Option value={item.id}>{item.name}</Option>
+                                 )
+                              }
+                           </Select>
+                           <this.Link to="/inventories/items/create" className="ant-btn ant-btn-primary">
                               <this.Translate id="text_add_new" />
                            </this.Link>
                      </Col>

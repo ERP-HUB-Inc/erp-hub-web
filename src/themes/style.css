@@ -234,6 +234,7 @@ html,
 
 .ant-form-item-label label:after {
     content: "";
+    display: none !important;
 }
 
 /*==================INPUT=============*/

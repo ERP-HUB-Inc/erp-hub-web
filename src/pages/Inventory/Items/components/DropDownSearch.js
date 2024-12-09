@@ -107,9 +107,8 @@ export default class DropDownSearch extends Component {
     this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
   }
 
-  handleSearchProduct = (value, isSearchingBarcode = false) => {
-    const searchKey = JSON.stringify({ column: ["name", "namekm", "namebm", "barcode"], value });
-    this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey, this.props.searchFor, isSearchingBarcode));
+  handleSearchProduct = (search, isSearchingBarcode = false) => {
+    this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, search, this.props.searchFor, isSearchingBarcode));
   }
 
   handleKeyDownOnProductSearch = (event) => {

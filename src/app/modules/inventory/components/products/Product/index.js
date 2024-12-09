@@ -66,8 +66,8 @@ export default class ProductList extends List {
                         </this.Link>
                      </Menu.Item>
                      <Menu.Item key={3} className={record.isSplittable ? "" : "hidden"}>
-                        <this.Link to={`/products/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
-                           <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_product" />
+                        <this.Link to={`/inventories/items/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
+                           <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_item" />
                         </this.Link>
                      </Menu.Item>
                      <Divider style={{marginTop: 4, marginBottom: 4}} />

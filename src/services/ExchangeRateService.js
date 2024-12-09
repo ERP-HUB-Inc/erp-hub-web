@@ -11,7 +11,7 @@ class ExchangeRateService extends BaseService {
    getExchangeRate(filter) {
       this.setHeader();
       return this.GET({
-         url: `${this.baseUrl}?limit=1&filter=${filter}&languageId=${this.getLanguageId()}`,
+         url: `${this.baseUrl}?limit=1&filter=${filter}`,
          data: this.data,
          headers: this.header
       });

@@ -183,6 +183,7 @@ function SelectCategory(props) {
     notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
     valueKey="id"
     dataSource={categories}
+    defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchCategory} />;
 }
@@ -746,7 +747,7 @@ export default class FormItem extends BaseModal {
           />
 
           <SelectCategory
-            formData={formData}
+            defaultValue={formData.categoryId}
             placeholder="Choose a category..."
             form={form}
           />
@@ -782,7 +783,7 @@ export default class FormItem extends BaseModal {
             name="enableDescription"
             label={<Translate id="text_enable_pro_des_imei_serial_number" />}
             defaultValue={formData.enableDescription}
-            form={this.props.form}
+            form={form}
           />
 
           <Form.Item
@@ -843,7 +844,7 @@ export default class FormItem extends BaseModal {
             label={
               <div>
                 <div><Translate id="text_status" /></div>
-                <div style={{ fontSize: 13, color: "#888", marginTop: 5 }}>Specify whether this item is currently active or inactive in the system.{formData.status}</div>
+                <div style={{ fontSize: 13, color: "#888" }}>Specify whether this item is currently active or inactive in the system.</div>
               </div>
             }
             dataSource={this.statuses}

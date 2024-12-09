@@ -118,6 +118,11 @@ export default class SiderDemo extends React.Component {
       loader: () => import("../pages/Inventory/Items/components/ProductDetail"),
       loading: () => <StartUp />,
     });
+    const SplitItem = Loadable({
+      loader: () => import("../pages/Inventory/Items/components/ProductSplit"),
+      loading: () => <StartUp />,
+    });
+
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
@@ -311,6 +316,7 @@ export default class SiderDemo extends React.Component {
                     <Route path="/inventories/items/create" component={NewItem} />
                     <Route path="/inventories/items/update/:id" component={EditItem} />
                     <Route path="/inventories/items/view/:id" component={ViewItem} />
+                    <Route path="/inventories/items/split/:productVariantId" component={SplitItem} />
                     <Route path="/inventories/items" component={Item} />
                     <Route path="/inventories/transfers" component={Vendor} />
                     <Route path="/inventories/adjustments" component={Vendor} />

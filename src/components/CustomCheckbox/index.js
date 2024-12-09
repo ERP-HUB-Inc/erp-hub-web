@@ -11,36 +11,32 @@ const StyledSubtitle = styled.div`
   color: ${(props) => props.color || "#888"};
 `;
 
-export class CustomCheckbox extends React.PureComponent {
-  render(){
-    const {getFieldDecorator} = this.props.form;
-    return (
-      <Form.Item style={this.props.style}>
-        {getFieldDecorator(this.props.name, {
-          valuePropName: "checked",
-          initialValue: this.props.defaultValue,
-        })(
-          <React.Fragment>
-            <div style={{lineHeight: 0}}>
-              <Checkbox onChange={this.props.onChange}>
-                {this.props.label}
-                {
-                  this.props.tooltip && 
-                  <Tooltip placement="right" title={this.props.tooltip}>
-                    <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
-                  </Tooltip>
-                }
-              </Checkbox>
-            </div>
-            {this.props.subtitle && <StyledSubtitle>{this.props.subtitle}</StyledSubtitle>}
-          </React.Fragment>
+export function CustomCheckbox(props) {
+  const { getFieldDecorator } = props.form;
+    return (<Form.Item style={props.style}>
+        {getFieldDecorator(props.name, { valuePropName: "checked", initialValue: props.defaultValue })(
+          <Checkbox>
+            {props.label}
+            {
+              props.tooltip && 
+              <Tooltip placement="right" title={props.tooltip}>
+                <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
+              </Tooltip>
+            }
+            {
+              props.subtitle && 
+              <div>
+                <StyledSubtitle>{props.subtitle}</StyledSubtitle>
+              </div>
+            }
+          </Checkbox>
         )}
       </Form.Item>
     );
-  }
 }
 
 CustomCheckbox.defaultProps = {
   name: "checkbox",
-  defaultValue: false 
+  // defaultValue: false 
 };
+

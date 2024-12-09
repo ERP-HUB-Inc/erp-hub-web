@@ -238,6 +238,7 @@ html,
 
 .ant-form-item-label label:after {
     content: "";
+    display: none !important;
 }
 
 .ant-form-horizontal .ant-form-item {

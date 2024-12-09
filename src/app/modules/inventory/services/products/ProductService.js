@@ -37,7 +37,7 @@ class ProductService extends BaseService {
    ) {
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+         url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&locationId=${locationId}`,  
          data: this.data,
          headers: this.header
       });
@@ -73,7 +73,7 @@ class ProductService extends BaseService {
       const languageId = this.getLanguageId();
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}&searchFor=${searchFor}&isSearchingBarcode=${isSearchingBarcode}`,  
+         url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&searchFor=${searchFor}&isSearchingBarcode=${isSearchingBarcode}`,  
          data: this.data,
          headers: this.header
       });
@@ -156,7 +156,7 @@ class ProductService extends BaseService {
    ){
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/${id}?productOption=${productOption}&isIncludeLocation=${isIncludeLocation ? isIncludeLocation : 0}&languageId=${this.getLanguageId()}`,
+         url: `${this.baseUrl}/${id}?productOption=${productOption}&isIncludeLocation=${isIncludeLocation ? isIncludeLocation : 0}`,
          data: this.data,
          headers: this.header
       });

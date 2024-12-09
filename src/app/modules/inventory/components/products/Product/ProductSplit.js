@@ -199,7 +199,7 @@ class SplitProduct extends Component {
                         paddingRight: 0
                     }}
                     onBack={() => history.goBack()}
-                    title={<this.Translate id="text_slit_product" />}
+                    title={<this.Translate id="text_slit_item" />}
                     subTitle={<this.Translate id="text_slit_product_for_retail_sale" />}
                     extra={[
                         <div style={{display: "flex", alignItems: "center"}} key="1">

@@ -49,14 +49,16 @@ export class Select extends React.Component {
         label={<React.Fragment>
           {this.props.label}
           {
-            this.props.tooltip && 
+            this.props.tooltip ?
             <Tooltip placement="right" title={this.props.tooltip}>
               <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
             </Tooltip>
+            :
+            ""
           }
           </React.Fragment>
         }
-        tooltip={this.props.tooltip}
+        colon={false}
         labelAlign="left"
         help={this.props.help}
         className={this.props.className}

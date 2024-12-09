@@ -41,7 +41,7 @@ class EditStock extends React.Component {
    shippingDetailRef = React.createRef();
 
    componentDidMount() {
-      LocationService.listsLocationAccess(10)
+      LocationService.get({ limit: 100 })
       .then(response => {
          if (response && response.data && response.data.data) {
             const locations = response.data.data;
@@ -144,10 +144,14 @@ class EditStock extends React.Component {
                <Row gutter={16}>
                   <Col span={24}>
                      <Form.Item required={true} label={<Translate id="text_location" />}>
-                        <Select placeholder={this.CATranslate("text_location")} value={this.state.locationId} onChange={(value) => this.onChange("locationId", value)}>
+                        <Select
+                           placeholder={this.CATranslate("text_location")}
+                           defaultValue={this.state.locationId}
+                           onChange={(value) => this.onChange("locationId", value)}
+                        >
                            {
                               this.state.locations.map((location, index) => 
-                                 <Option value={location.id} key={index}>{location.name}</Option>
+                                 <Select.Option value={location.id} key={index}>{location.name}{this.state.locationId}</Select.Option>
                               )
                            }
                         </Select>

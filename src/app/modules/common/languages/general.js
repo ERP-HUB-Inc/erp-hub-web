@@ -130,9 +130,9 @@ export default {
 
   text_all: ["All", "ទាំងអស់"],
 
-  text_all_category: ["All Categories", "គ្រប់ប្រភេទ"],
+  text_all_category: ["All categories", "គ្រប់ប្រភេទ"],
 
-  text_all_stores: ["All Stores", "គ្រប់ទីតាំង"],
+  text_all_stores: ["All stores", "គ្រប់ទីតាំង"],
 
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],
 
@@ -334,7 +334,7 @@ export default {
 
   text_all_employee: ["All Employees", "បុគ្គលិកទាំងអស់"],
 
-  text_all_store: ["All Stores", "ហាងទាំងអស់"],
+  text_all_store: ["All stores", "ហាងទាំងអស់"],
 
   text_receipt: ["Receipt", "បង្កាន់ដៃបង់ប្រាក់", "Receipt"],
 

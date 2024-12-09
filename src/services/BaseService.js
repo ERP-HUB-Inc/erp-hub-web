@@ -81,13 +81,13 @@ export default class BaseService extends Service {
    }
 
    get(option = {
-      limit,
-      offset,
-      sortField,
-      sortOrder,
-      filter,
-      search,
-      locationId
+      limit: 15,
+      offset: 0,
+      sortField: "",
+      sortOrder: "",
+      filter: "",
+      search: "",
+      locationId: ""
    }) {
       this.setHeader();
       return this.GET({ 

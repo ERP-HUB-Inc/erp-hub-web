@@ -30,7 +30,7 @@ class StockAdjustmentApproveService extends BaseService {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists/approve?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+      url: `${this.baseUrl}/lists/approve?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&locationId=${locationId}`,  
       data: this.data,
       headers: this.header
     });
