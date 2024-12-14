@@ -61,7 +61,7 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const InvoiceDetail = Loadable({
-      loader: () => import("../app/modules/pos/components/transactions/Invoice/Detail"),
+      loader: () => import("../app/modules/pos/components/transactions/Invoice/Details"),
       loading: () => <StartUp />,
     });
     const NewInoice = Loadable({

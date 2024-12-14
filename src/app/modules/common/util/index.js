@@ -324,7 +324,7 @@ export default class Util {
     return `${unsigne}${result}`;
   }
 
-  formatCurrency(n, currency = "$", position = 0, precision = 2) {
+  formatCurrency(n, currency = "", position = 0, precision = 2) {
     let unsigne = "";
     if (n < 0) {
       n = Math.abs(n);

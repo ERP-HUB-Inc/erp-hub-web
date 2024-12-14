@@ -67,7 +67,7 @@ export default class ProductUpdate extends BaseComponent {
       sweetalert({
         icon: "success",
         title: "Success!",
-        text: "You have saved product!",
+        text: "You have saved item!",
         buttons: false,
         timer: 1500
       });
