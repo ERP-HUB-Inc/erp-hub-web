@@ -1,9 +1,9 @@
 
 
-@import "Responsive.css";
+@import "responsive.css";
 /* @import "Color.scss"; */
-@import "Element.css";
-@import "Font.css";
+@import "element.css";
+@import "font.css";
 
 body {
     margin: 0;
