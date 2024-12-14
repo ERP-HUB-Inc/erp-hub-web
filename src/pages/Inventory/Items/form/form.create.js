@@ -6,7 +6,7 @@ import {
 } from "antd";
 import sweetalert from "sweetalert";
 import BaseComponent from "@components/BaseComponent";
-import FormItem from "./FormItem";
+import FormItem from "./form.item";
 import history from "@router/index";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
@@ -243,6 +243,7 @@ export default class ProductCreate extends BaseComponent {
         <FormItem
           form={form}
           languages={storeLanguage.list}
+          locations={this.props.locations}
           locale={locale}
           dispatch={dispatch}
           switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}

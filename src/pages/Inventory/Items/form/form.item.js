@@ -432,7 +432,7 @@ export default class FormItem extends BaseModal {
       serialType: Enum.SERIAL_TYPE.STANDARD,
       productsType: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
-      isAutoGenerateBarcode: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
+      isAutoGenerateBarcode: true,
       isRequireInputBarcode: true,
       isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
@@ -514,12 +514,16 @@ export default class FormItem extends BaseModal {
   }
 
   componentDidMount() {
-    const {formData} = this.props;
-    if (formData.tag && formData.tag.length){
-      this.setState({tags: formData.tag.split(",")});
-    }
+    this.setState(prevState => {
+      const { formData } = this.props;
+      return {
+        ...prevState,
+        serialType: formData.id ? formData.serialType : prevState.serialType,
+        tags: formData.tag && formData.tag.length ? formData.tag.split(",") : []
+      }
+    });
 
-    const {currency, currencyId}  = this.Util.getSetting();
+    const { currency, currencyId }  = this.Util.getSetting();
 
     if (currency !== "$"){
       ExchangeRateService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
@@ -727,13 +731,18 @@ export default class FormItem extends BaseModal {
           </Col>
 
           <Form.Item label="Enable Auto Barcode">
-            <Switch
-              // defaultChecked={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
-              defaultChecked={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
-              onChange={this.handleEnableAutoBarcode}
-            />
+            {
+              form.getFieldDecorator("isAutoGenerateBarcode", { valuePropName: "checked", initialValue: (formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO })(
+                <Switch
+                  // defaultChecked={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+                  // defaultChecked={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+                  onChange={this.handleEnableAutoBarcode}
+                  disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
+                />
+              )
+            }
           </Form.Item>
-
+        
           <InputText
             name="barcode"
             label={<Translate id="text_barcode" />}
@@ -743,7 +752,7 @@ export default class FormItem extends BaseModal {
             errorRequired={<Translate id="error_require_sku" />}
             max={20}
             form={form}
-            disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+            disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode == true}
           />
 
           <SelectCategory
@@ -791,52 +800,53 @@ export default class FormItem extends BaseModal {
             label={
               <div style={{ textAlign: "left" }}>
                 <div>Choose an item type</div>
-                <div style={{ fontSize: 14, color: "#888", marginTop: 5 }}>Pick the type that matches how this item will be used or managed.</div>
+                <div style={{ fontSize: 13, color: "#888", marginTop: 5 }}>Pick the type that matches how this item will be used or managed.</div>
               </div>
             }
           >
-            <Radio.Group onChange={this.onChangeItemType} style={{ width: "100%" }}>
-              {[Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.NON_INVENTORY].map((value) => (
-                <Radio
-                  key={value}
-                  value={value}
-                  style={{ width: "100%" }} // Hide the default Radio button
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "16px",
-                      border: this.state.serialType === value ? "2px solid #1890ff" : "1px solid #d9d9d9",
-                      borderRadius: 3,
-                      cursor: "pointer",
-                      marginBottom: "8px",
-                      transition: "border-color 0.3s",
-                    }}
-                    onClick={() => this.setState({ serialType: value })}
-                  >
-                    {/* Image on the left */}
-                    <img
-                      src="https://via.placeholder.com/50"
-                      alt={`Option ${value}`}
-                      style={{ borderRadius: "4px", marginRight: "16px" }}
-                    />
+            <div style={{ marginTop: 10 }}>
+              {[Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.NON_INVENTORY].map((value, key) => (
+                <div
+                key={key}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "16px",
+                  border: this.state.serialType === value ? "2px solid #1890ff" : "1px solid #d9d9d9",
+                  borderRadius: 3,
+                  cursor: "pointer",
+                  marginBottom: 15,
+                  transition: "border-color 0.3s",
+                }}
+                onClick={() => this.setState({ serialType: value })}
+              >
+                {/* Image on the left */}
+                <img
+                  src="https://via.placeholder.com/50"
+                  alt={`Option ${value}`}
+                  style={{ borderRadius: "4px", marginRight: "16px" }}
+                />
 
-                    {/* Title and Subtitle on the right */}
-                    <div>
-                      <div style={{ fontWeight: "bold", fontSize: "16px" }}>
-                        {value === Enum.SERIAL_TYPE.STANDARD ? "Good" : "Service"}
-                      </div>
-                      <div style={{ color: "#888", fontSize: "14px" }}>
-                        {value === Enum.SERIAL_TYPE.STANDARD
-                          ? "Physical items like products, materials, or inventory."
-                          : "Non-physical offerings like maintenance, repair, or consulting."}
-                      </div>
-                    </div>
+                {/* Title and Subtitle on the right */}
+                <div style={{ lineHeight: "24px" }}>
+                  <div style={{ fontWeight: "bold", fontSize: "16px" }}>
+                    {value === Enum.SERIAL_TYPE.STANDARD ? "Good" : "Service"}
                   </div>
-                </Radio>
+                  <div style={{ color: "#888", fontSize: "14px" }}>
+                    {value === Enum.SERIAL_TYPE.STANDARD
+                      ? "Physical items like products, materials, or inventory." + this.state.serialType
+                      : "Non-physical offerings like maintenance, repair, or consulting."}
+                  </div>
+                </div>
+              </div>
               ))}
-            </Radio.Group>
+            </div>
+            <InputNumber
+              name="serialType"
+              data={this.state.serialType}
+              form={form}
+              style={{ display: "none" }}
+            />
           </Form.Item>
 
           <Select
@@ -920,9 +930,11 @@ export default class FormItem extends BaseModal {
         >
           <CustomCheckbox
             name="enableInventoryTracking"
+            defaultValue={formData.enableInventoryTracking}
             label={"Track Inventory for this Item"}
             subtitle={"You cannot enable/disable inventory tracking once you've created transactions for this item"}
             tooltip={"Enable this option to track this item's stock based on its sales and purchase transactions."}
+            disabled={this.state.serialType === Enum.SERIAL_TYPE.NON_INVENTORY}
             form={form}
           />
 
@@ -940,18 +952,21 @@ export default class FormItem extends BaseModal {
           <InputText
             name="sku"
             label={"Stock Keeping Unit (SKU)"}
-            data={formData.sku}
+            data={Util.getProductSku(formData)}
             placeholder="SKU code (e.g., ABC123)"
             form={form}
           />
 
-          <InputNumber
-            name="intialStockQuantity"
-            label={"Initial Stock Quantity"}
-            data={formData.intialStockQuantity}
-            placeholder="Enter initial stock quantity"
-            form={form}
-          />
+          {
+            !formData.id && 
+            <InputNumber
+              name="intialStockQuantity"
+              label={"Initial Stock Quantity"}
+              data={formData.intialStockQuantity}
+              placeholder="Enter initial stock quantity"
+              form={form}
+            />
+          }
 
           <InputNumber
             name="reorderPoint"
@@ -961,52 +976,15 @@ export default class FormItem extends BaseModal {
             form={form}
           />
 
-          <CustomFormItem
+          <Select
             name="defaultLocationId"
             label={"Default Warehouse"}
-            subtitle={"Select the primary warehouse where inventory will be stored and managed. This warehouse will be used as the default location for stock allocation, order fulfillment, stock level tracking, and for processing incoming goods from purchase orders."}
-          >
-              <Radio.Group onChange={this.onChangeItemType} style={{ width: "100%" }}>
-                {["Location A", "Location B"].map((value) => (
-                  <Radio
-                    key={value}
-                    value={value}
-                    style={{ width: "100%" }} // Hide the default Radio button
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "16px",
-                        border: this.state.serialType === value ? "2px solid #1890ff" : "1px solid #d9d9d9",
-                        borderRadius: 3,
-                        cursor: "pointer",
-                        marginBottom: "8px",
-                        transition: "border-color 0.3s",
-                      }}
-                      onClick={() => this.setState({ serialType: value })}
-                    >
-                      {/* Image on the left */}
-                      <img
-                        src="https://via.placeholder.com/50"
-                        alt={`Option ${value}`}
-                        style={{ borderRadius: "4px", marginRight: "16px" }}
-                      />
-
-                      {/* Title and Subtitle on the right */}
-                      <div>
-                        <div style={{ fontWeight: "bold", fontSize: "16px" }}>
-                          { value }
-                        </div>
-                        <div style={{ color: "#888", fontSize: "14px" }}>
-                          Physical items like products, materials, or inventory.
-                        </div>
-                      </div>
-                    </div>
-                  </Radio>
-                ))}
-              </Radio.Group>
-          </CustomFormItem>
+            placeholder="Please select default wharehouse"
+            valueKey="id"
+            dataSource={this.props.locations.list}
+            defaultValue={formData.defaultLocationId}
+            form={form}
+          />
         </CustomCollapse>
 
         <CustomCollapse

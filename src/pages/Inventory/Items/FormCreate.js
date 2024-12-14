@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import FormCreatePage from "./components/FormCreate";
+import FormCreatePage from "./form/form.create";
 
 function FormCreateContainer(props) {
   return <FormCreatePage {...props} />;
@@ -29,6 +29,7 @@ function mapStateToProps(state) {
     variantAttributes: state.reducer.variantAttribute.request,
     variantAttributeAdd: state.reducer.variantAttribute.add,
     storeLanguage: state.reducer.storeLanguage.request,
+    locations: state.reducer.location.request,
     locale: state.locale
   };
 }

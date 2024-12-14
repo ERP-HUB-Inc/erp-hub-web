@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import FormUpdatPage from "./components/FormUpdate";
+import FormUpdatPage from "./form/form.update";
 
 function FormUpdateContainer(props) {
   return <FormUpdatPage {...props} />;
@@ -32,6 +32,7 @@ function mapStateToProps(state) {
     variantAttributes: state.reducer.variantAttribute.request,
     variantAttributeAdd: state.reducer.variantAttribute.add,
     storeLanguage: state.reducer.storeLanguage.request.list,
+    locations: state.reducer.location.request,
     locale: state.locale
   };
 }

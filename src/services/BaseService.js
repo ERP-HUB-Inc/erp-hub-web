@@ -59,6 +59,17 @@ export default class BaseService extends Service {
       });
    }
 
+   PATCH(option = {
+      url: "",
+      headers: {},
+      data: {},
+   }) {
+      return axios({
+         method: "PATCH",
+         ...option
+      });
+   }
+
    DELETE(option = {
       url: "",
       headers: {},
@@ -117,16 +128,5 @@ export default class BaseService extends Service {
          headers: this.header
       });
    }
-
-   update(data) {
-      this.setHeader();
-      const {id} = data;
-      return this.PUT({
-         url: `${this.baseUrl}/${id}`,
-         data: {
-         ...data
-         },
-         headers: this.header
-      });
-   }
+   
 }

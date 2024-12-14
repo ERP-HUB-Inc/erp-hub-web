@@ -9,8 +9,9 @@ import sweetalert from "sweetalert";
 import FormCreateOption from "@inventories/Option/FormCreate";
 import FormCreateTax from "@settings/Tax/FormCreate";
 import BaseComponent from "@components/BaseComponent";
-import FormItem from "./FormItem";
+import FormItem from "./form.item";
 import history from "@router/index";
+import { Translate } from "@redux/index";
 import ProductAction from "../redux/action";
 import Enum from "@enums/index";
 import Exchange from "./ExchangeMoneyFunc";
@@ -26,7 +27,7 @@ export default class ProductUpdate extends BaseComponent {
       exchangeRate: 1,
     };
 
-    this.title = <this.Translate id="text_item" />;
+    this.title = <Translate id="text_item" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
@@ -43,6 +44,7 @@ export default class ProductUpdate extends BaseComponent {
     const { id } = this.props.match.params,
     params = new URLSearchParams(this.props.location.search);
     this.props.dispatch(ProductAction.requestAndShowForm({id, productOption: params.get("productOption")}));
+    this.props.dispatch(ProductAction.fetchLocation());
 
     window.addEventListener("keydown", (e) => {
       if (!this.props.productUpdate.updating) {
@@ -101,7 +103,6 @@ export default class ProductUpdate extends BaseComponent {
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        
         if (
           values.productOption === Enum.PRODUCT_VARIANT &&
           this.state.productVariants.length === 0
@@ -152,16 +153,26 @@ export default class ProductUpdate extends BaseComponent {
         ]);
 
         values["id"] = this.props.productDetail.data.id;
-        values["reorderPoint"] = values["reorderPoint"] ? values["reorderPoint"] : 0;
-        values["factoryCost"] = values["factoryCost"] ? values["factoryCost"] : 0;
-        values["shippingFee"] = values["shippingFee"] ? values["shippingFee"] : 0;
         values["tag"] = this.productTags.toString();
-        values["cost"] = values["cost"] ? values["cost"] : 0;
-        values["markup"] = values["markup"] ? values["markup"] : 0;
-        values["price"] = Exchange.rielToDollar(values["price"], this.exchangeRate);
-        values["wholePrice"] = Exchange.rielToDollar(values["wholePrice"], this.exchangeRate);
-        values["distributePrice"] = Exchange.rielToDollar(values["distributePrice"], this.exchangeRate);
-        values["taxes"] = [{taxId: values["taxId"]}];
+        values["cost"] = values["cost"];
+        values["markup"] = values["markup"];
+
+        if (values["price"]) {
+          values["price"] = Exchange.rielToDollar(values["price"], this.exchangeRate);
+        }
+
+        if (values["wholePrice"]) {
+          values["wholePrice"] = Exchange.rielToDollar(values["wholePrice"], this.exchangeRate);
+        }
+
+        if (values["distributePrice"]) {
+          values["distributePrice"] = Exchange.rielToDollar(values["distributePrice"], this.exchangeRate);
+        }
+
+        if (values["taxId"]) {
+          values["taxes"] = [{taxId: values["taxId"]}];
+        }
+
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
 
         const productVariants = this.state.productArchiveVariants.concat(this.state.productVariants);
@@ -241,11 +252,11 @@ export default class ProductUpdate extends BaseComponent {
                 paddingRight: 0
             }}
             onBack={() => history.goBack()}
-            title={<this.Translate id="text_item" />}
-            subTitle={<this.Translate id="text_edit_item" />}
+            title={<Translate id="text_item" />}
+            subTitle={<Translate id="text_edit_item" />}
             extra={[
-              <Button key="1" htmlType="submit" loading={this.props.productUpdate.updating} type="primary" style={{marginLeft: 15}} id="btnSubmit">
-                <this.Translate id="text_save" />(Ctrl+s)
+              <Button key="1" htmlType="submit" title="Ctrl + s" loading={this.props.productUpdate.updating} type="primary" style={{marginLeft: 15}} id="btnSubmit">
+                <Translate id="text_save" />
               </Button>
             ]}
         />
@@ -257,6 +268,7 @@ export default class ProductUpdate extends BaseComponent {
             formData={productDetail.data}
             productLog={productLog}
             productCostLog={productCostLog}
+            locations={this.props.locations}
             switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
             productVariantArchive={this.props.productVariantArchive}
             productVariantCheckStatus={this.props.productVariantCheckStatus}

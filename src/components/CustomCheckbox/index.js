@@ -15,7 +15,7 @@ export function CustomCheckbox(props) {
   const { getFieldDecorator } = props.form;
     return (<Form.Item style={props.style}>
         {getFieldDecorator(props.name, { valuePropName: "checked", initialValue: props.defaultValue })(
-          <Checkbox>
+          <Checkbox disabled={props.disabled}>
             {props.label}
             {
               props.tooltip && 
@@ -34,9 +34,4 @@ export function CustomCheckbox(props) {
       </Form.Item>
     );
 }
-
-CustomCheckbox.defaultProps = {
-  name: "checkbox",
-  // defaultValue: false 
-};
 

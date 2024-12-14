@@ -42,6 +42,18 @@ class ProductService extends BaseService {
       });
    }
 
+   update(data) {
+      this.setHeader();
+      const {id} = data;
+      return this.PATCH({
+         url: `${this.baseUrl}/${id}`,
+         data: {
+         ...data
+         },
+         headers: this.header
+      });
+   }
+
    attributes(id) {
       this.setHeader();
       return this.GET({ 

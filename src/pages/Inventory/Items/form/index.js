@@ -108,21 +108,19 @@ export default class ProductList extends Datatable {
          },
          {
             title: <this.Translate id="text_manage_stock" />,
-            dataIndex: "serialType",
-            key: "serialType",
+            dataIndex: "enableInventoryTracking",
+            key: "enableInventoryTracking",
             width: 150,
             align: "center",
-            render: serialType => {
-               let checked = false
+            render: enableInventoryTracking => {
                let stockTypeStr = <this.Translate id="text_other" />;
-               if (serialType === Enum.SERIAL_TYPE.STANDARD) {
-                  checked = true
+               if (enableInventoryTracking) {
                   stockTypeStr = <this.Translate id="text_inventory" />;
-               } else if (serialType === Enum.SERIAL_TYPE.NON_INVENTORY) {
+               } else {
                   stockTypeStr = <this.Translate id="text_non_inventory" />;
                }
 
-               return <Checkbox checked={checked} />;
+               return <Checkbox checked={enableInventoryTracking} />;
             }
          },
          {
