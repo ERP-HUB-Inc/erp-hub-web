@@ -12,6 +12,7 @@ import {
   Input,
   Pagination
 } from "antd";
+import ReactGA from "react-ga4";
 import history from "@router/index";
 import Exchange from "./ExchangeMoneyFunc";
 import EditStock from "./EditStock";
@@ -525,7 +526,13 @@ export default class ProductList extends Datatable {
                                  )
                               }
                            </Select>
-                           <this.Link to="/inventories/items/create" className="ant-btn ant-btn-primary">
+                           <this.Link to="/inventories/items/create" onClick={() => { 
+                              ReactGA.event({
+                                 category: "Action Button",
+                                 action: "click",
+                                 label: "ERP HUB Web",
+                             });
+                            }} className="ant-btn ant-btn-primary">
                               <this.Translate id="text_add_new" />
                            </this.Link>
                      </Col>

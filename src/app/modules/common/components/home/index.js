@@ -122,7 +122,7 @@ export default class Home extends Component {
           contentValue={
             <CountUp
               start={0}
-              end={revenue}
+              end={revenue ?? 0}
               duration={2}
               separator=","
               decimals={2}
@@ -138,7 +138,7 @@ export default class Home extends Component {
           contentValue={
             <CountUp
               start={0}
-              end={discount}
+              end={discount ?? 0}
               duration={2}
               separator=","
               decimals={2}
@@ -153,7 +153,7 @@ export default class Home extends Component {
         <Board contentValue={
           <CountUp
             start={0}
-            end={revenue - discount}
+            end={(revenue - discount) ?? 0}
             duration={2}
             separator=","
             decimals={2}
@@ -170,7 +170,7 @@ export default class Home extends Component {
           contentValue={
             <CountUp
               start={0}
-              end={this.getDashboardValue(3, "value")}
+              end={this.getDashboardValue(3, "value") ?? 0}
               duration={2}
               separator=","
               decimals={0}

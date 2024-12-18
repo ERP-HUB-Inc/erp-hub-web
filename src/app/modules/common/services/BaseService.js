@@ -84,11 +84,15 @@ export default class BaseService {
       headers: {},
       data: {},
    }) {
-      const response = axios({
-         method: "GET",
-         ...option
-      });
-      return response;
+      try {
+         const response = axios({
+            method: "GET",
+            ...option
+         });
+         return response;  
+      } catch (error) {
+         
+      }
    }
 
    PUT(option = {

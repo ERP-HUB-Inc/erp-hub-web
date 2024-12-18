@@ -1,6 +1,6 @@
 import React from "react";
-import { connect } from "@redux/index";
 import { Form } from "antd";
+import { connect } from "@redux/index";
 import ProductPage from "./form";
 
 function ProductContainer(props) {

@@ -38,7 +38,6 @@ import {
   ActionButton,
   Switchs,
   Waiting,
-  Checkboxs,
   TrashButton,
   Button,
   InputText,
@@ -59,7 +58,6 @@ import {
   SearchButton,
   Radios,
   SelectSearch,
-  SelectTag,
   TagButton,
   MonthsPicker,
   WeekPickers,
@@ -158,7 +156,6 @@ export default class Component extends React.PureComponent {
     this.ActionButton = ActionButton;
     this.Switchs = Switchs;
     this.Waiting = Waiting;
-    this.Checkboxs = Checkboxs;
     this.Checkbox = Checkbox;
     this.CheckboxGroup = CheckboxGroup;
     this.Collapse = Collapse;
@@ -189,7 +186,6 @@ export default class Component extends React.PureComponent {
     this.InputTextArea = InputTextArea;
     this.SearchButton = SearchButton;
     this.SelectSearch = SelectSearch;
-    this.SelectTag = SelectTag;
     this.Tag = TagButton;
     this.TagLabel = Tag;
     this.List = List;

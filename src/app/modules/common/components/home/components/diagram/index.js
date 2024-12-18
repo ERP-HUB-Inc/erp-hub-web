@@ -86,7 +86,7 @@ export default class Diagram extends Component {
     
     filter = JSON.stringify(filter);
       
-    this.props.dispatch(SaleReportAction.fetch(filter, rangFilter));
+    // this.props.dispatch(SaleReportAction.fetch(filter, rangFilter));
   }
 
   render() {

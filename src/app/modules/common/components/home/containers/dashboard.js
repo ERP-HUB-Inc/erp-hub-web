@@ -255,7 +255,7 @@ const Dashboard = () => {
           <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]}>
             <Col lg={24} xs={24}>
               <Row gutter={[16, 16]}>
-                <Col lg={6} sm={24} style={{padding: 12}}>
+                <Col lg={6} sm={24}>
                   <div id="taskDadhboardFirst">
                     <Card bordered={false}>
                       <div className='header-task-item'>
@@ -278,7 +278,7 @@ const Dashboard = () => {
                     </Card>
                   </div>
                 </Col>
-                <Col lg={6} sm={24} style={{padding: 12}}>
+                <Col lg={6} sm={24}>
                   <div id="taskDadhboardFirst">
                     <Card bordered={false}>
                       <div className='header-task-item'>
@@ -298,7 +298,7 @@ const Dashboard = () => {
                     </Card>
                   </div>
                 </Col>
-                <Col lg={6} sm={24} style={{padding: 12}}>
+                <Col lg={6} sm={24}>
                   <div id="taskDadhboardFirst">
                     <Card bordered={false}>
                       <div className='header-task-item'>
@@ -321,7 +321,7 @@ const Dashboard = () => {
                     </Card>
                   </div>
                 </Col>
-                <Col lg={6} sm={24} style={{padding: 12}}>
+                <Col lg={6} sm={24}>
                   <div id="taskDadhboardFirst">
                     <Card bordered={false}>
                       <div className='header-task-item'>
@@ -346,7 +346,7 @@ const Dashboard = () => {
                 </Col>
               </Row>
             </Col>
-            <Col lg={24} xs={24} id="overall-sales" style={{padding: "0px 20px"}}>
+            <Col lg={24} xs={24} id="overall-sales">
               <Card title={<Translate id="text_overall_sales" />} bordered={false} extra={<Icon type="ellipsis" />}>
                 <div className="header-task">
                   <div className="pull-left">
@@ -368,13 +368,13 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div id="mainLinChart">
-                  <div style={{ height: 350, padding: "10px 20px"}}>
+                  <div style={{ height: 350 }}>
                     <Line options={options} data={lineData} />
                   </div>
                 </div>
               </Card>
             </Col>
-            <Col lg={24} xs={24} className="task-line-chart" style={{ padding: "20px 16px" }}>
+            <Col lg={24} xs={24} className="task-line-chart">
               <div id="mainTableList">
                 <Card title={<Translate id="text_top_selling_products" />} bordered={false} extra={<Icon type="ellipsis" />}>
                   <div className="header-task">

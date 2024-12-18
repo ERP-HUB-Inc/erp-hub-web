@@ -1,0 +1,42 @@
+.breadcrumb ul li a span {
+    font-size: 19pt;
+}
+
+.breadcrumb {
+    border-radius: 5px;
+}
+
+.breadcrumb a span {
+    color: #4D4F5C;
+}
+
+.breadcrumb a ,
+.breadcrumb a.breadcrumb-link:active {
+    color: #9A9A9A;
+}
+
+.breadcrumb a:hover {
+    text-decoration: none;
+}
+
+.breadcrumb a { 
+    padding: 3px;
+    text-transform: uppercase;
+}
+
+.breadcrumb a.breadcrumb-link:after {
+    content: "  |";
+}
+
+.breadcrumb a.breadcrumb-link:last-child:after {
+    content: "";
+}
+
+.breadcrumb a a.breadcrumb-link:first-child:after {
+    content: "  >" !important;
+}
+
+h4.breadcrumb-title {
+    text-transform: uppercase;
+    font-size: 15pt;
+}

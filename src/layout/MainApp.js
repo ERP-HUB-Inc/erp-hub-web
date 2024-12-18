@@ -9,7 +9,7 @@ import {
   Router,
   Switch
 } from "react-router-dom";
-import dotenv from "dotenv";
+import ReactGA from "react-ga4";
 import history from "../app/modules/common/router/history";
 import Util from "../app/modules/common/util";
 import configureStore from "../app/store/configureStore";
@@ -17,6 +17,7 @@ import Localization from "../app/localization";
 import StartUp from "../app/modules/common/components/StartUp";
 import './NewSidebar.css'
 import { ERPHub } from '../components';
+import Item from "../pages/Inventory/Items";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -25,6 +26,12 @@ export default class SiderDemo extends React.Component {
    state = {
      collapsed: false,
    };
+
+   componentDidMount() {
+      ReactGA.initialize("G-1MQDE7W3RC");
+      // Send pageview with a custom path
+      ReactGA.send({ hitType: "pageview", page: "/landingpage", title: "Landing Page" });
+   }
  
    toggle = () => {
      this.setState({
@@ -37,7 +44,6 @@ export default class SiderDemo extends React.Component {
    }
  
    render() {
-    dotenv.config();
     let store = configureStore();
     store = new Localization(store);
     
@@ -102,10 +108,10 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
-    const Item = Loadable({
-      loader: () => import("../pages/Inventory/Items"),
-      loading: () => <StartUp />,
-    });
+    // const Item = Loadable({
+    //   loader: () => import("../pages/Inventory/Items"),
+    //   loading: () => <StartUp />,
+    // });
     const NewItem = Loadable({
       loader: () => import("../pages/Inventory/Items/FormCreate"),
       loading: () => <StartUp />,

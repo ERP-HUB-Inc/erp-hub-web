@@ -9,7 +9,6 @@ import {
   Router,
   Switch
 } from "react-router-dom";
-import dotenv from "dotenv";
 import history from "../app/modules/common/router/history";
 import Util from "../app/modules/common/util";
 import configureStore from "../app/store/configureStore";
@@ -45,7 +44,6 @@ export default class SiderDemo extends React.Component {
    }
  
    render() {
-    dotenv.config();
     let store = configureStore();
     store = new Localization(store);
 
