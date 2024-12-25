@@ -172,20 +172,19 @@ export default class FormVariant extends BaseModal {
         key: "action",
         align: "center",
         width: 100,
-        render: (text, record, index) => {
+        render: (_, record, index) => {
           return <div className="wrap-variant-action">
-            <this.Switchs
+            {/* <this.Switchs
               name={`variantProductStatus[${index}]`}
               checked={record.status}
               onChange={(checked) => this.handleChangeProductVariantStatus(checked, index, record.quantity)}
-              form={this.props.form} />
-            <this.Button
+              form={this.props.form} /> */}
+            <Button
               loading={index === this.state.productVariantToDelete.productVariantRow && this.props.productVariantCheckStatus.fetching}
               type="danger"
-              className="delete-variant-item"
-              onClick={() => this.handleRemoveProductVariant(index, record.id)}>
-              <span className="icon-delete" style={{fontSize: "15pt"}}></span>
-            </this.Button>
+              icon="delete"
+              shape="circle"
+              onClick={() => this.handleRemoveProductVariant(index, record.id)} />
           </div>;
         }
       }

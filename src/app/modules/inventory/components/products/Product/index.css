@@ -47,16 +47,6 @@
     display: flex
 }
 
-.product-type-content .delete-variant-item {
-    margin-left: 15px;
-    padding-left: 8px;
-    padding-right: 6px
-}
-
-.product-type-content .delete-variant-item span {
-    font-size: 15pt
-}
-
 .product-type-content  .btn-add-product-compsite{
     padding-left: 8px;
     padding-right: 8px;

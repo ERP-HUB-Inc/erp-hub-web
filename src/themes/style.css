@@ -719,12 +719,6 @@ color: #4D4F5C;
     border-radius: 3px
 }
 
-/* UPLOAD IMAGE */
-.ant-upload.ant-upload-select-picture-card {
-    width: 100% !important;
-    /* height: 180px !important */
-}
-
 /* DATERANGE PICKER */
 .ant-calendar-range-bottom .ant-calendar-range-quick-selector a {
     color: rgb(24, 144, 255) !important;
