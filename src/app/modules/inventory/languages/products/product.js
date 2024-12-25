@@ -255,11 +255,6 @@ export default {
       "​អ្នក​អាច upload file ដោយ"
    ],
 
-   "input_product_variant_name": [
-      "Variant Name",
-      "ឈ្មោះ"
-   ],
-
    "text_search_product": [
       "Search product",
       "ស្ងែង​រក​ផលិតផល"
@@ -405,7 +400,7 @@ export default {
       "សមាសធាតុមួយកើតពីផលិតផលមួយឬច្រើន។ វាមាន SKU មួយប៉ុន្តែវាកាត់ស្តុកចេញពី សមាសធាតុផលិតចូលរួម"
    ],
 
-   "btn_product_add_another_attribute": [
+   "text.add.another.attribute": [
       "Add another attribute",
       "បញ្ចូលលក្ខណៈផ្សេង"
    ],

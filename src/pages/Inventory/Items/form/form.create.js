@@ -240,6 +240,7 @@ export default class ProductCreate extends BaseComponent {
               <this.Translate id="text_save" />(Ctrl+s)
             </Button>
           ]} />
+          
         <FormItem
           form={form}
           languages={storeLanguage.list}

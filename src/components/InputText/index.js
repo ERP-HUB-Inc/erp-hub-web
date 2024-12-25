@@ -25,6 +25,7 @@ export class InputText extends React.Component {
         wrapperCol={this.props.wrapperCol}
         help={this.props.help}
         validateStatus={this.props.validateStatus}
+        hasFeedback={!!this.props.data}
         style={this.props.style}
         className={this.props.className}>
         {

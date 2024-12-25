@@ -16,10 +16,10 @@ class ConsignmentService extends BaseService {
         });
     }
 
-    async getReportByProduct(search = "", sellerId = "", start = "", end="", isExport = false) {
+    async getReportByProduct(search = "", supplierId = "", start = "", end="", isExport = false) {
         this.setHeader();
         return this.GET({
-            url: `${this.baseUrl}/summary_by_products?search=${search}&sellerId=${sellerId}&startDate=${start}&endDate=${end}&isExport=${isExport}`,
+            url: `${this.baseUrl}/summary_by_products?search=${search}&supplierId=${supplierId}&startDate=${start}&endDate=${end}&isExport=${isExport}`,
             headers: this.header
         });
     }

@@ -96,7 +96,7 @@ class SplitProduct extends Component {
                 productVariantId: ItemHelper.getProductVariantId(data),
                 quantity: 0,
                 cost: 0,
-                unitId: data.defaultUnitId,
+                unitId: data.stockUnitId,
                 unitName: data.unit.name
             };
         };

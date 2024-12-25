@@ -20,7 +20,7 @@ import Datatable from "@layout/Datatable";
 import CommonUtil from "@common/util";
 import Util from "@helper/inventory";
 import Enum from "@enums/index";
-import FormCreate from "../FormCreate";
+import FormCreate from "../form.create";
 import ProductAction from "../redux/action";
 import Constant from "../redux/constant";
 import ProductService from "@services/ProductService";
@@ -37,14 +37,14 @@ export default class ProductList extends Datatable {
          loading: false,
          brands: [],
          locations: [],
-         productTypes: [],
+         categories: [],
          products: [],
          pagination: {},
          dataSourceToPrint: []
       };
       this.editStockRef = React.createRef();
       this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-      this.categoriesList = [{name: <this.Translate id="text_all_categories"/>, id: null}];
+      this.categoriesList = [{name: <this.Translate id="text_all_categories"/>, id: 0}];
       this.stockList = [
          {name: <this.Translate id="text_all_stock"/>, id: 0},
          {name: <this.Translate id="text_in_stock"/>, id: 1},
@@ -105,7 +105,7 @@ export default class ProductList extends Datatable {
             dataIndex: "category",
             key: "category",
             width: 140,
-            render: category => category.name
+            render: category => category?.name
          },
          {
             title: <this.Translate id="text_manage_stock" />,
@@ -130,9 +130,8 @@ export default class ProductList extends Datatable {
             key: "quantity",
             width: 130,
             align: "right",
-            render: (quantity, record) => {
-               quantity = this.calculateTotalQuantity(record);
-               return `${quantity} ${record.unit.name}`;
+            render: (_, record) => {
+               return `${this.calculateTotalQuantity(record)} ${record?.unitOfMeasurement?.name}`;
             }
          },
          {
@@ -175,7 +174,7 @@ export default class ProductList extends Datatable {
          CategoryService.get(500, 0, "name", "ASC")
          .then(response => {
             if (response && response.data) {
-               this.setState({productTypes: response.data.data});
+               this.setState({categories: response.data.data});
             }
          });
 
@@ -502,11 +501,12 @@ export default class ProductList extends Datatable {
                               showSearch
                               allowClear
                               placeholder={this.CATranslate("text_all_categories", this.props.locale)}
+                              defaultValue={0}
                               onChange={this.handleChangeCategory}
                               style={{ width: 180, marginLeft: 15 }}
                            >
                               {
-                                 this.categoriesList.concat(this.state.productTypes).map((item, key) => 
+                                 this.categoriesList.concat(this.state.categories).map((item, key) => 
                                     <Option value={item.id}>{item.name}</Option>
                                  )
                               }

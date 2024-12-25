@@ -34,6 +34,14 @@ class VariantService extends BaseService {
     });
   }
 
+  getVariantsByItemId(itemId) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/${itemId}/items`,
+      headers: this.header
+    });
+  }
+
   checkIsAvailableForArchive(id){
     this.setHeader();
     return this.GET({ 

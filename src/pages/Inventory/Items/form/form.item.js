@@ -35,12 +35,14 @@ import CategoryService from "@services/CategoryService";
 import BrandService from "@services//BrandService";
 import UnitService from "@services/UnitService";
 import ProductService from "@services/ProductService";
+import VariantService from "@services/VariantService";
 import ProductConditionService from "@services/ProductConditionService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import BaseModal from "@layout/BaseModal";
 import Exchange from "./ExchangeMoneyFunc";
 import "./index.css";
+import FormVariant from "./form.variant";
 
 function SelectBrand(props) {
   const limit = 15;
@@ -227,12 +229,13 @@ function SelectUnitOfMeasurement(props) {
   }, [])
 
   return <SelectSearch
-    name="defaultUnitId"
+    name="unitOfMeasurementId"
     label={"Unit of Measurement (UOM) (e.g., kg, piece, meter)"}
     placeholder={"Select the unit of measurement (e.g., kg, piece, meter)"}
     notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
     valueKey="id"
     dataSource={units}
+    defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchUnit}
   />;
@@ -277,12 +280,13 @@ function SelectSellingUnit(props) {
   }, [])
 
   return <SelectSearch
-    name="sellingUnitId"
+    name="sellUnitId"
     label={"Selling Unit"}
     placeholder={"Select the unit in which the product is sold (e.g., piece, box, pack)"}
     notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
     valueKey="id"
     dataSource={units}
+    defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchUnit}
   />;
@@ -333,6 +337,7 @@ function SelectStockUnit(props) {
     notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
     valueKey="id"
     dataSource={units}
+    defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchUnit}
   />;
@@ -350,7 +355,7 @@ function SelectOwner(props) {
     timeout = setTimeout(() => {
       if (search) {
         setLoading(true);
-        VendorService.get(limit, 0, "", "", "", JSON.stringify({column: ["name"], value: search}))
+        VendorService.get({ limit, search })
         .then(response => {
           if (response && response.data) {
             setOwners([{id: "", name: "N/A"}].concat(response.data.data));
@@ -377,15 +382,66 @@ function SelectOwner(props) {
   }, [])
 
   return <SelectSearch
-    name="sellerId"
-    // label={<Translate id="text_owner" />}
+    name="supplierId"
     label={"Owned by Supplier"}
     placeholder={props.placeholder}
     notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
     valueKey="id"
     dataSource={owners}
+    defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchOwner}
+  />;
+}
+
+function SelectPreferredSupplier(props) {
+  const limit = 15;
+  
+  const [loading, setLoading] = React.useState(false);
+  const [items, setItems] = React.useState([]);
+
+  let timeout = null;
+  const onSearch = search => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (search) {
+        setLoading(true);
+        VendorService.get({ limit, search })
+        .then(response => {
+          if (response && response.data) {
+            setItems([{id: "", name: "N/A"}].concat(response.data.data));
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      }
+    }, 1000);
+  };
+
+  React.useEffect(() => {
+    setLoading(true);
+    VendorService.get(limit)
+    .then(response => {
+      if (response && response.data) {
+        setItems(response.data.data);
+      }
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+  }, [])
+
+  return <SelectSearch
+    name="preferredSupplierId"
+    label={"Preferred Supplier"}
+    placeholder={props.placeholder}
+    notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
+    valueKey="id"
+    dataSource={items}
+    defaultValue={props.defaultValue}
+    form={props.form}
+    onSearch={onSearch}
   />;
 }
 
@@ -431,6 +487,7 @@ export default class FormItem extends BaseModal {
     this.state = {
       serialType: Enum.SERIAL_TYPE.STANDARD,
       productsType: [],
+      variants: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
       isAutoGenerateBarcode: true,
       isRequireInputBarcode: true,
@@ -514,8 +571,9 @@ export default class FormItem extends BaseModal {
   }
 
   componentDidMount() {
+    const { formData } = this.props;
+
     this.setState(prevState => {
-      const { formData } = this.props;
       return {
         ...prevState,
         serialType: formData.id ? formData.serialType : prevState.serialType,
@@ -534,7 +592,16 @@ export default class FormItem extends BaseModal {
         }
       });
     } else {
-      this.setState({exchangeRate: 1});
+      this.setState({ exchangeRate: 1 });
+    }
+
+    if (formData.id) {
+      VariantService.getVariantsByItemId(formData.id)
+      .then(response => {
+        if (response?.data) {
+          this.setState({ variants: response.data });
+        }
+      })
     }
   }
 
@@ -712,7 +779,7 @@ export default class FormItem extends BaseModal {
               data={formData.name}
               placeholder="Enter item name..."
               errorRequired={<Translate id="error_require_name" />}
-              errorLenght={<Translate id="input_error_products_name" />}
+              errorLenght={<Translate id="text.error.item.length" />}
               isAutoFocus={true}
               required={true}
               form={form}
@@ -725,7 +792,7 @@ export default class FormItem extends BaseModal {
                 data={formData.namekm}
                 placeholder={this.CATranslate("text_item_name", locale)}
                 errorRequired={<Translate id="error_require_name" />}
-                errorLenght={<Translate id="input_error_products_name" />}
+                errorLenght={<Translate id="text.error.item.length" />}
                 form={form}
                 suffix={this.getLanguageIcon("km")}/>
           </Col>
@@ -748,7 +815,7 @@ export default class FormItem extends BaseModal {
             label={<Translate id="text_barcode" />}
             data={Util.getProductBarcode(formData)}
             placeholder="Scan or type the barcode here..."
-            required={this.state.isRequireInputBarcode}
+            // required={this.state.isRequireInputBarcode}
             errorRequired={<Translate id="error_require_sku" />}
             max={20}
             form={form}
@@ -922,6 +989,36 @@ export default class FormItem extends BaseModal {
               form={form}
             />
         </CustomCollapse>
+        
+        <CustomCollapse
+            headerTitle={"Variants"}
+            subtitle={"Manage product variations like size, color, and style while setting custom pricing and stock levels for each option."}
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <FormVariant
+              currentUser={currentUser}
+              dispatch={dispatch}
+              form={form}
+              locale={locale}
+              formData={formData}
+              exchangeRate={exchangeRate}
+              getPrecisionByCurrency={(length) => this.getPrecisionByCurrency(length)}
+              switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+              productVariantArchive={this.props.productVariantArchive}
+              productVariantCheckStatus={this.props.productVariantCheckStatus}
+              productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+              productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
+              callBackGetProductAttribute={this.props.callBackGetProductAttribute}
+              callBackGetProductVariant={this.props.callBackGetProductVariant}
+              handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
+              handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
+              productVariants={this.state.variants}
+              productAttributes={formData.productAttributes}
+              variantAttributes={this.props.variantAttributes}
+              variantAttributeAdd={variantAttributeAdd}
+              handleAddVariantAttribute={this.props.handleAddVariantAttribute}
+            />
+        </CustomCollapse>
 
         <CustomCollapse
           headerTitle={"Inventory Details"}
@@ -993,32 +1090,29 @@ export default class FormItem extends BaseModal {
           collapseStyle={{ marginTop: "30px" }}
         >
           <SelectOwner
-            formData={formData}
+            defaultValue={formData.supplierId}
             placeholder={this.CATranslate("text_owner", locale)}
             form={form}
           />
 
           <InputNumber
-              name="supplierConsignmentPercentage"
+              name="supplierPercentage"
               label={"Percentage for Supplier on Sale"}
               placeholder={"0.00"}
-              data={formData.supplierConsignmentPercentage}
+              data={formData.supplierPercentage}
               form={form}
           />
 
-          <Select
-              name="supplierId"
-              label={"Preferred Supplier"}
-              placeholder={"Select your preferred supplier from the list"}
-              dataSource={[{name: <Translate id="text_day" />, value: "DAY"}]}
-              defaultValue={formData.supplierId}
-              form={form}
+          <SelectPreferredSupplier
+            defaultValue={formData.preferredSupplierId}
+            placeholder={"Select your preferred supplier from the list"}
+            form={form}
           />
 
           <InputText
-            name="supplierCode"
+            name="supplierItemCode"
             label={"Supplier Item Code"}
-            data={formData.supplierCode}
+            data={formData.supplierItemCode}
             placeholder="Enter the item code provided by the supplier"
             form={form}
           />
@@ -1057,17 +1151,17 @@ export default class FormItem extends BaseModal {
           />
 
           <SelectUnitOfMeasurement
-            formData={formData}
+            defaultValue={formData.unitOfMeasurementId}
             form={form}
           />
 
           <SelectSellingUnit
-            formData={formData}
+            defaultValue={formData.sellUnitId}
             form={form}
           />
 
           <SelectStockUnit
-            formData={formData}
+            defaultValue={formData.stockUnitId}
             form={form}
           />
 
@@ -1129,13 +1223,13 @@ export default class FormItem extends BaseModal {
           <SelectBrand
             placeholder={"Select item brand..."}
             form={form}
-            formData={formData}
+            defaultValue={formData.brandId}
           />
 
           <SelectManufacturer
             placeholder={"Select item manufacturer..."}
             form={form}
-            formData={formData}
+            defaultValue={formData.manufacturerId}
           />
 
           <Form.Item label={<Translate id="text_specification" />}>
@@ -1191,7 +1285,7 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     description:"",
-    defaultUnitId: "",
+    stockUnitId: "",
     brandId: "",
     categoryId: "",
     serialType: "",

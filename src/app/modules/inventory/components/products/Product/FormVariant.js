@@ -35,7 +35,7 @@ export default class FormVariant extends Modal {
     };
     this.columns = [
       {
-        title: <this.Translate id="input_product_variant_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name"
       },
@@ -1266,7 +1266,7 @@ export default class FormVariant extends Modal {
           attributeLength < 3 || attributeLength === 0 ?
             <this.Col md="12" className="btn-addcontact">
               <this.Button onClick={this.handleAddProductAttribute}>
-                <span className="icon-add"></span> <span><this.Translate id="btn_product_add_another_attribute" /></span>
+                <span className="icon-add"></span> <span><this.Translate id="text.add.another.attribute" /></span>
               </this.Button>
             </this.Col>
             :

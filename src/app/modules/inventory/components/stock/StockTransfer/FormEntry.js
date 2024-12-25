@@ -232,7 +232,7 @@ export default class FormEntry extends Modal {
       existingProductList.push({
         transferEntryId: "",
         productName,
-        unitId: product.defaultUnitId,
+        unitId: product.stockUnitId,
         variantName: productVariant.name,
         allQuantity: quantity,
         productVariants: productVariantForCalculateQTY,
@@ -262,7 +262,7 @@ export default class FormEntry extends Modal {
           transferEntryId: "",
           productName,
           variantName: productVariant.name,
-          unitId: product.defaultUnitId,
+          unitId: product.stockUnitId,
           allQuantity: quantity,
           productVariants: productVariantForCalculateQTY,
           productVariantId: productVariant.id,

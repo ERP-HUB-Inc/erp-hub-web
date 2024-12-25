@@ -113,7 +113,7 @@ export default class SiderDemo extends React.Component {
     //   loading: () => <StartUp />,
     // });
     const NewItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/FormCreate"),
+      loader: () => import("../pages/Inventory/Items/form.create"),
       loading: () => <StartUp />,
     });
     const EditItem = Loadable({

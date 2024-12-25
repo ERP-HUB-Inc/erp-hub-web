@@ -76,6 +76,7 @@ export default class InputNumber extends React.Component {
           </React.Fragment>
         }
         validateStatus={this.props.validateStatus}
+        hasFeedback={!!this.props.data}
         help={this.props.errorMsg}
         style={this.props.style}
       >

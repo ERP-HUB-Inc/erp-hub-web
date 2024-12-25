@@ -41,6 +41,16 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.container.ModuleFederationPlugin({
+      name: 'host',
+      remotes: {
+        remoteApp: 'remoteApp@http://localhost:3001/remoteEntry.js', // Remote project URL
+      },
+      shared: {
+        react: { singleton: true, eager: true },
+        'react-dom': { singleton: true, eager: true },
+      },
+    }),
     new Dotenv({ path: "./.env" }), // Loads environment variables from .env file
     new HtmlWebpackPlugin({
       title: "ERP HUB", // Title for HTML

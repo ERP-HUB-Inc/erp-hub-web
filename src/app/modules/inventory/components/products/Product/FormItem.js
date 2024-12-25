@@ -171,7 +171,7 @@ function SelectUnit(props) {
         className={isEdit ? "hidden" : ""}
         form={props.form} />
       <SelectSearch
-        name="defaultUnitId"
+        name="stockUnitId"
         label={<Translate id="text_unit" />}
         placeholder={props.placeholder}
         notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
@@ -223,7 +223,7 @@ function SelectOwner(props) {
         className={isEdit ? "hidden" : ""}
         form={props.form} />
       <SelectSearch
-        name="sellerId"
+        name="supplierId"
         label={<Translate id="text_owner" />}
         placeholder={props.placeholder}
         notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
@@ -499,7 +499,7 @@ export default class FormItem extends Modal {
                   data={formData.name}
                   placeholder={this.CATranslate("text_item_name", locale)}
                   errorRequired={<this.Translate id="error_require_name" />}
-                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  errorLenght={<this.Translate id="text.error.item.length" />}
                   isAutoFocus={true}
                   required={true}
                   form={form}
@@ -513,7 +513,7 @@ export default class FormItem extends Modal {
                   data={formData.namekm}
                   placeholder={this.CATranslate("text_item_name", locale)}
                   errorRequired={<this.Translate id="error_require_name" />}
-                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  errorLenght={<this.Translate id="text.error.item.length" />}
                   form={form}
                   suffix={this.getLanguageIcon("km")}/>
               </this.Col>
@@ -929,7 +929,7 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     description:"",
-    defaultUnitId: "",
+    stockUnitId: "",
     brandId: "",
     categoryId: "",
     serialType: "",

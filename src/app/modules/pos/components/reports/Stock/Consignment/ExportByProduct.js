@@ -6,13 +6,13 @@ import {
 } from "antd";
 import ConsignmentService from "../../../../services/report/ConsignmentService";
 
-function ExportFormLoader({search, sellerId, startDate, endDate}) {
+function ExportFormLoader({search, supplierId, startDate, endDate}) {
   const [loading, setLoading] = React.useState(false);
   const [result, setResult] = React.useState(null);
   React.useEffect(() => {
     try {
       setLoading(true);
-      ConsignmentService.getReportByProduct(search, sellerId, startDate, endDate, true)
+      ConsignmentService.getReportByProduct(search, supplierId, startDate, endDate, true)
       .then(response => {
         if (response.data) {
           setResult(response.data);

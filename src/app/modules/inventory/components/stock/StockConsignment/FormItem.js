@@ -141,7 +141,7 @@ class FormItem extends React.PureComponent {
     } else {
       this.setState({
         formData: {
-          sellerId: "",
+          supplierId: "",
           locationId: this.util.getLocationId(),
           date: moment(),
           status: "Draft",
@@ -205,7 +205,7 @@ class FormItem extends React.PureComponent {
 
         const consignment = {
           locationId: values.locationId,
-          sellerId: values.sellerId,
+          supplierId: values.supplierId,
           description: "",
           date: values.date ? moment(values.date).format("YYYY-MM-DD") : "",
           status: values.status
@@ -396,12 +396,12 @@ class FormItem extends React.PureComponent {
             <Row id="purchase-order-form" gutter={40}>
               <Col md={6}>
                 <Select 
-                  name="sellerId"
+                  name="supplierId"
                   label={<Translate id="text_seller" />}
                   placeholder={`${stringTranslate("text_seller", this.props.locale)}`}
                   valueKey="id"
                   required={true}
-                  defaultValue={formData.sellerId}
+                  defaultValue={formData.supplierId}
                   dataSource={this.state.sellers}
                   form={this.props.form}/>
 

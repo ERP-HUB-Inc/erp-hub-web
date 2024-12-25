@@ -31,7 +31,7 @@ function ReportConsignmentByProduct(props) {
 
   const fetchReport = () => {
     let search = "",
-      sellerId = "",
+    supplierId = "",
       startDate = util.formatDateForMYSQL(fromValue),
       endDate = util.formatDateForMYSQL(toValue);
 
@@ -40,8 +40,8 @@ function ReportConsignmentByProduct(props) {
       search = params.get("search");
     }
 
-    if (params.get("sellerId")) {
-      sellerId = params.get("sellerId");
+    if (params.get("supplierId")) {
+      supplierId = params.get("supplierId");
     }
 
     if (params.get("start")) {
@@ -53,7 +53,7 @@ function ReportConsignmentByProduct(props) {
     }
 
     setLoading(true);
-    ConsignmentService.getReportByProduct(search, sellerId, startDate, endDate)
+    ConsignmentService.getReportByProduct(search, supplierId, startDate, endDate)
       .then(response => {
         setData(response.data);
       })
@@ -63,9 +63,9 @@ function ReportConsignmentByProduct(props) {
 
   const onChangeSelect = value => {
     if (value) {
-      params.set("sellerId", value);
+      params.set("supplierId", value);
     } else {
-      params.delete("sellerId");
+      params.delete("supplierId");
     }
     util.pushParamsToURL(pathname, params.toString());
 
@@ -121,8 +121,8 @@ function ReportConsignmentByProduct(props) {
       props.form.setFieldsValue({ search: params.get("search") });
     }
 
-    if (params.get("sellerId")) {
-      props.form.setFieldsValue({ sellerId: params.get("sellerId") });
+    if (params.get("supplierId")) {
+      props.form.setFieldsValue({ supplierId: params.get("supplierId") });
     }
 
     if (params.get("start")) {
@@ -164,7 +164,7 @@ function ReportConsignmentByProduct(props) {
             <div id="selectDrop">
               <Select
                 showSearch
-                name="sellerId"
+                name="supplierId"
                 style={{ width: 200, marginRight: 15 }}
                 placeholder="Select seller"
                 onChange={onChangeSelect}
@@ -197,7 +197,7 @@ function ReportConsignmentByProduct(props) {
         <Col md={24}>
           <ExportConsignmentProduct
             search={props.form.getFieldValue("search")}
-            sellerId={props.form.getFieldValue("sellerId")}
+            supplierId={props.form.getFieldValue("supplierId")}
             startDate={fromValue.format(formatDate)}
             endDate={toValue.format(formatDate)} />
         </Col>

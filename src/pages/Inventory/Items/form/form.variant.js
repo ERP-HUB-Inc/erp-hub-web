@@ -1,6 +1,7 @@
 import React from "react";
-import { Icon } from "antd";
+import { Button, Icon } from "antd";
 import _ from "lodash";
+import { Translate } from "@redux/index";
 import { UploadImageCrop } from "@components/UploadImageCrop";
 import BaseModal from "@layout/BaseModal";
 import ProductAction from "../redux/action";
@@ -32,7 +33,7 @@ export default class FormVariant extends BaseModal {
     };
     this.columns = [
       {
-        title: <this.Translate id="input_product_variant_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name"
       },
@@ -69,12 +70,10 @@ export default class FormVariant extends BaseModal {
         title: <this.Translate id="text_retial_price" />,
         dataIndex: "price",
         key: "price",
-        align: "right",
         width: 120,
         render: (price, record, index) => {
           return <this.InputNumber
             name={`variantProductPrice[${index}]`}
-            className="text-right"
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
@@ -88,12 +87,10 @@ export default class FormVariant extends BaseModal {
         title: <this.Translate id="text_whole_price" />,
         dataIndex: "wholePrice",
         key: "wholePrice",
-        align: "right",
         width: 120,
         render: (wholePrice, record, index) => {
           return <this.InputNumber
             name={`variantProductWholePrice[${index}]`}
-            className="text-right"
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
@@ -107,12 +104,10 @@ export default class FormVariant extends BaseModal {
         title: <this.Translate id="text_distribute_price" />,
         dataIndex: "distributePrice",
         key: "distributePrice",
-        align: "right",
         width: 150,
         render: (distributePrice, record, index) => {
           return <this.InputNumber
             name={`variantProductDistributePrice[${index}]`}
-            className="text-right"
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
@@ -123,7 +118,7 @@ export default class FormVariant extends BaseModal {
         }
       },
       {
-        title: <this.Translate id="text_photo" />,
+        title: <this.Translate id="text_image" />,
         dataIndex: "image",
         key: "image",
         align: "center",
@@ -1262,9 +1257,9 @@ export default class FormVariant extends BaseModal {
         {
           attributeLength < 3 || attributeLength === 0 ?
             <this.Col md="12" className="btn-addcontact">
-              <this.Button onClick={this.handleAddProductAttribute}>
-                <span className="icon-add"></span> <span><this.Translate id="btn_product_add_another_attribute" /></span>
-              </this.Button>
+              <Button icon="plus" onClick={this.handleAddProductAttribute}>
+                <Translate id="text.add.another.attribute" />
+              </Button>
             </this.Col>
             :
             ""
