@@ -8,7 +8,6 @@ import {
   Input,
   Tooltip,
   Icon,
-  Radio,
   Row,
   Col,
   Switch
@@ -27,7 +26,6 @@ import {
   SelectSearch,
   UploadImageCrop,
   CustomCollapse,
-  CustomFormItem,
   CustomCheckbox
 } from "@components/index";
 import ProductAction from "../redux/action";
@@ -562,12 +560,7 @@ export default class FormItem extends BaseModal {
         value: 0
       }
     ];
-
-    this.onChange = this.onChange.bind(this);
-    this.onCangeIsAutoGenerateCode = this.onCangeIsAutoGenerateCode.bind(this);
-    this.onChangeTab = this.onChangeTab.bind(this);
-    this.getProductImageFromCallBack = this.getProductImageFromCallBack.bind(this);
-    this.handleChangeType = this.handleChangeType.bind(this);
+    this.timer = null;
   }
 
   componentDidMount() {
@@ -596,7 +589,7 @@ export default class FormItem extends BaseModal {
     }
 
     if (formData.id) {
-      VariantService.getVariantsByItemId(formData.id)
+      VariantService.getVariantsByItemId({ itemId: formData.id })
       .then(response => {
         if (response?.data) {
           this.setState({ variants: response.data });
@@ -605,11 +598,11 @@ export default class FormItem extends BaseModal {
     }
   }
 
-  getProductImageFromCallBack(value) {
+  getProductImageFromCallBack = (value) => {
     this.props.form.setFieldsValue({image: value});
   } 
 
-  onChangeTab(activeKey) {
+  onChangeTab = (activeKey) => {
     const {dispatch, formData} = this.props;
     const productVariantId = formData.productVariants.length > 0 ? formData.productVariants[0].id : "";
     if ((activeKey - this.TAB_PRODUCT_COST_LOG) === 0) {
@@ -619,7 +612,7 @@ export default class FormItem extends BaseModal {
     }
   }
 
-  onChange(e) {
+  onChange = (e) => {
     this.setState({
       productTypeIndex: e.target.value
     });
@@ -635,7 +628,7 @@ export default class FormItem extends BaseModal {
     }
   }
 
-  onCangeIsAutoGenerateCode(value) {
+  onCangeIsAutoGenerateCode = (value) => {
     if (value === this.Enum.GENERATE_PRODUCT_CODE.AUTO) {
       this.props.form.setFieldsValue({
         barcode: ""
@@ -650,7 +643,20 @@ export default class FormItem extends BaseModal {
     this.props.dispatch(ProductAction.switchTypeOfGenerateSKU(value));
   }
 
-  handleChangeType(value) {
+  onSearchVariant = (e) => {
+    const search = e.target.value;
+    
+    clearTimeout(this.timer);
+
+    this.timer = setTimeout(() => {
+       VariantService.getVariantsByItemId({ itemId: this.props.formData.id, search })
+       .then(response => {
+        this.setState({ variants: response.data })
+       })
+    }, 800);
+ }
+
+  handleChangeType = (value) => {
     if (value === Enum.TYPE_OF_PRODUCT.RAW_MATERIAL) {
       this.setState({productOptionClassDisabled: "disabled-click"});
     } else {
@@ -1013,6 +1019,7 @@ export default class FormItem extends BaseModal {
               handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
               handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
               productVariants={this.state.variants}
+              onSearch={this.onSearchVariant}
               productAttributes={formData.productAttributes}
               variantAttributes={this.props.variantAttributes}
               variantAttributeAdd={variantAttributeAdd}

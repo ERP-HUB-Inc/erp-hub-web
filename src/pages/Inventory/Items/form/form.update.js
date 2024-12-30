@@ -138,10 +138,6 @@ export default class ProductUpdate extends BaseComponent {
         }
 
         this.Util.clearObjProperty(values, [
-          "variantProductCode",
-          "variantProductCost",
-          "variantProductPrice",
-          "variantProductStatus",
           "attributeId",
           "productName",
           "language",
@@ -174,24 +170,20 @@ export default class ProductUpdate extends BaseComponent {
         }
 
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
-
-        const productVariants = this.state.productArchiveVariants.concat(this.state.productVariants);
-
-        ///display Updated product price
-        if (productVariants && productVariants.length) {
-          this.props.form.setFieldsValue({price: productVariants[0].price});
-          this.props.form.setFieldsValue({wholePrice: productVariants[0].wholePrice});
-          this.props.form.setFieldsValue({distributePrice: productVariants[0].distributePrice});
-        }
-
-        productVariants.map( (variant) => {
-          variant.price  = Exchange.rielToDollar(variant.price, this.exchangeRate);
-          variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
-          variant.wholePrice = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
-          return variant;
+        
+        values["variantProducts"] = values.variantId.map((variantId, index) => {
+          return {
+            id: variantId,
+            name: values.variantName[index],
+            price: values.variantRetailPrice[index],
+            wholePrice: values.variantWholesalePrice[index],
+            distributePrice: values.variantDistributionPrice[index],
+            barcode: values.variantBarcode[index],
+            sku: values.variantSku[index],
+            productAttributeValueId: values.variantAttributeValueId[index],
+            reorderPoint: values.variantAttributeValueId[index]
+          }
         });
-
-        values["variantProducts"] = productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.update(values));

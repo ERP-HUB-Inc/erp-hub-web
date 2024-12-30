@@ -489,52 +489,52 @@ export default class ProductList extends Datatable {
                         <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_items" /></h3>
                      </Col>
                      <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
-                           <Input
-                              placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
-                              form={this.props.form}
-                              style={{width: 314, marginBottom: 0}}
-                              onChange={this.handleSearch}
-                              allowClear={true}
-                           />
+                        <Input
+                           placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
+                           form={this.props.form}
+                           style={{width: 314, marginBottom: 0}}
+                           onChange={this.handleSearch}
+                           allowClear={true}
+                        />
 
-                           <Select
-                              showSearch
-                              allowClear
-                              placeholder={this.CATranslate("text_all_categories", this.props.locale)}
-                              defaultValue={0}
-                              onChange={this.handleChangeCategory}
-                              style={{ width: 180, marginLeft: 15 }}
-                           >
-                              {
-                                 this.categoriesList.concat(this.state.categories).map((item, key) => 
-                                    <Option value={item.id}>{item.name}</Option>
-                                 )
-                              }
-                           </Select>
+                        <Select
+                           showSearch
+                           allowClear
+                           placeholder={this.CATranslate("text_all_categories", this.props.locale)}
+                           defaultValue={0}
+                           onChange={this.handleChangeCategory}
+                           style={{ width: 180, marginLeft: 15 }}
+                        >
+                           {
+                              this.categoriesList.concat(this.state.categories).map((item, key) => 
+                                 <Option value={item.id}>{item.name}</Option>
+                              )
+                           }
+                        </Select>
 
-                           <Select
-                              showSearch
-                              allowClear
-                              placeholder={this.CATranslate("text_all_categories", this.props.locale)}
-                              defaultValue={0}
-                              onChange={this.handleChangeLocation}
-                              style={{ width: 180, margin: "0 15px" }}
-                           >
-                              {
-                                 this.locationList.concat(this.props.locations.list).map((item, key) => 
-                                    <Option value={item.id}>{item.name}</Option>
-                                 )
-                              }
-                           </Select>
-                           <this.Link to="/inventories/items/create" onClick={() => { 
-                              ReactGA.event({
-                                 category: "Action Button",
-                                 action: "click",
-                                 label: "ERP HUB Web",
-                             });
-                            }} className="ant-btn ant-btn-primary">
-                              <this.Translate id="text_add_new" />
-                           </this.Link>
+                        <Select
+                           showSearch
+                           allowClear
+                           placeholder={this.CATranslate("text_all_categories", this.props.locale)}
+                           defaultValue={0}
+                           onChange={this.handleChangeLocation}
+                           style={{ width: 180, margin: "0 15px" }}
+                        >
+                           {
+                              this.locationList.concat(this.props.locations.list).map((item, key) => 
+                                 <Option value={item.id}>{item.name}</Option>
+                              )
+                           }
+                        </Select>
+                        <this.Link to="/inventories/items/create" onClick={() => { 
+                           ReactGA.event({
+                              category: "Action Button",
+                              action: "click",
+                              label: "ERP HUB Web",
+                           });
+                           }} className="ant-btn ant-btn-primary">
+                           <this.Translate id="text_add_new" />
+                        </this.Link>
                      </Col>
                   </Row>
 

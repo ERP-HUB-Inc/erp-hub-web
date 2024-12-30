@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Icon } from "antd";
+import { Button, Input, Icon } from "antd";
 import _ from "lodash";
+import { InputText, InputNumber } from "@components/index"
 import { Translate } from "@redux/index";
 import { UploadImageCrop } from "@components/UploadImageCrop";
 import BaseModal from "@layout/BaseModal";
@@ -33,92 +34,113 @@ export default class FormVariant extends BaseModal {
     };
     this.columns = [
       {
-        title: <this.Translate id="text_name" />,
+        title: <Translate id="text_name" />,
         dataIndex: "name",
         key: "name"
       },
       {
-        title: <this.Translate id="text_product_sku" />,
+        title: <Translate id="text_product_sku" />,
         dataIndex: "sku",
         key: "sku",
         width: 120,
         render: (sku, record, index) => {
-          return <this.InputText
-            name={`variantProductSku[${index}]`}
-            placeholder={this.CATranslate("text_product_sku", this.props.locale)}
-            data={sku}
-            handleKeyUp={(e) => this.handleOnChangeSKU(e, index)}
-            form={this.props.form}/>;
+          return <>
+            <InputText
+              name={`variantId[${index}]`}
+              data={record.id}
+              className="hidden"
+              form={this.props.form}
+            />
+            <InputText
+              name={`variantName[${index}]`}
+              data={record.name}
+              className="hidden"
+              form={this.props.form}
+            />
+            <InputText
+              name={`variantAttributeValueId[${index}]`}
+              data={record.productAttributeValueId}
+              className="hidden"
+              form={this.props.form}
+            />
+            <InputText
+              name={`variantSku[${index}]`}
+              placeholder={this.CATranslate("text_product_sku", this.props.locale)}
+              data={sku}
+              // handleKeyUp={(e) => this.handleOnChangeSKU(e, index)}
+              form={this.props.form}
+            />
+          </>;
         }
       },
       {
-        title: <this.Translate id="text_barcode" />,
+        title: <Translate id="text_barcode" />,
         dataIndex: "barcode",
         key: "barcode",
         width: 120,
         render: (barcode, record, index) => {
-          return <this.InputText
-            name={`variantProductCode[${index}]`}
+          return <InputText
+            name={`variantBarcode[${index}]`}
             placeholder={this.CATranslate("text_barcode", this.props.locale)}
             data={barcode}
             disabled={record.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
-            handleKeyUp={(e) => this.handleOnChangeBarcode(e, index)}
+            // handleKeyUp={(e) => this.handleOnChangeBarcode(e, index)}
             form={this.props.form}/>;
         }
       },
       {
-        title: <this.Translate id="text_retial_price" />,
+        title: <Translate id="text_retial_price" />,
         dataIndex: "price",
         key: "price",
         width: 120,
-        render: (price, record, index) => {
-          return <this.InputNumber
-            name={`variantProductPrice[${index}]`}
+        render: (price, _, index) => {
+          return <InputNumber
+            name={`variantRetailPrice[${index}]`}
             isAutoSelect={true}
             isHideTool={true}
-            errorRequired={<this.Translate id="error_require_price" />}
+            errorRequired={<Translate id="error_require_price" />}
             data={price}
             precision={this.props.getPrecisionByCurrency()}
-            handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
+            // handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
             form={this.props.form} />;
         }
       },
       {
-        title: <this.Translate id="text_whole_price" />,
+        title: <Translate id="text_whole_price" />,
         dataIndex: "wholePrice",
         key: "wholePrice",
         width: 120,
-        render: (wholePrice, record, index) => {
-          return <this.InputNumber
-            name={`variantProductWholePrice[${index}]`}
+        render: (wholePrice, _, index) => {
+          return <InputNumber
+            name={`variantWholesalePrice[${index}]`}
             isAutoSelect={true}
             isHideTool={true}
-            errorRequired={<this.Translate id="error_require_price" />}
+            errorRequired={<Translate id="error_require_price" />}
             data={wholePrice}
             precision={this.props.getPrecisionByCurrency()}
-            handleKeyUp={(e) => this.handleOnChangePrice(e, index, "wholePrice")}
+            // handleKeyUp={(e) => this.handleOnChangePrice(e, index, "wholePrice")}
             form={this.props.form}/>;
         }
       },
       {
-        title: <this.Translate id="text_distribute_price" />,
+        title: <Translate id="text_distribute_price" />,
         dataIndex: "distributePrice",
         key: "distributePrice",
         width: 150,
-        render: (distributePrice, record, index) => {
-          return <this.InputNumber
-            name={`variantProductDistributePrice[${index}]`}
+        render: (distributePrice, _, index) => {
+          return <InputNumber
+            name={`variantDistributionPrice[${index}]`}
             isAutoSelect={true}
             isHideTool={true}
-            errorRequired={<this.Translate id="error_require_price" />}
+            errorRequired={<Translate id="error_require_price" />}
             data={distributePrice}
             precision={this.props.getPrecisionByCurrency()}
-            handleKeyUp={(e) => this.handleOnChangePrice(e, index, "distributePrice")}
+            // handleKeyUp={(e) => this.handleOnChangePrice(e, index, "distributePrice")}
             form={this.props.form} />;
         }
       },
       {
-        title: <this.Translate id="text_image" />,
+        title: <Translate id="text_image" />,
         dataIndex: "image",
         key: "image",
         align: "center",
@@ -167,7 +189,7 @@ export default class FormVariant extends BaseModal {
         }
       },
       {
-        title: <this.Translate id="text_action" />,
+        title: <Translate id="text_action" />,
         dataIndex: "action",
         key: "action",
         align: "center",
@@ -189,22 +211,9 @@ export default class FormVariant extends BaseModal {
         }
       }
     ];
-    this.confirmTextAction = <this.Translate id="text_delete_confirm_variant_product" />;
-    this.confirmTitle = <this.Translate id="delete_variant_warning" />;
-    this.handleOnChangeAttribute = this.handleOnChangeAttribute.bind(this);
-    this.handleOnChangePrice = this.handleOnChangePrice.bind(this);
-    this.actionConfirmResponseMsg = <this.Translate id="text_not_allow_to_delete_product_has_quantity" />;
-    this.handleKeyDownAttributeValue = this.handleKeyDownAttributeValue.bind(this);
-    this.handleOnRemoveLozengeItem = this.handleOnRemoveLozengeItem.bind(this);
-    this.handleAddProductAttribute = this.handleAddProductAttribute.bind(this);
-    this.handleAddProductVariant = this.handleAddProductVariant.bind(this);
-    this.handleRemoveProductVariant = this.handleRemoveProductVariant.bind(this);
-    this.handleCallBackAddAttribute = this.handleCallBackAddAttribute.bind(this);
-    this.handleDeleteProductAttribute = this.handleDeleteProductAttribute.bind(this);
-    this.handleFocusOnAttributeValue = this.handleFocusOnAttributeValue.bind(this);
-    this.handleOnFocusOutAttributeValue = this.handleOnFocusOutAttributeValue.bind(this);
-    this.handleChangeProductVariantStatus = this.handleChangeProductVariantStatus.bind(this);
-    this.syncInputTableWithProductVariant = this.syncInputTableWithProductVariant.bind(this);
+    this.confirmTextAction = <Translate id="text_delete_confirm_variant_product" />;
+    this.confirmTitle = <Translate id="delete_variant_warning" />;
+    this.actionConfirmResponseMsg = <Translate id="text_not_allow_to_delete_product_has_quantity" />;
   }
 
   responseAfterUpload = (response,index) => {
@@ -448,6 +457,7 @@ export default class FormVariant extends BaseModal {
           return variant;
         });
       }
+
       productAttributes = _.sortBy(productAttributes, ["createdAt"]);
       this.setState({
         variantAttributeList: productAttributes,
@@ -480,7 +490,7 @@ export default class FormVariant extends BaseModal {
         variantAttributeList[this.state.addAttributeRowIndex]["attributeId"] = variantAttributeAdd.response.data.id;
       }
 
-      this.setState({variantAttributeList});
+      this.setState({ variantAttributeList });
 
       this.props.form.setFieldsValue({[`attributeId[${this.state.addAttributeRowIndex}]`]: variantAttributeAdd.response.data.id});
       
@@ -491,7 +501,7 @@ export default class FormVariant extends BaseModal {
     if (this.props.switchAutoGenerateSKU.switched) {
       const productVariantList = this.state.productVariantList;
       const isAutoGenerateBarcode = this.props.switchAutoGenerateSKU.value;
-      productVariantList.forEach((productVariant, index) => {
+      productVariantList.forEach((_, index) => {
         productVariantList[index]["isAutoGenerateBarcode"] = isAutoGenerateBarcode;
       });
       this.setState({productVariantList});
@@ -508,7 +518,7 @@ export default class FormVariant extends BaseModal {
     this.props.dispatch(ProductAction.fetchVariantAttributes(100));
   }
 
-  handleChangeProductVariantStatus(checked, productVariantRow, quantity) {
+  handleChangeProductVariantStatus = (checked, productVariantRow, quantity) => {
     if (!checked) {
       if (quantity > 0) {
         this.Message.warning(this.CATranslate("deactive_product_variant_warning", this.props.locale));
@@ -520,10 +530,10 @@ export default class FormVariant extends BaseModal {
     }
   }
 
-  handleOnChangePrice(event, index, fieldName = "price") {
+  handleOnChangePrice = (event, index, fieldName = "price") => {
     const productVariantList = this.state.productVariantList;
     productVariantList[index][fieldName] = parseFloat(event.target.value);
-    this.setState({productVariantList});
+    this.setState({ productVariantList });
   }
 
   handleOnChangeBarcode(event, index) {
@@ -536,7 +546,7 @@ export default class FormVariant extends BaseModal {
     productVariantList[index]["sku"] = event.target.value;
   }
 
-  syncInputTableWithProductVariant() {
+  syncInputTableWithProductVariant = () => {
     this.state.productVariantList.forEach((productVariant, index) => {
       if (productVariant.status === this.Enum.ACTIVE) {
         this.props.form.setFieldsValue({[`variantProductCode[${index}]`]: productVariant.barcode});
@@ -936,19 +946,19 @@ export default class FormVariant extends BaseModal {
     };
   }
 
-  handleFocusOnAttributeValue() {
+  handleFocusOnAttributeValue = () => {
     this.props.form.setFieldsValue({isFocusOnVariantInput: 1});
   }
 
-  handleOnFocusOutAttributeValue() {
+  handleOnFocusOutAttributeValue = () => {
     this.props.form.setFieldsValue({isFocusOnVariantInput: 0});
   }
 
-  handleCallBackAddAttribute(index) {
+  handleCallBackAddAttribute = (index) => {
     this.setState({addAttributeRowIndex: index});
   }
 
-  handleDeleteProductAttribute(index) {
+  handleDeleteProductAttribute = (index) => {
     const variantAttributeList = this.state.variantAttributeList;
     let productVariantList = this.state.productVariantList;
     if (variantAttributeList[index]["id"] === "") {
@@ -972,14 +982,14 @@ export default class FormVariant extends BaseModal {
     });
   }
 
-  handleOnChangeAttribute(index, value) {
+  handleOnChangeAttribute = (index, value) => {
     const variantAttributeList = this.state.variantAttributeList;
     variantAttributeList[index]["attributeId"] = value;
     this.setState({variantAttributeList});
     document.getElementById(`lozenge-item${index}`).focus();
   }
 
-  handleKeyDownAttributeValue(event, index) {
+  handleKeyDownAttributeValue = (event, index) => {
     const variantAttributeList = this.state.variantAttributeList;
     const variantAttributeLength = variantAttributeList.length;
     const attributeValue = event.target.value + "".trim();
@@ -1039,7 +1049,7 @@ export default class FormVariant extends BaseModal {
     }
   }
 
-  handleOnRemoveLozengeItem(index, inputIndex) {
+  handleOnRemoveLozengeItem = (index, inputIndex) => {
     const variantAttributeList = this.state.variantAttributeList;
     let productVariantList = this.state.productVariantList;
     const productAttributeValueId = variantAttributeList[inputIndex]["attributeValues"][index]["id"];
@@ -1096,7 +1106,7 @@ export default class FormVariant extends BaseModal {
     document.getElementById(`lozenge-item${inputIndex}`).focus();
   }
 
-  handleAddProductAttribute() {
+  handleAddProductAttribute = () => {
     const existingVariantAttributes = this.state.variantAttributeList;
     
     existingVariantAttributes.push({
@@ -1116,7 +1126,7 @@ export default class FormVariant extends BaseModal {
     }
   }
 
-  handleAddProductVariant(variantAttributeKey) {
+  handleAddProductVariant = (variantAttributeKey) => {
     const existingVariantAttributes = this.state.variantAttributeList;
 
     existingVariantAttributes.forEach((variantAttribute, key) => {
@@ -1141,7 +1151,7 @@ export default class FormVariant extends BaseModal {
     this.props.dispatch(ProductAction.archiveVariant(this.state.productVariantToDelete.id));
   }
 
-  handleRemoveProductVariant(productVariantRow, id) {
+  handleRemoveProductVariant = (productVariantRow, id) => {
     if (id !== "") {
       this.setState({
         productVariantToDelete: {
@@ -1177,7 +1187,7 @@ export default class FormVariant extends BaseModal {
     return (
       <this.Select
         name={`attributeId[${variantAttributeKey}]`}
-        label={variantAttributeKey === 0 ? <span><this.Translate id="text_attribute" /> <this.Translate id="text_attribute_example" /></span> : ""}
+        label={variantAttributeKey === 0 ? <span><Translate id="text_attribute" /> <Translate id="text_attribute_example" /></span> : ""}
         placeholder="Select attribute"
         valueKey="id"
         dataSource={this.state.variantAttributes}
@@ -1193,7 +1203,7 @@ export default class FormVariant extends BaseModal {
     const attributeLength = this.countProductAttribute(this.state.variantAttributeList);
     return (
       <this.Row>
-        <this.InputNumber
+        <InputNumber
           name="isFocusOnVariantInput"
           form={this.props.form}
           className="hidden"
@@ -1211,7 +1221,7 @@ export default class FormVariant extends BaseModal {
                       variantAttributeKey === 0 ?
                         <div className="ant-form-item-label">
                           <label htmlFor="lozenge-item[0]">
-                            <span><this.Translate id="label_attrib_value" /></span>
+                            <span><Translate id="label_attrib_value" /></span>
                           </label>
                         </div>
                         :
@@ -1264,13 +1274,20 @@ export default class FormVariant extends BaseModal {
             ""
         }
         <this.Col md="12">
+          <Input
+            placeholder={"Search variant name, sku and barcode"}
+            form={this.props.form}
+            style={{width: 314, marginBottom: 0}}
+            onChange={this.props.onSearch}
+            allowClear={true}  
+          />
           <this.Table
             rowKey="name"
             rowClassName={record => record.status === this.Enum.ARCHIVE ? "hidden" : ""}
             dataSource={this.state.productVariantList}
             loading={this.props.productAttributeValueCheckStatus.fetching}
             columns={this.columns}
-            locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}} />
+            locale={{emptyText: <Translate id="placeholder_table_variant_product" />}} />
         </this.Col>
         {this.renderModalConfirmAction()}
       </this.Row>

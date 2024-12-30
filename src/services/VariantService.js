@@ -34,10 +34,10 @@ class VariantService extends BaseService {
     });
   }
 
-  getVariantsByItemId(itemId) {
+  getVariantsByItemId(option = { itemId, search }) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/${itemId}/items`,
+      url: `${this.baseUrl}/${option.itemId}/items?search=${option.search ?? ""}`,
       headers: this.header
     });
   }
