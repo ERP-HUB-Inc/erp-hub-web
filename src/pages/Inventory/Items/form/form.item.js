@@ -31,6 +31,7 @@ import {
 import ProductAction from "../redux/action";
 import CategoryService from "@services/CategoryService";
 import BrandService from "@services//BrandService";
+import ManufacturerService from "@services/ManufacturerService";
 import UnitService from "@services/UnitService";
 import ProductService from "@services/ProductService";
 import VariantService from "@services/VariantService";
@@ -85,6 +86,7 @@ function SelectBrand(props) {
     placeholder={props.placeholder}
     notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
     valueKey="id"
+    defaultValue={props.defaultValue}
     dataSource={brands}
     form={props.form}
     onSearch={onSearchBrand}
@@ -96,17 +98,17 @@ function SelectManufacturer(props) {
 
   const [loading, setLoading] = React.useState(false);
 
-  const [brands, setBrands] = React.useState([]);
+  const [data, setData] = React.useState([]);
   
   let timeout = null;
   
-  const onSearchBrand = search => {
+  const onSearch = search => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       BrandService.get({ limit, search } )
         .then(response => {
           if (response && response.data) {
-            setBrands(response.data.data);
+            setData(response.data.data);
           }
         })
         .finally(() => {
@@ -117,10 +119,10 @@ function SelectManufacturer(props) {
 
   React.useEffect(() => {
     setLoading(true);
-    BrandService.get({ limit })
+    ManufacturerService.get({ limit })
     .then(response => {
       if (response && response.data) {
-        setBrands(response.data.data);
+        setData(response.data.data);
       }
     })
     .finally(() => {
@@ -134,9 +136,10 @@ function SelectManufacturer(props) {
     placeholder={props.placeholder}
     notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
     valueKey="id"
-    dataSource={brands}
+    defaultValue={props.defaultValue}
+    dataSource={data}
     form={props.form}
-    onSearch={onSearchBrand}
+    onSearch={onSearch}
   />;
 }
 
@@ -150,8 +153,8 @@ function SelectCategory(props) {
     timeout = setTimeout(() => {
       if (search) {
         setLoading(true);
-        CategoryService.get(limit, 0, "", "", "", JSON.stringify({column: ["name", "namekm"], value: search}))
-        .then(response => {
+        CategoryService.get({ limit, search })
+        .then(response => { console.log('response:', response)
           if (response && response.data) {
             setCategories(response.data.data);
           }
@@ -944,7 +947,7 @@ export default class FormItem extends BaseModal {
           <InputNumber
               name="price"
               label={<Translate id="text_retial_price" />}
-              data={Exchange.dollarToRiel(Util.getProductPrice(formData), exchangeRate)}
+              data={Exchange.dollarToRiel(Util.getItemPrice(this.state.variants), exchangeRate)}
               precision={this.getPrecisionByCurrency()}
               placeholder={"0.00"}
               errorRequired={<Translate id="error_require_price" />}
@@ -955,7 +958,7 @@ export default class FormItem extends BaseModal {
           <InputNumber
               name="wholePrice"
               label={<Translate id="text_whole_price" />}
-              data={Exchange.dollarToRiel(Util.getProductWholeSalePrice(formData), exchangeRate)}
+              data={Exchange.dollarToRiel(Util.getItemWholeSalePrice(this.state.variants), exchangeRate)}
               precision={this.getPrecisionByCurrency()}
               placeholder={"0.00"}
               form={form}
@@ -964,7 +967,7 @@ export default class FormItem extends BaseModal {
           <InputNumber
               name="distributePrice"
               label={<Translate id="text_distribute_price" />}
-              data={Exchange.dollarToRiel(Util.getProductDistributePrice(formData), exchangeRate)}
+              data={Exchange.dollarToRiel(Util.getItemDistributePrice(this.state.variants), exchangeRate)}
               precision={this.getPrecisionByCurrency()}
               placeholder={"0.00"}
               form={form}

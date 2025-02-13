@@ -171,7 +171,7 @@ export default class ProductUpdate extends BaseComponent {
 
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
         
-        values["variantProducts"] = values.variantId.map((variantId, index) => {
+        values["variantProducts"] = values?.variantId?.map((variantId, index) => {
           return {
             id: variantId,
             name: values.variantName[index],

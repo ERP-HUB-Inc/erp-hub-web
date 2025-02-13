@@ -80,6 +80,18 @@ class ItemHelper {
     return this.isValidProductVariant(product) && product.productVariants[0].distributePrice ? product.productVariants[0].distributePrice : 0;
   }
 
+  getItemPrice(variants = []) {
+    return variants[0]?.price || 0;
+  }
+
+  getItemWholeSalePrice(variants = []) {
+    return variants[0]?.wholePrice || 0;
+  }
+
+  getItemDistributePrice(variants = []) {
+    return variants[0]?.distributePrice || 0;
+  }
+
   getProductCost(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].cost : 0;
   }

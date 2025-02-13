@@ -547,7 +547,7 @@ const exchangeAndFormatToRiel = (price) => {
    return commonUtil.formatCurrency(commonUtil.toValidKHMoney(Exchange.dollarToRiel(price, exchangeRate)), "៛", 1, 0);
 };
 
-const currencyIsDollar = commonUtil.getSetting().currency === "$";
+const currencyIsDollar = commonUtil.getSetting()?.currency === "$";
 const exchangeAndFormatCurrency = currencyIsDollar ? exchangeAndFormatToDollar : exchangeAndFormatToRiel;
 
 class ColumnExpand extends List {
