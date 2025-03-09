@@ -20,6 +20,7 @@ module.exports = {
       '@components': path.resolve(SRC_DIR, 'components'),
       '@layout': path.resolve(SRC_DIR, 'layout'),
       '@helper': path.resolve(SRC_DIR, 'helper'),
+      '@model': path.resolve(SRC_DIR, 'model'),
       '@enums': path.resolve(SRC_DIR, 'enums'),
       '@router': path.resolve(SRC_DIR, 'router'),
       '@services': path.resolve(SRC_DIR, 'services'),

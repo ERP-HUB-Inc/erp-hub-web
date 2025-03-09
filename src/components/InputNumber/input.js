@@ -65,7 +65,17 @@ export default class InputNumber extends React.Component {
     const {getFieldDecorator} = this.props.form;
     return (
       <Form.Item
-        label={<React.Fragment>
+        // label={<React.Fragment>
+        //   {this.props.label}
+        //   {
+        //     this.props.tooltip && 
+        //     <Tooltip placement="right" title={this.props.tooltip}>
+        //       <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
+        //     </Tooltip>
+        //   }
+        //   </React.Fragment>
+        // }
+        label={this.props.tooltip ? <React.Fragment>
           {this.props.label}
           {
             this.props.tooltip && 
@@ -73,8 +83,7 @@ export default class InputNumber extends React.Component {
               <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
             </Tooltip>
           }
-          </React.Fragment>
-        }
+          </React.Fragment> : this.props.label}
         validateStatus={this.props.validateStatus}
         hasFeedback={!!this.props.data}
         help={this.props.errorMsg}

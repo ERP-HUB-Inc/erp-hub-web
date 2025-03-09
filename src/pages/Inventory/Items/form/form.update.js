@@ -166,24 +166,24 @@ export default class ProductUpdate extends BaseComponent {
         }
 
         if (values["taxId"]) {
-          values["taxes"] = [{taxId: values["taxId"]}];
+          values["taxes"] = [{ taxId: values["taxId"] }];
         }
 
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
-        
-        values["variantProducts"] = values?.variantId?.map((variantId, index) => {
+        values["productVariants"] = values?.variantId?.map((variantId, index) => {
           return {
             id: variantId,
             name: values.variantName[index],
             price: values.variantRetailPrice[index],
-            wholePrice: values.variantWholesalePrice[index],
-            distributePrice: values.variantDistributionPrice[index],
-            barcode: values.variantBarcode[index],
-            sku: values.variantSku[index],
-            productAttributeValueId: values.variantAttributeValueId[index],
-            reorderPoint: values.variantAttributeValueId[index]
+            wholePrice: values?.variantWholePrice?.[index],
+            distributePrice: values?.variantDistributePrice?.[index],
+            barcode: values.variantBarcode?.[index],
+            sku: values.variantSku?.[index],
+            reorderPoint: values?.variantReorderPoint?.[index],
+            status: values?.variantStatus?.[index],
           }
         });
+        
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.update(values));

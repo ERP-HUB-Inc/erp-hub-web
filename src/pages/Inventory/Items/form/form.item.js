@@ -154,7 +154,7 @@ function SelectCategory(props) {
       if (search) {
         setLoading(true);
         CategoryService.get({ limit, search })
-        .then(response => { console.log('response:', response)
+        .then(response => {
           if (response && response.data) {
             setCategories(response.data.data);
           }
@@ -759,23 +759,14 @@ export default class FormItem extends BaseModal {
       url: this.Util.getProductImage(formData.image).url
     };
 
-    const radioStyle = {
-      display: 'block',
-      height: '40px',
-      width: '100%',
-      lineHeight: '30px',
-      display: "none"
-    };
-
-    const selectedValue = 1;
-
     return (<Row gutter={[16, 16]}>
       <Col 
-        md={16}
-        offset={4}
-        // xs={{ span: 12, offset: 0, push: 0 }}
-        // sm={{ span: 12, offset: 0, push: 0 }}
-        // md={{ span: 14, offset: 5, push: 5 }}
+        // md={16}
+        // offset={4}
+        xs={{ span: 24, offset: 0 }}  // Small screens (phones)
+        sm={{ span: 20, offset: 2 }}  // Tablets
+        md={{ span: 16, offset: 4 }}  // Medium screens
+        lg={{ span: 16, offset: 4 }}  // Large screens
       >
         <CustomCollapse
           defaultActiveKey={["general_info"]}
