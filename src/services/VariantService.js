@@ -45,7 +45,7 @@ class VariantService extends BaseService {
   checkIsAvailableForArchive(id){
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/check/status?id=${id}`,
+      url: `${this.baseUrl}/archive/${id}/availability`,
       data: this.data,
       headers: this.header
     });

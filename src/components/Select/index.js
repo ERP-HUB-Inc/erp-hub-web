@@ -24,7 +24,7 @@ export class Select extends React.Component {
   }
 
   render() {
-    const {getFieldDecorator} = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     let dataSource = this.props.dataSource;
     if (!Array.isArray(dataSource)) {
       dataSource = [];
@@ -38,7 +38,7 @@ export class Select extends React.Component {
       ]
     };
 
-    if (this.props.defaultValue !== null && this.props.defaultValue !== "") {
+    if (this.props.defaultValue) {
       options["initialValue"] = this.props.defaultValue;
     } else if (!this.props.placeholder) {
       options["initialValue"] = this.props.defaultValue;

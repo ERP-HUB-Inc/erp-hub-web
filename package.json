@@ -67,7 +67,7 @@
   },
   "scripts": {
     "production": "webpack-dev-server --open",
-    "start": "BROWSER=google-chrome webpack-dev-server --mode development --open",
+    "start:dev": "BROWSER=google-chrome webpack-dev-server --mode development --open",
     "starts": "set PORT=3081 & react-scripts --openssl-legacy-provider start",
     "react:build": "react-scripts build",
     "webpack": "webpack-dev-server --mode development --open",

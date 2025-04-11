@@ -1,6 +1,6 @@
 import React from "react";
-import {connect} from "react-redux";
-import {Form} from "antd";
+import { connect } from "react-redux";
+import { Form } from "antd";
 import FormCompositePage from "./form/FormCompositePage";
 
 function FormCompositeContainer(props) {
