@@ -15,6 +15,7 @@ import {
 import {
   Translate
 } from "@redux/index";
+import { FormItemContext } from "@contexts/index";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Enum from "@enums/index";
@@ -517,7 +518,7 @@ export default class FormItem extends BaseModal {
       {
         name: <Translate id="radio_box_product_standard" />,
         description: <Translate id="radio_box_product_standard_description" />,
-        value: Enum.PRODUCT_STANDARD
+        value: Enum.NO_VARIANT
       },
       {
         name: <Translate id="radio_box_product_variant" />,
@@ -573,7 +574,8 @@ export default class FormItem extends BaseModal {
       return {
         ...prevState,
         serialType: formData.id ? formData.serialType : prevState.serialType,
-        tags: formData.tag && formData.tag.length ? formData.tag.split(",") : []
+        tags: formData.tag && formData.tag.length ? formData.tag.split(",") : [],
+        variants: formData?.productVariants ? formData.productVariants : [],
       }
     });
 
@@ -590,8 +592,8 @@ export default class FormItem extends BaseModal {
     } else {
       this.setState({ exchangeRate: 1 });
     }
-
-    if (formData.id) {
+    
+    if (formData.id && formData.productOption === Enum.PRODUCT_VARIANT) {
       VariantService.getVariantsByItemId({ itemId: formData.id })
       .then(response => {
         if (response?.data) {
@@ -719,7 +721,7 @@ export default class FormItem extends BaseModal {
 
   saveInputRef = input => (this.input = input);
 
-  getPrecisionByCurrency(length=2){
+  getPrecisionByCurrency(length = 2){
     return this.Util.getSetting().currency === "$"  ? length :  0;
   }
 
@@ -744,13 +746,8 @@ export default class FormItem extends BaseModal {
       });
     }
 
-    let productTypeBox = Enum.PRODUCT_STANDARD;
-    if (formData.id) {
-      productTypeBox = formData.productOption;
-    } else {
-      productTypeBox = this.state.productTypeIndex;
-    }
-
+    const productHasVariant = formData.productOption === Enum.PRODUCT_VARIANT;
+    const productNoVariant = formData.productOption === Enum.NO_VARIANT;
 
     const image = {
       uid: "-1",
@@ -761,12 +758,10 @@ export default class FormItem extends BaseModal {
 
     return (<Row gutter={[16, 16]}>
       <Col 
-        // md={16}
-        // offset={4}
-        xs={{ span: 24, offset: 0 }}  // Small screens (phones)
-        sm={{ span: 20, offset: 2 }}  // Tablets
-        md={{ span: 16, offset: 4 }}  // Medium screens
-        lg={{ span: 16, offset: 4 }}  // Large screens
+        xs={{ span: 24, offset: 0 }}
+        sm={{ span: 20, offset: 2 }}
+        md={{ span: 16, offset: 4 }}
+        lg={{ span: 16, offset: 4 }}
       >
         <CustomCollapse
           defaultActiveKey={["general_info"]}
@@ -797,30 +792,34 @@ export default class FormItem extends BaseModal {
                 suffix={this.getLanguageIcon("km")}/>
           </Col>
 
-          <Form.Item label="Enable Auto Barcode">
-            {
-              form.getFieldDecorator("isAutoGenerateBarcode", { valuePropName: "checked", initialValue: (formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO })(
-                <Switch
-                  // defaultChecked={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
-                  // defaultChecked={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
-                  onChange={this.handleEnableAutoBarcode}
-                  disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
-                />
-              )
-            }
-          </Form.Item>
-        
-          <InputText
-            name="barcode"
-            label={<Translate id="text_barcode" />}
-            data={Util.getProductBarcode(formData)}
-            placeholder="Scan or type the barcode here..."
-            // required={this.state.isRequireInputBarcode}
-            errorRequired={<Translate id="error_require_sku" />}
-            max={20}
-            form={form}
-            disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode == true}
-          />
+          {
+            productNoVariant && <>
+              <Form.Item label="Enable Auto Barcode">
+                {
+                  form.getFieldDecorator("isAutoGenerateBarcode", { valuePropName: "checked", initialValue: (formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO })(
+                    <Switch
+                      // defaultChecked={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+                      // defaultChecked={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+                      onChange={this.handleEnableAutoBarcode}
+                      disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
+                    />
+                  )
+                }
+              </Form.Item>
+            
+              <InputText
+                name="barcode"
+                label={<Translate id="text_barcode" />}
+                data={Util.getProductBarcode(formData)}
+                placeholder="Scan or type the barcode here..."
+                // required={this.state.isRequireInputBarcode}
+                errorRequired={<Translate id="error_require_sku" />}
+                max={20}
+                form={form}
+                disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode == true}
+              />
+            </>
+          }
 
           <SelectCategory
             defaultValue={formData.categoryId}
@@ -929,41 +928,75 @@ export default class FormItem extends BaseModal {
             form={form}
           />
         </CustomCollapse>
+        
+        {
+          productHasVariant ? 
+          <CustomCollapse
+            headerTitle={`Variants(${this.state.variants?.pagination?.total})`}
+            subtitle={"Manage product variations like size, color, and style while setting custom pricing and stock levels for each option."}
+            collapseStyle={{ marginTop: "30px" }}
+          >
+              <FormVariant
+                currentUser={currentUser}
+                dispatch={dispatch}
+                form={form}
+                locale={locale}
+                formData={formData}
+                exchangeRate={exchangeRate}
+                getPrecisionByCurrency={(length) => this.getPrecisionByCurrency(length)}
+                switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+                productVariantArchive={this.props.productVariantArchive}
+                productVariantCheckStatus={this.props.productVariantCheckStatus}
+                productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+                productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
+                callBackGetProductAttribute={this.props.callBackGetProductAttribute}
+                callBackGetProductVariant={this.props.callBackGetProductVariant}
+                handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
+                handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
+                productVariants={this.state.variants}
+                onSearch={this.onSearchVariant}
+                productAttributes={formData.productAttributes}
+                variantAttributes={this.props.variantAttributes}
+                variantAttributeAdd={variantAttributeAdd}
+                handleAddVariantAttribute={this.props.handleAddVariantAttribute}
+              />
+          </CustomCollapse>
+          :
+          <CustomCollapse
+            headerTitle={"Pricing"}
+            subtitle={"Define the pricing for your item across different sales channels: retail, wholesale, and distribution."}
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <InputNumber
+                name="price"
+                label={<Translate id="text_retial_price" />}
+                data={Exchange.dollarToRiel(Util.getItemPrice(this.state.variants), exchangeRate)}
+                precision={this.getPrecisionByCurrency()}
+                placeholder={"0.00"}
+                errorRequired={<Translate id="error_require_price" />}
+                max={99999999}
+                form={form}
+              />
 
-        <CustomCollapse
-          headerTitle={"Pricing"}
-          subtitle={"Define the pricing for your item across different sales channels: retail, wholesale, and distribution."}
-          collapseStyle={{ marginTop: "30px" }}
-        >
-          <InputNumber
-              name="price"
-              label={<Translate id="text_retial_price" />}
-              data={Exchange.dollarToRiel(Util.getItemPrice(this.state.variants), exchangeRate)}
-              precision={this.getPrecisionByCurrency()}
-              placeholder={"0.00"}
-              errorRequired={<Translate id="error_require_price" />}
-              max={99999999}
-              form={form}
-            />
+            <InputNumber
+                name="wholePrice"
+                label={<Translate id="text_whole_price" />}
+                data={Exchange.dollarToRiel(Util.getItemWholeSalePrice(this.state.variants), exchangeRate)}
+                precision={this.getPrecisionByCurrency()}
+                placeholder={"0.00"}
+                form={form}
+              />
 
-          <InputNumber
-              name="wholePrice"
-              label={<Translate id="text_whole_price" />}
-              data={Exchange.dollarToRiel(Util.getItemWholeSalePrice(this.state.variants), exchangeRate)}
-              precision={this.getPrecisionByCurrency()}
-              placeholder={"0.00"}
-              form={form}
-            />
-
-          <InputNumber
-              name="distributePrice"
-              label={<Translate id="text_distribute_price" />}
-              data={Exchange.dollarToRiel(Util.getItemDistributePrice(this.state.variants), exchangeRate)}
-              precision={this.getPrecisionByCurrency()}
-              placeholder={"0.00"}
-              form={form}
-            />
-        </CustomCollapse>
+            <InputNumber
+                name="distributePrice"
+                label={<Translate id="text_distribute_price" />}
+                data={Exchange.dollarToRiel(Util.getItemDistributePrice(this.state.variants), exchangeRate)}
+                precision={this.getPrecisionByCurrency()}
+                placeholder={"0.00"}
+                form={form}
+              />
+          </CustomCollapse>
+        }
 
         <CustomCollapse
           headerTitle={"Images and Media"}
@@ -987,37 +1020,6 @@ export default class FormItem extends BaseModal {
               data={formData.videoUrl}
               placeholder="Enter video URL (e.g., https://youtu.be/example)"
               form={form}
-            />
-        </CustomCollapse>
-        
-        <CustomCollapse
-            headerTitle={"Variants"}
-            subtitle={"Manage product variations like size, color, and style while setting custom pricing and stock levels for each option."}
-            collapseStyle={{ marginTop: "30px" }}
-          >
-            <FormVariant
-              currentUser={currentUser}
-              dispatch={dispatch}
-              form={form}
-              locale={locale}
-              formData={formData}
-              exchangeRate={exchangeRate}
-              getPrecisionByCurrency={(length) => this.getPrecisionByCurrency(length)}
-              switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
-              productVariantArchive={this.props.productVariantArchive}
-              productVariantCheckStatus={this.props.productVariantCheckStatus}
-              productAttributeCheckStatus={this.props.productAttributeCheckStatus}
-              productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
-              callBackGetProductAttribute={this.props.callBackGetProductAttribute}
-              callBackGetProductVariant={this.props.callBackGetProductVariant}
-              handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
-              handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
-              productVariants={this.state.variants}
-              onSearch={this.onSearchVariant}
-              productAttributes={formData.productAttributes}
-              variantAttributes={this.props.variantAttributes}
-              variantAttributeAdd={variantAttributeAdd}
-              handleAddVariantAttribute={this.props.handleAddVariantAttribute}
             />
         </CustomCollapse>
 
@@ -1047,13 +1049,16 @@ export default class FormItem extends BaseModal {
             form={form}
           />
 
-          <InputText
-            name="sku"
-            label={"Stock Keeping Unit (SKU)"}
-            data={Util.getProductSku(formData)}
-            placeholder="SKU code (e.g., ABC123)"
-            form={form}
-          />
+          {
+            productNoVariant && 
+            <InputText
+              name="sku"
+              label={"Stock Keeping Unit (SKU)"}
+              data={Util.getProductSku(formData)}
+              placeholder="SKU code (e.g., ABC123)"
+              form={form}
+            />
+          }
 
           {
             !formData.id && 
@@ -1065,14 +1070,18 @@ export default class FormItem extends BaseModal {
               form={form}
             />
           }
-
-          <InputNumber
-            name="reorderPoint"
-            label={"Reorder Level"}
-            data={formData.reorderPoint}
-            placeholder="Enter reorder point"
-            form={form}
-          />
+          
+          {
+            productNoVariant && 
+            <InputNumber
+              name="reorderPoint"
+              label={"Reorder Level"}
+              data={formData.reorderPoint}
+              placeholder="Enter reorder point"
+              form={form}
+            />
+          }
+          
 
           <Select
             name="defaultLocationId"
@@ -1293,7 +1302,7 @@ FormItem.defaultProps = {
     isAutoGenerateBarcode: Enum.GENERATE_PRODUCT_CODE.MANAUL,
     barcode: "",
     type: "",
-    productOption: Enum.PRODUCT_STANDARD,
+    productOption: Enum.NO_VARIANT,
     reorderPoint: null,
     factoryCost: null,
     shippingFee: null,

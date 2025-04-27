@@ -484,7 +484,7 @@ export default class ProductList extends List {
                      <Col span={21} style={{display: "flex", justifyContent: "flex-end"}}>
                            <this.InputText
                               name="key"
-                              placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
+                              placeholder={this.CATranslate("text_search_item", this.props.locale)}
                               form={this.props.form}
                               style={{width: 314, marginBottom: 0}}
                               onChange={this.handleSearch}

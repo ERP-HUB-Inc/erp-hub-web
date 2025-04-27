@@ -5,6 +5,7 @@ import {
   PageHeader
 } from "antd";
 import sweetalert from "sweetalert";
+import { Translate } from "@redux/index";
 import BaseComponent from "@components/BaseComponent";
 import FormItem from "./form.item";
 import history from "@router/index";
@@ -25,7 +26,7 @@ export default class ProductCreate extends BaseComponent {
       productAttributes: [],
       productVariants: []
     };
-    this.title = <this.Translate id="text_product" />;
+    this.title = <Translate id="text_product" />;
     this.width = "100%";
     this.dispatch = this.props.dispatch;
     this.exchangeRate = 1;

@@ -71,6 +71,8 @@ export * from "./UploadImageCrop";
 export * from "./Waiting";
 export * from "./WeekPicker";
 export * from "./InputTextArea";
+export * from "./stateful/SelectCategory";
+export * from "./stateful/SelectLocation";
 
 // Antd Components
 export {

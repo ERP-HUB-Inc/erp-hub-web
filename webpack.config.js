@@ -8,7 +8,7 @@ var DIST_DIR = path.resolve(__dirname, "build");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 module.exports = {
-  entry: SRC_DIR + "/index.js?v=1238238", // Entry point with version query string
+  entry: SRC_DIR + "/index.jsx?v=1238238", // Entry point with version query string
   mode: 'development',
   output: {
     path: DIST_DIR, // Ensure correct output directory
@@ -16,9 +16,11 @@ module.exports = {
     publicPath: "/" // Set the public path for asset serving
   },
   resolve: {
+    extensions: ['.js', '.jsx'],
     alias: {
       '@components': path.resolve(SRC_DIR, 'components'),
       '@layout': path.resolve(SRC_DIR, 'layout'),
+      '@contexts': path.resolve(SRC_DIR, 'context'),
       '@helper': path.resolve(SRC_DIR, 'helper'),
       '@model': path.resolve(SRC_DIR, 'model'),
       '@enums': path.resolve(SRC_DIR, 'enums'),
@@ -64,7 +66,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/, // Process JavaScript files
+        test: /\.(js|jsx)$/, // Process JavaScript files
         exclude: /node_modules/,
         loader: "babel-loader"
       },

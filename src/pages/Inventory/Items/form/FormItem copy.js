@@ -296,7 +296,7 @@ export default class FormItem extends BaseModal {
       {
         name: <Translate id="radio_box_product_standard" />,
         description: <Translate id="radio_box_product_standard_description" />,
-        value: Enum.PRODUCT_STANDARD
+        value: Enum.NO_VARIANT
       },
       {
         name: <Translate id="radio_box_product_variant" />,
@@ -473,7 +473,7 @@ export default class FormItem extends BaseModal {
       });
     }
 
-    let productTypeBox = Enum.PRODUCT_STANDARD;
+    let productTypeBox = Enum.NO_VARIANT;
     if (formData.id) {
       productTypeBox = formData.productOption;
     } else {
@@ -505,7 +505,7 @@ export default class FormItem extends BaseModal {
                 title={productType.name}
                 language={productType.description}
                 value={productType.value}
-                className={productType.value === productTypeBox || formData.id == null ? productType.value !== Enum.PRODUCT_STANDARD ? this.state.productOptionClassDisabled : "" : "disabled-click"} /> 
+                className={productType.value === productTypeBox || formData.id == null ? productType.value !== Enum.NO_VARIANT ? this.state.productOptionClassDisabled : "" : "disabled-click"} /> 
             ) 
             }
           </this.RadioBox>
@@ -921,7 +921,7 @@ FormItem.defaultProps = {
     isAutoGenerateBarcode: Enum.GENERATE_PRODUCT_CODE.MANAUL,
     barcode: "",
     type: "",
-    productOption: Enum.PRODUCT_STANDARD,
+    productOption: Enum.NO_VARIANT,
     reorderPoint: null,
     factoryCost: null,
     shippingFee: null,

@@ -556,7 +556,7 @@ export default {
       "(ឧ. ទំហំ)"
    ],
 
-   "text_general_seach_product": [
+   "text_search_item": [
       "Search by name,barcode and description",
       "ស្វែងរកតាម ឈ្មោះ​ លេខកូដ និងកំណត់សំគាល់"
    ],

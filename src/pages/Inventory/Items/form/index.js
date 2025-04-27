@@ -13,6 +13,7 @@ import {
   Pagination
 } from "antd";
 import ReactGA from "react-ga4";
+import { Translate } from "@redux/index";
 import history from "@router/index";
 import Exchange from "./ExchangeMoneyFunc";
 import EditStock from "./EditStock";
@@ -20,16 +21,19 @@ import Datatable from "@layout/Datatable";
 import CommonUtil from "@common/util";
 import Util from "@helper/inventory";
 import Enum from "@enums/index";
+import { 
+   SelectCategory,
+   SelectLocation
+} from "@components/index";
 import FormCreate from "../form.create";
 import ProductAction from "../redux/action";
 import Constant from "../redux/constant";
 import ProductService from "@services/ProductService";
-import CategoryService from "@services/CategoryService";
+import LocationService from "@services/LocationService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import "./index.css";
 
 export default class ProductList extends Datatable {
-
    constructor(props) {
       super(props);
       this.state = {
@@ -37,22 +41,22 @@ export default class ProductList extends Datatable {
          loading: false,
          brands: [],
          locations: [],
-         categories: [],
          products: [],
          pagination: {},
          dataSourceToPrint: []
       };
+      this.SelectCategoryRef = React.createRef();
+      this.SelectLocationRef = React.createRef();
       this.editStockRef = React.createRef();
-      this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-      this.categoriesList = [{name: <this.Translate id="text_all_categories"/>, id: 0}];
+      this.locationList = [{name: <Translate id="text_all_store"/>, id: 0}];
       this.stockList = [
-         {name: <this.Translate id="text_all_stock"/>, id: 0},
-         {name: <this.Translate id="text_in_stock"/>, id: 1},
-         {name: <this.Translate id="text_out_of_stock"/>, id: 2}
+         {name: <Translate id="text_all_stock"/>, id: 0},
+         {name: <Translate id="text_in_stock"/>, id: 1},
+         {name: <Translate id="text_out_of_stock"/>, id: 2}
       ];
       this.columns = [
          {
-            title: <this.Translate id="text_item_name" />,
+            title: <Translate id="text_item_name" />,
             dataIndex: "name",
             key: "name",
             render: (name, record) => {
@@ -60,25 +64,25 @@ export default class ProductList extends Datatable {
                   <Menu>
                      <Menu.Item key={1}>
                         <this.Link to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}>
-                           <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
+                           <Icon type="eye" style={{marginRight: 10}} /> <Translate id="text_view" />
                         </this.Link>
                      </Menu.Item>
                      <Menu.Item key={2}>
                         <this.Link to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}>
-                           <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                           <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit" />
                         </this.Link>
                      </Menu.Item>
                      <Menu.Item key={3} className={record.isSplittable ? "" : "hidden"}>
                         <this.Link to={`/inventories/items/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
-                           <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_item" />
+                           <Icon type="scissor" style={{marginRight: 10}} /> <Translate id="text_slit_item" />
                         </this.Link>
                      </Menu.Item>
                      <Divider style={{marginTop: 4, marginBottom: 4}} />
                      <Menu.Item key={4} onClick={() => this.handleConfirm(record)}>
-                        <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
+                        <Icon type="delete" style={{marginRight: 10}} /> <Translate id="text_delete" />
                      </Menu.Item>
                      <Menu.Item key={5} onClick={() => this.editStockRef.showDrawer(record)}>
-                        <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit_stock" />
+                        <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit_stock" />
                      </Menu.Item>
                   </Menu>
                );
@@ -87,45 +91,52 @@ export default class ProductList extends Datatable {
                   <Dropdown overlay={menu} className="product-row-option">
                      {/*eslint-disable-next-line*/}
                   <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
-                     <this.Translate id="text_option" /> <Icon type="down" />
+                     <Translate id="text_option" /> <Icon type="down" />
                   </a>
                   </Dropdown>
                </div>;
             }
          },
          {
-            title: <this.Translate id="text_barcode" />,
+            title: <Translate id="text_barcode" />,
             dataIndex: "barcode",
             key: "barcode",
             width: 140,
-            render: (text, record) => Util.getProductBarcode(record)
+            render: (text, record) => {
+               const numberOfVariant = record?.productVariants?.length;
+               if (numberOfVariant > 1) {
+                  return `${numberOfVariant} Variants`;
+               }
+
+               return Util.getProductBarcode(record)
+            }
          },
          {
-            title: <this.Translate id="text_category" />,
+            title: <Translate id="text_category" />,
             dataIndex: "category",
             key: "category",
             width: 140,
             render: category => category?.name
          },
          {
-            title: <this.Translate id="text_manage_stock" />,
+            title: <Translate id="text_manage_stock" />,
             dataIndex: "enableInventoryTracking",
             key: "enableInventoryTracking",
             width: 150,
             align: "center",
             render: enableInventoryTracking => {
-               let stockTypeStr = <this.Translate id="text_other" />;
+               let stockTypeStr = <Translate id="text_other" />;
                if (enableInventoryTracking) {
-                  stockTypeStr = <this.Translate id="text_inventory" />;
+                  stockTypeStr = <Translate id="text_inventory" />;
                } else {
-                  stockTypeStr = <this.Translate id="text_non_inventory" />;
+                  stockTypeStr = <Translate id="text_non_inventory" />;
                }
 
                return <Checkbox checked={enableInventoryTracking} />;
             }
          },
          {
-            title: <this.Translate id="text_quantity" />,
+            title: <Translate id="text_quantity" />,
             dataIndex: "quantity",
             key: "quantity",
             width: 130,
@@ -135,7 +146,7 @@ export default class ProductList extends Datatable {
             }
          },
          {
-            title: <this.Translate id="text_retial_price" />,
+            title: <Translate id="text_retial_price" />,
             key: "price",
             dataIndex: "price",
             width: 180,
@@ -143,7 +154,7 @@ export default class ProductList extends Datatable {
             render: (text, record) => exchangeAndFormatCurrency(Util.getProductPrice(record))
          },
       ];
-      this.formCreate = <FormCreate/>;
+      this.formCreate = <FormCreate />;
       this.callBackOnShowEditForm = this.showFormEdit;
       // this.columnExpend = new ColumnExpand(this.props, this.handleConfirm); 
       this.fetchingProp = "products";
@@ -161,7 +172,8 @@ export default class ProductList extends Datatable {
 
    componentDidMount() {
          const params = new URLSearchParams(document.location.search);
-         const {currency, currencyId}  = this.Util.getSetting();
+         const { currency, currencyId }  = this.Util.getSetting();
+
          if (params.get("current")) this.setState({ current: Number(params.get("current")) });
          if (params.get("search")) this.props.form.setFieldsValue({ key: params.get("search") });
          if (params.get("categoryId")) this.props.form.setFieldsValue({categoryId: params.get("categoryId")});
@@ -169,17 +181,17 @@ export default class ProductList extends Datatable {
 
          this.fetchList(true);
 
-         this.props.dispatch(ProductAction.fetchLocation());
-
-         CategoryService.get(500, 0, "name", "ASC")
+         // Fetch the list of locations with pagination, sorting by "name" in ascending order
+         LocationService.get(500, 0, "name", "ASC")
          .then(response => {
             if (response && response.data) {
-               this.setState({categories: response.data.data});
+               this.setState({locations: response.data.data});
             }
          });
-
-         if (currency !== "$"){
-            ExchangeRateService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
+         
+         if (currency !== "$") {
+            ExchangeRateService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]}))
+            .then(({data})=>{
                const data1 = data.data;
                if (data1 && data1.length){
                   exchangeRate = data1[data1.length-1].value;
@@ -270,7 +282,7 @@ export default class ProductList extends Datatable {
    renderButtonAddNew() {
       return (
          <this.Link to="/inventories/items/create" className="ant-btn ant-btn-primary" style={{marginRight: 15}}>
-            <this.Translate id="text_add_new" />
+            <Translate id="text_add_new" />
          </this.Link>
       );
    }
@@ -340,7 +352,7 @@ export default class ProductList extends Datatable {
    renderButtonImport() {
       return <this.Link to={"/products/import"} className="ant-btn" style={{marginLeft: 15}}>
          <span className="icon-import icon-padding-right"></span>
-         <this.Translate id="text_import" />
+         <Translate id="text_import" />
       </this.Link>;
    }
 
@@ -361,44 +373,66 @@ export default class ProductList extends Datatable {
                </Menu.Item>
             </Menu>
          )}>
-            <this.Translate id="text_add_new" />
+            <Translate id="text_add_new" />
       </Dropdown.Button>;
    }
 
-   handleSearch = (e) => {
+   onSearch = (e) => {
       const value = e.target.value;
+
       const params = new URLSearchParams(document.location.search);
+
       clearTimeout(this.timer);
+
       if (value) {
          params.set("search", value);
       } else {
          params.delete("search");
       }
+
       this.Util.pushParamsToURL(this.pathName, params.toString());
+      
       this.timer = setTimeout(() => {
+         
          this.fetchList();
+
       }, 800);
    }
 
-   handleChangeLocation = (locationId) => {
+   onChangeLocation = (locationId) => {
       const params = new URLSearchParams(document.location.search);
+
       if (locationId) {
          params.set("locationId", locationId);
       } else {
          params.delete("locationId");
       }
+
       this.Util.pushParamsToURL(this.pathName, params.toString());
+
       this.fetchList();
    }
 
-   handleChangeCategory = (categoryId) => {
+   onSearchLocation = (value) => {
+      LocationService.get({ search: value })
+      .then(response => {
+         if (response && response.data) {
+            this.setState({ locations: response.data.data });
+         }
+      });
+   }
+
+   onChangeCategory = (categoryId) => {
       const params = new URLSearchParams(document.location.search);
+
       if (categoryId) {
          params.set("categoryId", categoryId);
       } else {
          params.delete("categoryId");
       }
+
       this.Util.pushParamsToURL(this.pathName, params.toString());
+
       this.fetchList();
    }
 
@@ -406,16 +440,19 @@ export default class ProductList extends Datatable {
       if (this.action) {
          const params = new URLSearchParams(document.location.search);
          let strParam = `limit=${pageSize}&current=${current}`;
+
          if (params.get("search")) {
-         strParam += `&search=${params.get("search")}`;
+            strParam += `&search=${params.get("search")}`;
          }
 
          if (params.get("locationId")) {
-         strParam += `&locationId=${params.get("locationId")}`;
+            strParam += `&locationId=${params.get("locationId")}`;
          }
 
          this.setState({ current, isClickFilter: false });
+
          this.Util.pushParamsToURL(this.pathName, strParam);
+
          this.fetchList(true);
       }
    }
@@ -426,11 +463,11 @@ export default class ProductList extends Datatable {
          let strParam = `limit=${pageSize}&current=${current}`;
 
          if (params.get("search")) {
-         strParam += `&search=${params.get("search")}`;
+            strParam += `&search=${params.get("search")}`;
          }
 
          if (params.get("locationId")) {
-         strParam += `&locationId=${params.get("locationId")}`;
+            strParam += `&locationId=${params.get("locationId")}`;
          }
 
          this.setState({ current, isClickFilter: false });
@@ -441,22 +478,23 @@ export default class ProductList extends Datatable {
 
    onSelectChange(selectedRowKeys, selectedRows) {
       super.onSelectChange(selectedRowKeys, selectedRows);
-      this.setState({dataSourceToPrint: this.mapSelectedListIds(selectedRows)});
+      this.setState({ dataSourceToPrint: this.mapSelectedListIds(selectedRows) });
    }
 
-   expandedRender(record){
+   expandedRender(record) {
       return( 
          <div className="sub-table">
-         <this.SubTable 
-            columns={this.columnExpend}
-            dataSource={record.productVariants}
-            locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}}/>
+            <this.SubTable 
+               columns={this.columnExpend}
+               dataSource={record.productVariants}
+               locale={{ emptyText: <Translate id="placeholder_table_variant_product" /> }}
+            />
          </div>
       );
    }
 
    renderPagination() {
-      const {total, limit} = this.state.pagination;
+      const { total, limit } = this.state.pagination;
       const pagination = {
         total,
         pageSize: limit,
@@ -486,46 +524,27 @@ export default class ProductList extends Datatable {
                <div className="table-wrapper">
                   <Row>
                      <Col md={3} style={{marginBottom: 0}}>
-                        <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_items" /></h3>
+                        <h3 style={{marginBottom: 0, fontWeight: 600}}><Translate id="text_items" /></h3>
                      </Col>
                      <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
                         <Input
-                           placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
+                           placeholder={this.CATranslate("text_search_item", this.props.locale)}
                            form={this.props.form}
                            style={{width: 314, marginBottom: 0}}
-                           onChange={this.handleSearch}
+                           onChange={this.onSearch}
                            allowClear={true}
                         />
 
-                        <Select
-                           showSearch
-                           allowClear
-                           placeholder={this.CATranslate("text_all_categories", this.props.locale)}
-                           defaultValue={0}
-                           onChange={this.handleChangeCategory}
-                           style={{ width: 180, marginLeft: 15 }}
-                        >
-                           {
-                              this.categoriesList.concat(this.state.categories).map((item, key) => 
-                                 <Option value={item.id}>{item.name}</Option>
-                              )
-                           }
-                        </Select>
+                        <SelectCategory
+                           ref={this.SelectCategoryRef}
+                           onChange={this.onChangeCategory}
+                        />
 
-                        <Select
-                           showSearch
-                           allowClear
-                           placeholder={this.CATranslate("text_all_categories", this.props.locale)}
-                           defaultValue={0}
-                           onChange={this.handleChangeLocation}
-                           style={{ width: 180, margin: "0 15px" }}
-                        >
-                           {
-                              this.locationList.concat(this.props.locations.list).map((item, key) => 
-                                 <Option value={item.id}>{item.name}</Option>
-                              )
-                           }
-                        </Select>
+                        <SelectLocation
+                           ref={this.SelectLocationRef}
+                           onChange={this.onChangeLocation}
+                        />
+
                         <this.Link to="/inventories/items/create" onClick={() => { 
                            ReactGA.event({
                               category: "Action Button",
@@ -533,7 +552,7 @@ export default class ProductList extends Datatable {
                               label: "ERP HUB Web",
                            });
                            }} className="ant-btn ant-btn-primary">
-                           <this.Translate id="text_add_new" />
+                           <Translate id="text_add_new" />
                         </this.Link>
                      </Col>
                   </Row>
@@ -545,7 +564,7 @@ export default class ProductList extends Datatable {
                      dataSource={this.state.products}
                      columns={this.columns}
                      rowClassName={this.rowClassName}
-                     locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+                     locale={{emptyText: <Translate id="table_empty_data"/>}}
                      // expandedRowRender={this.expandedRender}
                      onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
                      loading={this.state.loading} />
@@ -597,7 +616,7 @@ class ColumnExpand extends Datatable {
             render: barcode => barcode ? barcode : this.emptyCell
          },
          {
-            title: <this.Translate id="text_stock_type" />,
+            title: <Translate id="text_stock_type" />,
             dataIndex: "serialType",
             key: "serialType",
             width: 150,

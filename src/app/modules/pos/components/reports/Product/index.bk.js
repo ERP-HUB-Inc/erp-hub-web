@@ -108,7 +108,7 @@ export default class ProductList extends List {
     this.columnFilterWithKey = ["name", "barcode"];
     this.pageSize = 50;
     this.pageSizeOptions = ["50", "100", "150", "200"];
-    this.placeHolderForGeneralSearch = "text_general_seach_product";
+    this.placeHolderForGeneralSearch = "text_search_item";
     this.service = ProductReportService;
     this.action = ProductReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;

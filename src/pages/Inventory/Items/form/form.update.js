@@ -29,7 +29,6 @@ export default class ProductUpdate extends BaseComponent {
 
     this.title = <Translate id="text_item" />;
     this.dispatch = this.props.dispatch;
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
     this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
     this.handleCallBackGetArchiveProductVariant = this.handleCallBackGetArchiveProductVariant.bind(this);
@@ -94,7 +93,7 @@ export default class ProductUpdate extends BaseComponent {
     this.setState({productArchiveAttributes});
   }
 
-  handleSubmit(e) {
+  onSubmit = (e) => {
     e.preventDefault();
 
     if (this.props.form.getFieldValue("isFocusOnVariantInput") === 1) {
@@ -237,7 +236,7 @@ export default class ProductUpdate extends BaseComponent {
     return <div style={{marginBottom: 25}}>
       {
         productDetail.fetched ?
-        <Form autoComplete="off" onSubmit={this.handleSubmit}>
+        <Form autoComplete="off" onSubmit={this.onSubmit}>
           <PageHeader
             style={{
                 paddingLeft: 0,
