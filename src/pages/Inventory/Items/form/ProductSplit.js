@@ -255,7 +255,7 @@ class SplitProduct extends Component {
                                 placeholder={this.CATranslate("text_search_output_product", this.props.locale)}
                                 handleOnSelectList={product => this.handleOnSelectList(product)}
                                 dispatch={this.props.dispatch}
-                                filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.SERIAL]})}
+                                filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.PRODUCT, Enum.SERIAL_TYPE.SERIAL]})}
                                 className="ca-input-v1"
                                 locale={this.props.locale}
                                 form={this.props.form} />

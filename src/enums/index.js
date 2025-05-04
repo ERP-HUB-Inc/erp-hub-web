@@ -5,8 +5,8 @@ export default {
    PRODUCT_COMPOSITE: 2,
    SERIAL_TYPE: {
      SERIAL: 0,
-     NON_INVENTORY: 1,
-     STANDARD: 2,
+     SERVICE: 1,
+     PRODUCT: 2,
      LICENSE: 3
    },
    TYPE_OF_PRODUCT: {

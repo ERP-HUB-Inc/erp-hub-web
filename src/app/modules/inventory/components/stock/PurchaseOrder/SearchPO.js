@@ -403,7 +403,7 @@ export default class SearchPo extends Modal {
           productSearch={this.props.dataSource}
           handleOnSelectList={this.handleOnSelectList}
           dispatch={this.props.dispatch}
-          filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.SERIAL]})}
+          filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.PRODUCT, Enum.SERIAL_TYPE.SERIAL]})}
           className="ca-input-v1 purchase-order"
           locale={this.props.locale}
           form={this.props.form}/>  

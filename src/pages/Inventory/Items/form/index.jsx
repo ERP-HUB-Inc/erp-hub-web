@@ -323,7 +323,7 @@ export default class ProductList extends Datatable {
       if (product) {
          const quantity = this.getAllQTY(product[0]);
 
-         if (product[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY || quantity <= 0){
+         if (product[0].serialType === Enum.SERIAL_TYPE.SERVICE || quantity <= 0){
             this.setState({deleting: true});
             ProductService.archive(this.state.selectedListIds)
             .then(() => {
