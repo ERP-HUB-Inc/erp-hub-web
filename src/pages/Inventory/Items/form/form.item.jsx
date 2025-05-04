@@ -487,7 +487,7 @@ export default class FormItem extends BaseModal {
   constructor(props) {
     super(props);
     this.state = {
-      serialType: Enum.SERIAL_TYPE.STANDARD,
+      serialType: Enum.SERIAL_TYPE.PRODUCT,
       productsType: [],
       variants: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
@@ -535,11 +535,11 @@ export default class FormItem extends BaseModal {
     this.serialTypes = [
       {
         name: <Translate id="text_yes" />,
-        value: Enum.SERIAL_TYPE.STANDARD
+        value: Enum.SERIAL_TYPE.PRODUCT
       },
       {
         name: <Translate id="text_no" />,
-        value: Enum.SERIAL_TYPE.NON_INVENTORY
+        value: Enum.SERIAL_TYPE.SERVICE
       }
     ];
 
@@ -870,7 +870,7 @@ export default class FormItem extends BaseModal {
             }
           >
             <div style={{ marginTop: 10 }}>
-              {[Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.NON_INVENTORY].map((value, key) => (
+              {[Enum.SERIAL_TYPE.PRODUCT, Enum.SERIAL_TYPE.SERVICE].map((value, key) => (
                 <div
                 key={key}
                 style={{
@@ -887,18 +887,17 @@ export default class FormItem extends BaseModal {
               >
                 {/* Image on the left */}
                 <img
-                  src="https://via.placeholder.com/50"
+                  src={value === Enum.SERIAL_TYPE.PRODUCT ? "https://cdn-icons-png.flaticon.com/128/10951/10951884.png" : "https://cdn-icons-png.flaticon.com/128/2706/2706962.png"}
                   alt={`Option ${value}`}
-                  style={{ borderRadius: "4px", marginRight: "16px" }}
+                  style={{ borderRadius: 4, marginRight: 16, width: 60 }}
                 />
-
                 {/* Title and Subtitle on the right */}
                 <div style={{ lineHeight: "24px" }}>
                   <div style={{ fontWeight: "bold", fontSize: "16px" }}>
-                    {value === Enum.SERIAL_TYPE.STANDARD ? "Good" : "Service"}
+                    {value === Enum.SERIAL_TYPE.PRODUCT ? "Good" : "Service"}
                   </div>
                   <div style={{ color: "#888", fontSize: "14px" }}>
-                    {value === Enum.SERIAL_TYPE.STANDARD
+                    {value === Enum.SERIAL_TYPE.PRODUCT
                       ? "Physical items like products, materials, or inventory."
                       : "Non-physical offerings like maintenance, repair, or consulting."}
                   </div>
@@ -1033,7 +1032,7 @@ export default class FormItem extends BaseModal {
             label={"Track Inventory for this Item"}
             subtitle={"You cannot enable/disable inventory tracking once you've created transactions for this item"}
             tooltip={"Enable this option to track this item's stock based on its sales and purchase transactions."}
-            disabled={this.state.serialType === Enum.SERIAL_TYPE.NON_INVENTORY}
+            disabled={this.state.serialType === Enum.SERIAL_TYPE.SERVICE}
             form={form}
           />
 

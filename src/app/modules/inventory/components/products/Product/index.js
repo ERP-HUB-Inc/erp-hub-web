@@ -104,9 +104,9 @@ export default class ProductList extends List {
             width: 150,
             render: serialType => {
                let stockTypeStr = <this.Translate id="text_other" />;
-               if (serialType === Enum.SERIAL_TYPE.STANDARD) {
+               if (serialType === Enum.SERIAL_TYPE.PRODUCT) {
                   stockTypeStr = <this.Translate id="text_inventory" />;
-               } else if (serialType === Enum.SERIAL_TYPE.NON_INVENTORY) {
+               } else if (serialType === Enum.SERIAL_TYPE.SERVICE) {
                   stockTypeStr = <this.Translate id="text_non_inventory" />;
                }
 
@@ -318,7 +318,7 @@ export default class ProductList extends List {
       if (product) {
          const quantity = this.getAllQTY(product[0]);
 
-         if (product[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY || quantity <= 0){
+         if (product[0].serialType === Enum.SERIAL_TYPE.SERVICE || quantity <= 0){
             this.setState({deleting: true});
             ProductService.archive(this.state.selectedListIds)
             .then(() => {

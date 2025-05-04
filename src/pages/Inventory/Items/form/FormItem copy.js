@@ -14,7 +14,7 @@ import {
 } from "@redux/index";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import FormComposite from "./FormComposite";
+import FormComposite from "./form.composite";
 import FormVariant from "./form.variant";
 import Enum from "@enums/index";
 import Util from "@helper/item";
@@ -313,11 +313,11 @@ export default class FormItem extends BaseModal {
     this.serialTypes = [
       {
         name: <Translate id="text_yes" />,
-        value: Enum.SERIAL_TYPE.STANDARD
+        value: Enum.SERIAL_TYPE.PRODUCT
       },
       {
         name: <Translate id="text_no" />,
-        value: Enum.SERIAL_TYPE.NON_INVENTORY
+        value: Enum.SERIAL_TYPE.SERVICE
       }
     ];
 

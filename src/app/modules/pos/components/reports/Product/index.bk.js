@@ -197,9 +197,9 @@ export default class ProductList extends List {
       let productReOrderPointList = [];
       if (this.state.selectedListIds.length > 0) {
         const selectedListIds = this.state.selectedListIds.filter((value, index) => index < limitRecord);
-        productReOrderPointList = this.props.list.list.filter(value => selectedListIds.includes(value.id) && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
+        productReOrderPointList = this.props.list.list.filter(value => selectedListIds.includes(value.id) && value.product.serialType === Enum.SERIAL_TYPE.PRODUCT);
       } else {
-        productReOrderPointList = this.props.list.list.filter((value, index) => index < limitRecord && value.quantity <= value.reorderPoint && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
+        productReOrderPointList = this.props.list.list.filter((value, index) => index < limitRecord && value.quantity <= value.reorderPoint && value.product.serialType === Enum.SERIAL_TYPE.PRODUCT);
       }
       this.setState({ modalConten: <FormCreate productReOrderPointList={productReOrderPointList} /> });
     }
