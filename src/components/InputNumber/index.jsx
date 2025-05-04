@@ -1,14 +1,27 @@
 import React from "react";
-import { Form, InputNumber as AntdInputNumber, Tooltip, Icon } from "antd";
+import { 
+  Form, 
+  InputNumber as AntdInputNumber, 
+  Tooltip,
+  Icon 
+} from "antd";
+import "./index.css";
 
-export default class InputNumber extends React.Component {
+
+export class InputNumber extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       validateStatus: "success",
       errorMsg: null
     };
-    this.errorMessage="";
+    this.errorMessage = "";
+    this.rules = [
+      {
+        required: this.props.required,
+        validator: this.checkPrice
+      }
+    ];
   }
 
   componentDidMount(){
@@ -23,58 +36,61 @@ export default class InputNumber extends React.Component {
     }
   }
 
+  // Handles number input changes
   handleNumberChange = (value) => {
     this.validatePrimeNumber(value);
-    if (this.props.onChange != null) {
+
+    if (this.props.onChange) {
       this.props.onChange(value);
     }
-  }
+  };
 
-  validatePrimeNumber = (number) => {
-    if (number > this.props.max) {
-      this.setState({
-        validateStatus: "error",
-        errorMsg: this.props.errorLength
-      });
-    } else {
-      this.setState({
-        validateStatus: "success",
-        errorMsg: null
-      });
-    }
-  }
+  // Handles focus event for the input
+  handleFocus = (event) => {
+    const { isAutoSelect, handleOnFocus } = this.props;
 
-  handleOnFocus = (event) => {
-    if (this.props.isAutoSelect) {
+    if (isAutoSelect) {
       event.target.select();
       event.target.setSelectionRange(0, 9999);
     }
 
-    if (this.props.handleOnFocus) {
-      this.props.handleOnFocus();
+    if (handleOnFocus) {
+      handleOnFocus();
     }
-  }
+  };
 
-  parserValue(value) {
-    value = value.replace(/\$\s?|(,*)/g, "");
-    value = value.replace("%", "");
-    return value;
-  }
+  // Parses a string value and removes formatting characters
+  parseValue = (value) => {
+    let parsed = value.replace(/\$\s?|(,*)/g, "");
+    parsed = parsed.replace("%", "");
+    return parsed;
+  };
+
+  // Validates the input value for pricing rules
+  validatePrice = (rule, value, callback) => {
+    let parsedValue = value;
+
+    if (value === null || value === "") {
+      parsedValue = 0;
+    }
+
+    if (parseFloat(parsedValue) <= 0 && this.props.required) {
+      callback(this.props.errorRequired);
+      return;
+    }
+
+    if (this.props.compare && parseFloat(value) > this.props.compare.value) {
+      callback(this.props.compare.message);
+      return;
+    }
+
+    callback();
+  };
 
   render() {
-    const {getFieldDecorator} = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     return (
       <Form.Item
-        // label={<React.Fragment>
-        //   {this.props.label}
-        //   {
-        //     this.props.tooltip && 
-        //     <Tooltip placement="right" title={this.props.tooltip}>
-        //       <Icon type="question-circle" style={{ marginLeft: 8, color: "#888" }} />
-        //     </Tooltip>
-        //   }
-        //   </React.Fragment>
-        // }
         label={this.props.tooltip ? <React.Fragment>
           {this.props.label}
           {
@@ -103,23 +119,30 @@ export default class InputNumber extends React.Component {
               onKeyDown={this.props.handleKeyDown}
               onKeyUp={this.props.handleKeyUp}
               onBlur={this.props.handleOnBlur}
-              onFocus={this.handleOnFocus}
+              onFocus={this.handleFocus}
               style={this.props.inputStyle}
               parser={this.props.parser}
               onPressEnter={this.props.handlePressEnter}
               className={`${this.props.isHideTool ? "hide-input-number-tool" : "" } ${this.props.className}`}
               help={this.errorMessage} />
           )
-        } 
+        }
       </Form.Item>
     );
-  }
+  }   
 }
 
 InputNumber.defaultProps = {
+  name: "name",
+  max: 9999999999,
+  precision: 2,
+  errorLength: "The number allow maximum 9999 999 999.",
+  required: false,
+  isAutoSelect: true,
   data: 0.00,
   formatter: /\B(?=(\d{3})+(?!\d))/g,
   isUnsign: false,
-  isHideTool: false
+  isHideTool: false,
+  errorRequired: "Field required"
 };
 

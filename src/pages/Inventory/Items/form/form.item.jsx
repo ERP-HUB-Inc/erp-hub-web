@@ -569,7 +569,6 @@ export default class FormItem extends BaseModal {
 
   componentDidMount() {
     const { formData } = this.props;
-
     this.setState(prevState => {
       return {
         ...prevState,
@@ -900,7 +899,7 @@ export default class FormItem extends BaseModal {
                   </div>
                   <div style={{ color: "#888", fontSize: "14px" }}>
                     {value === Enum.SERIAL_TYPE.STANDARD
-                      ? "Physical items like products, materials, or inventory." + this.state.serialType
+                      ? "Physical items like products, materials, or inventory."
                       : "Non-physical offerings like maintenance, repair, or consulting."}
                   </div>
                 </div>
