@@ -254,7 +254,7 @@ export default class ProductList extends Datatable {
          if (params.get("limit")) limit = Number(params.get("limit"));
          if (params.get("current")) offset = Number(params.get("current"));
          if (params.get("search")) search = params.get("search");
-         if (params.get("categoryId")) filter = JSON.stringify({categoryId: params.get("categoryId")});
+         if (params.get("categoryId")) filter = JSON.stringify({ categoryId: params.get("categoryId") });
          if (params.get("locationId")) locationId = Number(params.get("locationId"));
 
          if (!withPagination) {
@@ -265,8 +265,9 @@ export default class ProductList extends Datatable {
          }
 
          offset = (offset - 1) * limit;
-         // this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey, locationId));
+         
          this.setState({loading: true});
+         
          ProductService.get({ limit, offset, filter, search, locationId })
          .then(response => {
             if (response.data) {

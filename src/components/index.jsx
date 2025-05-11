@@ -73,6 +73,7 @@ export * from "./WeekPicker";
 export * from "./InputTextArea";
 export * from "./stateful/SelectCategory";
 export * from "./stateful/SelectLocation";
+export * from "./stateless/StatisticCard";
 
 // Antd Components
 export {

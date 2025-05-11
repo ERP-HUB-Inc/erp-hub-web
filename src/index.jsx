@@ -9,6 +9,7 @@ import 'antd/dist/antd.css';
 import App from "./layout/MainApp";
 import configureStore from "./app/store/configureStore";
 import Localization from "./app/localization";
+import StreamTransactions from "./StreamTransactions";
 
 let store = configureStore();
 store = new Localization(store);

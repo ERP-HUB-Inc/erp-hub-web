@@ -21,7 +21,9 @@ export default class BaseService extends Service {
       if (option.sortOrder) queryParams.push(`sortOrder=${option.sortOrder}`);
       if (option.filter) queryParams.push(`filter=${option.filter}`);
       if (option.search) queryParams.push(`search=${option.search}`);
-      if (option.locationId) queryParams.push(`sortOrder=${option.locationId}`);
+      if (option.locationId) queryParams.push(`locationId=${option.locationId}`);
+      if (option.startDate) queryParams.push(`startDate=${option.startDate}`);
+      if (option.endDate) queryParams.push(`endDate=${option.endDate}`);
    
       return queryParams.map((param, index) => index === 0 ? param : `&${param}`).join('');
    }

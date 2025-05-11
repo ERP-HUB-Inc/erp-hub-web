@@ -25,7 +25,7 @@ export default function SelectLocation(props) {
         onFocus={props.onFocus}
         onBlur={props.onBlur}
         id={props.id}>
-        <Option value={0}><Translate id="text_all_stores" /></Option>
+        <Option value={0}><Translate id="text_all_locations" /></Option>
         {locations.map((location, index) => <Option value={location.id} key={index}>{location.name}</Option>)}
     </Select>;
 };

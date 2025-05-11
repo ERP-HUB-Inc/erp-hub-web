@@ -731,7 +731,6 @@ export default class FormItem extends BaseModal {
       form,
       locale,
       formData,
-      productSearch,
       variantAttributeAdd
     } = this.props;
 

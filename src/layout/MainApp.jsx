@@ -129,6 +129,16 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
+    // Reporting
+    const SaleReportCenter = Loadable({
+      loader: () => import("../pages/Report/index"),
+      loading: () => <StartUp />,
+    });
+    const SaleReportReceipt = Loadable({
+      loader: () => import("../pages/Report/ReportSaleReceipt"),
+      loading: () => <StartUp />,
+    });
+
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
@@ -232,7 +242,7 @@ export default class SiderDemo extends React.Component {
                         }
                       >
                         <Menu.Item key="61">
-                          <Link to="/reports/sales">Sales Report</Link>
+                          <Link to="/reports/sales-report-center">Sales Report</Link>
                         </Menu.Item>
                         <Menu.Item key="62">
                             <Link to="/reports/purchase">Purchase Report</Link>
@@ -326,6 +336,9 @@ export default class SiderDemo extends React.Component {
                     <Route path="/inventories/items" component={Item} />
                     <Route path="/inventories/transfers" component={Vendor} />
                     <Route path="/inventories/adjustments" component={Vendor} />
+
+                    <Route path="/reports/sales-report-center" component={SaleReportCenter} />
+                    <Route path="/reports/sales-report-receipt" component={SaleReportReceipt} />
 
                     <Route path="/" component={Dashboard} />
                   </Switch>

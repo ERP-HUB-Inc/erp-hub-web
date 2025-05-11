@@ -116,7 +116,7 @@ class StockCountList extends Component {
     }
 
     if (params.get("locationId")) {
-      filter = JSON.stringify({locationId: Number(params.get("locationId"))});
+      filter = JSON.stringify({locationId: string(params.get("locationId"))});
     }
 
     offset = (offset - 1) * limit;

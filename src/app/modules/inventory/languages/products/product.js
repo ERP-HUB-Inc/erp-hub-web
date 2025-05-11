@@ -1,7 +1,7 @@
 export default {
    "text_product": [
-      "Product",
-      "ផលិតផល"
+      "Item",
+      "មុខទំនិញ"
    ],
 
    "text_items": [
@@ -30,7 +30,7 @@ export default {
    ],
 
    "text_new_product": [
-      "New Product",
+      "New Item",
       "បង្កើតផលិតផលថ្មី"
    ],
 

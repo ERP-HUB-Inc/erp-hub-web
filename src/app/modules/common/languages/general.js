@@ -132,7 +132,7 @@ export default {
 
   text_all_category: ["All categories", "គ្រប់ប្រភេទ"],
 
-  text_all_stores: ["All stores", "គ្រប់ទីតាំង"],
+  text_all_location: ["All locations", "គ្រប់ទីតាំង"],
 
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],
 
@@ -313,8 +313,6 @@ export default {
   text_walkin: ["Walk In", "អតិថិជនទូទៅ"],
 
   text_location: ["Location", "ទីកន្លែង"],
-
-  text_all_location: ["All Location", "គ្រប់ទីតាំង"],
 
   text_other_location: ["Other Location", "ទីតាំងផ្សេង"],
 
