@@ -107,7 +107,7 @@ class Util {
     let quantity = 0;
 
     if (Array.isArray(productLocations)) {
-      quantity = _.sumBy(productLocations, "quantity");
+      quantity = _.sumBy(productLocations, "quantity") ?? 0;
     }
 
     return quantity;

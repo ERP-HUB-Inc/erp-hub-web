@@ -151,7 +151,7 @@ export default class ProductList extends Datatable {
             dataIndex: "price",
             width: 180,
             align: "right",
-            render: (text, record) => exchangeAndFormatCurrency(Util.getProductPrice(record))
+            render: (_, record) => exchangeAndFormatCurrency(Util.getProductPrice(record))
          },
       ];
       this.formCreate = <FormCreate />;
@@ -303,8 +303,8 @@ export default class ProductList extends Datatable {
       let isNotFilterByLocation = true;
       record["productVariants"].forEach(productVariant => {
          if ("productLocations" in productVariant) {
-         isNotFilterByLocation = false;
-         quantity += Util.getProductQTYLocation(productVariant["productLocations"]);
+            isNotFilterByLocation = false;
+            quantity += Util.getProductQTYLocation(productVariant["productLocations"]);
          }
       });
 
@@ -594,110 +594,3 @@ const exchangeAndFormatToRiel = (price) => {
 
 const currencyIsDollar = commonUtil.getSetting()?.currency === "$";
 const exchangeAndFormatCurrency = currencyIsDollar ? exchangeAndFormatToDollar : exchangeAndFormatToRiel;
-
-class ColumnExpand extends Datatable {
-   constructor(props) {
-      super(props);
-      this.colorStockStatus = ["#4cb64c", "#f3a638"];
-      return [
-         {
-            dataIndex: "blank1",
-            key: "blank1",
-            width: 20,
-            render: () => {},
-         },
-         {
-            dataIndex: "name",
-            key: "name"
-         },
-         {
-            dataIndex: "barcode",
-            key: "barcode",
-            width: 130,
-            render: barcode => barcode ? barcode : this.emptyCell
-         },
-         {
-            title: <Translate id="text_stock_type" />,
-            dataIndex: "serialType",
-            key: "serialType",
-            width: 150,
-            render: () => { }
-         },
-         {
-            dataIndex: "productType",
-            key: "productType",
-            width: 200,
-            render: () => {}
-         },
-         {
-            dataIndex: "quantity",
-            key: "quantity",
-            width: 130,
-            align: "center",
-            render: (text, record) => {
-               const virtaulProduct = {
-                  productVariants: [
-                     {
-                        ...record,
-                        productLocations: record.productLocations
-                     }
-                  ]
-               };
-               
-               let quantity = this.calculateTotalQuantity(virtaulProduct);
-               
-               let colorIndex = 0;
-               if (quantity === 0) {
-                  colorIndex = 1;
-               } else if (quantity < 0) {
-                  colorIndex = 1;
-               }
-
-               return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
-            },
-         },
-         {
-            dataIndex: "price",
-            key: "price",
-            width: 150,
-            align: "center",
-            render: price => exchangeAndFormatCurrency(price)
-         },
-         {
-            dataIndex: "wholePrice",
-            key: "wholePrice",
-            width: 150,
-            align: "center",
-            render: wholePrice => exchangeAndFormatCurrency(wholePrice),
-         },
-         {
-            dataIndex: "distributePrice",
-            key: "distributePrice",
-            width: 180,
-            align: "center",
-            render: distributePrice => exchangeAndFormatCurrency(distributePrice)
-         }
-      ];
-   }
-
-   calculateTotalQuantity(record) {
-      let quantity = record.quantity;
-      let isNotFilterByLocation = true;
-      record["productVariants"].forEach(productVariant => {
-         if ("productLocations" in productVariant && productVariant["productLocations"]) {
-         isNotFilterByLocation = false;
-         quantity = Util.getProductQTYLocation(productVariant["productLocations"]);
-         }
-      });
-
-      if (isNotFilterByLocation) {
-         quantity = Util.getProductQTYLocation(record["productVariants"]);
-      }
-
-      return quantity;
-   }
-
-   getAllQTY(record) {
-      return Util.getProductQTYLocation(record["productVariants"]);
-   }
-}

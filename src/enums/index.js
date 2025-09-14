@@ -220,8 +220,8 @@ export default {
     AFTER: 1
   },
   GENERATE_PRODUCT_CODE: {
-    MANAUL: 0,
-    AUTO: 1
+    MANAUL: 1,
+    AUTO: 2
   },
   OPERATION_TYPE: {
     EXPENSE: 0,

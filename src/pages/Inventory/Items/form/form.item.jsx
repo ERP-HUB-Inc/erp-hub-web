@@ -15,7 +15,6 @@ import {
 import {
   Translate
 } from "@redux/index";
-import { FormItemContext } from "@contexts/index";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Enum from "@enums/index";
@@ -491,7 +490,7 @@ export default class FormItem extends BaseModal {
       productsType: [],
       variants: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
-      isAutoGenerateBarcode: true,
+      isAutoGenerateBarcode: false,
       isRequireInputBarcode: true,
       isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
@@ -1079,14 +1078,13 @@ export default class FormItem extends BaseModal {
             />
           }
           
-
           <Select
             name="defaultLocationId"
             label={"Default Warehouse"}
             placeholder="Please select default wharehouse"
             valueKey="id"
             dataSource={this.props.locations.list}
-            defaultValue={formData.defaultLocationId}
+            defaultValue={parseInt(formData.defaultLocationId)}
             form={form}
           />
         </CustomCollapse>
