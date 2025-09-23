@@ -84,8 +84,13 @@ export default {
       "តម្លៃលក់ដុំ"
    ],
 
-   "text_distribute_price": [
+   "text_price_to_distributors": [
       "Price to Distributors",
+      "តម្លៃតំណាងចែកចាយ"
+   ],
+
+   "text_distribute_price": [
+      "Distributors Price",
       "តម្លៃតំណាងចែកចាយ"
    ],
 

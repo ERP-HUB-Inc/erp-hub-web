@@ -86,6 +86,7 @@ const SelectCategory = forwardRef((props, ref) => {
       onSearch={handleSearch}
       loading={loadingRef.current}
       style={{ width: 180, marginRight: 15, marginLeft: 15 }}
+      size="large"
     >
       {categoriesList.concat(categories).map((item) => (
         <Select.Option value={item.id} key={item.id}>

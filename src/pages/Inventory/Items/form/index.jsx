@@ -1,16 +1,18 @@
 import React from "react";
 import {
-  Menu,
-  Dropdown,
-  Divider,
-  Icon,
-  Row,
-  Col,
-  Checkbox,
-  Table,
-  Select,
-  Input,
-  Pagination
+   Avatar,
+   Menu,
+   Dropdown,
+   Divider,
+   Icon,
+   Row,
+   Col,
+   Table,
+   Input,
+   Pagination,
+   Tag,
+   Typography,
+   Button
 } from "antd";
 import ReactGA from "react-ga4";
 import { Translate } from "@redux/index";
@@ -32,6 +34,28 @@ import ProductService from "@services/ProductService";
 import LocationService from "@services/LocationService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import "./index.css";
+
+const { Text } = Typography;
+
+const menu = (
+  <Menu>
+    <Menu.Item>
+      <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+        1st menu item
+      </a>
+    </Menu.Item>
+    <Menu.Item>
+      <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+        2nd menu item
+      </a>
+    </Menu.Item>
+    <Menu.Item>
+      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+        3rd menu item
+      </a>
+    </Menu.Item>
+  </Menu>
+);
 
 export default class ProductList extends Datatable {
    constructor(props) {
@@ -59,7 +83,113 @@ export default class ProductList extends Datatable {
             title: <Translate id="text_item_name" />,
             dataIndex: "name",
             key: "name",
+            sorter: (a, b) => a.name - b.name,
             render: (name, record) => {
+               const numberOfVariant = record?.productVariants?.length || 0;
+               const stockCount = this.calculateTotalQuantity(record);
+               const categoryName = record?.category?.name || 'Uncategorized';
+               
+               // Helper function to get product name (you'll need to implement this based on your Util)
+               const getProductName = () => {
+                  // Replace this with your actual utility function
+                  return record?.name || name || 'Product Name';
+               };
+
+               return (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                     <Avatar 
+                     src={record?.image || record?.imageUrl || "https://ae-pic-a1.aliexpress-media.com/kf/S1dd261bc501a452ab057df05e6c91d823.jpg_960x960q75.jpg_.avif"} 
+                     size={64}
+                     shape="square"
+                     style={{ 
+                        borderRadius: '8px',
+                        backgroundColor: '#f0f0f0'
+                     }}
+                     />
+                     <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '10px' }}>
+                           {getProductName()}
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                           <>
+                              {
+                                 numberOfVariant > 1 ?
+                                 <Tag color="#2db7f5">
+                                    {`${numberOfVariant} variants`}
+                                 </Tag>
+                                 :
+                                 <Text type="secondary" style={{ fontSize: '12px', fontWeight: '500' }}>
+                                    {Util.getProductBarcode(record)}
+                                 </Text>
+                              }
+                              <Text type="secondary" style={{ fontSize: '12px' }}>•</Text>
+                           </>
+                           <Text type="secondary" style={{ fontSize: '12px' }}>
+                              {categoryName}
+                           </Text>
+                           <Text type="secondary" style={{ fontSize: '12px' }}>•</Text>
+                           <Text type="secondary" style={{ 
+                              fontSize: '12px',
+                              fontWeight: '500'
+                           }}>
+                              📦 Current Stock: {stockCount} {record?.unitOfMeasurement?.name}
+                           </Text>
+                           {stockCount <= record.reorderPoint && stockCount > 0 && (
+                              <Text style={{ 
+                              fontSize: '12px', 
+                              color: '#fa8c16',
+                              fontWeight: '500'
+                              }}>
+                              📉 low
+                              </Text>
+                           )}
+                        </div>
+                     </div>
+                  </div>
+               );
+            },
+         },
+         {
+            title: <Translate id="text_retial_price" />,
+            key: "price",
+            dataIndex: "price",
+            width: 180,
+            align: "right",
+            sorter: (a, b) => a.price - b.price,
+            render: (_, record) => {
+               return <Text strong style={{ fontSize: '16px' }}>
+                  {exchangeAndFormatCurrency(Util.getProductPrice(record))}
+               </Text>
+            }
+         },
+         {
+            title: <Translate id="text_whole_price" />,
+            key: "wholePrice",
+            dataIndex: "wholePrice",
+            width: 180,
+            align: "right",
+            sorter: (a, b) => a.wholePrice - b.wholePrice,
+            render: (_, record) => {
+               return <Text strong style={{ fontSize: '16px' }}>{exchangeAndFormatCurrency(Util.getProductWholeSalePrice(record))}</Text>
+            }
+         },
+         {
+            title: <Translate id="text_distribute_price" />,
+            key: "distributePrice",
+            dataIndex: "distributePrice",
+            width: 180,
+            align: "right",
+            sorter: (a, b) => a.distributePrice - b.distributePrice,
+            render: (_, record) => <Text strong style={{ fontSize: '16px' }}>{exchangeAndFormatCurrency(Util.getProductDistributePrice(record))}</Text>
+         },
+         {
+            title: <Translate id="text_action" />,
+            key: "action",
+            dataIndex: "action",
+            align: "center",
+            width: 100,
+            render: (_, record) => {
                const menu = (
                   <Menu>
                      <Menu.Item key={1}>
@@ -86,73 +216,11 @@ export default class ProductList extends Datatable {
                      </Menu.Item>
                   </Menu>
                );
-               return <div className="wrap-product-name" style={{display: "flex"}}>
-                  {Util.getProductNameV2(record, this.Util.getCurrentLanguageCode())}
-                  <Dropdown overlay={menu} className="product-row-option">
-                     {/*eslint-disable-next-line*/}
-                  <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
-                     <Translate id="text_option" /> <Icon type="down" />
-                  </a>
-                  </Dropdown>
-               </div>;
+               return <Dropdown overlay={menu} placement="bottomLeft">
+                  <Button icon="more" />
+               </Dropdown>;
             }
-         },
-         {
-            title: <Translate id="text_barcode" />,
-            dataIndex: "barcode",
-            key: "barcode",
-            width: 140,
-            render: (text, record) => {
-               const numberOfVariant = record?.productVariants?.length;
-               if (numberOfVariant > 1) {
-                  return `${numberOfVariant} Variants`;
-               }
-
-               return Util.getProductBarcode(record)
-            }
-         },
-         {
-            title: <Translate id="text_category" />,
-            dataIndex: "category",
-            key: "category",
-            width: 140,
-            render: category => category?.name
-         },
-         {
-            title: <Translate id="text_manage_stock" />,
-            dataIndex: "enableInventoryTracking",
-            key: "enableInventoryTracking",
-            width: 150,
-            align: "center",
-            render: enableInventoryTracking => {
-               let stockTypeStr = <Translate id="text_other" />;
-               if (enableInventoryTracking) {
-                  stockTypeStr = <Translate id="text_inventory" />;
-               } else {
-                  stockTypeStr = <Translate id="text_non_inventory" />;
-               }
-
-               return <Checkbox checked={enableInventoryTracking} />;
-            }
-         },
-         {
-            title: <Translate id="text_quantity" />,
-            dataIndex: "quantity",
-            key: "quantity",
-            width: 130,
-            align: "right",
-            render: (_, record) => {
-               return `${this.calculateTotalQuantity(record)} ${record?.unitOfMeasurement?.name}`;
-            }
-         },
-         {
-            title: <Translate id="text_retial_price" />,
-            key: "price",
-            dataIndex: "price",
-            width: 180,
-            align: "right",
-            render: (_, record) => exchangeAndFormatCurrency(Util.getProductPrice(record))
-         },
+         }
       ];
       this.formCreate = <FormCreate />;
       this.callBackOnShowEditForm = this.showFormEdit;
@@ -534,6 +602,7 @@ export default class ProductList extends Datatable {
                            style={{width: 314, marginBottom: 0}}
                            onChange={this.onSearch}
                            allowClear={true}
+                           size="large"
                         />
 
                         <SelectCategory
@@ -552,7 +621,7 @@ export default class ProductList extends Datatable {
                               action: "click",
                               label: "ERP HUB Web",
                            });
-                           }} className="ant-btn ant-btn-primary">
+                           }} className="ant-btn ant-btn-primary ant-btn-lg">
                            <Translate id="text_add_new" />
                         </this.Link>
                      </Col>
@@ -586,7 +655,7 @@ const commonUtil = new CommonUtil();
 let exchangeRate = 1;
 
 const exchangeAndFormatToDollar = (price) => {
-   return commonUtil.formatCurrency(price);
+   return commonUtil.formatCurrency(price, "$");
 };
 const exchangeAndFormatToRiel = (price) => {
    return commonUtil.formatCurrency(commonUtil.toValidKHMoney(Exchange.dollarToRiel(price, exchangeRate)), "៛", 1, 0);

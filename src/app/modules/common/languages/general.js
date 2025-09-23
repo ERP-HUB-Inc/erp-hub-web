@@ -89,7 +89,7 @@ export default {
   text_delete: ["Delete", "លុប"],
 
   text_remove: ["Remove", "ដកចេញ"],
-
+ 
   text_updated_at: ["Update", "កែរប្រែ"],
 
   text_option: ["Option", "ជម្រើស"],
@@ -145,6 +145,8 @@ export default {
   text_retail_price: ["Retail Price", "តម្លៃលក់រាយ"],
 
   text_quantity: ["Quantity", "បរិមាណ"],
+
+  text_current_stock: ["Current Stock", "បរិមាណ"],
 
   text_current_quantity: ["Current Quantity", "បរិមាណបច្ចុប្បន្ន"],
 

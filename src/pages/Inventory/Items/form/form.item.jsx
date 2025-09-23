@@ -1,9 +1,7 @@
 import React from "react";
 import {
-  Checkbox,
   Form,
   Spin,
-  Button,
   Tag,
   Input,
   Tooltip,
@@ -985,7 +983,7 @@ export default class FormItem extends BaseModal {
 
             <InputNumber
                 name="distributePrice"
-                label={<Translate id="text_distribute_price" />}
+                label={<Translate id="text_price_to_distributors" />}
                 data={Exchange.dollarToRiel(Util.getItemDistributePrice(this.state.variants), exchangeRate)}
                 precision={this.getPrecisionByCurrency()}
                 placeholder={"0.00"}
@@ -1008,6 +1006,14 @@ export default class FormItem extends BaseModal {
             accessToken={this.Util.getAccessToken()}
             locale={locale}
             form={form}
+          />
+
+          <InputText
+              name="imageUrl"
+              label="Image URL (e.g., product demo or marketing banner)"
+              data={formData.imageUrl}
+              placeholder="Enter image URL (e.g., https://example.com/image.png)"
+              form={form}
           />
 
           <InputText
