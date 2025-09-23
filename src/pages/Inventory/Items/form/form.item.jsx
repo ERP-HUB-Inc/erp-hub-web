@@ -37,6 +37,7 @@ import ProductConditionService from "@services/ProductConditionService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import BaseModal from "@layout/BaseModal";
+import { orderBy } from "lodash";
 import Exchange from "./ExchangeMoneyFunc";
 import "./index.css";
 import FormVariant from "./form.variant";
@@ -70,7 +71,11 @@ function SelectBrand(props) {
     BrandService.get({ limit })
     .then(response => {
       if (response && response.data) {
-        setBrands(response.data.data);
+        if (props?.selected) {
+          setBrands([props.selected].concat(response.data.data));
+        } else {
+          setBrands(response.data.data);
+        }
       }
     })
     .finally(() => {
@@ -169,7 +174,11 @@ function SelectCategory(props) {
       CategoryService.get(limit)
       .then(response => {
         if (response && response.data) {
-          setCategories(response.data.data);
+          if (props.selected && response.data.data.findIndex(value => value.id === props.selected.id) <= -1) {
+            setCategories(orderBy([props.selected].concat(response.data.data), ["name"]));
+          } else {
+            setCategories(orderBy(response.data.data, ["name"]));
+          }
         }
       })
       .finally(() => {
@@ -372,7 +381,11 @@ function SelectOwner(props) {
     VendorService.get(limit)
     .then(response => {
       if (response && response.data) {
-        setOwners(response.data.data);
+        if (props.selected && response.data.data.findIndex(value => value.id === props.selected.id) <= -1) {
+          setOwners([props.selected].concat(response.data.data));
+        } else {
+          setOwners(response.data.data);
+        }
       }
     })
     .finally(() => {
@@ -818,6 +831,7 @@ export default class FormItem extends BaseModal {
 
           <SelectCategory
             defaultValue={formData.categoryId}
+            selected={formData?.category}
             placeholder="Choose a category..."
             form={form}
           />
@@ -1102,6 +1116,7 @@ export default class FormItem extends BaseModal {
         >
           <SelectOwner
             defaultValue={formData.supplierId}
+            selected={formData.supplier}
             placeholder={this.CATranslate("text_owner", locale)}
             form={form}
           />
@@ -1233,6 +1248,7 @@ export default class FormItem extends BaseModal {
 
           <SelectBrand
             placeholder={"Select item brand..."}
+            selected={formData?.brand}
             form={form}
             defaultValue={formData.brandId}
           />

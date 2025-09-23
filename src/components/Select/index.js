@@ -67,6 +67,7 @@ export class Select extends React.Component {
         {
           getFieldDecorator(this.props.name, options)(
             <AntdSelect
+              size="large"
               showSearch={this.props.showSearch}
               allowClear={this.props.allowClear}
               placeholder={this.props.placeholder}

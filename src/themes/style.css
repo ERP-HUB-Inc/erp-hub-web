@@ -833,6 +833,7 @@ color: #4D4F5C;
     text-decoration: none !important;
 }
 
-.ant-input-lg {
+.ant-input-lg,
+.ant-select-lg {
     font-size: 14px !important;
 }
