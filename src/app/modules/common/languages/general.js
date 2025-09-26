@@ -215,6 +215,8 @@ export default {
 
   text_items: ["Items", "មុខទំនិញ"],
 
+  text_items_management: ["Items Management", "គ្រប់គ្រងមុខទំនិញ"],
+
   text_records: ["Items", "ទិន្នន័យ"],
 
   text_balance: ["Balance", "សមតុល្យសាច់ប្រាក់"],

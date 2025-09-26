@@ -77,16 +77,16 @@ const SelectCategory = forwardRef((props, ref) => {
 
   return (
     <Select
-      showSearch
-      allowClear
-      placeholder={<Translate id="text_all_categories"/>}
       defaultValue={0}
+      placeholder={<Translate id="text_all_categories"/>}
       filterOption={false}
       onChange={handleChange}
       onSearch={handleSearch}
       loading={loadingRef.current}
       style={{ width: 180, marginRight: 15, marginLeft: 15 }}
       size="large"
+      showSearch
+      allowClear
     >
       {categoriesList.concat(categories).map((item) => (
         <Select.Option value={item.id} key={item.id}>

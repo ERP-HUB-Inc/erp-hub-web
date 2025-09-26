@@ -66,6 +66,17 @@ function SelectBrand(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      BrandService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setBrands(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     BrandService.get({ limit })
@@ -93,6 +104,7 @@ function SelectBrand(props) {
     dataSource={brands}
     form={props.form}
     onSearch={onSearchBrand}
+    onChange={handleChange}
   />;
 }
 
@@ -120,6 +132,17 @@ function SelectManufacturer(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      BrandService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setData(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     ManufacturerService.get({ limit })
@@ -143,6 +166,7 @@ function SelectManufacturer(props) {
     dataSource={data}
     form={props.form}
     onSearch={onSearch}
+    onChange={handleChange}
   />;
 }
 
@@ -167,6 +191,17 @@ function SelectCategory(props) {
         });
       }
     }, 1000);
+  };
+
+  const handleChange = (value) => {
+    if (!value) {
+      CategoryService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setCategories(response.data.data);
+        }
+      });
+    }
   };
   
   React.useEffect(() => {
@@ -195,7 +230,9 @@ function SelectCategory(props) {
     dataSource={categories}
     defaultValue={props.defaultValue}
     form={props.form}
-    onSearch={onSearchCategory} />;
+    onSearch={onSearchCategory}
+    onChange={handleChange}
+  />;
 }
 
 function SelectUnitOfMeasurement(props) {
@@ -253,9 +290,10 @@ function SelectSellingUnit(props) {
   const limit = 15;
 
   const [loading, setLoading] = React.useState(false);
-
   const [units, setUnits] = React.useState([]);
+
   let timeout = null;
+
   const onSearchUnit = search => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
@@ -272,6 +310,17 @@ function SelectSellingUnit(props) {
         });
       }
     }, 1000);
+  };
+
+  const handleChange = (value) => {
+    if (!value) {
+      UnitService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setUnits(response.data.data);
+        }
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -297,6 +346,7 @@ function SelectSellingUnit(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchUnit}
+    onChange={handleChange}
   />;
 }
 
@@ -325,6 +375,17 @@ function SelectStockUnit(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      UnitService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setUnits(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     UnitService.get(limit)
@@ -348,6 +409,7 @@ function SelectStockUnit(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchUnit}
+    onChange={handleChange}
   />;
 }
 
@@ -374,6 +436,17 @@ function SelectOwner(props) {
         });
       }
     }, 1000);
+  };
+
+  const handleChange = (value) => {
+    if (!value) {
+      VendorService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setOwners(response.data.data);
+        }
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -403,6 +476,7 @@ function SelectOwner(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchOwner}
+    onChange={handleChange}
   />;
 }
 
@@ -431,12 +505,27 @@ function SelectPreferredSupplier(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      VendorService.get()
+      .then((response) => {
+        if (response?.data) {
+          setItems(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     VendorService.get(limit)
     .then(response => {
       if (response && response.data) {
-        setItems(response.data.data);
+        if (props.selected && response.data.data.findIndex(value => value.id === props.selected.id) <= -1) {
+          setItems([props.selected].concat(response.data.data));
+        } else {
+          setItems(response.data.data);
+        }
       }
     })
     .finally(() => {
@@ -454,6 +543,7 @@ function SelectPreferredSupplier(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearch}
+    onChange={handleChange}
   />;
 }
 
@@ -471,6 +561,17 @@ function SelectCondition(props) {
       }
     });
   }, []);
+
+  const handleChange = (value) => {
+    if (!value) {
+      ProductConditionService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setConditions(response.data.data);
+        }
+      });
+    }
+  };
 
   React.useEffect(() => {
     setLoading(true);
@@ -490,6 +591,7 @@ function SelectCondition(props) {
       valueKey="id"
       dataSource={conditions}
       form={props.form}
+      onChange={handleChange}
   />;
 }
 
@@ -698,11 +800,11 @@ export default class FormItem extends BaseModal {
   };
 
   handleEnableAutoBarcode = (checked) => {
-    if (checked) {
-      this.props.form.setFieldsValue({
-        barcode: ""
-      });
-    }
+    // if (checked) {
+    //   this.props.form.setFieldsValue({
+    //     barcode: ""
+    //   });
+    // }
 
     this.setState({
       isAutoGenerateBarcode: checked,
@@ -809,7 +911,7 @@ export default class FormItem extends BaseModal {
                       // defaultChecked={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                       // defaultChecked={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                       onChange={this.handleEnableAutoBarcode}
-                      disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
+                      // disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
                     />
                   )
                 }
@@ -1131,6 +1233,7 @@ export default class FormItem extends BaseModal {
 
           <SelectPreferredSupplier
             defaultValue={formData.preferredSupplierId}
+            selected={formData.preferredSupplier}
             placeholder={"Select your preferred supplier from the list"}
             form={form}
           />
