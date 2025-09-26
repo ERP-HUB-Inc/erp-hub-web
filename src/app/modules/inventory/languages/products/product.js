@@ -1,7 +1,7 @@
 export default {
    "text_product": [
-      "Product",
-      "ផលិតផល"
+      "Item",
+      "មុខទំនិញ"
    ],
 
    "text_items": [
@@ -30,7 +30,7 @@ export default {
    ],
 
    "text_new_product": [
-      "New Product",
+      "New Item",
       "បង្កើតផលិតផលថ្មី"
    ],
 
@@ -84,8 +84,13 @@ export default {
       "តម្លៃលក់ដុំ"
    ],
 
-   "text_distribute_price": [
+   "text_price_to_distributors": [
       "Price to Distributors",
+      "តម្លៃតំណាងចែកចាយ"
+   ],
+
+   "text_distribute_price": [
+      "Distributors Price",
       "តម្លៃតំណាងចែកចាយ"
    ],
 

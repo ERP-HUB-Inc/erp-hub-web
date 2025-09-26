@@ -200,9 +200,9 @@ html,
     margin-bottom: 10px !important
 }
 
-.table-wrapper .ant-btn {
+/* .table-wrapper .ant-btn {
     min-width: 110px
-}
+} */
 
 .ant-form-inline .ant-form-item {
     display: block !important
@@ -831,4 +831,9 @@ color: #4D4F5C;
 .ant-menu-item-selected > a,
 .ant-menu-item > a {
     text-decoration: none !important;
+}
+
+.ant-input-lg,
+.ant-select-lg {
+    font-size: 14px !important;
 }

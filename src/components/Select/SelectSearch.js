@@ -33,6 +33,7 @@ export class SelectSearch extends React.Component {
         {
           getFieldDecorator(this.props.name, this.rules)(
             <Select
+              size="large"
               placeholder={this.props.placeholder}
               disabled={this.props.disabled}
               notFoundContent={this.props.notFoundContent}

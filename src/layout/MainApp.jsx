@@ -129,6 +129,16 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
+    // Reporting
+    const SaleReportCenter = Loadable({
+      loader: () => import("../pages/Report/index"),
+      loading: () => <StartUp />,
+    });
+    const SaleReportReceipt = Loadable({
+      loader: () => import("../pages/Report/ReportSaleReceipt"),
+      loading: () => <StartUp />,
+    });
+
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
@@ -163,7 +173,7 @@ export default class SiderDemo extends React.Component {
                         key="2"
                         title={
                           <span>
-                            <Icon type="form" />
+                            <Icon type="dollar" />
                             <span>Sales</span>
                           </span>
                         }
@@ -178,7 +188,7 @@ export default class SiderDemo extends React.Component {
                         key="3"
                         title={
                           <span>
-                            <Icon type="table" />
+                            <Icon type="shopping" />
                             <span>Purchasing</span>
                           </span>
                         }
@@ -192,21 +202,27 @@ export default class SiderDemo extends React.Component {
                         key="4"
                         title={
                           <span>
-                            <Icon type="table" />
+                            <Icon type="inbox" />
                             <span>Inventory</span>
                           </span>
                         }
                       >
                         <Menu.Item key="41"><Link to="/inventories/items">Items</Link></Menu.Item>
-                        <Menu.Item key="42"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
-                        <Menu.Item key="43"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item>
+                        <Menu.Item key="42"><Link to="/inventories/transfers">Stock In/Out</Link></Menu.Item>
+                        {/* 
+                          Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
+                          Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
+                          Each movement is logged in the Stock Ledger (history).
+                        */}
+                        <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
+                        <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item>
                       </SubMenu>
 
                       <SubMenu
                         key="5"
                         title={
                           <span>
-                            <Icon type="table" />
+                            <Icon type="bank" />
                             <span>Finance</span>
                           </span>
                         }
@@ -226,13 +242,13 @@ export default class SiderDemo extends React.Component {
                         key="6"
                         title={
                           <span>
-                            <Icon type="table" />
+                            <Icon type="bar-chart" />
                             <span>Report</span>
                           </span>
                         }
                       >
                         <Menu.Item key="61">
-                          <Link to="/reports/sales">Sales Report</Link>
+                          <Link to="/reports/sales-report-center">Sales Report</Link>
                         </Menu.Item>
                         <Menu.Item key="62">
                             <Link to="/reports/purchase">Purchase Report</Link>
@@ -326,6 +342,9 @@ export default class SiderDemo extends React.Component {
                     <Route path="/inventories/items" component={Item} />
                     <Route path="/inventories/transfers" component={Vendor} />
                     <Route path="/inventories/adjustments" component={Vendor} />
+
+                    <Route path="/reports/sales-report-center" component={SaleReportCenter} />
+                    <Route path="/reports/sales-report-receipt" component={SaleReportReceipt} />
 
                     <Route path="/" component={Dashboard} />
                   </Switch>

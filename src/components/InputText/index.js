@@ -47,6 +47,8 @@ export class InputText extends React.Component {
             }
           ],
           initialValue: this.props.data})(<Input
+            size="large"
+            name={this.props.name}
             suffix={this.props.suffix}
             prefix={this.props.prefix}
             type={this.props.type}

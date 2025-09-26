@@ -5,7 +5,7 @@ import Util from "../app/modules/common/util";
 export default class BaseService {
 
    constructor() {
-      this.baseUrl = this.generateAPIUrl();
+      this.baseUrl = `${this.generateAPIUrl()}/g8w4y-32as9v`;
       this.version = "v1";
       this.module = "";
       this.Util = new Util();
@@ -54,29 +54,25 @@ export default class BaseService {
 
    generateAPIUrl() {
       let host = process.env.REACT_APP_API_HOST;
-      let port = process.env.REACT_APP_API_PROD_PORT;
-      if (process.env.REACT_APP_ENV === "DEV") {
-         host = process.env.REACT_APP_API_DEV_HOST;
-         port = process.env.REACT_APP_API_PORT;
-      } else if (process.env.REACT_APP_ENV === "PRE_PROD") {
-         port = process.env.REACT_APP_API_PRE_PROD_PORT;
-      }
+      let port = process.env.REACT_APP_API_PORT;
 
-      const rootPath = process.env.REACT_APP_API_ROOT;
-      const url = `${host}:${port}/${rootPath}`;
+      const url = `${host}:${port}`;
       return url;
    }
 
-   POST(option = {
-      url: "",
-      headers: {},
-      data: {},
-   }) {
-      const response = axios({
-         method: "POST",
-         ...option
-      });
-      return response;
+   async POST(option = { url: "", headers: {}, data: {} }) {
+    const csrfToken = await this.getCsrfToken();
+
+    const response = await axios({
+      method: "POST",
+      url: this.baseUrl + option.url,
+      data: option.data,
+      headers: {
+        "X-CSRF-Token": csrfToken,
+        ...option.headers,
+      },
+      withCredentials: true,
+    });
    }
 
    GET(option = {

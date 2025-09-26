@@ -237,7 +237,7 @@ export default class ProductCreate extends BaseComponent {
           title={<this.Translate id="text_product" />}
           subTitle={<this.Translate id="text_new_product" />}
           extra={[
-            <Button htmlType="submit" loading={productAdd.adding} key={0} type="primary" style={{marginLeft: 15}} id="btnSubmit">
+            <Button size="large" htmlType="submit" loading={productAdd.adding} key={0} type="primary" style={{marginLeft: 15}} id="btnSubmit">
               <this.Translate id="text_save" />(Ctrl+s)
             </Button>
           ]} />

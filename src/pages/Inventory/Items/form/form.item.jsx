@@ -1,9 +1,7 @@
 import React from "react";
 import {
-  Checkbox,
   Form,
   Spin,
-  Button,
   Tag,
   Input,
   Tooltip,
@@ -15,7 +13,6 @@ import {
 import {
   Translate
 } from "@redux/index";
-import { FormItemContext } from "@contexts/index";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Enum from "@enums/index";
@@ -40,6 +37,7 @@ import ProductConditionService from "@services/ProductConditionService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import BaseModal from "@layout/BaseModal";
+import { orderBy } from "lodash";
 import Exchange from "./ExchangeMoneyFunc";
 import "./index.css";
 import FormVariant from "./form.variant";
@@ -68,12 +66,27 @@ function SelectBrand(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      BrandService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setBrands(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     BrandService.get({ limit })
     .then(response => {
       if (response && response.data) {
-        setBrands(response.data.data);
+        if (props?.selected) {
+          setBrands([props.selected].concat(response.data.data));
+        } else {
+          setBrands(response.data.data);
+        }
       }
     })
     .finally(() => {
@@ -91,6 +104,7 @@ function SelectBrand(props) {
     dataSource={brands}
     form={props.form}
     onSearch={onSearchBrand}
+    onChange={handleChange}
   />;
 }
 
@@ -118,6 +132,17 @@ function SelectManufacturer(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      BrandService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setData(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     ManufacturerService.get({ limit })
@@ -141,6 +166,7 @@ function SelectManufacturer(props) {
     dataSource={data}
     form={props.form}
     onSearch={onSearch}
+    onChange={handleChange}
   />;
 }
 
@@ -166,13 +192,28 @@ function SelectCategory(props) {
       }
     }, 1000);
   };
+
+  const handleChange = (value) => {
+    if (!value) {
+      CategoryService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setCategories(response.data.data);
+        }
+      });
+    }
+  };
   
   React.useEffect(() => {
     setLoading(true);
       CategoryService.get(limit)
       .then(response => {
         if (response && response.data) {
-          setCategories(response.data.data);
+          if (props.selected && response.data.data.findIndex(value => value.id === props.selected.id) <= -1) {
+            setCategories(orderBy([props.selected].concat(response.data.data), ["name"]));
+          } else {
+            setCategories(orderBy(response.data.data, ["name"]));
+          }
         }
       })
       .finally(() => {
@@ -189,7 +230,9 @@ function SelectCategory(props) {
     dataSource={categories}
     defaultValue={props.defaultValue}
     form={props.form}
-    onSearch={onSearchCategory} />;
+    onSearch={onSearchCategory}
+    onChange={handleChange}
+  />;
 }
 
 function SelectUnitOfMeasurement(props) {
@@ -247,9 +290,10 @@ function SelectSellingUnit(props) {
   const limit = 15;
 
   const [loading, setLoading] = React.useState(false);
-
   const [units, setUnits] = React.useState([]);
+
   let timeout = null;
+
   const onSearchUnit = search => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
@@ -266,6 +310,17 @@ function SelectSellingUnit(props) {
         });
       }
     }, 1000);
+  };
+
+  const handleChange = (value) => {
+    if (!value) {
+      UnitService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setUnits(response.data.data);
+        }
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -291,6 +346,7 @@ function SelectSellingUnit(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchUnit}
+    onChange={handleChange}
   />;
 }
 
@@ -319,6 +375,17 @@ function SelectStockUnit(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      UnitService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setUnits(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     UnitService.get(limit)
@@ -342,6 +409,7 @@ function SelectStockUnit(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchUnit}
+    onChange={handleChange}
   />;
 }
 
@@ -370,12 +438,27 @@ function SelectOwner(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      VendorService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setOwners(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     VendorService.get(limit)
     .then(response => {
       if (response && response.data) {
-        setOwners(response.data.data);
+        if (props.selected && response.data.data.findIndex(value => value.id === props.selected.id) <= -1) {
+          setOwners([props.selected].concat(response.data.data));
+        } else {
+          setOwners(response.data.data);
+        }
       }
     })
     .finally(() => {
@@ -393,6 +476,7 @@ function SelectOwner(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearchOwner}
+    onChange={handleChange}
   />;
 }
 
@@ -421,12 +505,27 @@ function SelectPreferredSupplier(props) {
     }, 1000);
   };
 
+  const handleChange = (value) => {
+    if (!value) {
+      VendorService.get()
+      .then((response) => {
+        if (response?.data) {
+          setItems(response.data.data);
+        }
+      });
+    }
+  };
+
   React.useEffect(() => {
     setLoading(true);
     VendorService.get(limit)
     .then(response => {
       if (response && response.data) {
-        setItems(response.data.data);
+        if (props.selected && response.data.data.findIndex(value => value.id === props.selected.id) <= -1) {
+          setItems([props.selected].concat(response.data.data));
+        } else {
+          setItems(response.data.data);
+        }
       }
     })
     .finally(() => {
@@ -444,6 +543,7 @@ function SelectPreferredSupplier(props) {
     defaultValue={props.defaultValue}
     form={props.form}
     onSearch={onSearch}
+    onChange={handleChange}
   />;
 }
 
@@ -461,6 +561,17 @@ function SelectCondition(props) {
       }
     });
   }, []);
+
+  const handleChange = (value) => {
+    if (!value) {
+      ProductConditionService.get({ limit })
+      .then((response) => {
+        if (response?.data) {
+          setConditions(response.data.data);
+        }
+      });
+    }
+  };
 
   React.useEffect(() => {
     setLoading(true);
@@ -480,6 +591,7 @@ function SelectCondition(props) {
       valueKey="id"
       dataSource={conditions}
       form={props.form}
+      onChange={handleChange}
   />;
 }
 
@@ -491,7 +603,7 @@ export default class FormItem extends BaseModal {
       productsType: [],
       variants: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
-      isAutoGenerateBarcode: true,
+      isAutoGenerateBarcode: false,
       isRequireInputBarcode: true,
       isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
@@ -688,11 +800,11 @@ export default class FormItem extends BaseModal {
   };
 
   handleEnableAutoBarcode = (checked) => {
-    if (checked) {
-      this.props.form.setFieldsValue({
-        barcode: ""
-      });
-    }
+    // if (checked) {
+    //   this.props.form.setFieldsValue({
+    //     barcode: ""
+    //   });
+    // }
 
     this.setState({
       isAutoGenerateBarcode: checked,
@@ -731,7 +843,6 @@ export default class FormItem extends BaseModal {
       form,
       locale,
       formData,
-      productSearch,
       variantAttributeAdd
     } = this.props;
 
@@ -800,7 +911,7 @@ export default class FormItem extends BaseModal {
                       // defaultChecked={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                       // defaultChecked={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                       onChange={this.handleEnableAutoBarcode}
-                      disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
+                      // disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
                     />
                   )
                 }
@@ -822,6 +933,7 @@ export default class FormItem extends BaseModal {
 
           <SelectCategory
             defaultValue={formData.categoryId}
+            selected={formData?.category}
             placeholder="Choose a category..."
             form={form}
           />
@@ -987,7 +1099,7 @@ export default class FormItem extends BaseModal {
 
             <InputNumber
                 name="distributePrice"
-                label={<Translate id="text_distribute_price" />}
+                label={<Translate id="text_price_to_distributors" />}
                 data={Exchange.dollarToRiel(Util.getItemDistributePrice(this.state.variants), exchangeRate)}
                 precision={this.getPrecisionByCurrency()}
                 placeholder={"0.00"}
@@ -1010,6 +1122,14 @@ export default class FormItem extends BaseModal {
             accessToken={this.Util.getAccessToken()}
             locale={locale}
             form={form}
+          />
+
+          <InputText
+              name="imageUrl"
+              label="Image URL (e.g., product demo or marketing banner)"
+              data={formData.imageUrl}
+              placeholder="Enter image URL (e.g., https://example.com/image.png)"
+              form={form}
           />
 
           <InputText
@@ -1080,14 +1200,13 @@ export default class FormItem extends BaseModal {
             />
           }
           
-
           <Select
             name="defaultLocationId"
             label={"Default Warehouse"}
             placeholder="Please select default wharehouse"
             valueKey="id"
             dataSource={this.props.locations.list}
-            defaultValue={formData.defaultLocationId}
+            defaultValue={parseInt(formData.defaultLocationId)}
             form={form}
           />
         </CustomCollapse>
@@ -1099,6 +1218,7 @@ export default class FormItem extends BaseModal {
         >
           <SelectOwner
             defaultValue={formData.supplierId}
+            selected={formData.supplier}
             placeholder={this.CATranslate("text_owner", locale)}
             form={form}
           />
@@ -1113,6 +1233,7 @@ export default class FormItem extends BaseModal {
 
           <SelectPreferredSupplier
             defaultValue={formData.preferredSupplierId}
+            selected={formData.preferredSupplier}
             placeholder={"Select your preferred supplier from the list"}
             form={form}
           />
@@ -1230,6 +1351,7 @@ export default class FormItem extends BaseModal {
 
           <SelectBrand
             placeholder={"Select item brand..."}
+            selected={formData?.brand}
             form={form}
             defaultValue={formData.brandId}
           />

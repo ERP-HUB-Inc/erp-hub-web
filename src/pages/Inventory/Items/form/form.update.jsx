@@ -246,7 +246,7 @@ export default class ProductUpdate extends BaseComponent {
             title={<Translate id="text_item" />}
             subTitle={<Translate id="text_edit_item" />}
             extra={[
-              <Button key="1" htmlType="submit" title="Ctrl + s" loading={this.props.productUpdate.updating} type="primary" style={{marginLeft: 15}} id="btnSubmit">
+              <Button size="large" key="1" htmlType="submit" title="Ctrl + s" loading={this.props.productUpdate.updating} type="primary" style={{marginLeft: 15}} id="btnSubmit">
                 <Translate id="text_save" />
               </Button>
             ]}

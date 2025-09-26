@@ -103,13 +103,7 @@ export default class ClientSignIn extends Component {
       this.validateClassStatus = "has-error";
 
       this.props.dispatch(ClientAction.reset());
-    }
-
-    //set device number
-    if(this.props.updateDeviceNumber.updated){
-      localStorage.setItem(ConstantAuth.ACCESS_DEVICE, this.props.updateDeviceNumber.response.data.code);
-    }
-   
+    }   
 
   }
   

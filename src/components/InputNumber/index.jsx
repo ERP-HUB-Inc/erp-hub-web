@@ -38,8 +38,6 @@ export class InputNumber extends React.Component {
 
   // Handles number input changes
   handleNumberChange = (value) => {
-    this.validatePrimeNumber(value);
-
     if (this.props.onChange) {
       this.props.onChange(value);
     }

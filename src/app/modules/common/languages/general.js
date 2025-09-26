@@ -89,7 +89,7 @@ export default {
   text_delete: ["Delete", "លុប"],
 
   text_remove: ["Remove", "ដកចេញ"],
-
+ 
   text_updated_at: ["Update", "កែរប្រែ"],
 
   text_option: ["Option", "ជម្រើស"],
@@ -132,7 +132,7 @@ export default {
 
   text_all_category: ["All categories", "គ្រប់ប្រភេទ"],
 
-  text_all_stores: ["All stores", "គ្រប់ទីតាំង"],
+  text_all_location: ["All locations", "គ្រប់ទីតាំង"],
 
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],
 
@@ -145,6 +145,8 @@ export default {
   text_retail_price: ["Retail Price", "តម្លៃលក់រាយ"],
 
   text_quantity: ["Quantity", "បរិមាណ"],
+
+  text_current_stock: ["Current Stock", "បរិមាណ"],
 
   text_current_quantity: ["Current Quantity", "បរិមាណបច្ចុប្បន្ន"],
 
@@ -212,6 +214,8 @@ export default {
   text_item: ["Item", "មុខទំនិញ"],
 
   text_items: ["Items", "មុខទំនិញ"],
+
+  text_items_management: ["Items Management", "គ្រប់គ្រងមុខទំនិញ"],
 
   text_records: ["Items", "ទិន្នន័យ"],
 
@@ -313,8 +317,6 @@ export default {
   text_walkin: ["Walk In", "អតិថិជនទូទៅ"],
 
   text_location: ["Location", "ទីកន្លែង"],
-
-  text_all_location: ["All Location", "គ្រប់ទីតាំង"],
 
   text_other_location: ["Other Location", "ទីតាំងផ្សេង"],
 
