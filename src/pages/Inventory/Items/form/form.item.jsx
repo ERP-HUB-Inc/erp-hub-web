@@ -668,12 +668,16 @@ export default class FormItem extends BaseModal {
 
     this.statuses = [
       {
-        name: "Active",
+        name: "Draft",
         value: 1
       },
       {
+        name: "Ready for Sale",
+        value: 2
+      },
+      {
         name: "Inactive",
-        value: 0
+        value: 3
       }
     ];
     this.timer = null;
@@ -1034,6 +1038,7 @@ export default class FormItem extends BaseModal {
               </div>
             }
             dataSource={this.statuses}
+            value={formData.status}
             defaultValue={formData.status !== "" ? formData.status : this.statuses[0].status}
             form={form}
           />

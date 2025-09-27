@@ -1,7 +1,7 @@
 import React from "react";
-import FormItem from "./FormItem";
-import BrandAction from "../redux/action";
 import BaseModal from "@layout/BaseModal";
+import FormItem from "./form.item.jsx";
+import BrandAction from "../redux/action.js";
 
 export default class FormCreate extends BaseModal {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Loadable from "react-loadable"
-import { Dropdown, Layout, Menu, Icon, Divider } from 'antd'
-import { Provider } from "react-redux"
+import { Dropdown, Layout, Menu, Icon, Divider } from "antd";
+import { Provider } from "react-redux";
 import {
   BrowserRouter,
   Link,
@@ -18,6 +18,8 @@ import StartUp from "../app/modules/common/components/StartUp";
 import './NewSidebar.css'
 import { ERPHub } from '../components';
 import Item from "../pages/Inventory/Items";
+import SettingsPage from '@settings/SettingPage';
+import SystemLogs from '@settings/SystemLogs';
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -139,6 +141,16 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
+    // Setting
+    const Category = Loadable({
+      loader: () => import("@settings/Modules/Category/index"),
+      loading: () => <StartUp />,
+    });
+
+    const Brand = Loadable({
+      loader: () => import("@settings/Modules/Brand/index"),
+      loading: () => <StartUp />,
+    });
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
@@ -266,8 +278,10 @@ export default class SiderDemo extends React.Component {
                       </SubMenu>
 
                       <Menu.Item key="7">
-                        <Icon type="setting" />
-                        <span>Settings</span>
+                        <Link to="/settings">
+                          <Icon type="setting" />
+                          <span>Settings</span>
+                        </Link>
                       </Menu.Item>
                     </Menu>
                 </Sider>
@@ -345,6 +359,11 @@ export default class SiderDemo extends React.Component {
 
                     <Route path="/reports/sales-report-center" component={SaleReportCenter} />
                     <Route path="/reports/sales-report-receipt" component={SaleReportReceipt} />
+
+                    <Route path="/settings" component={SettingsPage} />
+                    <Route path="/categories" component={Category} />
+                    <Route path="/brands" component={Brand} />
+                    <Route path="/setting-logs" component={SystemLogs} />
 
                     <Route path="/" component={Dashboard} />
                   </Switch>

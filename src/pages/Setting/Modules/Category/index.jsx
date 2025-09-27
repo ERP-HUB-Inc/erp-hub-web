@@ -1,7 +1,7 @@
 import React from "react";
-import {connect} from "@redux/index";
-import {Form} from "antd";
-import CategoryPage from "./components";
+import { connect } from "@redux/index";
+import { Form } from "antd";
+import CategoryPage from "./form";
 
 function CategoryContainer(props) {
   return <CategoryPage {...props} />;

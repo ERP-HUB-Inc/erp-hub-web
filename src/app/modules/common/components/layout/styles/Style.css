@@ -505,7 +505,7 @@ color: #4D4F5C;
 }
 
 .ant-layout {
-    background:#F7F7F7;
+    background:#fff !important;
     height: 100%;
     position: relative
 }

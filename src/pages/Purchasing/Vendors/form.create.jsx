@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormCreatePage from "./components/FormCreate";
+import FormCreatePage from "./form/form.create";
 
 function SupplierContainer(props) {
   return <FormCreatePage {...props} />;

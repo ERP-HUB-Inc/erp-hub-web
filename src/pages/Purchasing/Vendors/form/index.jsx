@@ -1,10 +1,10 @@
 import React from "react";
-import FormCreatePage from "../FormCreate";
-import FormUpdatePage from "../FormUpdate";
+import VendorService from "@services/VendorService";
+import Datatable from "@layout/Datatable";
 import Constant from "../redux/constant";
-import SupplierAction from "../redux/action";
-import SupplierService from "../../../../services/VendorService";
-import Datatable from "../../../../layout/Datatable";
+import VendorAction from "../redux/action";
+import FormCreatePage from "../form.create";
+import FormUpdatePage from "../form.update";
 
 export default class SupplierList extends Datatable {
   constructor(props) {
@@ -33,15 +33,16 @@ export default class SupplierList extends Datatable {
         dataIndex: "email",
         key: "email",
         sorter: true
-      },
-      this.columnStatus
-    ];
+      }
+    ].concat(this.renderActionColumn());
+    this.title = "Vendors";
+    this.placeholder = "Search vendors...";
     this.formCreate = <FormCreatePage />;
     this.formUpdate = <FormUpdatePage />;
-    this.service = SupplierService;
+    this.service = VendorService;
+    this.action = VendorAction;
     this.placeHolderForGeneralSearch = "general_search";
     this.columnFilterWithKey = ["name", "phoneNumber", "email", "description"];
-    this.action = SupplierAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
   }
 }

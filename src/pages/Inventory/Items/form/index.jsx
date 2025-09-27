@@ -37,26 +37,6 @@ import "./index.css";
 
 const { Text } = Typography;
 
-const menu = (
-  <Menu>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-        1st menu item
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-        2nd menu item
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-        3rd menu item
-      </a>
-    </Menu.Item>
-  </Menu>
-);
-
 export default class ProductList extends Datatable {
    constructor(props) {
       super(props);
@@ -141,7 +121,7 @@ export default class ProductList extends Datatable {
                               color: '#fa8c16',
                               fontWeight: '500'
                               }}>
-                              📉 low
+                                 📉 low
                               </Text>
                            )}
                         </div>
@@ -599,8 +579,9 @@ export default class ProductList extends Datatable {
                         <Input
                            placeholder={this.CATranslate("text_search_item", this.props.locale)}
                            form={this.props.form}
-                           style={{width: 314, marginBottom: 0}}
                            onChange={this.onSearch}
+                           prefix={<Icon type="search" />}
+                           style={{width: 314, marginBottom: 0}}
                            allowClear={true}
                            size="large"
                         />

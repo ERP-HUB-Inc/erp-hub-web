@@ -169,6 +169,7 @@ export default class ProductUpdate extends BaseComponent {
         }
 
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
+
         values["productVariants"] = values?.variantId?.map((variantId, index) => {
           return {
             id: variantId,
@@ -182,7 +183,10 @@ export default class ProductUpdate extends BaseComponent {
             status: values?.variantStatus?.[index],
           }
         });
-        
+
+        // In case for production non-variant
+        values.productVariantId = this.props.productDetail?.data?.productVariants?.[0]?.id ?? null;
+
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.update(values));

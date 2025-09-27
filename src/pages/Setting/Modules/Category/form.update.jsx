@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/products/ProductsType/FormUpdate";
+import { FormUpdate } from "./form/form.update";
 
-class ProductsTypeForm extends React.Component {
+class CategoryEditForm extends React.Component {
   render() {
     return (
       <FormUpdate {...this.props} />
@@ -27,6 +27,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const productsTypeForm = Form.create(mapPropsToFields)(ProductsTypeForm);
+const categoryEditForm = Form.create(mapPropsToFields)(CategoryEditForm);
 
-export default connect(mapStateToProps)(productsTypeForm);
+export default connect(mapStateToProps)(categoryEditForm);

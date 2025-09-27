@@ -3,8 +3,10 @@ import {
   isMobile,
   isMobileOnly
 } from "react-device-detect";
-import {Button, Pagination} from "antd";
+import { Button, Dropdown, Input, Menu, Divider, Pagination, Row, Col, Icon } from "antd";
+import ReactGA from "react-ga4";
 import Component  from "@components/BaseComponent";
+import { Translate } from "@redux/index";
 import menuSource from "../app/modules/common/components/layout/SiderBar/datasource";
 import BaseService from "../app/modules/common/services/BaseService";
 import PrivilegeAction from "../app/modules/pos/action/settings/privilege";
@@ -32,7 +34,8 @@ export default class Datatable extends Component {
       isRequestAdd: false,
       isShowFilter: !isMobileOnly //default show filter on difference from mobile
     };
-
+    this.title = "";
+    this.placeholder = "";
     this.rowSelection = true;
     this.showExport = false;
     this.ExportheadersCsv = [];
@@ -96,6 +99,16 @@ export default class Datatable extends Component {
 
   /**===================================================================SHARE FUNCTION FOR CHILD CLASS============================================================**/
 
+  fetchData = () => {
+    this.service.get({ limit: this.pageSize, offset: (this.state.current - 1) * this.pageSize })
+    .then(response => {
+      if (response && response.data) {
+        this.setState({ data: response.data });
+      }
+    })
+    .finally(() => this.setState({loading: false}));
+  }
+
   formatDate(value) {
     const setting = this.Util.getSetting();
     return this.Util.formatDate(value, setting.dateFormat);
@@ -127,7 +140,7 @@ export default class Datatable extends Component {
   /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
     if (this.action) {
-      this.props.dispatch(this.action.fetch(this.pageSize));   
+      this.props.dispatch(this.action.fetch(this.pageSize));  
     }
   }
 
@@ -212,14 +225,10 @@ export default class Datatable extends Component {
   }
 
   /**
-   * just handle for show user click on single row and display form edit
+   * Just handle for show user click on single row and display form edit
    * it will overide in child class
    */
   handleShowFormEdit(rowData) {
-    if (this.checkIsAllowEditRecordOrNot(rowData)) {
-      return;
-    }
-
     if (this.action) {
       if (this.callBackOnShowEditForm) {
         this.callBackOnShowEditForm(rowData);
@@ -452,13 +461,43 @@ export default class Datatable extends Component {
     );
   }
 
+  renderActionColumn() {
+    return {
+      title: <Translate id="text_action" />,
+      key: "action",
+      dataIndex: "action",
+      align: "center",
+      width: 100,
+      render: (_, record) => {
+          const menu = (
+            <Menu>
+                <Menu.Item key={1}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <Translate id="text_view" />
+                </Menu.Item>
+                <Menu.Item key={2} onClick={() => this.handleShowFormEdit(record)}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit" />
+                </Menu.Item>
+                <Divider style={{marginTop: 4, marginBottom: 4}} />
+                <Menu.Item key={4} onClick={() => this.handleConfirm(record)}>
+                  <Icon type="delete" style={{marginRight: 10}} /> <Translate id="text_delete" />
+                </Menu.Item>
+            </Menu>
+          );
+          return <Dropdown overlay={menu} placement="bottomLeft">
+            <Button icon="more" />
+          </Dropdown>;
+      }
+    };
+  }
+
   renderButtonAddNew() {
     return (
       <Button
         type="primary"
         className="mg-right"
         disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
-        onClick={this.handleShowFormAdd}>
+        onClick={this.handleShowFormAdd}
+      >
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
       </Button>
@@ -773,20 +812,92 @@ export default class Datatable extends Component {
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }
+
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        // disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
+        name: record.name,
+      })
+    };
     
     return (
-      
       <div className="content-list">
-        <div style={{height: "100%"}}>
-          <div className="wrap-filter" style={{ display: `${this.state.isShowFilter ? "" : "none"}`}}>
+        <div style={{height: "100%", marginTop: 10}}>
+          {/* <div className="wrap-filter" style={{ display: `${this.state.isShowFilter ? "" : "none"}`}}>
             { this.renderFilterRecord() }
-          </div>
+          </div> */}
+          <div className="table-wrapper">
+            <Row>
+                <Col md={3} style={{marginBottom: 0}}>
+                  <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
+                </Col>
+                <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
+                  <Input
+                      placeholder={this.placeholder}
+                      form={this.props.form}
+                      onChange={this.onSearch}
+                      prefix={<Icon type="search" />}
+                      style={{width: 314, marginBottom: 0}}
+                      allowClear={true}
+                      size="large"
+                  />
 
-          { this.renderTableList(fetchingProps) }
+                  {/* <this.Link to="/inventories/items/create" onClick={() => { 
+                      ReactGA.event({
+                        category: "Action Button",
+                        action: "click",
+                        label: "ERP HUB Web",
+                      });
+                      }} className="ant-btn ant-btn-primary ant-btn-lg">
+                      <Translate id="text_add_new" />
+                  </this.Link> */}
+
+                  <Button icon="plus" type="primary" size="large" onClick={() => {
+                    ReactGA.event({
+                      category: "Action Button",
+                      action: "click",
+                      label: "ERP HUB Web"
+                    });
+
+                    if (this.action && this.formCreate) {
+                      this.props.dispatch(this.action.showForm());
+                      this.setState({
+                        modalConten: this.formCreate,
+                        loadingPopup: false
+                      });
+                    }
+                  }} style={{ marginLeft: 10 }}>
+                    <Translate id="text_add_new" />
+                  </Button>
+                </Col>
+            </Row>
+
+            <this.Table
+              bordered={true}
+              // rowSelection={this.rowSelection ? rowSelection : null}
+              dataSource={fetchingProps.list}
+              columns={this.columns}
+              onChange={this.onChange}
+              locale={{ emptyText: <this.Translate id="table_empty_data"/> }}
+              onRow={record =>({
+                onDoubleClick:() => this.handleShowFormEdit(record),
+                onClick: (event) => this.handleOnTapHandler(event, record)
+              })}
+              loading={fetchingProps.fetching}
+            />
+
+            <div style={{marginTop: 15, marginBottom: 15}}>
+              {this.renderPagination(fetchingProps)}
+            </div>
+            
+            <this.clearFloating/>
+          </div>
   
           { this.state.modalContent1 }
 
-          { this.state.modalConten }
+          { this.formUpdate }
       
           { this.renderModalConfirmDelete() }
         </div>

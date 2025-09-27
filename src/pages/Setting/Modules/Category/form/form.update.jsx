@@ -1,10 +1,11 @@
 import React from "react";
-import FormItem from "./FormItem";
-import ProductsTypeAction from "../../../actions/products/productsType";
-import Constant from "../../../constants/products/productsType";
-import Modal from "../../../../common/components/shares/Modal";
+import BaseModal from "@layout/BaseModal";
+import FormItem from "./form.item";
+import CategoryAction from "../redux/action";
+import Constant from "../redux/constant";
 
-export default class Form extends Modal {
+
+export class FormUpdate extends BaseModal {
 
   title = <this.Translate id="text_category" />;
 
@@ -21,18 +22,18 @@ export default class Form extends Modal {
         if (values["image"]) {
           values["image"] = this.getImageFromUpload(values, "image");
         }
-        this.props.dispatch(ProductsTypeAction.update(values));
+        this.props.dispatch(CategoryAction.update(values));
       }
     });
   }
     
   handleCancel() {
-    this.props.dispatch(ProductsTypeAction.reset(Constant.RESET_DETAIL_CATEGORY));
+    this.props.dispatch(CategoryAction.reset(Constant.RESET_DETAIL_CATEGORY));
   }
 
   render() {
     this.submitLoading = this.props.productsTypeUpdate.updating;
-
+  
     if (this.props.productsTypeDetail.showForm) {
       this.content = <FormItem
         formData={this.props.productsTypeDetail.data}

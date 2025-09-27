@@ -132,6 +132,10 @@ export default {
 
   text_all_category: ["All categories", "គ្រប់ប្រភេទ"],
 
+  text_categories: ["Categories", "ប្រភេទមុខទំនិញ"],
+
+  text_brands: ["Brands", "ម៉ាកផលិតផល"],
+
   text_all_location: ["All locations", "គ្រប់ទីតាំង"],
 
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],

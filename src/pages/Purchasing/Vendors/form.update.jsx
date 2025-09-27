@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdatePage from "./components/FormUpdate";
+import FormUpdatePage from "./form/form.update";
 
 function SupplierFormContainer(props) {
   return <FormUpdatePage {...props} />

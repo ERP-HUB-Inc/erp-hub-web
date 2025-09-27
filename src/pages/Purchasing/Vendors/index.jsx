@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import SupplierPage from "./components";
+import SupplierPage from "./form";
 
 function SupplierContainer(props) {
   return <SupplierPage {...props} />;
@@ -12,7 +12,6 @@ function mapStateToProps(state) {
     list: state.reducer.supplier.request,
     add: state.reducer.supplier.add,
     update: state.reducer.supplier.update,
-    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

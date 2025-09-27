@@ -1,5 +1,5 @@
 import React from "react";
-import FormItem from "./FormItem";
+import FormItem from "./form.item";
 import BaseModal from "@layout/BaseModal";
 import CategoryAction from "../redux/action";
 

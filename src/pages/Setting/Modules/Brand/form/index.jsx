@@ -1,22 +1,25 @@
 import React from "react";
-import FormCreate from "../../../containers/products/Brand/FormCreate";
-import FormUpdate from "../../../containers/products/Brand/FormUpdate";
-import Constant from "../../../constants/products/brand";
-import BrandAction from "../../../actions/products/brand";
-import BrandService from "../../../services/products/BrandService";
-import DataTable from "../../../../common/components/shares/List/DataTable";
+import BrandService from "@services/BrandService";
+import DataTable from "@layout/Datatable";
+import { Translate } from "@redux/index";
+import FormCreate from "../form.create";
+import FormUpdate from "../form.update";
+import Constant from "../redux/constant";
+import BrandAction from "../redux/action";
 
 export default class Lists extends DataTable {
   constructor(props) {
     super(props);
-    this.module = "products";
+    this.module = "brands";
+    this.title = <Translate id="text_brands" />;
+    this.placeholder = "Search brands...";
     this.columns = [
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name"
       }
-    ];
+    ].concat([this.renderActionColumn()]);;
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
     this.service = BrandService;

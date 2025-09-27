@@ -1,7 +1,7 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect } from "@redux";
 import { Form } from "antd";
-import FormCreatePage from "./components/FormCreate";
+import FormCreatePage from "./form/form.create";
 
 function FormCreateContainer(props) {
   return <FormCreatePage {...props} />;
@@ -9,8 +9,7 @@ function FormCreateContainer(props) {
 
 function mapStateToProps(state) {
   return {
-    productsTypeAdd: state.reducer.productsType.add,
-    productsType: state.reducer.productsType.request.list,
+    brandAdd: state.reducer.brand.add,
     locale: state.locale
   };
 }

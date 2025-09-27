@@ -1,10 +1,14 @@
 import React from "react";
 import { connect } from "@redux/index";
 import { Form } from "antd";
-import FormUpdatePage from "./components/FormUpdate";
+import FormUpdate from "./form/form.update";
 
-function FormUpdateContainer(props) {
-  return <FormUpdatePage {...props} />;
+class BrandEditForm extends React.Component {
+  render() {
+    return (
+      <FormUpdate {...this.props} />
+    );
+  }
 }
 
 function mapStateToProps(state) {
@@ -21,6 +25,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const formUpdateContainer = Form.create(mapPropsToFields)(FormUpdateContainer);
+const brandEditForm = Form.create(mapPropsToFields)(BrandEditForm);
 
-export default connect(mapStateToProps)(formUpdateContainer);
+export default connect(mapStateToProps)(brandEditForm);

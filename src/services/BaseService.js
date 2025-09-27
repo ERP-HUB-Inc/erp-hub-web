@@ -87,7 +87,7 @@ export default class BaseService extends Service {
    getById(ids){
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/detail/${ids}`,
+         url: `${this.baseUrl}/${ids}`,
          data: this.data,
          headers: this.header
       });
@@ -127,6 +127,15 @@ export default class BaseService extends Service {
          ...data,
          isSystem: 0
          },
+         headers: this.header
+      });
+   }
+
+   update(data) {
+      this.setHeader();
+      return this.PUT({
+         url: `${this.baseUrl}/${data.id}`, 
+         data,
          headers: this.header
       });
    }

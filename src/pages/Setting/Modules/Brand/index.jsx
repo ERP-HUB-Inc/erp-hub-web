@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "@redux/index";
 import { Form } from "antd";
-import BrandPage from "./components";
+import BrandPage from "./form";
 
 function BrandContainer(props) {
   return <BrandPage {...props} />;
@@ -12,7 +12,6 @@ function mapStateToProps(state) {
     list: state.reducer.brand.request,
     add: state.reducer.brand.add,
     update: state.reducer.brand.update,
-    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }
