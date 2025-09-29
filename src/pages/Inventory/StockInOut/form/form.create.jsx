@@ -4,7 +4,7 @@ import {
   PageHeader
 } from "antd";
 import sweetalert from "sweetalert";
-import FormItem from "./FormItem";
+import FormItem from "./form.item";
 import Constant from "../redux/constant";
 import Action from "../redux/action";
 import Enum from "../../../../enums";

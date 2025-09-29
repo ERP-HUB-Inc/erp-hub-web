@@ -1,5 +1,5 @@
 import React from "react";
-import ProductDropDownSearch from "./DropDownSearch";
+import ProductDropDownSearch from "./dropdown.search";
 import Enum from "@enums/index";
 import Util from "@helper/item";
 import BaseModal from "@layout/BaseModal";

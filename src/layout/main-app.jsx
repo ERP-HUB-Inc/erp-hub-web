@@ -10,16 +10,18 @@ import {
   Switch
 } from "react-router-dom";
 import ReactGA from "react-ga4";
-import history from "../app/modules/common/router/history";
+import history from '@router/index';
 import Util from "../app/modules/common/util";
 import configureStore from "../app/store/configureStore";
 import Localization from "../app/localization";
 import StartUp from "../app/modules/common/components/StartUp";
 import './NewSidebar.css'
 import { ERPHub } from '../components';
-import Item from "../pages/Inventory/Items";
 import SettingsPage from '@settings/SettingPage';
 import SystemLogs from '@settings/SystemLogs';
+import OrdersDashboard from '@settings/OrderDashboard';
+import TabletView from '@settings/TableView';
+import { ColumnSelection } from '@settings/ColumnSelection';
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -97,11 +99,11 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const NewPurchaseOrder = Loadable({
-      loader: () => import("../pages/Purchasing/Orders/FormCreate"),
+      loader: () => import("../pages/Purchasing/Orders/form.create"),
       loading: () => <StartUp />,
     });
     const UpdatePurchaseOrder = Loadable({
-      loader: () => import("../pages/Purchasing/Orders/FormUpdate"),
+      loader: () => import("../pages/Purchasing/Orders/form.update"),
       loading: () => <StartUp />,
     });
 
@@ -110,10 +112,14 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
-    // const Item = Loadable({
-    //   loader: () => import("../pages/Inventory/Items"),
-    //   loading: () => <StartUp />,
-    // });
+    const Item = Loadable({
+      loader: () => import("../pages/Inventory/Items"),
+      loading: () => <StartUp />,
+    });
+    const StockInOut = Loadable({
+      loader: () => import("../pages/Inventory/StockInOut"),
+      loading: () => <StartUp />,
+    });
     const NewItem = Loadable({
       loader: () => import("../pages/Inventory/Items/form.create"),
       loading: () => <StartUp />,
@@ -123,11 +129,11 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const ViewItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/ProductDetail"),
+      loader: () => import("../pages/Inventory/Items/form/product.detail"),
       loading: () => <StartUp />,
     });
     const SplitItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/ProductSplit"),
+      loader: () => import("../pages/Inventory/Items/form/product.split"),
       loading: () => <StartUp />,
     });
 
@@ -156,9 +162,9 @@ export default class SiderDemo extends React.Component {
     const theme = 'light';
     const isPOSPage = window.location.pathname === "/pos";
     const styledContent = {
-      margin: '24px 16px',
+      margin: '0px 0px',
       marginTop: 52,
-      padding: 24,
+      padding: 0,
       height: '100vh'
     }
 
@@ -220,7 +226,7 @@ export default class SiderDemo extends React.Component {
                         }
                       >
                         <Menu.Item key="41"><Link to="/inventories/items">Items</Link></Menu.Item>
-                        <Menu.Item key="42"><Link to="/inventories/transfers">Stock In/Out</Link></Menu.Item>
+                        <Menu.Item key="42"><Link to="/inventories/stock-inout">Stock In/Out</Link></Menu.Item>
                         {/* 
                           Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
                           Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
@@ -354,6 +360,7 @@ export default class SiderDemo extends React.Component {
                     <Route path="/inventories/items/view/:id" component={ViewItem} />
                     <Route path="/inventories/items/split/:productVariantId" component={SplitItem} />
                     <Route path="/inventories/items" component={Item} />
+                    <Route path="/inventories/stock-inout" component={StockInOut} />
                     <Route path="/inventories/transfers" component={Vendor} />
                     <Route path="/inventories/adjustments" component={Vendor} />
 
@@ -364,6 +371,9 @@ export default class SiderDemo extends React.Component {
                     <Route path="/categories" component={Category} />
                     <Route path="/brands" component={Brand} />
                     <Route path="/setting-logs" component={SystemLogs} />
+                    <Route path="/order-dashboards" component={OrdersDashboard} />
+                    <Route path="/table-views" component={TabletView} />
+                    <Route path="/columns" component={ColumnSelection} />
 
                     <Route path="/" component={Dashboard} />
                   </Switch>

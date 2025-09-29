@@ -9,7 +9,7 @@ import VariantService from "@services/VariantService";
 import BaseModal from "@layout/BaseModal";
 import ProductAction from "../redux/action";
 import Constant from "../redux/constant";
-import Exchange from "./ExchangeMoneyFunc";
+import Exchange from "./exchange-money-func";
 import "./index.css";
 import { Variant } from "@model/index";
 

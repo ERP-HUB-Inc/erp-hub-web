@@ -1,6 +1,6 @@
 import React from "react";
 import Enum from "@enums/index";
-import Datatable from "@layout/Datatable";
+import Datatable from "@layout/datatable";
 import CategoryService from "@services/CategoryService";
 import { Translate } from "@redux/index";
 import FormCreate from "../form.create";

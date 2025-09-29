@@ -6,7 +6,7 @@ import {
   Spin
 } from "antd";
 import sweetalert from "sweetalert";
-import FormItem from "./FormItem";
+import FormItem from "./form.item";
 import Action from "../redux/action";
 import Component from "../../../../app/modules/common/components/Component";
 import Enum from "../../../../enums";

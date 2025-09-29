@@ -8,6 +8,7 @@ import {
    Row,
    Col,
    Table,
+   Tabs,
    Input,
    Pagination,
    Tag,
@@ -15,11 +16,12 @@ import {
    Button
 } from "antd";
 import ReactGA from "react-ga4";
+import { Link } from "react-router-dom";
 import { Translate } from "@redux/index";
 import history from "@router/index";
-import Exchange from "./ExchangeMoneyFunc";
-import EditStock from "./EditStock";
-import Datatable from "@layout/Datatable";
+import Exchange from "./exchange-money-func";
+import EditStock from "./edit-stock";
+import Datatable from "@layout/datatable";
 import CommonUtil from "@common/util";
 import Util from "@helper/inventory";
 import Enum from "@enums/index";
@@ -33,9 +35,11 @@ import Constant from "../redux/constant";
 import ProductService from "@services/ProductService";
 import LocationService from "@services/LocationService";
 import ExchangeRateService from "@services/ExchangeRateService";
+import { PageHeader } from "@components/PageHeader";
 import "./index.css";
 
 const { Text } = Typography;
+const { TabPane } = Tabs;
 
 export default class ProductList extends Datatable {
    constructor(props) {
@@ -173,19 +177,19 @@ export default class ProductList extends Datatable {
                const menu = (
                   <Menu>
                      <Menu.Item key={1}>
-                        <this.Link to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}>
+                        <Link to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}>
                            <Icon type="eye" style={{marginRight: 10}} /> <Translate id="text_view" />
-                        </this.Link>
+                        </Link>
                      </Menu.Item>
                      <Menu.Item key={2}>
-                        <this.Link to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}>
+                        <Link to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}>
                            <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit" />
-                        </this.Link>
+                        </Link>
                      </Menu.Item>
                      <Menu.Item key={3} className={record.isSplittable ? "" : "hidden"}>
-                        <this.Link to={`/inventories/items/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
+                        <Link to={`/inventories/items/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
                            <Icon type="scissor" style={{marginRight: 10}} /> <Translate id="text_slit_item" />
-                        </this.Link>
+                        </Link>
                      </Menu.Item>
                      <Divider style={{marginTop: 4, marginBottom: 4}} />
                      <Menu.Item key={4} onClick={() => this.handleConfirm(record)}>
@@ -569,63 +573,87 @@ export default class ProductList extends Datatable {
       return (
          <div className="content-list">
             <EditStock ref={f => this.editStockRef = f} locale={this.props.locale} callback={() => this.fetchList(true)} />
-            <div style={{height: "100%", marginTop: 10}}>
-               <div className="table-wrapper">
-                  <Row>
-                     <Col md={3} style={{marginBottom: 0}}>
-                        <h3 style={{marginBottom: 0, fontWeight: 600}}><Translate id="text_items" /></h3>
-                     </Col>
-                     <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
-                        <Input
-                           placeholder={this.CATranslate("text_search_item", this.props.locale)}
-                           form={this.props.form}
-                           onChange={this.onSearch}
-                           prefix={<Icon type="search" />}
-                           style={{width: 314, marginBottom: 0}}
-                           allowClear={true}
-                           size="large"
-                        />
-
-                        <SelectCategory
-                           ref={this.SelectCategoryRef}
-                           onChange={this.onChangeCategory}
-                        />
-
-                        <SelectLocation
-                           ref={this.SelectLocationRef}
-                           onChange={this.onChangeLocation}
-                        />
-
-                        <this.Link to="/inventories/items/create" onClick={() => { 
+            <div className="table-wrapper">
+               <PageHeader
+                  title="Items Management"
+                  subtitle="Manage all products and services"
+                  breadcrumbs={[
+                     { text: 'Dashboard', href: '/dashboard' },
+                     { text: 'Items Management' }
+                  ]}
+                  actions={[
+                     {
+                        text: 'Import Items',
+                        type: 'default',
+                        icon: 'upload',
+                        onClick: () => {}
+                     },
+                     {
+                        text: <Translate id="text_add_new" />,
+                        type: 'primary',
+                        icon: 'plus',
+                        onClick: () => {
                            ReactGA.event({
                               category: "Action Button",
-                              action: "click",
+                              action: "Add New Item",
                               label: "ERP HUB Web",
                            });
-                           }} className="ant-btn ant-btn-primary ant-btn-lg">
-                           <Translate id="text_add_new" />
-                        </this.Link>
-                     </Col>
-                  </Row>
 
-                  <Table
-                     rowKey="id"
-                     bordered={true}
-                     pagination={false}
-                     dataSource={this.state.products}
-                     columns={this.columns}
-                     rowClassName={this.rowClassName}
-                     locale={{emptyText: <Translate id="table_empty_data"/>}}
-                     // expandedRowRender={this.expandedRender}
-                     onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
-                     loading={this.state.loading} />
+                           history.push("/inventories/items/create");
+                        }
+                     }
+                  ]}
+               />
 
-                  <div style={{marginTop: 15}}>
-                     {this.renderPagination()}
-                  </div>
+               <Tabs defaultActiveKey="item">
+                  <TabPane tab={`Items(${this.state.pagination.total})`} key="item" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
+                     <Row style={{ marginBottom: 10 }}>
+                        <Col md={24}>
+                           <Input
+                              placeholder={this.CATranslate("text_search_item", this.props.locale)}
+                              form={this.props.form}
+                              onChange={this.onSearch}
+                              suffix={<Icon type="search" />}
+                              style={{width: 350, marginBottom: 0}}
+                              allowClear={true}
+                           />
 
-                  <this.clearFloating/>
-               </div>
+                           <SelectCategory
+                              ref={this.SelectCategoryRef}
+                              onChange={this.onChangeCategory}
+                           />
+
+                           <SelectLocation
+                              ref={this.SelectLocationRef}
+                              onChange={this.onChangeLocation}
+                           />
+                        </Col>
+                     </Row>
+
+                     <Table
+                        rowKey="id"
+                        bordered={true}
+                        pagination={false}
+                        dataSource={this.state.products}
+                        columns={this.columns}
+                        rowClassName={this.rowClassName}
+                        locale={{emptyText: <Translate id="table_empty_data"/>}}
+                        // expandedRowRender={this.expandedRender}
+                        onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
+                        loading={this.state.loading}
+                        size="middle"
+                     />
+
+                     <div style={{marginTop: 15}}>
+                        {this.renderPagination()}
+                     </div>
+
+                     <this.clearFloating/>
+                  </TabPane>
+                  <TabPane tab="Stock" key="stock" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
+                     Content of Tab Pane 3
+                  </TabPane>
+               </Tabs>
             </div>
          </div>
       );

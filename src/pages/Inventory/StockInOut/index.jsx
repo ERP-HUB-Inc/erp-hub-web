@@ -1,10 +1,10 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import PurchaseOrderPage from "./components";
+import StockInOutPage from "./form";
 
 function PurchaseOrderContainer(props) {
-  return <PurchaseOrderPage {...props} />;
+  return <StockInOutPage {...props} />;
 }
 
 function mapStateToProps(state) {

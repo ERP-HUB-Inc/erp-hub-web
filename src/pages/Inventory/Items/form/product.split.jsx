@@ -10,7 +10,7 @@ import {
 } from "antd";
 import sweetalert from "sweetalert";
 import history from "@router/index";
-import DropDownSearch from "./DropDownSearch";
+import DropDownSearch from "./dropdown.search";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
 import ItemHelper from "@helper/item";

@@ -1,6 +1,6 @@
 import React from "react";
 import BrandService from "@services/BrandService";
-import DataTable from "@layout/Datatable";
+import DataTable from "@layout/datatable";
 import { Translate } from "@redux/index";
 import FormCreate from "../form.create";
 import FormUpdate from "../form.update";

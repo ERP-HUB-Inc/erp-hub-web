@@ -1,6 +1,5 @@
 import React from "react";
 import {Table} from "antd";
-import "./index.css";
 
 export class CTable extends React.Component {
   render() {

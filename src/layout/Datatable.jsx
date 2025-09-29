@@ -3,7 +3,7 @@ import {
   isMobile,
   isMobileOnly
 } from "react-device-detect";
-import { Button, Dropdown, Input, Menu, Divider, Pagination, Row, Col, Icon } from "antd";
+import { Button, Dropdown, Input, Menu, Divider, Pagination, Row, Col, Icon } from "@components/index";
 import ReactGA from "react-ga4";
 import Component  from "@components/BaseComponent";
 import { Translate } from "@redux/index";
@@ -824,83 +824,70 @@ export default class Datatable extends Component {
     
     return (
       <div className="content-list">
-        <div style={{height: "100%", marginTop: 10}}>
-          {/* <div className="wrap-filter" style={{ display: `${this.state.isShowFilter ? "" : "none"}`}}>
+        {/* <div className="wrap-filter" style={{ display: `${this.state.isShowFilter ? "" : "none"}`}}>
             { this.renderFilterRecord() }
           </div> */}
-          <div className="table-wrapper">
-            <Row>
-                <Col md={3} style={{marginBottom: 0}}>
-                  <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
-                </Col>
-                <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
-                  <Input
-                      placeholder={this.placeholder}
-                      form={this.props.form}
-                      onChange={this.onSearch}
-                      prefix={<Icon type="search" />}
-                      style={{width: 314, marginBottom: 0}}
-                      allowClear={true}
-                      size="large"
-                  />
+          <Row style={{ marginBottom: 15 }}>
+            <Col md={3} style={{marginBottom: 0}}>
+              <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
+            </Col>
+            <Col md={21} style={{display: "flex", justifyContent: "flex-end"}}>
+              <Button icon="plus" type="primary" size="large" onClick={() => {
+                ReactGA.event({
+                  category: "Action Button",
+                  action: "click",
+                  label: "ERP HUB Web"
+                });
 
-                  {/* <this.Link to="/inventories/items/create" onClick={() => { 
-                      ReactGA.event({
-                        category: "Action Button",
-                        action: "click",
-                        label: "ERP HUB Web",
-                      });
-                      }} className="ant-btn ant-btn-primary ant-btn-lg">
-                      <Translate id="text_add_new" />
-                  </this.Link> */}
+                if (this.action && this.formCreate) {
+                  this.props.dispatch(this.action.showForm());
+                  this.setState({
+                    modalConten: this.formCreate,
+                    loadingPopup: false
+                  });
+                }
+              }} style={{ marginLeft: 10 }}>
+                New Vendor
+              </Button>
+            </Col>
+            <Col md={24}>
+              <Input
+                  placeholder={this.placeholder}
+                  form={this.props.form}
+                  onChange={this.onSearch}
+                  prefix={<Icon type="search" />}
+                  style={{width: 314, marginBottom: 0}}
+                  allowClear={true}
+                  size="default"
+              />
+            </Col>
+        </Row>
 
-                  <Button icon="plus" type="primary" size="large" onClick={() => {
-                    ReactGA.event({
-                      category: "Action Button",
-                      action: "click",
-                      label: "ERP HUB Web"
-                    });
+        <this.Table
+          bordered={true}
+          // rowSelection={this.rowSelection ? rowSelection : null}
+          dataSource={fetchingProps.list}
+          columns={this.columns}
+          onChange={this.onChange}
+          locale={{ emptyText: <this.Translate id="table_empty_data"/> }}
+          onRow={record =>({
+            onDoubleClick:() => this.handleShowFormEdit(record),
+            onClick: (event) => this.handleOnTapHandler(event, record)
+          })}
+          loading={fetchingProps.fetching}
+        />
 
-                    if (this.action && this.formCreate) {
-                      this.props.dispatch(this.action.showForm());
-                      this.setState({
-                        modalConten: this.formCreate,
-                        loadingPopup: false
-                      });
-                    }
-                  }} style={{ marginLeft: 10 }}>
-                    <Translate id="text_add_new" />
-                  </Button>
-                </Col>
-            </Row>
-
-            <this.Table
-              bordered={true}
-              // rowSelection={this.rowSelection ? rowSelection : null}
-              dataSource={fetchingProps.list}
-              columns={this.columns}
-              onChange={this.onChange}
-              locale={{ emptyText: <this.Translate id="table_empty_data"/> }}
-              onRow={record =>({
-                onDoubleClick:() => this.handleShowFormEdit(record),
-                onClick: (event) => this.handleOnTapHandler(event, record)
-              })}
-              loading={fetchingProps.fetching}
-            />
-
-            <div style={{marginTop: 15, marginBottom: 15}}>
-              {this.renderPagination(fetchingProps)}
-            </div>
-            
-            <this.clearFloating/>
-          </div>
+        <div style={{marginTop: 15, marginBottom: 15}}>
+          {this.renderPagination(fetchingProps)}
+        </div>
+        
+        <this.clearFloating/>
   
           { this.state.modalContent1 }
 
           { this.formUpdate }
       
           { this.renderModalConfirmDelete() }
-        </div>
       </div>
       
     );

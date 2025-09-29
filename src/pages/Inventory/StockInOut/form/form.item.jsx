@@ -1,5 +1,5 @@
 import React from "react";
-import SearchPO from "./SearchPO";
+import SearchPO from "./search.po";
 import Enum from "../../../../enums";
 import Constant from "../redux/constant";
 import Action from "../redux/action";

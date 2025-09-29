@@ -293,11 +293,11 @@ const ERPSettings = () => {
                   </Link>
                   <Link to={"/brands"}>
                     <Button type="link" style={{ textAlign: 'left', padding: '4px 0', height: 'auto' }}>
-                      <Icon type="crown" /> Brand Management
+                      <Icon type="crown" /> Brands
                     </Button>
                   </Link>
                   <Button type="link" style={{ textAlign: 'left', padding: '4px 0', height: 'auto' }}>
-                    <Icon type="calculator" /> Units of Measure
+                    <Icon type="calculator" /> Units of Measurement
                   </Button>
                   <Button type="link" style={{ textAlign: 'left', padding: '4px 0', height: 'auto' }}>
                     <Icon type="setting" /> Product Attributes

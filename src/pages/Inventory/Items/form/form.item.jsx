@@ -38,7 +38,7 @@ import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import BaseModal from "@layout/BaseModal";
 import { orderBy } from "lodash";
-import Exchange from "./ExchangeMoneyFunc";
+import Exchange from "./exchange-money-func";
 import "./index.css";
 import FormVariant from "./form.variant";
 

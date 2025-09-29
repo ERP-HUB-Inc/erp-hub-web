@@ -14,7 +14,7 @@ import history from "@router/index";
 import { Translate } from "@redux/index";
 import ProductAction from "../redux/action";
 import Enum from "@enums/index";
-import Exchange from "./ExchangeMoneyFunc";
+import Exchange from "./exchange-money-func";
 
 export default class ProductUpdate extends BaseComponent {
   constructor(props) {

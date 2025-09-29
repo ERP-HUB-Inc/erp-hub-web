@@ -12,7 +12,7 @@ import history from "@router/index";
 import ProductService from "@services/ProductService";
 import ProductDetailOption from "./ProductDetailOption";
 import ProductDetailStockInformation from "./ProductDetailStockInformation";
-import MovementLog from "./MovementLog";
+import MovementLog from "./movement.log";
 import PurchaseHistory from "./PurchaseHistory";
 
 

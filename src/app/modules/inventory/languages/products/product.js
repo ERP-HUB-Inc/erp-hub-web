@@ -562,7 +562,7 @@ export default {
    ],
 
    "text_search_item": [
-      "Search by name,barcode and description",
+      "Quick search: name, barcode, or description",
       "ស្វែងរកតាម ឈ្មោះ​ លេខកូដ និងកំណត់សំគាល់"
    ],
 

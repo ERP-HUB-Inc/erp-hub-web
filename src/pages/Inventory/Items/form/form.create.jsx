@@ -16,7 +16,7 @@ import FormCreateCategory from "@settings/Modules/Category/form.create";
 import FormCreateOption from "@inventories/Option/FormCreate";
 import FormCreateUnit from "@inventories/Unit/FormCreate";
 import FormCreateTax from "@settings/Tax/FormCreate";
-import Exchange from "./ExchangeMoneyFunc";
+import Exchange from "./exchange-money-func";
 
 export default class ProductCreate extends BaseComponent {
   constructor(props) {

@@ -73,13 +73,21 @@ export * from "./WeekPicker";
 export * from "./InputTextArea";
 export * from "./stateful/SelectCategory";
 export * from "./stateful/SelectLocation";
-export * from "./stateless/StatisticCard";
+export * from "./stateless/statistic-card";
+export * from "./stateless/monetary-value";
+export * from "./PageHeader";
 
 // Antd Components
 export {
   Alert,
+  Avatar,
   Badge,
   Breadcrumb,
+  Dropdown,
+  Divider,
+  Pagination,
+  DatePicker,
+  Table,
   Button,
   Checkbox,
   Collapse,
@@ -97,6 +105,7 @@ export {
   Spin,
   Tabs,
   Tag,
+  Rate,
   Tooltip,
   Upload,
   message
