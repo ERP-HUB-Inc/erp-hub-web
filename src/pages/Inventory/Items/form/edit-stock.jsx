@@ -103,7 +103,7 @@ class EditStock extends React.Component {
                productVariantId: Util.getProductVariantId(product),
                productName: product.name,
                variantName: "",
-               barcode: Util.getProductBarcode(product),
+               barcode: Util.getItemBarcode(product),
                unitId: product.unit ? product.unit.id : null,
                adjustQuantity: this.state.adjustQuantity
             }

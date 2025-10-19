@@ -31,7 +31,7 @@ import UnitService from "@services/UnitService";
 import ProductService from "@services/ProductService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 import Exchange from "./exchange-money-func";
 import "./index.css";
 
@@ -618,7 +618,7 @@ export default class FormItem extends BaseModal {
                     className="barcode-option" />
                   <this.InputText
                     name="barcode"
-                    data={Util.getProductBarcode(formData)}
+                    data={Util.getItemBarcode(formData)}
                     placeholder={this.CATranslate("text_barcode", locale)}
                     required={this.state.isRequireInputBarcode}
                     errorRequired={<Translate id="error_require_sku" />}

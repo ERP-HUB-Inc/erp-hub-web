@@ -1,5 +1,5 @@
 import React from "react";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 import CategoryService from "@services/CategoryService";
 
 export default class FormItem extends BaseModal {

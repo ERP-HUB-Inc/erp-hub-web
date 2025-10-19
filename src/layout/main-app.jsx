@@ -10,6 +10,7 @@ import {
   Switch
 } from "react-router-dom";
 import ReactGA from "react-ga4";
+import { io } from "socket.io-client"
 import history from '@router/index';
 import Util from "../app/modules/common/util";
 import configureStore from "../app/store/configureStore";
@@ -22,6 +23,18 @@ import SystemLogs from '@settings/SystemLogs';
 import OrdersDashboard from '@settings/OrderDashboard';
 import TabletView from '@settings/TableView';
 import { ColumnSelection } from '@settings/ColumnSelection';
+import SystemAlertBanner from '@components/stateless/system-alert-banner';
+import StockInUI from './stock-in-summary';
+import ItemManagementUI from './item-management-ai';
+import ItemAIGenerator from './item-ai-tool';
+import StickyFooterPage from './sticky-footer';
+
+const socket = io("http://202.79.29.108:8100", {
+  query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
+  transports: ["websocket"], // ensures faster connection
+  reconnectionAttempts: 5,   // optional: auto-retry limit
+  reconnectionDelay: 1000,   // optional: delay between retries
+});
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -29,13 +42,48 @@ const { SubMenu } = Menu;
 export default class SiderDemo extends React.Component {
    state = {
      collapsed: false,
+     alertData: null
    };
 
    componentDidMount() {
       ReactGA.initialize("G-1MQDE7W3RC");
       // Send pageview with a custom path
       ReactGA.send({ hitType: "pageview", page: "/landingpage", title: "Landing Page" });
+
+      // socket.on("training-progress", (data) => {
+      //   this.setState(prev => ({
+      //     ...prev.state,
+      //     alertData: {
+      //       type: "announcement",
+      //       title: `Training ${data.modelName} ${data.status}`,
+      //       message: `Dataset: ${data.dataset}, Accuracy: ${data.accuracy}%, Loss: ${data.loss}`,
+      //       link: "/training/results",
+      //       linkText: "View Results",
+      //     },
+      //   }));
+      // });
+
+
+      // Handle connection
+      socket.on("connect", () => {
+        console.log("✅ Connected to socket server");
+      });
+
+      // Handle disconnection
+      socket.on("disconnect", () => {
+        console.log("❌ Disconnected from socket server");
+      });
+
+      socket.on("contact-synced", (data) => {
+        console.log("contact-synced", data);
+      });
    }
+
+  componentWillUnmount() {
+    socket.off("connect");
+    socket.off("disconnect");
+    socket.off("chat-message");
+  }
  
    toggle = () => {
      this.setState({
@@ -117,7 +165,7 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const StockInOut = Loadable({
-      loader: () => import("../pages/Inventory/StockInOut"),
+      loader: () => import("../pages/Inventory/StockIO"),
       loading: () => <StartUp />,
     });
     const NewItem = Loadable({
@@ -168,11 +216,23 @@ export default class SiderDemo extends React.Component {
       height: '100vh'
     }
 
+    console.log(this.state.alertData);
+
     return (<Provider store={store}>
       <BrowserRouter>
         <Switch>
           <Router history={history}>
             <Layout id='components-layout-demo-custom-trigger'>
+              {/* {
+                this.state.alertData && 
+                <SystemAlertBanner
+                  type="announcement"
+                  title="New Inventory Features Released"
+                  message="We've added powerful new inventory tracking and reporting capabilities to help streamline your operations."
+                  link="/features/inventory"
+                  linkText="Explore Features"
+                />
+              } */}
               {
                 !isPOSPage ?
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: '100vh' }}>
@@ -374,6 +434,10 @@ export default class SiderDemo extends React.Component {
                     <Route path="/order-dashboards" component={OrdersDashboard} />
                     <Route path="/table-views" component={TabletView} />
                     <Route path="/columns" component={ColumnSelection} />
+                    <Route path="/stock-in-ui" component={StockInUI} />
+                    <Route path="/item-ai-ui" component={ItemManagementUI} />
+                    <Route path="/item-ai-generator" component={ItemAIGenerator} />
+                    <Route path="/sticky-footer-page" component={StickyFooterPage} />
 
                     <Route path="/" component={Dashboard} />
                   </Switch>

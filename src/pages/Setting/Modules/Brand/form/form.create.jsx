@@ -1,5 +1,5 @@
 import React from "react";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal.jsx";
 import FormItem from "./form.item.jsx";
 import BrandAction from "../redux/action.js";
 

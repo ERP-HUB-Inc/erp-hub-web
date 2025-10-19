@@ -161,7 +161,7 @@ export default class DropDownSearch extends Component {
   }
 
   renderSearchItem = (product) => {
-    const barcode = Util.getProductBarcode(product);
+    const barcode = Util.getItemBarcode(product);
     return <this.List.Item.Meta
         avatar={
           <this.Image url={this.Util.getProductImage(product.image).url}/>

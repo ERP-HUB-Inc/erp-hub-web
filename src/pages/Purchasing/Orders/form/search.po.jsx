@@ -7,7 +7,7 @@ import ProductVariantAction from "../../../../app/modules/inventory/actions/prod
 import Action from "../redux/action";
 import Constant from "../redux/constant";
 import UnitService from "../../../../services/UnitService";
-import BaseModal from "../../../../layout/BaseModal"
+import BaseModal from "../../../../layout/base-modal"
 import "./index.css";
 
 export default class PO extends BaseModal {

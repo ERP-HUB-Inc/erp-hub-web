@@ -129,7 +129,7 @@ export default function SearchProductDropdown(props) {
   };
 
   const renderSearchItem = (product) => {
-    const barcode = ProductUtil.getProductBarcode(product);
+    const barcode = ProductUtil.getItemBarcode(product);
     return <List.Item.Meta
         avatar={
           <Image url={util.getProductImage(product.image).url}/>

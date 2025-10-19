@@ -3,7 +3,7 @@ import SearchPO from "./search.po";
 import Enum from "../../../../enums";
 import Constant from "../redux/constant";
 import Action from "../redux/action";
-import BaseModal from "../../../../layout/BaseModal";
+import BaseModal from "../../../../layout/base-modal";
 
 export default class FormItem extends BaseModal {
   constructor(props) {

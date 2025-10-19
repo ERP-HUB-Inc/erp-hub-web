@@ -56,22 +56,31 @@ const PageHeader = ({
         {actions.length > 0 && (
           <Col>
             <div style={{ display: 'flex', gap: '8px' }}>
-              {actions.map((action, index) => (
-                <Button
-                  key={index}
-                  type={action.type || 'default'}
-                  size={action.size || 'large'}
-                  icon={action.icon}
-                  onClick={action.onClick}
-                  disabled={action.disabled}
-                  loading={action.loading}
-                  style={action.style}
-                >
-                  {action.text}
-                </Button>
-              ))}
+              {actions.map((action, index) => {
+                // If the action is a React element, just render it directly
+                if (React.isValidElement(action)) {
+                  return React.cloneElement(action, { key: index });
+                }
+
+                // Otherwise, assume it's an object with button props
+                return (
+                  <Button
+                    key={index}
+                    type={action.type || 'default'}
+                    size={action.size || 'large'}
+                    icon={action.icon}
+                    onClick={action.onClick}
+                    disabled={action.disabled}
+                    loading={action.loading}
+                    style={action.style}
+                  >
+                    {action.text}
+                  </Button>
+                );
+              })}
             </div>
           </Col>
+
         )}
       </Row>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
 import TaxAction from "../redux/action";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 
 export default class Form extends BaseModal {
   constructor(props) {

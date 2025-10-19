@@ -36,7 +36,7 @@ import VariantService from "@services/VariantService";
 import ProductConditionService from "@services/ProductConditionService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 import { orderBy } from "lodash";
 import Exchange from "./exchange-money-func";
 import "./index.css";
@@ -924,7 +924,7 @@ export default class FormItem extends BaseModal {
               <InputText
                 name="barcode"
                 label={<Translate id="text_barcode" />}
-                data={Util.getProductBarcode(formData)}
+                data={Util.getItemBarcode(formData)}
                 placeholder="Scan or type the barcode here..."
                 // required={this.state.isRequireInputBarcode}
                 errorRequired={<Translate id="error_require_sku" />}

@@ -1,5 +1,5 @@
 import React from "react";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 
 export default class FormItem extends BaseModal {
   render() {

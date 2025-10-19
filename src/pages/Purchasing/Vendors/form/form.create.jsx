@@ -1,6 +1,6 @@
 import React from "react";
 import FormItem from "./form.item";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 import Action from "../redux/action";
 
 export default class FormCreate extends BaseModal {

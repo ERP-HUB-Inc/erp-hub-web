@@ -1,7 +1,7 @@
 import React from "react";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 
 export default class FormCostLog extends BaseModal {
   constructor(props) {

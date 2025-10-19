@@ -18,15 +18,17 @@ import Datatable from "@layout/datatable";
 import Enum from "@enums/index";
 import history from "@router/index";
 import PurchaseService from "@services/PurchaseOrderService";
+import StockIOService from "@services/StockIOService";
 import "./index.css";
 import { PageHeader } from "@components/PageHeader";
+import { QuantityValue } from "@components/stateless/quantity.value";
 
 const { TabPane } = Tabs;
 
 // SME / small business ERP: keep it simple (PO No., Date, Vendor, Status, Amount).
 // Enterprise ERP: include more workflow info (Approver, Delivery Date, Payment Terms).
 
-export default class PurchaseOrderPage extends Datatable {
+export default class StockIOPage extends Datatable {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,48 +49,99 @@ export default class PurchaseOrderPage extends Datatable {
       {
         title: "Batch No.",
         dataIndex: "number",
-        key: "number"
+        key: "number",
+        width: 220,
       },
       {
-        title: "Type",
-        dataIndex: "number",
-        key: "number"
-      },
-      // { move this column to display on hover
-      //   title: <this.Translate id="text_notes"/>,
-      //   dataIndex: "description",
-      //   key: "description"
-      // },
-      {
-        title: "Created By",
-        dataIndex: "supplier",
-        key: "supplierId",
-        render: (supplier) => (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Avatar 
-              size={40} 
-              style={{ 
-                backgroundColor: this.getVendorAvatarColor(supplier.name),
-                fontSize: '14px',
+        title: "Stock Location",
+        dataIndex: "location",
+        key: "locationId",
+        width: 220,
+        render: (location) => location ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '8px',
+              backgroundColor: '#f0f5ff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              position: 'relative'
+            }}>
+              <span style={{ fontSize: '20px' }}>📦</span>
+              <div style={{
+                position: 'absolute',
+                bottom: '-2px',
+                right: '-2px',
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                backgroundColor: location.status === 1 ? '#52c41a' : '#d9d9d9',
+                border: '2px solid #fff'
+              }} />
+            </div>
+            <div style={{ flex: 1, overflow: 'hidden' }}>
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#262626',
                 fontWeight: 500,
-                color: '#fff'
-              }}
-            >
-              {this.getVendorInitials(supplier.name)}
-            </Avatar>
-            <div>
-              <div style={{ fontWeight: 500, fontSize: '14px', color: '#262626' }}>
-                {supplier.name}
+                lineHeight: '20px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>
+                {location.name}
               </div>
-              <div style={{ fontSize: '13px', color: '#8c8c8c', marginTop: '2px' }}>
-                {supplier.email}
-              </div>
-              <div style={{ fontSize: '12px', color: '#8c8c8c', marginTop: '1px' }}>
-                {supplier.phoneNumber}
-              </div>
+              {location.address && (
+                <div style={{ 
+                  fontSize: '12px', 
+                  color: '#8c8c8c',
+                  lineHeight: '16px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  marginTop: '2px'
+                }}>
+                  📍 {location.address}
+                </div>
+              )}
+              {!location.address && location.code && (
+                <div style={{ 
+                  fontSize: '12px', 
+                  color: '#8c8c8c',
+                  lineHeight: '16px',
+                  marginTop: '2px'
+                }}>
+                  ID: {location.code}
+                </div>
+              )}
             </div>
           </div>
-        ),
+        ) : this.emptyText
+      },
+      {
+        title: "Created By",
+        dataIndex: "user",
+        key: "userId",
+        width: 150,
+        render: (user) => user ? (
+          <div style={{ fontSize: '14px', color: '#262626' }}>
+            {user.fullName}
+          </div>
+        ) : this.emptyText
+      },
+      {
+        title: "Received By",
+        dataIndex: "receiver",
+        key: "receiverId",
+        width: 150,
+        render: (receiver) => receiver ? (
+          <div style={{ fontSize: '14px', color: '#262626' }}>
+            {receiver.fullName}
+          </div>
+        ) : this.emptyText
       },
       {
         title: <this.Translate id="text_date_created" />,
@@ -98,37 +151,59 @@ export default class PurchaseOrderPage extends Datatable {
         render: value => this.Util.formatDate(value, "D, MMM YYYY HH:mm")
       },
       {
-        title: "Total Value",
-        dataIndex: "requestTotal",
-        key: "requestTotal",
+        title: "Total Qty",
+        dataIndex: "quantity",
+        key: "quantity",
         align: "right",
-        render: (text, record) => {
-          const requestTotal = record.requestTotal;
-          const receiveTotal = record.receiveTotal;
-          const returnTotal = record.returnTotal;
-
-          let key = "requestTotal";
-          if (record.step === Enum.PO_STEP.RECEIVED) {
-            key = "receiveTotal";
-          } else if (record.step === Enum.PO_STEP.RETURN) {
-            key = "returnTotal";
-          }
-
-          return <MonetaryValue amount={requestTotal} />
-        }
+        width: 120,
+        render: (quantity, record) => (
+          <QuantityValue
+            value={quantity}
+            showSign={true}
+            type={record.type}
+            unit="pcs"
+            decimals={2}
+          />
+        )
       },
       {
-        title: "Total Qty",
-        dataIndex: "receiver",
-        key: "receiverId",
-        render: receiver => receiver ? <span>{receiver.fullName}</span> : this.emptyText
+        title: "Total Value",
+        dataIndex: "amount",
+        key: "amount",
+        align: "right",
+        width: 150,
+        render: (amount, record) => (
+          <MonetaryValue 
+            amount={parseFloat(amount)} 
+            showSign={true}
+            type={record.type}
+            currency=""
+          />
+        )
       },
       {
         title: "Status",
-        dataIndex: "step",
-        key: "step",
-        width: 100,
-        render: step => step in this.PO_STEP_STR ? <Tag color={this.PO_STEP_STR[step].color} className="text-center" style={{ borderRadius: 50 }}>{this.PO_STEP_STR[step].name}</Tag> : ""
+        dataIndex: "status",
+        key: "status",
+        align: "center",
+        width: 120,
+        render: (status) => {
+          const statusConfig = {
+            1: { color: 'orange', text: 'Pending' },
+            2: { color: 'green', text: 'Completed' },
+            3: { color: 'red', text: 'Cancelled' }
+          };
+          const config = statusConfig[status] || { color: 'default', text: 'Unknown' };
+          return (
+            <Tag 
+              color={config.color} 
+              className="text-center" 
+              style={{ borderRadius: 50, minWidth: 80, textTransform: "uppercase" }}
+            >
+              {config.text}
+            </Tag>
+          );
+        }
       }
     ].concat(this.renderActionColumn());
     this.fetchingProp = "purchaseOrder";
@@ -234,7 +309,7 @@ export default class PurchaseOrderPage extends Datatable {
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
     this.setState({loading: true});
-    this.service.get(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
+    StockIOService.get(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
         .then((response) => {
           if (response.data && response.data.data) {
             this.setState({

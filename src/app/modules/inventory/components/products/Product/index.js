@@ -95,7 +95,7 @@ export default class ProductList extends List {
             dataIndex: "barcode",
             key: "barcode",
             width: 140,
-            render: (text, record) => Util.getProductBarcode(record)
+            render: (text, record) => Util.getItemBarcode(record)
          },
          {
             title: <this.Translate id="text_stock_type" />,

@@ -2,7 +2,7 @@ import React from "react";
 import ProductDropDownSearch from "./dropdown.search";
 import Enum from "@enums/index";
 import Util from "@helper/item";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 
 export default class FormComposite extends BaseModal {
   constructor(props) {
@@ -71,7 +71,7 @@ export default class FormComposite extends BaseModal {
           existingCompositeList.push({
             id: productPackage.id,
             productName: Util.getProductNameV2(productPackage.product),
-            productCode: Util.getProductBarcode(productPackage.product),
+            productCode: Util.getItemBarcode(productPackage.product),
             productCompositeProductId: productPackage.rawProductId,
             markup: productPackage.quantity,
             cost: Util.getProductCost(productPackage.product),
