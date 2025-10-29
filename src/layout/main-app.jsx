@@ -1,6 +1,6 @@
 import React from 'react'
 import Loadable from "react-loadable"
-import { Dropdown, Layout, Menu, Icon, Divider } from "antd";
+import { Dropdown, Layout, Menu, Icon, Divider, Badge, Avatar, List } from "antd";
 import { Provider } from "react-redux";
 import {
   BrowserRouter,
@@ -17,7 +17,7 @@ import configureStore from "../app/store/configureStore";
 import Localization from "../app/localization";
 import StartUp from "../app/modules/common/components/StartUp";
 import './NewSidebar.css'
-import { ERPHub } from '../components';
+import { ERPHub, LogoTextOnly } from '../components';
 import SettingsPage from '@settings/SettingPage';
 import SystemLogs from '@settings/SystemLogs';
 import OrdersDashboard from '@settings/OrderDashboard';
@@ -216,7 +216,6 @@ export default class SiderDemo extends React.Component {
       height: '100vh'
     }
 
-    console.log(this.state.alertData);
 
     return (<Provider store={store}>
       <BrowserRouter>
@@ -236,9 +235,7 @@ export default class SiderDemo extends React.Component {
               {
                 !isPOSPage ?
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: '100vh' }}>
-                  <ERPHub>
-                    ERP HUB
-                  </ERPHub>
+                  <LogoTextOnly />
                   <Menu theme={theme} mode="inline" defaultSelectedKeys={['1']}>
                     <Menu.Item key="1">
                       <Link to="/">
@@ -356,40 +353,48 @@ export default class SiderDemo extends React.Component {
               }
 
               <Layout>
-                {
-                  !isPOSPage ?
-                  <Header style={{ background: '#fff', padding: 0, position: 'fixed', zIndex: 1, width: "100%" }}>
+                <Header style={{ 
+                  background: '#fff', 
+                  padding: 0, 
+                  position: 'fixed', 
+                  zIndex: 1, 
+                  width: "87%",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingRight: '24px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Icon
                       className="trigger"
                       type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                       onClick={this.toggle}
                     />
-                    <Link to={"/pos"}>POS</Link>
-                    <Dropdown overlay={(
-                      <Menu>
-                        <Menu.Item>
-                          <Icon type="user" />
-                          Profile
-                        </Menu.Item>
-                        <Menu.Item>
-                          <Icon type="redo" />
-                          Update Now
-                        </Menu.Item>
-                        <Divider style={{ marginTop: 5, marginBottom: 5 }} />
-                        <Menu.Item onClick={this.onLogout}>
-                          <Icon type="logout" />
-                          Logout
-                        </Menu.Item>
-                      </Menu>
-                      )} trigger={["hover"]}>
-                        <Link to="#">
-                          Marco JR
-                        </Link>
-                    </Dropdown>
-                  </Header>
-                  :
-                  <React.Fragment />
-                }
+                  </div>
+
+                  <Dropdown overlay={(
+                    <Menu>
+                      <Menu.Item>
+                        <Icon type="user" />
+                        Profile
+                      </Menu.Item>
+                      <Menu.Item>
+                        <Icon type="redo" />
+                        Update Now
+                      </Menu.Item>
+                      <Divider style={{ marginTop: 5, marginBottom: 5 }} />
+                      <Menu.Item onClick={this.onLogout}>
+                        <Icon type="logout" />
+                        Logout
+                      </Menu.Item>
+                    </Menu>
+                  )} trigger={["hover"]}>
+                    <Link to="#">
+                      Marco JR
+                    </Link>
+                  </Dropdown>
+                </Header>
+
                 <Content
                   style={isPOSPage ? { height: "100vh"} : styledContent}
                   id="center-container"
@@ -450,3 +455,102 @@ export default class SiderDemo extends React.Component {
     </Provider>);
    }
 }
+
+
+const NotificationMenu = () => {
+  // Sample notifications - replace with your actual data
+  const notifications = [
+    {
+      id: 1,
+      title: 'New Order Received',
+      description: 'Order #12345 has been placed',
+      time: '5 min ago',
+      type: 'order',
+      read: false
+    },
+    {
+      id: 2,
+      title: 'Low Stock Alert',
+      description: 'Product XYZ is running low',
+      time: '1 hour ago',
+      type: 'alert',
+      read: false
+    },
+    {
+      id: 3,
+      title: 'Payment Confirmed',
+      description: 'Invoice #67890 paid successfully',
+      time: '2 hours ago',
+      type: 'payment',
+      read: true
+    }
+  ];
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const getIcon = (type) => {
+    switch(type) {
+      case 'order': return 'shopping-cart';
+      case 'alert': return 'warning';
+      case 'payment': return 'dollar';
+      default: return 'bell';
+    }
+  };
+
+  return (
+    <div style={{ width: 350, maxHeight: 400, overflow: 'auto' }}>
+      <div style={{ 
+        padding: '12px 16px', 
+        borderBottom: '1px solid #f0f0f0',
+        fontWeight: 'bold',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <span>Notifications</span>
+        {unreadCount > 0 && (
+          <Badge count={unreadCount} style={{ backgroundColor: '#52c41a' }} />
+        )}
+      </div>
+      <List
+        itemLayout="horizontal"
+        dataSource={notifications}
+        renderItem={item => (
+          <List.Item 
+            style={{ 
+              padding: '12px 16px',
+              cursor: 'pointer',
+              backgroundColor: item.read ? '#fff' : '#f0f7ff',
+              borderBottom: '1px solid #f0f0f0'
+            }}
+          >
+            <List.Item.Meta
+              avatar={
+                <Avatar 
+                  style={{ backgroundColor: item.read ? '#d9d9d9' : '#1890ff' }}
+                  icon={getIcon(item.type)}
+                />
+              }
+              title={<span style={{ fontSize: '14px', fontWeight: item.read ? 'normal' : 'bold' }}>{item.title}</span>}
+              description={
+                <div>
+                  <div style={{ fontSize: '12px', color: '#595959' }}>{item.description}</div>
+                  <div style={{ fontSize: '11px', color: '#8c8c8c', marginTop: 4 }}>{item.time}</div>
+                </div>
+              }
+            />
+          </List.Item>
+        )}
+      />
+      <div style={{ 
+        padding: '12px 16px', 
+        textAlign: 'center',
+        borderTop: '1px solid #f0f0f0',
+        cursor: 'pointer',
+        color: '#1890ff'
+      }}>
+        <Link to="/notifications">View All Notifications</Link>
+      </div>
+    </div>
+  );
+};

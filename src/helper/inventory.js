@@ -1,5 +1,6 @@
 import _ from "lodash";
 import SettingUtil from "@common/util";
+
 class Util {
   getProductName(product) {
     if (product === null)
@@ -50,6 +51,16 @@ class Util {
   }
 
   getProductVariantId(product) {
+    let productVariantId = "";
+
+    if (product && product.productVariants) {
+      productVariantId = product.productVariants[0].id;
+    }
+
+    return productVariantId;
+  }
+
+  getVariantId(product) {
     let productVariantId = "";
 
     if (product && product.productVariants) {

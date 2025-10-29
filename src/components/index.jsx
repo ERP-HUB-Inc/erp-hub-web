@@ -76,6 +76,7 @@ export * from "./stateful/SelectLocation";
 export * from "./stateless/statistic-card";
 export * from "./stateless/monetary-value";
 export * from "./stateless/stockio-quantity-inplut";
+export * from "./stateless/logo-text-only"
 export * from "./PageHeader";
 
 // Antd Components

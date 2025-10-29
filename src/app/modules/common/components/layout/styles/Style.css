@@ -112,12 +112,6 @@ html,
     display: block !important;
 }
 
-.ant-table-fixed-header .ant-table-scroll .ant-table-header {
-    margin-bottom: 0 !important;
-    overflow: hidden !important;
-    padding-right: 20px
-}
-
 .breadcrumb {
     border-radius: 3px !important;
     padding: 5px 15px !important;

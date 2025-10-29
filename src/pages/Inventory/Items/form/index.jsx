@@ -14,6 +14,7 @@ import {
    Input,
    InputNumber,
    Pagination,
+   Form,
    Tag,
    Typography,
    Button,
@@ -46,6 +47,8 @@ import { PageHeader } from "@components/PageHeader";
 import "./index.css";
 import { QuantityValue } from "@components/stateless/quantity.value";
 import { buildStockInPayload } from "../stockio.helper";
+import { getLocationId } from "@helper/user";
+import inventory from "@helper/inventory";
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
@@ -57,6 +60,7 @@ export default class ProductList extends Datatable {
          ...this.state,
          loading: false,
          drawerVisible: false,
+         submittingStockIn: false,
          brands: [],
          locations: [],
          products: [],
@@ -311,18 +315,25 @@ export default class ProductList extends Datatable {
                
                return (
                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <InputNumber
-                     style={{ width: '100%' }}
-                     placeholder="0.00"
-                     autoFocus={index === 0}
-                     value={this.state.stockInItems?.[record.id]?.qtyIn}
-                     onChange={(value) => this.handleQuantityChange(record, value)}
-                     formatter={value => value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
-                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
-                     step={1}
-                     size="large"
-                     precision={2}
-                  />
+                  <Form.Item style={{margin: 0}}>
+                     {
+                        this.props.form.getFieldDecorator(`qtyIn_${index}`, {})
+                        (
+                           <InputNumber
+                              style={{ width: '100%' }}
+                              placeholder="0.00"
+                              autoFocus={index === 0}
+                              // value={this.state.stockInItems?.[record.id]?.qtyIn}
+                              onChange={(value) => this.handleQuantityChange(record, value)}
+                              formatter={value => value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
+                              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                              step={1}
+                              size="large"
+                              precision={2}
+                           />
+                        )
+                     }
+                  </Form.Item>
                </div>
                );
             }
@@ -434,15 +445,12 @@ export default class ProductList extends Datatable {
       }
    }
 
-   // On Stock IO
    handleStockIn = async () => {
-      let currentUser = localStorage.getItem("ACCESS_TOKEN");
-      currentUser = JSON.parse(currentUser);
-
+      this.setState({ submittingStockIn: true });
       const stockIO = {
-         locatinId: currentUser.locatinId,
+         locatinId: getLocationId(),
          vendorId: null,
-         userId: null,
+         quantity: this.getQuantityStockIn(),
          entries: Object.values(this.state.stockInItems)
       };
       const payload = buildStockInPayload(stockIO);
@@ -453,6 +461,11 @@ export default class ProductList extends Datatable {
       } catch (error) {
          console.error("❌ Stock In Failed:", error);
          throw error;
+      } finally {
+         this.setState({ 
+            submittingStockIn: false,
+            drawerVisible: false
+         })
       }
    };
 
@@ -530,6 +543,10 @@ export default class ProductList extends Datatable {
 
    getAllQTY(record) {
       return Util.getProductQTYLocation(record["productVariants"]);
+   }
+
+   getQuantityStockIn = () => {
+      return Object.values(this.state.stockInItems).reduce((sum, item) => sum + item.qtyIn, 0);
    }
 
    handleDelete() {
@@ -630,7 +647,7 @@ export default class ProductList extends Datatable {
    handleQuantityChange = debounce((item, qtyIn) => {
       const itemId = item.id;
       const itemName = item.name;
-      const variantId = null
+      const variantId = inventory.getVariantId(item);
       const variantName = null
       const isVariantItem = item.productOption === 1
       const unitId = null
@@ -855,6 +872,7 @@ export default class ProductList extends Datatable {
                         locale={{emptyText: <Translate id="table_empty_data"/>}}
                         onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
                         loading={this.state.loading}
+                        // scroll={{ y: 550, x: 1200 }}
                         size="middle"
                      />
 
@@ -924,7 +942,7 @@ export default class ProductList extends Datatable {
                               <Col span={12}>
                                  <Statistic
                                     title="Total Quantity"
-                                    value={Object.values(this.state.stockInItems).reduce((sum, item) => sum + item.qtyIn, 0)}
+                                    value={this.getQuantityStockIn()}
                                     precision={2}
                                     valueStyle={{ color: '#52c41a', fontSize: '28px', fontWeight: 600 }}
                                  />
@@ -1015,6 +1033,8 @@ export default class ProductList extends Datatable {
                            <Button 
                               type="primary" 
                               onClick={this.handleStockIn}
+                              disabled={this.state.submittingStockIn}
+                              loading={this.state.submittingStockIn}
                               size="large"
                               style={{ width: '200px' }}
                            >
@@ -1048,7 +1068,7 @@ export default class ProductList extends Datatable {
                            <Col span={6}>
                               <Statistic
                                  title="Total Quantity"
-                                 value={Object.values(this.state.stockInItems).reduce((sum, item) => sum + item.qtyIn, 0)}
+                                 value={this.getQuantityStockIn()}
                                  precision={2}
                                  valueStyle={{ color: '#52c41a', fontWeight: 600, fontSize: '20px' }}
                               />
@@ -1064,7 +1084,19 @@ export default class ProductList extends Datatable {
                               <Button
                                  type="primary"
                                  size="large"
-                                 onClick={() => this.setState({ drawerVisible: true })}
+                                 onClick={() => {
+                                    this.setState({ drawerVisible: true });
+                                    this.props.form.validateFields((err, values) => {
+                                       if (!err) {
+                                          console.log('Form values:', values);
+
+                                          // do something with the values, like saving...
+
+                                          // reset form after submit
+                                          this.props.form.resetFields();
+                                       }
+                                    });
+                                 }}
                                  disabled={Object.values(this.state.stockInItems).length <= 0}
                                  style={{ width: '250px', height: '48px', fontSize: '16px' }}
                               >

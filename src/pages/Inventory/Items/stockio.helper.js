@@ -15,13 +15,13 @@ export function buildStockInPayload(stockIO) {
     type: "IN",
     number,
     name: "Stock In",
-    locationId: stockIO?.locationId || "DEFAULT-LOCATION",
-    userId: stockIO?.userId || "SYSTEM",
-    receiverId: stockIO?.userId || "SYSTEM",
+    locationId: stockIO?.locationId,
     vendorId: stockIO.vendorId || null,
     date: today.toISOString(), // same ISO format as before
     description: `Auto stock-in created by ${stockIO?.username || "system"}`,
-    status: "COMPLETED",
+    quantity: stockIO.quantity,
+    amount: 0,
+    status: 2,
     entries: stockIO.entries.map((item) => ({
         itemId: item.itemId,
         itemName: item.itemName,
