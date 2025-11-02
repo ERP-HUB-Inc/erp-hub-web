@@ -28,7 +28,7 @@ import ProductAction from "../redux/action";
 import CategoryService from "@services/CategoryService";
 import BrandService from "@services//BrandService";
 import UnitService from "@services/UnitService";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import BaseModal from "@layout/base-modal";

@@ -210,9 +210,9 @@ export default class StockIOPage extends Datatable {
     this.service = PurchaseService;
     this.title = "Stock In/Out";
     this.fetchingProp = "list";
-    this.pathname = "/inventories/stock-inout";
-    this.pathCreate= "/purchase-orders/create";
-    this.pathUpdate= "/purchase-orders/update";
+    this.pathname = "/inventories/stock-io";
+    this.pathCreate= "/inventories/create";
+    this.pathUpdate= "/inventories/update";
     this.permissionModuleCode = "purchase_order";
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="text_draft" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
@@ -499,7 +499,7 @@ export default class StockIOPage extends Datatable {
                           label: "ERP HUB Web",
                         });
 
-                        history.push("/purchase-orders/create");
+                        history.push("/inventories/stock-io/create");
                     }
                   }
               ]}

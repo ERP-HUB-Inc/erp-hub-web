@@ -7,7 +7,7 @@ import {
 } from "antd";
 import { Link } from "react-router-dom";
 import { Translate } from "@redux/index";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import Util from "@helper/util";
 
 const util = new Util();

@@ -12,7 +12,7 @@ import Component from "../../../../app/modules/common/components/Component";
 import Enum from "../../../../enums";
 import history from "../../../../app/modules/common/router/history";
 
-export default class PurchaseOrderUpdate extends Component {
+export default class StockIOUpdate extends Component {
   constructor(props) {
     super(props);
     this.wrapClassName = `${this.wrapClassName} wrap-modal-po  modal-po-full-screen`;
@@ -25,9 +25,8 @@ export default class PurchaseOrderUpdate extends Component {
       [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color:  this.Enum.PO_STEP_COLOR.RETURN},
       [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color:  this.Enum.PO_STEP_COLOR.PAID}
     };
-    this.title = <this.Translate id="text_po" />;
+    this.title = "Update Stock IO";
     this.dispatch = this.props.dispatch;
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.prepareFormDataForUpdate = this.prepareFormDataForUpdate.bind(this);
   }
 
@@ -66,7 +65,7 @@ export default class PurchaseOrderUpdate extends Component {
     }
   }
 
-  handleSubmit (e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     if (this.props.purchaseOrderDetail.data.step !== Enum.PO_STEP.DRAFT) {
       sweetalert({

@@ -28,7 +28,6 @@ import StockInUI from './stock-in-summary';
 import ItemManagementUI from './item-management-ai';
 import ItemAIGenerator from './item-ai-tool';
 import StickyFooterPage from './sticky-footer';
-import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -246,7 +245,7 @@ export default class SiderDemo extends React.Component {
                 !isPOSPage ?
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: '100vh' }}>
                   <LogoTextOnly />
-                  {/* <DynamicMenu /> */}
+                  <DynamicMenu />
                   <Menu theme={theme} mode="inline" defaultSelectedKeys={['1']}>
                     <Menu.Item key="1">
                       <Link to="/">
@@ -300,8 +299,8 @@ export default class SiderDemo extends React.Component {
                           Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
                           Each movement is logged in the Stock Ledger (history).
                         */}
-                        {/* <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
-                        <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item> */}
+                        <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
+                        <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item>
                       </SubMenu>
 
                       <SubMenu
@@ -438,9 +437,9 @@ export default class SiderDemo extends React.Component {
                     <Route path="/inventories/items" component={Item} />
 
                     {/* StockIO Management */}
+                    <Route path="/inventories/stock-io" component={StockInOut} />
                     <Route path="/inventories/stock-io/create" component={NewStockInOut} />
                     <Route path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
-                    <Route path="/inventories/stock-io" component={StockInOut} />
 
                     <Route path="/inventories/transfers" component={Vendor} />
                     <Route path="/inventories/adjustments" component={Vendor} />
@@ -459,7 +458,6 @@ export default class SiderDemo extends React.Component {
                     <Route path="/item-ai-ui" component={ItemManagementUI} />
                     <Route path="/item-ai-generator" component={ItemAIGenerator} />
                     <Route path="/sticky-footer-page" component={StickyFooterPage} />
-                    <Route path="/stock-io-form" component={StockIOForm} />
 
                     <Route path="/" component={Dashboard} />
                   </Switch>

@@ -112,3 +112,13 @@ export {
   Upload,
   message
 } from "antd";
+
+export {
+  LayoutDashboard,
+  DollarSign,
+  ShoppingCart,
+  Inbox,
+  Banknote,
+  BarChart3,
+  Settings
+} from "lucide-react";

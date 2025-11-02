@@ -78,6 +78,25 @@ class Util {
     return this.isValidProductVariant(product) ? product.productVariants[0].sku : "";
   }
 
+  getQuantityOnHand(record) {
+    let quantity = 0;
+    let isNotFilterByLocation = true;
+    if (Array.isArray(record["productVariants"])) {
+      record["productVariants"].forEach(productVariant => {
+          if ("productLocations" in productVariant) {
+            isNotFilterByLocation = false;
+            quantity += this.getProductQTYLocation(productVariant["productLocations"]);
+          }
+      });
+
+      if (isNotFilterByLocation) {
+          quantity = this.getProductQTYLocation(record["productVariants"]);
+      }
+    }
+
+    return quantity;
+  }
+
   getProductPrice(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].price : 0;
   }

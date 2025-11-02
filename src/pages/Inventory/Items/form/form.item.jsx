@@ -31,7 +31,7 @@ import CategoryService from "@services/CategoryService";
 import BrandService from "@services//BrandService";
 import ManufacturerService from "@services/ManufacturerService";
 import UnitService from "@services/UnitService";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import VariantService from "@services/VariantService";
 import ProductConditionService from "@services/ProductConditionService";
 import VendorService from "@services/VendorService";

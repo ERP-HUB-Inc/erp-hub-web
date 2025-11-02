@@ -9,7 +9,7 @@ import {
 
 import {Translate} from "@redux/index";
 import history from "@router/index";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import ProductDetailOption from "./ProductDetailOption";
 import ProductDetailStockInformation from "./ProductDetailStockInformation";
 import MovementLog from "./movement.log";

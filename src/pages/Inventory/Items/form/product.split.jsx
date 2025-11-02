@@ -14,7 +14,7 @@ import DropDownSearch from "./dropdown.search";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
 import ItemHelper from "@helper/item";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import LocationService from "@services/LocationService";
 import Component from "@common/components/Component";
 

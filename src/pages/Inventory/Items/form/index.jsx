@@ -39,7 +39,7 @@ import {
 import FormCreate from "../form.create";
 import ProductAction from "../redux/action";
 import Constant from "../redux/constant";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import LocationService from "@services/LocationService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import StockIOService from "@services/StockIOService";
@@ -448,7 +448,7 @@ export default class ProductList extends Datatable {
    handleStockIn = async () => {
       this.setState({ submittingStockIn: true });
       const stockIO = {
-         locatinId: getLocationId(),
+         locationId: getLocationId(),
          vendorId: null,
          quantity: this.getQuantityStockIn(),
          entries: Object.values(this.state.stockInItems)
@@ -457,6 +457,18 @@ export default class ProductList extends Datatable {
       try {
          const response = await StockIOService.stockIn(payload);
          console.log("✅ Stock In Success:", response);
+
+         this.props.form.validateFields((err, values) => {
+            if (!err) {
+               console.log('Form values:', values);
+
+               // do something with the values, like saving...
+
+               // reset form after submit
+               this.props.form.resetFields();
+               this.setState({ stockInItems: [] })
+            }
+         });
          return response;
       } catch (error) {
          console.error("❌ Stock In Failed:", error);
@@ -1084,19 +1096,7 @@ export default class ProductList extends Datatable {
                               <Button
                                  type="primary"
                                  size="large"
-                                 onClick={() => {
-                                    this.setState({ drawerVisible: true });
-                                    this.props.form.validateFields((err, values) => {
-                                       if (!err) {
-                                          console.log('Form values:', values);
-
-                                          // do something with the values, like saving...
-
-                                          // reset form after submit
-                                          this.props.form.resetFields();
-                                       }
-                                    });
-                                 }}
+                                 onClick={() => this.setState({ drawerVisible: true })}
                                  disabled={Object.values(this.state.stockInItems).length <= 0}
                                  style={{ width: '250px', height: '48px', fontSize: '16px' }}
                               >

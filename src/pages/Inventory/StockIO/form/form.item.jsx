@@ -93,12 +93,6 @@ export default class FormItem extends BaseModal {
             required={true}
             form={form} />
           <this.InputText
-            name="number"
-            label={<this.Translate id="text_order_number" />}
-            data={formData.number}
-            placeholder={this.CATranslate("text_order_number", locale)}
-            form={form} />
-          <this.InputText
             name="referenceNo"
             label={<this.Translate id="text_reference_no" />}
             data={formData.referenceNo}
@@ -146,37 +140,6 @@ export default class FormItem extends BaseModal {
             max={255}
             form={this.props.form}
           />
-          <this.Row>
-            <this.Col md="7">
-              <this.InputNumber
-                name="payTermNumber"
-                label={<this.Translate id="text_payment_terms" />}
-                placeholder={this.CATranslate("text_payment_terms", locale)}
-                data={formData.payTermNumber}
-                precision={0}
-                form={form} />
-            </this.Col>
-            <this.Col md="5"  id="payment-term" style={{paddingLeft: "0"}}>
-              <this.Select
-                name="payTermType"
-                label={<this.Translate id="text_payment_terms" />}
-                placeholder={this.CATranslate("text_please_select", locale)}
-                defaultValue={formData.payTermType}
-                dataSource={[
-                  {
-                    name: <this.Translate id="text_day" />,
-                    value: Enum.PAYMENT_TERM_TYPE.DAY
-                  },
-                  {
-                    name: <this.Translate id="text_month" />,
-                    value: Enum.PAYMENT_TERM_TYPE.MONTH
-                  }
-                ]}
-                form={form} />
-              </this.Col>
-          </this.Row>
-          <this.Row className="ca-penel-v1 wrap-po-filter-create hidden">
-          </this.Row>
         </this.Col>
         <this.Col md="8" className="purchase-order-entry">
           <SearchPO
