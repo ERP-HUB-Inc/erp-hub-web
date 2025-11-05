@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeader, Input, Select, DatePicker, Button, Table, InputNumber, Icon, Row, Col, Card, Tag, Alert, Modal, Upload, Divider, Tooltip, Form } from 'antd';
 import moment from 'moment';
+import sweetalert from "sweetalert";
 import ItemService from "@services/ItemService";
 import LocationService from '@services/LocationService';
+import StockIOService from '@services/StockIOService';
+import UnitService from '@services/UnitService';
 import history from "@router/index";
 import Util from "@helper/inventory";
+import { getLocationId } from '@helper/user';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -12,7 +16,9 @@ const { TextArea } = Input;
 const StockIOForm = (props) => {
   const [stockIOItems, setStockIOItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
+  const [units, setUnits] = useState([]);
   const [items, setItems] = useState([]);
   const [pagination, setPagination] = useState({});
   const [movementType, setMovementType] = useState('IN');
@@ -22,18 +28,31 @@ const StockIOForm = (props) => {
 
   const reasons = {
     IN: [
-      'Purchase',          // when buying goods from supplier
-      'Customer Return',   // when customer returns goods
-      'Transfer In',       // received from another branch
-      'Stock Adjustment',  // manual correction
-      'Production Result'  // products from production
+      "Buy from Supplier",
+      "Customer Returned Item",
+      "Received from Another Branch",
+      "Fix Stock Mistake",
+      "Made in Production",
+      "Start Initial Stock",
+      "Stock on Consignment",
+      "Free Item from Supplier",
+      "Returned from Branch",
+      "Split / Repack Item",
+      "Free Item / Donation"
     ],
     OUT: [
-      'Sale',              // sold to customer
-      'Return to Supplier',// return goods to supplier
-      'Transfer Out',      // send to another branch
-      'Damaged / Lost',    // broken, expired, or missing
-      'Used in Production' // used as material in production
+      "Sale",
+      "Return to Supplier",
+      "Transfer Out",
+      "Damaged / Lost",
+      "Used in Production",
+      "Opening Adjustment",
+      "Internal Use / Staff Use",
+      "Sample / Demo Use",
+      "Donation / Charity",
+      "Promotion / Free Gift",
+      "Expired / Spoiled Write-Off",
+      "Repack / Unit Conversion"
     ]
   };
 
@@ -44,10 +63,14 @@ const StockIOForm = (props) => {
     }
     fetchItems();
     fetchWarehouses();
+    fetchUnits();
   }, []);
 
-  const fetchItems = () => {
-    ItemService.get({ limit: 15, offset: 0 })
+  const fetchItems = (locationId) => {
+    const option = { limit: 15, offset: 0 };
+    if (locationId) option.locationId = locationId;
+
+    ItemService.get(option)
     .then(response => {
       if (response.data) {
           setItems(response.data.data);
@@ -62,6 +85,16 @@ const StockIOForm = (props) => {
     .then(response => {
       if (response.data) {
         setWarehouses(response.data.data);
+      }
+    })
+    .finally(() => console.log("hello world"));
+  }
+
+  const fetchUnits = () => {
+    UnitService.get()
+    .then(response => {
+      if (response.data) {
+        setUnits(response.data.data);
       }
     })
     .finally(() => console.log("hello world"));
@@ -107,6 +140,7 @@ const StockIOForm = (props) => {
           if (selectedItem) {
             updated.itemName = selectedItem.name;
             updated.sku = Util.getProductSku(selectedItem);
+            updated.unitId = Util.getUnitId(selectedItem);
             updated.currentStock = selectedItem.currentStock;
             updated.avgQuantity = selectedItem.avgQuantity;
             updated.warehouse = selectedItem.warehouse || warehouses[0].id;
@@ -137,6 +171,25 @@ const StockIOForm = (props) => {
       }
       return stockIOItem;
     });
+
+    // Ensure there's always an empty row at the end
+    if (newItems.findIndex(i => i.itemId === null) === -1) {
+      newItems.push({
+          key: Date.now(),
+          itemId: null,
+          itemName: '',
+          sku: '',
+          quantity: null,
+          warehouse: warehouses[0]?.id,
+          reason: reasons[movementType][0],
+          batch: '',
+          expiry: null,
+          notes: '',
+          currentStock: 0,
+          avgQuantity: 0
+      });
+    }
+  
     setStockIOItems(newItems);
   };
 
@@ -149,28 +202,29 @@ const StockIOForm = (props) => {
     })));
   };
 
+  const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='%23f0f0f0'/%3E%3Cg transform='translate(50, 50)'%3E%3Crect x='10' y='15' width='80' height='70' fill='none' stroke='%23bfbfbf' stroke-width='3' rx='4'/%3E%3Cpolygon points='15,75 35,50 55,65 75,45 85,75' fill='%23d9d9d9'/%3E%3Ccircle cx='70' cy='30' r='8' fill='%23bfbfbf'/%3E%3C/g%3E%3Ctext x='100' y='130' font-family='Arial, sans-serif' font-size='12' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
+
   const columns = [
     {
       title: "Item",
       dataIndex: 'itemId',
       width: 250,
-      render: (value, record) => (
+      render: (value, record, index) => (
         <div>
           <Form.Item style={{ marginBottom: 0 }}>
             {
-              props.form.getFieldDecorator(`item[${record.key}]`, {
+              props.form.getFieldDecorator(`item[${index}]`, {
                 rules: [
                   {
-                    required: true,
-                    message: 'Please select an item'
+                    required: false,
+                    message: 'Type to search or pick an item'
                   }
                 ],
-                initialValue: value
               })(
                 <Select
                   showSearch
                   style={{ width: '100%' }}
-                  placeholder="Search or select item"
+                  placeholder="Type to search or pick an item"
                   onChange={(val) => updateRow(record.key, 'itemId', val)}
                   onSearch={onSearchItem}
                   filterOption={false}
@@ -178,21 +232,48 @@ const StockIOForm = (props) => {
                 >
                   {items.map(item => (
                     <Option key={item.id} value={item.id}>
-                      <div>
-                        <div>{item.name}</div>
-                        <small style={{ color: '#999' }}>SKU: {Util.getProductSku(item)} | Stock: {Util.getQuantityOnHand(item)}</small>
-                      </div>
+                      <Tooltip title={item.name} placement="right">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <img 
+                            src={item.thumbnail || item.image || '/placeholder-image.png'} 
+                            alt={item.name}
+                            style={{ 
+                              width: '40px', 
+                              height: '40px', 
+                              objectFit: 'cover',
+                              borderRadius: '4px',
+                              flexShrink: 0
+                            }}
+                            onError={(e) => {
+                              e.target.src = FALLBACK_IMAGE;
+                            }}
+                          />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ 
+                              fontWeight: 500,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {item.name}
+                            </div>
+                            <small style={{ color: '#999' }}>
+                              SKU: {Util.getProductSku(item)} | Stock: {Util.getQuantityOnHand(item)}
+                            </small>
+                          </div>
+                        </div>
+                      </Tooltip>
                     </Option>
                   ))}
                 </Select>
               )
             }
           </Form.Item>
-          {/* {aiSuggestions[record.key] && (
+          {aiSuggestions[record.key] && (
             <Tag color="blue" style={{ marginTop: 4, fontSize: 11 }}>
               <Icon type="bulb" /> {aiSuggestions[record.key]}
             </Tag>
-          )} */}
+          )}
         </div>
       ),
     },
@@ -206,13 +287,13 @@ const StockIOForm = (props) => {
       title: "Quantity",
       dataIndex: 'quantity',
       width: 120,
-      render: (value, record) => (
+      render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
           {
-            props.form.getFieldDecorator(`quantity[${record.key}]`, {
+            props.form.getFieldDecorator(`quantity[${index}]`, {
               rules: [
                 {
-                  required: true,
+                  required: false,
                   message: 'Please enter quantity'
                 },
                 {
@@ -226,7 +307,7 @@ const StockIOForm = (props) => {
               <InputNumber
                 style={{ width: '100%' }}
                 min={1}
-                placeholder="Qty"
+                placeholder="Enter quantity (pcs)"
                 onChange={(val) => updateRow(record.key, 'quantity', val)}
               />
             )
@@ -240,27 +321,28 @@ const StockIOForm = (props) => {
       ),
     },
     {
-      title: "Warehouse",
-      dataIndex: 'warehouse',
+      title: "Unit",
+      dataIndex: 'unitId',
       width: 160,
-      render: (value, record) => (
+      render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
           {
-            props.form.getFieldDecorator(`warehouse-${record.key}`, {
+            props.form.getFieldDecorator(`unitId[${index}]`, {
               rules: [
                 {
-                  required: true,
-                  message: 'Please select warehouse'
+                  required: false,
+                  message: 'Please select unit'
                 }
               ],
               initialValue: value
             })(
               <Select
                 style={{ width: '100%' }}
-                onChange={(val) => updateRow(record.key, 'warehouse', val)}
+                placeholder="Pick a Unit (pcs, box, kg...)"
+                onChange={(val) => updateRow(record.key, 'unitId', val)}
               >
-                {warehouses.map(wh => (
-                  <Option key={wh.id} value={wh.id}>{wh.name}</Option>
+                {units.map(u => (
+                  <Option key={u.id} value={u.id}>{u.name}</Option>
                 ))}
               </Select>
             )
@@ -272,13 +354,13 @@ const StockIOForm = (props) => {
       title: 'Reason',
       dataIndex: 'reason',
       width: 150,
-      render: (value, record) => (
+      render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
           {
-            props.form.getFieldDecorator(`reason-${record.key}`, {
+            props.form.getFieldDecorator(`reason[${index}]`, {
               rules: [
                 {
-                  required: true,
+                  required: false,
                   message: 'Please select reason'
                 }
               ],
@@ -289,7 +371,11 @@ const StockIOForm = (props) => {
                 onChange={(val) => updateRow(record.key, 'reason', val)}
               >
                 {reasons[movementType].map(rs => (
-                  <Option key={rs} value={rs}>{rs}</Option>
+                  <Option key={rs} value={rs}>
+                    <Tooltip title={rs} placement="right">
+                      {rs}
+                    </Tooltip>
+                  </Option>
                 ))}
               </Select>
             )
@@ -301,11 +387,11 @@ const StockIOForm = (props) => {
       title: 'Batch/Expiry',
       dataIndex: 'batch',
       width: 150,
-      render: (value, record) => (
+      render: (value, record, index) => (
         <div>
           <Form.Item style={{ marginBottom: 4 }}>
             {
-              props.form.getFieldDecorator(`batch[${record.key}]`, {
+              props.form.getFieldDecorator(`batch[${index}]`, {
                 initialValue: value
               })(
                 <Input
@@ -318,7 +404,7 @@ const StockIOForm = (props) => {
           </Form.Item>
           <Form.Item style={{ marginBottom: 0 }}>
             {
-              props.form.getFieldDecorator(`expiry[${record.key}]`, {
+              props.form.getFieldDecorator(`expiry[${index}]`, {
                 initialValue: record.expiry ? moment(record.expiry) : null
               })(
                 <DatePicker
@@ -337,10 +423,10 @@ const StockIOForm = (props) => {
       title: 'Notes',
       dataIndex: 'notes',
       width: 150,
-      render: (value, record) => (
+      render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
           {
-            props.form.getFieldDecorator(`notes[${record.key}]`, {
+            props.form.getFieldDecorator(`notes[${index}]`, {
               initialValue: value
             })(
               <TextArea
@@ -382,8 +468,8 @@ const StockIOForm = (props) => {
   ];
 
   const calculateSummary = () => {
-    const totalItems = stockIOItems.filter(i => i.quantity > 0).length;
-    const totalQuantity = stockIOItems.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    const totalItems = stockIOItems.filter(i => i.quantity > 0 && i.itemId).length;
+    const totalQuantity = stockIOItems.filter(i => i.quantity > 0 && i.itemId).reduce((sum, item) => sum + (item.quantity || 0), 0);
     const warehouseSummary = {};
     
     stockIOItems.forEach(item => {
@@ -412,12 +498,99 @@ const StockIOForm = (props) => {
     }, 1000);
   };
 
-  const handleSubmit = () => {
-    props.form.validateFields((err, values) => {
+  const handleSubmit = async () => {
+    try {
+      const value = await new Promise((resolve, reject) => {
+        props.form.validateFields((err, values) => {
+          if (err) return reject(err);
+          resolve(values);
+        });
+      });
+
+      setSubmitting(true);
+
+      const payload = {
+        type: value.movementType,
+        name: "Stock In from Supplier",
+        locationId: value.locationId,
+        date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
+        description: value.referenceNo,
+        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
+        amount: 0,
+        status: 2,
+        entries: value.item.map((id, index) => {
+          const item = items.find(item => item.id === id);
+          return {
+            itemId: id,
+            itemName: item?.name || "",
+            variantId: Util.getVariantId(item),
+            variantName: Util.getVariantName(item),
+            unitId: Util.getUnitId(item),
+            unitName: Util.getUnitName(item),
+            quantity: value.quantity[index],
+            reason: value.reason[index],
+            batch: value.batch[index],
+            expiry: value.expiry[index],
+            notes: value.notes[index]
+          };
+        })
+      };
+
+      await StockIOService.stockIn(payload);
+
+    } catch (error) {
+      console.error("❌ Stock In Failed:", error);
+    } finally {
+      sweetalert({
+        icon: "success",
+        title: "Stock In Recorded",
+        text: "Your stock quantity has been updated.",
+        buttons: false,
+        timer: 1500
+      })
+      .then(() => {
+        setSubmitting(false);
+        setStockIOItems([]);
+        props.form.resetFields();
+      });
+    }
+  };
+
+  const handleDraftSubmit = () => {
+    props.form.validateFields((err, value) => {
       if (!err) {
-          console.log('Form values:', values);
+          const payload = {
+            type: value.movementType,
+            number: "",
+            name: "Stock In from Supplier",
+            locationId: value.warehouse[0],
+            userId: "",
+            receiverId: "",
+            vendorId: "",
+            date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
+            description: value.referenceNo,
+            quantity: value.quantity.reduce((sum, q) => sum + q, 0),
+            amount: 0, 
+            status: 20,
+            entries: value.item.map((id, index) => ({
+              itemId: id,
+              itemName: items.find(item => item.id === id).name,
+              variantId: Util.getVariantId(items.find(item => item.id === id)),
+              variantName: Util.getVariantName(items.find(item => item.id === id)),
+              quantity: value.quantity[index],
+              cost: 0,
+              unitId: "",
+              unitName: "",
+              reason: value.reason[index],
+              batch: value.batch[index],
+              expiry: value.expiry[index],
+              notes: value.notes[index]
+            }))
+          };
+          console.log("Submitting payload:", payload);
       }
     });
+
     // Validate
     const invalidItems = stockIOItems.filter(item => !item.itemId || !item.quantity);
     if (invalidItems.length > 0) {
@@ -529,7 +702,6 @@ const StockIOForm = (props) => {
             itemName: rowData['Item Name'],
             sku: rowData['SKU'],
             quantity: parseInt(rowData['Quantity']) || null,
-            warehouse: rowData['Warehouse'] || (matchedItem ? matchedItem.warehouse : warehouses[0].name),
             reason: rowData['Reason'] || reasons[movementType][0],
             batch: rowData['Batch'] || '',
             expiry: rowData['Expiry'] ? moment(rowData['Expiry']) : null,
@@ -673,7 +845,10 @@ const StockIOForm = (props) => {
             <Col span={6}>
               <Form.Item label="Date">
                 {
-                  props.form.getFieldDecorator("date", { rules: [{ required:  true }] })
+                  props.form.getFieldDecorator("date", { 
+                    rules: [{ required:  true }],
+                    initialValue: moment(new Date())
+                  })
                   (
                     <DatePicker
                       style={{ width: '100%' }}
@@ -683,11 +858,28 @@ const StockIOForm = (props) => {
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="Reference No.">
+              <Form.Item label="Warehouse">
                 {
-                  props.form.getFieldDecorator("referenceNo")
-                  (
-                    <Input placeholder="PO-2025-001" />
+                  props.form.getFieldDecorator('locationId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please select location'
+                      }
+                    ],
+                    initialValue: getLocationId()
+                  })(
+                    <Select
+                      style={{ width: '100%' }}
+                      placeholder="Select warehouse"
+                      onChange={locationId => {
+                        fetchItems(locationId)
+                      }}
+                    >
+                      {warehouses.map(wh => (
+                        <Option key={wh.id} value={wh.id}>{wh.name}</Option>
+                      ))}
+                    </Select>
                   )
                 }
               </Form.Item>
@@ -768,11 +960,9 @@ const StockIOForm = (props) => {
                 <div>
                   <strong>Warehouse Distribution:</strong>
                   <div style={{ marginTop: 8 }}>
-                    {Object.entries(summary.warehouseSummary).map(([whId, qty]) => (
-                      <Tag key={whId} color="blue" style={{ marginBottom: 4 }}>
-                        {warehouses.find(w => w.id === Number(whId))?.name ?? 'Unknown'}: {qty} units
-                      </Tag>
-                    ))}
+                    <Tag color="blue" style={{ marginBottom: 4 }}>
+                      {warehouses.find(wh => wh.id === Number(props.form.getFieldValue("locationId")))?.name ?? 'Unknown'}: {summary.totalQuantity} units
+                    </Tag>
                   </div>
                 </div>
               </Col>
@@ -781,7 +971,7 @@ const StockIOForm = (props) => {
 
           {/* Action Buttons */}
           <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-            <Button size="large">
+            <Button size="large" onClick={handleDraftSubmit}>
               Save as Draft
             </Button>
             <Button
@@ -789,6 +979,7 @@ const StockIOForm = (props) => {
               size="large"
               icon="check"
               onClick={handleSubmit}
+              loading={submitting}
               disabled={stockIOItems.filter(i => i.itemId).length === 0}
             >
               Submit All Items

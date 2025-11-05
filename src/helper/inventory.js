@@ -70,6 +70,37 @@ class Util {
     return productVariantId;
   }
 
+  getVariantName(product) {
+    let name = "";
+
+    if (product && product.productVariants) {
+      name = product.productVariants[0].name;
+    }
+
+    return name;
+  }
+
+
+  getUnitId(product) {
+    let unitId = "";
+
+    if (product && product.unitOfMeasurement) {
+      unitId = product.unitOfMeasurement.id;
+    }
+
+    return unitId;
+  }
+
+  getUnitName(product) {
+    let unitName = "";
+
+    if (product && product.unitOfMeasurement) {
+      unitName = product.unitOfMeasurement.name;
+    }
+
+    return unitName;
+  }
+
   getItemBarcode(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].barcode : "";
   }
