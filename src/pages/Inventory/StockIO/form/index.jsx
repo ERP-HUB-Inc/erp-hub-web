@@ -189,6 +189,7 @@ export default class StockIOPage extends Datatable {
         width: 120,
         render: (status) => {
           const statusConfig = {
+            0: { color: 'default', text: 'Drafted' },
             1: { color: 'orange', text: 'Pending' },
             2: { color: 'green', text: 'Completed' },
             3: { color: 'red', text: 'Cancelled' }
@@ -237,6 +238,10 @@ export default class StockIOPage extends Datatable {
 
     this.fetchList(true);
 
+  }
+
+  handleShowFormEdit = (record) => {
+    history.push({ pathname: "/inventories/stock-io/update/" + record.id });
   }
 
   getVendorInitials = (vendorName) => {
@@ -483,7 +488,7 @@ export default class StockIOPage extends Datatable {
               ]}
               actions={[
                   {
-                    text: "Import",
+                    text: "Import Stock",
                     type: "default",
                     icon: "upload",
                     onClick: () => {}

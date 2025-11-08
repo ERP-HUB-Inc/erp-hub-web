@@ -28,6 +28,7 @@ import StockInUI from './stock-in-summary';
 import ItemManagementUI from './item-management-ai';
 import ItemAIGenerator from './item-ai-tool';
 import StickyFooterPage from './sticky-footer';
+import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -245,7 +246,7 @@ export default class SiderDemo extends React.Component {
                 !isPOSPage ?
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: '100vh' }}>
                   <LogoTextOnly />
-                  <DynamicMenu />
+                  {/* <DynamicMenu /> */}
                   <Menu theme={theme} mode="inline" defaultSelectedKeys={['1']}>
                     <Menu.Item key="1">
                       <Link to="/">
@@ -254,109 +255,109 @@ export default class SiderDemo extends React.Component {
                       </Link>
                     </Menu.Item>
 
-                      <SubMenu
-                        key="2"
-                        title={
-                          <span>
-                            <Icon type="dollar" />
-                            <span>Sales</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="21"><Link to="/sales-orders">Orders</Link></Menu.Item>
-                        <Menu.Item key="22"><Link to="/quotes">Quotes</Link></Menu.Item>
-                        <Menu.Item key="23"><Link to="/invoices">Invoices</Link></Menu.Item>
-                        <Menu.Item key="24"><Link to="/customers">Customers</Link></Menu.Item>
-                      </SubMenu>
+                    <SubMenu
+                      key="2"
+                      title={
+                        <span>
+                          <Icon type="dollar" />
+                          <span>Sales</span>
+                        </span>
+                      }
+                    >
+                      <Menu.Item key="21"><Link to="/sales-orders">Orders</Link></Menu.Item>
+                      <Menu.Item key="22"><Link to="/quotes">Quotes</Link></Menu.Item>
+                      <Menu.Item key="23"><Link to="/invoices">Invoices</Link></Menu.Item>
+                      <Menu.Item key="24"><Link to="/customers">Customers</Link></Menu.Item>
+                    </SubMenu>
 
-                      <SubMenu
-                        key="3"
-                        title={
-                          <span>
-                            <Icon type="shopping" />
-                            <span>Purchasing</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="31"><Link to="/purchase-orders">Orders</Link></Menu.Item>
-                        <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item>
-                        <Menu.Item key="33"><Link to="/vendors">Vendors</Link></Menu.Item>
-                      </SubMenu>
+                    <SubMenu
+                      key="3"
+                      title={
+                        <span>
+                          <Icon type="shopping" />
+                          <span>Purchasing</span>
+                        </span>
+                      }
+                    >
+                      <Menu.Item key="31"><Link to="/purchase-orders">Orders</Link></Menu.Item>
+                      <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item>
+                      <Menu.Item key="33"><Link to="/vendors">Vendors</Link></Menu.Item>
+                    </SubMenu>
 
-                      <SubMenu
-                        key="4"
-                        title={
-                          <span>
-                            <Icon type="inbox" />
-                            <span>Inventory</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="41"><Link to="/inventories/items">Items</Link></Menu.Item>
-                        <Menu.Item key="42"><Link to="/inventories/stock-io">Stock In/Out</Link></Menu.Item>
-                        {/* 
-                          Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
-                          Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
-                          Each movement is logged in the Stock Ledger (history).
-                        */}
-                        <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
-                        <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item>
-                      </SubMenu>
+                    <SubMenu
+                      key="4"
+                      title={
+                        <span>
+                          <Icon type="inbox" />
+                          <span>Inventory</span>
+                        </span>
+                      }
+                    >
+                      <Menu.Item key="41"><Link to="/inventories/items">Items</Link></Menu.Item>
+                      <Menu.Item key="42"><Link to="/inventories/stock-io">Stock In/Out</Link></Menu.Item>
+                      {/* 
+                        Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
+                        Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
+                        Each movement is logged in the Stock Ledger (history).
+                      */}
+                      {/* <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
+                      <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item> */}
+                    </SubMenu>
 
-                      <SubMenu
-                        key="5"
-                        title={
-                          <span>
-                            <Icon type="bank" />
-                            <span>Finance</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="51">
-                            <Link to="/general-ledger">General Ledger (GL)</Link>
-                        </Menu.Item>
-                        <Menu.Item key="52">
-                            <Link to="/accounts-receivable">Accounts Receivable (AR)</Link>
-                        </Menu.Item>
-                        <Menu.Item key="53">
-                            <Link to="/accounts-payable">Accounts Payable (AP)</Link>
-                        </Menu.Item>
-                      </SubMenu>
-
-                      <SubMenu
-                        key="6"
-                        title={
-                          <span>
-                            <Icon type="bar-chart" />
-                            <span>Report</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="61">
-                          <Link to="/reports/sales-report-center">Sales Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="62">
-                            <Link to="/reports/purchase">Purchase Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="63">
-                            <Link to="/reports/stock">Stock Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="64">
-                            <Link to="/reports/product">Product Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="65">
-                            <Link to="/reports/financial">Financial Reports</Link>
-                        </Menu.Item>
-
-                      </SubMenu>
-
-                      <Menu.Item key="7">
-                        <Link to="/settings">
-                          <Icon type="setting" />
-                          <span>Settings</span>
-                        </Link>
+                    <SubMenu
+                      key="5"
+                      title={
+                        <span>
+                          <Icon type="bank" />
+                          <span>Finance</span>
+                        </span>
+                      }
+                    >
+                      <Menu.Item key="51">
+                          <Link to="/general-ledger">General Ledger (GL)</Link>
                       </Menu.Item>
-                    </Menu>
+                      <Menu.Item key="52">
+                          <Link to="/accounts-receivable">Accounts Receivable (AR)</Link>
+                      </Menu.Item>
+                      <Menu.Item key="53">
+                          <Link to="/accounts-payable">Accounts Payable (AP)</Link>
+                      </Menu.Item>
+                    </SubMenu>
+
+                    <SubMenu
+                      key="6"
+                      title={
+                        <span>
+                          <Icon type="bar-chart" />
+                          <span>Report</span>
+                        </span>
+                      }
+                    >
+                      <Menu.Item key="61">
+                        <Link to="/reports/sales-report-center">Sales Report</Link>
+                      </Menu.Item>
+                      <Menu.Item key="62">
+                          <Link to="/reports/purchase">Purchase Report</Link>
+                      </Menu.Item>
+                      <Menu.Item key="63">
+                          <Link to="/reports/stock">Stock Report</Link>
+                      </Menu.Item>
+                      <Menu.Item key="64">
+                          <Link to="/reports/product">Product Report</Link>
+                      </Menu.Item>
+                      <Menu.Item key="65">
+                          <Link to="/reports/financial">Financial Reports</Link>
+                      </Menu.Item>
+
+                    </SubMenu>
+
+                    <Menu.Item key="7">
+                      <Link to="/settings">
+                        <Icon type="setting" />
+                        <span>Settings</span>
+                      </Link>
+                    </Menu.Item>
+                  </Menu>
                 </Sider>
                 :
                 <React.Fragment />
@@ -437,9 +438,9 @@ export default class SiderDemo extends React.Component {
                     <Route path="/inventories/items" component={Item} />
 
                     {/* StockIO Management */}
-                    <Route path="/inventories/stock-io" component={StockInOut} />
                     <Route path="/inventories/stock-io/create" component={NewStockInOut} />
                     <Route path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
+                    <Route path="/inventories/stock-io" component={StockInOut} />
 
                     <Route path="/inventories/transfers" component={Vendor} />
                     <Route path="/inventories/adjustments" component={Vendor} />
@@ -458,6 +459,7 @@ export default class SiderDemo extends React.Component {
                     <Route path="/item-ai-ui" component={ItemManagementUI} />
                     <Route path="/item-ai-generator" component={ItemAIGenerator} />
                     <Route path="/sticky-footer-page" component={StickyFooterPage} />
+                    <Route path="/stock-io-form" component={StockIOForm} />
 
                     <Route path="/" component={Dashboard} />
                   </Switch>

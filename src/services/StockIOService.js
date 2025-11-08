@@ -9,12 +9,26 @@ class StockIOService extends BaseService {
   }
 
   /**
-   * Perform stock-in transaction.
+   * Perform stock-in Transaction.
+   * @param {Object} payload - Stock-in details
+   * @returns {Promise<Object>}
+   */
+  getStockInById(id) {
+    try {
+      return this.GET({
+        url: `${this.baseUrl}/${id}`
+      });
+    } catch (error) {
+      this.handleError(error, "stockIn");
+    }
+  }
+
+  /**
+   * Perform stock-in Transaction.
    * @param {Object} payload - Stock-in details
    * @returns {Promise<Object>}
    */
   async stockIn(payload = {}) {
-    this.setHeader();
     try {
       return await this.POST({
         url: `${this.baseUrl}/in`,
@@ -32,7 +46,6 @@ class StockIOService extends BaseService {
    * @returns {Promise<Object>}
    */
   async stockOut(payload = {}) {
-    this.setHeader();
     try {
       return await this.POST({
         url: `${this.baseUrl}/out`,
@@ -52,7 +65,6 @@ class StockIOService extends BaseService {
    */
   async updateStockOutById(id, payload = {}) {
     if (!id) throw new Error("Missing ID for updateStockOutById()");
-    this.setHeader();
     try {
       return await this.PUT({
         url: `${this.baseUrl}/out/${id}`,
@@ -72,7 +84,6 @@ class StockIOService extends BaseService {
    */
   async updateStockInById(id, payload = {}) {
     if (!id) throw new Error("Missing ID for updateStockInById()");
-    this.setHeader();
     try {
       return await this.PUT({
         url: `${this.baseUrl}/in/${id}`,

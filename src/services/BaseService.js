@@ -1,6 +1,23 @@
 import axios from "axios";
 import Service from "./Core";
 
+const api = axios.create({
+  baseURL: "http://127.0.0.1:8080",
+});
+
+api.interceptors.request.use((config) => {
+   if (localStorage.getItem("ACCESS_TOKEN")) {
+      let result = localStorage.getItem("ACCESS_TOKEN");
+      result = JSON.parse(result);
+      const token = result.accessToken;
+
+      if (token) {
+         config.headers.Authorization = `Bearer ${token}`;
+      }
+   }
+  return config;
+});
+
 export default class BaseService extends Service {
    constructor() {
       super();
@@ -33,7 +50,7 @@ export default class BaseService extends Service {
       headers: {},
       data: {},
    }) {
-      return axios({
+      return api({
          method: "POST",
          ...option
       });
@@ -44,7 +61,7 @@ export default class BaseService extends Service {
       headers: {},
       data: {},
    }) {
-      return axios({
+      return api({
          method: "GET",
          ...option
       });
@@ -55,7 +72,7 @@ export default class BaseService extends Service {
       headers: {},
       data: {},
    }) {
-      return axios({
+      return api({
          method: "PUT",
          ...option
       });

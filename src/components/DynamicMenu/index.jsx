@@ -30,6 +30,7 @@ const renderMenu = (menus, businessType, businessSize, lang) =>
     .filter(menu => filterByBusiness(menu, businessType, businessSize))
     .map(menu => {
       if (menu.children) {
+        console.log("Rendering menu:", menu.children);
         return (
           <SubMenu
             key={menu.key}
@@ -40,10 +41,15 @@ const renderMenu = (menus, businessType, businessSize, lang) =>
               </span>
             }
           >
-            {renderMenu(menu.children, businessType, businessSize, lang)}
+            {
+              menu.children.map(subMenu => {
+                return (<Menu.Item key={subMenu.key}><Link to={subMenu.path}>{subMenu.label.en}</Link></Menu.Item>);
+              })
+            }
           </SubMenu>
         );
       }
+
       return (
         <Menu.Item key={menu.key}>
           <Link to={menu.path}>

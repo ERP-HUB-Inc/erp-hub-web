@@ -327,7 +327,7 @@ const StockIOForm = (props) => {
       render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
           {
-            props.form.getFieldDecorator(`unitId[${index}]`, {
+            props.form.getFieldDecorator(`unitId[${index}]`, value ? {
               rules: [
                 {
                   required: false,
@@ -335,7 +335,8 @@ const StockIOForm = (props) => {
                 }
               ],
               initialValue: value
-            })(
+            } : {}
+            )(
               <Select
                 style={{ width: '100%' }}
                 placeholder="Pick a Unit (pcs, box, kg...)"
@@ -506,7 +507,6 @@ const StockIOForm = (props) => {
           resolve(values);
         });
       });
-
       setSubmitting(true);
 
       const payload = {
@@ -518,6 +518,63 @@ const StockIOForm = (props) => {
         quantity: value.quantity.reduce((sum, q) => sum + q, 0),
         amount: 0,
         status: 2,
+        entries: value.item.map((id, index) => {
+          const item = items.find(item => item.id === id);
+          return {
+            itemId: id,
+            itemName: item?.name || "",
+            variantId: Util.getVariantId(item),
+            variantName: Util.getVariantName(item),
+            unitId: value.unitId[index],
+            unitName: units.find(unit => unit.id === value.unitId[index])?.name || "",
+            quantity: value.quantity[index],
+            reason: value.reason[index],
+            batch: value.batch[index],
+            expiryDate: moment(value.expiry[index]).isValid() ? moment(value.expiry[index]).format("YYYY-MM-DD") : null,
+            notes: value.notes[index]
+          };
+        })
+      };
+      await StockIOService.stockIn(payload);
+
+    } catch (error) {
+      console.error("❌ Stock In Failed:", error);
+    } finally {
+      sweetalert({
+        icon: "success",
+        title: props.form.getFieldValue("movementType") === "IN" ? "Stock In Recorded" : "Stock Out Recorded",
+        text: "Your stock quantity has been updated.",
+        buttons: false,
+        timer: 1500
+      })
+      .then(() => {
+        setSubmitting(false);
+        setStockIOItems([]);
+        props.form.resetFields();
+      });
+    }
+  };
+
+  const handleDraftSubmit = async () => {
+    try {
+      const value = await new Promise((resolve, reject) => {
+        props.form.validateFields((err, values) => {
+          if (err) return reject(err);
+          resolve(values);
+        });
+      });
+
+      setSubmitting(true);
+
+      const payload = {
+        type: value.movementType,
+        name: "Stock In from Supplier",
+        locationId: value.locationId,
+        date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
+        description: value.referenceNo,
+        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
+        amount: 0,
+        status: 0,
         entries: value.item.map((id, index) => {
           const item = items.find(item => item.id === id);
           return {
@@ -554,81 +611,6 @@ const StockIOForm = (props) => {
         props.form.resetFields();
       });
     }
-  };
-
-  const handleDraftSubmit = () => {
-    props.form.validateFields((err, value) => {
-      if (!err) {
-          const payload = {
-            type: value.movementType,
-            number: "",
-            name: "Stock In from Supplier",
-            locationId: value.warehouse[0],
-            userId: "",
-            receiverId: "",
-            vendorId: "",
-            date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
-            description: value.referenceNo,
-            quantity: value.quantity.reduce((sum, q) => sum + q, 0),
-            amount: 0, 
-            status: 20,
-            entries: value.item.map((id, index) => ({
-              itemId: id,
-              itemName: items.find(item => item.id === id).name,
-              variantId: Util.getVariantId(items.find(item => item.id === id)),
-              variantName: Util.getVariantName(items.find(item => item.id === id)),
-              quantity: value.quantity[index],
-              cost: 0,
-              unitId: "",
-              unitName: "",
-              reason: value.reason[index],
-              batch: value.batch[index],
-              expiry: value.expiry[index],
-              notes: value.notes[index]
-            }))
-          };
-          console.log("Submitting payload:", payload);
-      }
-    });
-
-    // Validate
-    const invalidItems = stockIOItems.filter(item => !item.itemId || !item.quantity);
-    if (invalidItems.length > 0) {
-      Modal.error({
-        title: 'Validation Error',
-        content: 'Please ensure all stockIOItems have a selected product and quantity.',
-      });
-      return;
-    }
-
-    if (Object.keys(validationWarnings).length > 0) {
-      Modal.confirm({
-        title: 'Stock Warnings Detected',
-        content: 'Some stockIOItems have stock warnings. Do you want to proceed anyway?',
-        onOk: () => submitData(),
-      });
-    } else {
-      submitData();
-    }
-  };
-
-  const submitData = () => {
-    const summary = calculateSummary();
-    Modal.success({
-      title: 'Stock Movement Submitted',
-      content: (
-        <div>
-          <p><strong>Type:</strong> Stock {movementType === 'IN' ? 'In' : 'Out'}</p>
-          <p><strong>Total Items:</strong> {summary.totalItems}</p>
-          <p><strong>Total Quantity:</strong> {summary.totalQuantity}</p>
-          <Divider style={{ margin: '8px 0' }} />
-          <p><strong>Warehouse Summary:</strong></p>
-          {Object.entries(summary.warehouseSummary).map(([wh, qty]) => (
-            <div key={wh}>• {wh}: {qty} units</div>
-          ))}
-        </div>
-      ),
-    });
   };
 
   const handleBulkUpload = (file) => {
@@ -971,7 +953,11 @@ const StockIOForm = (props) => {
 
           {/* Action Buttons */}
           <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-            <Button size="large" onClick={handleDraftSubmit}>
+            <Button
+              size="large"
+              onClick={handleDraftSubmit}
+              disabled={stockIOItems.filter(i => i.itemId).length === 0}
+            >
               Save as Draft
             </Button>
             <Button
