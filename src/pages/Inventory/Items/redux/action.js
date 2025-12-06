@@ -1,5 +1,5 @@
 import Constant from "./constant";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import LocationService from "@services/LocationService";
 import VariantService from "@services/VariantService";
 import OptionService from "@services/OptionService";

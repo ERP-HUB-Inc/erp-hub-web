@@ -71,7 +71,7 @@ export default class FormComposite extends Modal {
           existingCompositeList.push({
             id: productPackage.id,
             productName: Util.getProductNameV2(productPackage.product),
-            productCode: Util.getProductBarcode(productPackage.product),
+            productCode: Util.getItemBarcode(productPackage.product),
             productCompositeProductId: productPackage.rawProductId,
             markup: productPackage.quantity,
             cost: Util.getProductCost(productPackage.product),

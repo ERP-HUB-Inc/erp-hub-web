@@ -561,7 +561,7 @@ export default class FormItem extends Modal {
                     className="barcode-option" />
                   <this.InputText
                     name="barcode"
-                    data={Util.getProductBarcode(formData)}
+                    data={Util.getItemBarcode(formData)}
                     placeholder={this.CATranslate("text_barcode", locale)}
                     required={this.state.isRequireInputBarcode}
                     errorRequired={<this.Translate id="error_require_sku" />}

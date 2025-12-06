@@ -1,6 +1,6 @@
 import React from "react";
 import swal from "sweetalert";
-import Datatable from "@layout/Datatable";
+import Datatable from "@layout/datatable";
 import Enum from "@enums/index";
 import UnitService from "@services/UnitService";
 import Constant from "../redux/constant";

@@ -84,7 +84,6 @@ const SelectCategory = forwardRef((props, ref) => {
       onSearch={handleSearch}
       loading={loadingRef.current}
       style={{ width: 180, marginRight: 15, marginLeft: 15 }}
-      size="large"
       showSearch
       allowClear
     >

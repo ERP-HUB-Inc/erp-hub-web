@@ -1,6 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 import UnitAction from "../redux/action";
 
 

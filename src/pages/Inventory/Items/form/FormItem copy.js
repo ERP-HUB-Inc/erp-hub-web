@@ -28,11 +28,11 @@ import ProductAction from "../redux/action";
 import CategoryService from "@services/CategoryService";
 import BrandService from "@services//BrandService";
 import UnitService from "@services/UnitService";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
-import BaseModal from "@layout/BaseModal";
-import Exchange from "./ExchangeMoneyFunc";
+import BaseModal from "@layout/base-modal";
+import Exchange from "./exchange-money-func";
 import "./index.css";
 
 function SelectBrand(props) {
@@ -618,7 +618,7 @@ export default class FormItem extends BaseModal {
                     className="barcode-option" />
                   <this.InputText
                     name="barcode"
-                    data={Util.getProductBarcode(formData)}
+                    data={Util.getItemBarcode(formData)}
                     placeholder={this.CATranslate("text_barcode", locale)}
                     required={this.state.isRequireInputBarcode}
                     errorRequired={<Translate id="error_require_sku" />}

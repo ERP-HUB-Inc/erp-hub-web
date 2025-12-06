@@ -132,6 +132,10 @@ export default {
 
   text_all_category: ["All categories", "គ្រប់ប្រភេទ"],
 
+  text_categories: ["Categories", "ប្រភេទមុខទំនិញ"],
+
+  text_brands: ["Brands", "ម៉ាកផលិតផល"],
+
   text_all_location: ["All locations", "គ្រប់ទីតាំង"],
 
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],
@@ -408,6 +412,8 @@ export default {
 
   text_supplier: ["Supplier", "អ្នកផ្គត់ផ្គង់", "Supplier"],
 
+  text_vendor: ["Vendor", "អ្នកផ្គត់ផ្គង់"],
+
   text_all_supplier: ["All Supplier", "អ្នកផ្គត់ផ្គង់", "All Supplier"],
 
   text_due_date: ["Due Date", "កាលបរិច្ឆេទ​កំណត់"],
@@ -419,6 +425,14 @@ export default {
   text_receive: ["Receive", "ទទួលបាន", "Receive"],
 
   text_receiver: ["Receiver", "អ្នកទទួល"],
+
+  text_created_by: ["Created By", "បង្កើតដោយ"],
+
+  text_approved_by: ["Approved By", "អនុម័តដោយ"],
+
+  text_date_created: ["Date Created", "បានបង្កើត"],
+
+  text_updated_by: ["Updated By", "បង្កើតដោយ"],
 
   text_payment_status: ["Payment Status", "ស្ថានភាពបង់ប្រាក់"],
 

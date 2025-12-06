@@ -31,14 +31,14 @@ import CategoryService from "@services/CategoryService";
 import BrandService from "@services//BrandService";
 import ManufacturerService from "@services/ManufacturerService";
 import UnitService from "@services/UnitService";
-import ProductService from "@services/ProductService";
+import ProductService from "@services/ItemService";
 import VariantService from "@services/VariantService";
 import ProductConditionService from "@services/ProductConditionService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
-import BaseModal from "@layout/BaseModal";
+import BaseModal from "@layout/base-modal";
 import { orderBy } from "lodash";
-import Exchange from "./ExchangeMoneyFunc";
+import Exchange from "./exchange-money-func";
 import "./index.css";
 import FormVariant from "./form.variant";
 
@@ -668,12 +668,16 @@ export default class FormItem extends BaseModal {
 
     this.statuses = [
       {
-        name: "Active",
+        name: "Draft",
         value: 1
       },
       {
+        name: "Ready for Sale",
+        value: 2
+      },
+      {
         name: "Inactive",
-        value: 0
+        value: 3
       }
     ];
     this.timer = null;
@@ -920,7 +924,7 @@ export default class FormItem extends BaseModal {
               <InputText
                 name="barcode"
                 label={<Translate id="text_barcode" />}
-                data={Util.getProductBarcode(formData)}
+                data={Util.getItemBarcode(formData)}
                 placeholder="Scan or type the barcode here..."
                 // required={this.state.isRequireInputBarcode}
                 errorRequired={<Translate id="error_require_sku" />}
@@ -1034,6 +1038,7 @@ export default class FormItem extends BaseModal {
               </div>
             }
             dataSource={this.statuses}
+            value={formData.status}
             defaultValue={formData.status !== "" ? formData.status : this.statuses[0].status}
             form={form}
           />

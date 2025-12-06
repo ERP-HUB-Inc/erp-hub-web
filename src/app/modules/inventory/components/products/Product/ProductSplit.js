@@ -88,7 +88,7 @@ class SplitProduct extends Component {
             return {
                 image: data.image,
                 name: data.name,
-                barcode: Util.getProductBarcode(data),
+                barcode: Util.getItemBarcode(data),
                 currentQuantity: Util.countProductQTYCurrentLocation(data, this.props.form.getFieldValue("locationId")),
                 currentCost: Util.getProductCost(data),
                 price: Util.getProductPrice(data),

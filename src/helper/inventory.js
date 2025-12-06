@@ -1,5 +1,6 @@
 import _ from "lodash";
 import SettingUtil from "@common/util";
+
 class Util {
   getProductName(product) {
     if (product === null)
@@ -59,12 +60,72 @@ class Util {
     return productVariantId;
   }
 
-  getProductBarcode(product) {
+  getVariantId(product) {
+    let productVariantId = "";
+
+    if (product && product.productVariants) {
+      productVariantId = product.productVariants[0].id;
+    }
+
+    return productVariantId;
+  }
+
+  getVariantName(product) {
+    let name = "";
+
+    if (product && product.productVariants) {
+      name = product.productVariants[0].name;
+    }
+
+    return name;
+  }
+
+
+  getUnitId(product) {
+    let unitId = "";
+
+    if (product && product.unitOfMeasurement) {
+      unitId = product.unitOfMeasurement.id;
+    }
+
+    return unitId;
+  }
+
+  getUnitName(product) {
+    let unitName = "";
+
+    if (product && product.unitOfMeasurement) {
+      unitName = product.unitOfMeasurement.name;
+    }
+
+    return unitName;
+  }
+
+  getItemBarcode(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].barcode : "";
   }
 
   getProductSku(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].sku : "";
+  }
+
+  getQuantityOnHand(record) {
+    let quantity = 0;
+    let isNotFilterByLocation = true;
+    if (Array.isArray(record["productVariants"])) {
+      record["productVariants"].forEach(productVariant => {
+          if ("productLocations" in productVariant) {
+            isNotFilterByLocation = false;
+            quantity += this.getProductQTYLocation(productVariant["productLocations"]);
+          }
+      });
+
+      if (isNotFilterByLocation) {
+          quantity = this.getProductQTYLocation(record["productVariants"]);
+      }
+    }
+
+    return quantity;
   }
 
   getProductPrice(product) {

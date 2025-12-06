@@ -1,5 +1,5 @@
 import React from "react";
-import Datatable from "@layout/Datatable";
+import Datatable from "@layout/datatable";
 import Enum from "@enums/index";
 import FormCreate from "../FormCreate";
 import FormUpdate from "../FormUpdate";

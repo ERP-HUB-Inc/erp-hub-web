@@ -11,12 +11,12 @@ import FormItem from "./form.item";
 import history from "@router/index";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
-import FormCreateBrand from "@inventories/Brand/FormCreate";
-import FormCreateCategory from "@inventories/Category/FormCreate";
+import FormCreateBrand from "@settings/Modules/Brand/form.create";
+import FormCreateCategory from "@settings/Modules/Category/form.create";
 import FormCreateOption from "@inventories/Option/FormCreate";
 import FormCreateUnit from "@inventories/Unit/FormCreate";
 import FormCreateTax from "@settings/Tax/FormCreate";
-import Exchange from "./ExchangeMoneyFunc";
+import Exchange from "./exchange-money-func";
 
 export default class ProductCreate extends BaseComponent {
   constructor(props) {

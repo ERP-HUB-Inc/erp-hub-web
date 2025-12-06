@@ -67,8 +67,16 @@ html,
     width: 40px !important
 }
 
-.ant-table-tbody tr td .ant-form-item {
-    margin-bottom: 0 !important
+.ant-table-tbody > tr:nth-child(odd) > td {
+  background: #ffffff !important;
+}
+
+.ant-table-tbody > tr:nth-child(even) > td {
+  background: #f9f9f9 !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: #e6f7ff !important;
 }
 
 .ant-table-footer {
@@ -104,21 +112,9 @@ html,
 }
 
 /* BREADCRUMB */
-.table-wrapper {
-    padding: 25px 25px;
-    min-height: 100%;
-    margin-bottom: 15px;
-    /* overflow: auto */
-}
 
 .ant-table-row:hover > .ant-table-row-cell-break-word .ant-dropdown-link {
     display: block !important;
-}
-
-.ant-table-fixed-header .ant-table-scroll .ant-table-header {
-    margin-bottom: 0 !important;
-    overflow: hidden !important;
-    padding-right: 20px
 }
 
 .breadcrumb {
@@ -200,10 +196,6 @@ html,
     margin-bottom: 10px !important
 }
 
-/* .table-wrapper .ant-btn {
-    min-width: 110px
-} */
-
 .ant-form-inline .ant-form-item {
     display: block !important
 }
@@ -220,21 +212,6 @@ html,
 
 .wrap-btn-search .ant-form-item-label {
     line-height: 25px
-}
-
-/* button */
-.mg-right {
-    margin-right: 8px
-}
-
-.ant-form-item-label {
-    margin-bottom: 0 !important;
-    line-height: 25px
-}
-
-.ant-form-item-label label:after {
-    content: "";
-    display: none !important;
 }
 
 /*==================INPUT=============*/
@@ -418,11 +395,6 @@ html,
 .main-searchs .search-icon,
 .main-searchs .icon-scaner {
     color: #c1bebe
-}
-
-/* ==============LABEL=========== */
-.ant-form-item-label label {
-    margin-bottom: 0
 }
 
 /* ================CA PANEL============ */
@@ -771,13 +743,6 @@ color: #4D4F5C;
     color: #9A9A9A
 }
 
-/*SHARE TOGETHER*/
-.wrap-select-search ul.ant-select-dropdown-menu li.add-new-item,
-#wrap-no-permission,
-.table-wrapper {
-    background-color: white
-}
-
 /* unavailable mobile  */
 .unavailable-mobile-layout  {
     text-align: center;
@@ -836,4 +801,10 @@ color: #4D4F5C;
 .ant-input-lg,
 .ant-select-lg {
     font-size: 14px !important;
+}
+
+.ant-tabs-nav-wrap {
+    padding-left: 40px;
+    padding-right: 40px;
+    background: #ffffff;
 }

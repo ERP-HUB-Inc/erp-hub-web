@@ -108,21 +108,8 @@ html,
 }
 
 /* BREADCRUMB */
-.table-wrapper {
-    padding: 25px 25px;
-    min-height: 100%;
-    margin-bottom: 15px;
-    /* overflow: auto */
-}
-
 .ant-table-row:hover > .ant-table-row-cell-break-word .ant-dropdown-link {
     display: block !important;
-}
-
-.ant-table-fixed-header .ant-table-scroll .ant-table-header {
-    margin-bottom: 0 !important;
-    overflow: hidden !important;
-    padding-right: 20px
 }
 
 .breadcrumb {
@@ -203,10 +190,6 @@ html,
 .ant-alert.ant-alert-error {
     margin-bottom: 10px !important
 }
-
-/* .table-wrapper .ant-btn {
-    min-width: 110px
-} */
 
 .ant-form-inline .ant-form-item {
     display: block !important
@@ -505,7 +488,7 @@ color: #4D4F5C;
 }
 
 .ant-layout {
-    background:#F7F7F7;
+    background:#fff !important;
     height: 100%;
     position: relative
 }
@@ -781,13 +764,6 @@ color: #4D4F5C;
     font-size: 8pt;
     font-weight: 500;
     color: #9A9A9A
-}
-
-/*SHARE TOGETHER*/
-.wrap-select-search ul.ant-select-dropdown-menu li.add-new-item,
-#wrap-no-permission,
-.table-wrapper {
-    background-color: white
 }
 
 /* unavailable mobile  */

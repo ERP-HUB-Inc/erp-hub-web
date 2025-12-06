@@ -6,7 +6,7 @@ import {
     Table,
 } from "antd";
 import {Translate} from "@redux/index";
-import ProductService from "@services//ProductService";
+import ProductService from "@services/ItemService";
 import Util from "@common/util";
 
 const util = new Util();

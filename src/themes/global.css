@@ -1,0 +1,136 @@
+:root {
+  /* === Primary === */
+  --primary-color: #14b8a6; /* Teal */
+
+  /* === Secondary Colors === */
+  --secondary-light-teal: #7dd3fc;
+  --secondary-cyan: #06b6d4;
+}
+
+/* ===== Ant Design Overrides ===== */
+
+/* Sidebar menu wrapper */
+.ant-menu {
+  background-color: #ffffff; /* sidebar background, adjust if needed */
+}
+
+/* Menu items */
+.ant-menu-item,
+.ant-menu-submenu-title {
+  color: inherit; /* keep default text color */
+}
+
+/* Active / selected menu item text */
+.ant-menu-item-selected,
+.ant-menu-submenu-selected {
+  color: var(--primary-color);
+}
+
+/* Hover effect for menu items */
+.ant-menu-item-selected > a,
+.ant-menu-item-selected > a:hover {
+  color: var(--primary-color);        /* light teal background on hover */
+}
+
+/* Active border right menu item */
+.ant-menu-vertical .ant-menu-item::after, 
+.ant-menu-vertical-left .ant-menu-item::after, 
+.ant-menu-vertical-right .ant-menu-item::after, 
+.ant-menu-inline .ant-menu-item::after {
+  border-right: 3px solid var(--primary-color);
+}
+
+/* Buttons */
+.ant-btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background-color: var(--secondary-cyan);
+  border-color: var(--secondary-cyan);
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+}
+a:hover {
+  color: var(--secondary-cyan);
+}
+
+/* Input focus & border highlight */
+.ant-input:focus,
+.ant-input-focused {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+}
+
+/* Input hover */
+.ant-input:hover {
+  border-color: var(--primary-color);
+}
+
+.ant-input-affix-wrapper:hover .ant-input:not(.ant-input-disabled) {
+  border-color: var(--primary-color);
+}
+
+/* Select hover */
+.ant-select-selection:hover {
+  border-color: var(--primary-color);
+}
+
+/* Table row hover */
+.ant-table-tbody > tr:hover > td {
+  background: var(--secondary-light-teal);
+}
+
+/* Secondary text helper */
+.text-secondary {
+  color: var(--secondary-cyan);
+}
+
+/* Default buttons (non-primary) */
+.ant-btn-default {
+  border-color: var(--primary-color); /* now uses your teal #14b8a6 */
+  color: var(--primary-color);        /* optional: make text match */
+  background-color: #ffffff;          /* keep white background */
+}
+
+/* Hover & focus state for default buttons */
+.ant-btn-default:hover,
+.ant-btn-default:focus {
+  border-color: var(--secondary-cyan);   /* hover border color */
+  color: var(--secondary-cyan);          /* text color on hover */
+  background-color: #f0fdfa;             /* optional subtle background highlight */
+}
+
+/* Active tab underline / ink bar */
+.ant-tabs-ink-bar {
+  background-color: var(--primary-color); /* teal underline */
+}
+
+/* Inactive tab text (default) */
+.ant-tabs-tab {
+  color: inherit; /* keep default color */
+}
+
+/* Active tab text */
+.ant-tabs-tab-active,
+.ant-tabs-nav .ant-tabs-tab-active,
+.ant-tabs-nav .ant-tabs-tab:hover {
+  color: var(--primary-color); /* primary teal */
+}
+
+/* Optional: keep hover text color same as active */
+.ant-tabs-tab:hover {
+  color: var(--primary-color);
+}
+
+/* Calendar */
+.ant-calendar-picker:hover .ant-calendar-picker-input:not(.ant-input-disabled) {
+  border-color: var(--primary-color);
+}
+
+
+

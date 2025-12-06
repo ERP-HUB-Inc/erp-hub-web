@@ -60,7 +60,7 @@ class ItemHelper {
     return productVariantId;
   }
 
-  getProductBarcode(product) {
+  getItemBarcode(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].barcode : "";
   }
 

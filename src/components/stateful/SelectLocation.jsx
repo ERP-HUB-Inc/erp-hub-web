@@ -74,7 +74,6 @@ const SelectLocation = forwardRef((props, ref) => {
       onSearch={handleSearch}
       loading={loadingRef.current}
       style={{ width: 180, marginRight: 15 }}
-      size="large"
     >
       {locationsList.concat(locations).map((item) => (
         <Select.Option value={item.id} key={item.id}>
