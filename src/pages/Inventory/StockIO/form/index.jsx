@@ -2,20 +2,24 @@ import React from "react";
 import moment from "moment";
 import ReactGA from "react-ga4";
 import {
+  Badge,
   Tag,
   Col, 
   DatePicker, 
-  Icon, 
+  Icon,
+  Button,
+  Menu,
+  Divider,
+  Dropdown,
   Input,
-  Pagination, 
+  Pagination,
   Row,
   Tabs,
   Table,
-  Avatar,
   MonetaryValue
 } from "@components/index";
 import Datatable from "@layout/datatable";
-import Enum from "@enums/index";
+import { Translate } from "@redux/index";
 import history from "@router/index";
 import PurchaseService from "@services/PurchaseOrderService";
 import StockIOService from "@services/StockIOService";
@@ -50,7 +54,81 @@ export default class StockIOPage extends Datatable {
         title: "Batch No.",
         dataIndex: "number",
         key: "number",
-        width: 220,
+        width: 180,
+      },
+      {
+        title: "Total Qty",
+        dataIndex: "quantity",
+        key: "quantity",
+        align: "right",
+        width: 120,
+        render: (quantity, record) => (
+          <QuantityValue
+            value={quantity}
+            showSign={true}
+            sign={
+              record.status === 3 ? '~' : 
+              record.status === 0 ? '' : 
+              (record.type === 'IN' ? '+' : '-')
+            }
+            type={record.type}
+            status={record.status}
+            unit="pcs"
+            decimals={2}
+          />
+        )
+      },
+      {
+        title: "Total Value",
+        dataIndex: "amount",
+        key: "amount",
+        align: "right",
+        width: 150,
+        render: (amount, record) => (
+          <MonetaryValue 
+            amount={parseFloat(amount)} 
+            showSign={true}
+            sign={
+              record.status === 3 ? '~' : 
+              record.status === 0 ? '' : 
+              (record.type === 'IN' ? '+' : '-')
+            }
+            type={record.type}
+            status={record.status}
+            currency=""
+          />
+        )
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        align: "center",
+        filters: [
+          { text: 'Drafted', value: 0 },
+          { text: 'Pending', value: 1 },
+          { text: 'Applied (IN, OUT)', value: 2 },
+          { text: 'Deleted', value: 3 }
+        ],
+        width: 120,
+        render: (status, record) => {
+          const statusConfig = {
+            0: { color: '#999', text: 'Drafted' },
+            1: { color: 'orange', text: 'Pending' },
+            2: { color: record.type === 'IN' ? 'green' : 'red', text: record.type === 'IN' ? 'Applied' : 'Applied' },
+            3: { color: '#fa8c16', text: 'Deleted' }
+          };
+          const config = statusConfig[status] || { color: 'default', text: 'Unknown' };
+          return (
+            <Tag 
+              color={config.color} 
+              className="text-center" 
+              style={{ borderRadius: 50, minWidth: 80, textTransform: "uppercase", fontWeight: "bold" }}
+            >
+              {config.text}
+            </Tag>
+          );
+        }
       },
       {
         title: "Stock Location",
@@ -149,62 +227,6 @@ export default class StockIOPage extends Datatable {
         key: "createdAt",
         width: 180,
         render: value => this.Util.formatDate(value, "D, MMM YYYY HH:mm")
-      },
-      {
-        title: "Total Qty",
-        dataIndex: "quantity",
-        key: "quantity",
-        align: "right",
-        width: 120,
-        render: (quantity, record) => (
-          <QuantityValue
-            value={quantity}
-            showSign={true}
-            type={record.type}
-            unit="pcs"
-            decimals={2}
-          />
-        )
-      },
-      {
-        title: "Total Value",
-        dataIndex: "amount",
-        key: "amount",
-        align: "right",
-        width: 150,
-        render: (amount, record) => (
-          <MonetaryValue 
-            amount={parseFloat(amount)} 
-            showSign={true}
-            type={record.type}
-            currency=""
-          />
-        )
-      },
-      {
-        title: "Status",
-        dataIndex: "status",
-        key: "status",
-        align: "center",
-        width: 120,
-        render: (status) => {
-          const statusConfig = {
-            0: { color: 'default', text: 'Drafted' },
-            1: { color: 'orange', text: 'Pending' },
-            2: { color: 'green', text: 'Completed' },
-            3: { color: 'red', text: 'Cancelled' }
-          };
-          const config = statusConfig[status] || { color: 'default', text: 'Unknown' };
-          return (
-            <Tag 
-              color={config.color} 
-              className="text-center" 
-              style={{ borderRadius: 50, minWidth: 80, textTransform: "uppercase" }}
-            >
-              {config.text}
-            </Tag>
-          );
-        }
       }
     ].concat(this.renderActionColumn());
     this.fetchingProp = "purchaseOrder";
@@ -215,15 +237,37 @@ export default class StockIOPage extends Datatable {
     this.pathCreate= "/inventories/create";
     this.pathUpdate= "/inventories/update";
     this.permissionModuleCode = "purchase_order";
-    this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="text_draft" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
-      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
-      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_received" />, color:  this.Enum.PO_STEP_COLOR.RECEIVE},
-      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
-      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_returned" />, color:  this.Enum.PO_STEP_COLOR.RETURN},
-      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color:  this.Enum.PO_STEP_COLOR.PAID}
-    };
     this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
+  }
+
+  renderActionColumn() {
+    return {
+      title: <Translate id="text_action" />,
+      key: "action",
+      dataIndex: "action",
+      align: "center",
+      width: 100,
+      render: (_, record) => {
+          let disabledModified = record.status === 2 || record.status === 3;
+          const menu = (
+            <Menu>
+                <Menu.Item key={1}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <Translate id="text_view" />
+                </Menu.Item>
+                <Menu.Item key={2} disabled={disabledModified} onClick={() => this.handleShowFormEdit(record)}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit" />
+                </Menu.Item>
+                <Divider style={{marginTop: 4, marginBottom: 4}} />
+                <Menu.Item key={4} disabled={disabledModified} onClick={() => this.handleConfirm(record)}>
+                  <Icon type="delete" style={{marginRight: 10}} /> <Translate id="text_delete" />
+                </Menu.Item>
+            </Menu>
+          );
+          return <Dropdown overlay={menu} placement="bottomLeft">
+            <Button icon="more" />
+          </Dropdown>;
+      }
+    };
   }
 
   componentDidMount() {
@@ -275,13 +319,14 @@ export default class StockIOPage extends Datatable {
     return colors[Math.abs(hash) % colors.length];
   };
 
-  fetchList(withPagination= false) {
+  fetchList(withPagination= false, urlSearchParams = null) {
     let searchKey = "";
     let filter = {};
+    let startDate = "";
+    let endDate = "";
     let limit = this.pageSize;
-    let ranges = "";
     let offset = this.state.current;
-    const params = new URLSearchParams(window.location.search);
+    const params = urlSearchParams ?? new URLSearchParams(window.location.search);
 
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -295,14 +340,20 @@ export default class StockIOPage extends Datatable {
 
     if (params.get("search")) {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
-    }else{
+    } else {
       params.delete("search");
     }
 
-    if (params.get("date")) {
-      ranges = JSON.stringify({column: "invoiceDate", value: [params.get("date"), params.get("date")]});
-    }else{
-      params.delete("date");
+    if (params.get("from") && params.get("to")) {
+      startDate = params.get("from");
+      endDate = params.get("to");
+    } else {
+      params.delete("from");
+      params.delete("to");
+    }
+
+    if (params.get("status")) {
+      filter.status = params.get("status").split(',').map(status => Number(status));
     }
 
     if (!withPagination){
@@ -313,8 +364,8 @@ export default class StockIOPage extends Datatable {
 
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
-    this.setState({loading: true});
-    StockIOService.get(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
+    this.setState({ loading: true });
+    StockIOService.get({ limit, offset, filter: JSON.stringify(filter), startDate, endDate, search: searchKey })
         .then((response) => {
           if (response.data && response.data.data) {
             this.setState({
@@ -353,21 +404,25 @@ export default class StockIOPage extends Datatable {
   }
 
   handleSearch = (e) => {
-    const queryParams = new URLSearchParams(document.location.search);
     const value = e.target.value;
-    queryParams.set("search", value ? value.trim() : "");
-    history.push({pathname: this.pathname, search: queryParams.toString()});
+
+    const params = new URLSearchParams(document.location.search);
+    params.set("search", value ? value.trim() : "");
+    history.push({pathname: this.pathname, search: params.toString()});
+
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
-      this.fetchList();
+      this.fetchList(true, params);
     }, 1000);
   }
 
-  handleChangeDate = (date) => {
-    const queryParams = new URLSearchParams(document.location.search);
-    queryParams.set("date", date ? moment(date).format("YYYY-MM-DD") : "");
-    history.push({pathname: this.pathname, search: queryParams.toString()});
-    this.fetchList();
+  handleChangeDateRange = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("from", dates[0] && moment(dates[0]).isValid() ? moment(dates[0]).format("YYYY-MM-DD") : "");
+    params.set("to", dates[1] && moment(dates[1]).isValid()  ? moment(dates[1]).format("YYYY-MM-DD") : "");
+
+    history.push({ pathname: this.pathname, search: params.toString() });
+    this.fetchList(true, params);
   }
 
   onShowSizeChange = (current, pageSize) => {
@@ -381,13 +436,15 @@ export default class StockIOPage extends Datatable {
   }
 
   onChangePagination = (current, pageSize) => {
-    const params = new URLSearchParams(document.location.search);
-    params.set("limit", pageSize);
-    params.set("offset", current);
+    if (current !== this.state.current) {
+      const params = new URLSearchParams(document.location.search);
+      params.set("limit", pageSize);
+      params.set("offset", current);
 
-    this.setState({current});
-    this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList(true);
+      this.setState({ current });
+      this.Util.pushParamsToURL(this.pathname, params.toString());
+      this.fetchList(true);
+    }
   }
 
   onSelectChange = (selectedRowKeys, selectedRows) => {
@@ -423,6 +480,23 @@ export default class StockIOPage extends Datatable {
       });
 
     }
+  }
+
+  handleConfirm(record) {
+    this.Util.sweetAlertConfirm(this.CATranslate("text_confirm_delete", this.props.locale), "This action will permanently remove this stock IO record.")
+    .then(willDelete => {
+        if (willDelete) {
+          StockIOService.archive(record.id)
+            .then(() => {
+              this.fetchList(true);
+            })
+            .catch(() => {
+              this.Message.error(this.CATranslate("error_warning_delete_po", this.props.locale));
+            }).finally(() => {
+              
+          });
+        }
+    });
   }
 
   showDeleteModal = () => {
@@ -488,10 +562,10 @@ export default class StockIOPage extends Datatable {
               ]}
               actions={[
                   {
-                    text: "Import Stock",
+                    text: "Bulk Import Stock",
                     type: "default",
                     icon: "upload",
-                    onClick: () => {}
+                    onClick: () => history.push("/inventories/stock-io/import")
                   },
                   {
                     text: "New Stock In",
@@ -511,7 +585,12 @@ export default class StockIOPage extends Datatable {
             />
 
             <Tabs defaultActiveKey="item">
-              <TabPane tab="Items" key="purchase-orders" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
+              <TabPane tab={
+                <span>
+                  All
+                  <Badge count={57} style={{ marginLeft: 6 }} />
+                </span>
+              } key="all" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
                   <Row  style={{ marginBottom: 10 }}>
                     <Col span={24}>
                       <Input
@@ -526,8 +605,67 @@ export default class StockIOPage extends Datatable {
                       <DatePicker.RangePicker
                         name="date"
                         placeholder={[
-                          this.CATranslate("text_start_date", this.props.locale),
-                          this.CATranslate("text_end_date", this.props.locale),
+                          "From (e.g., 2025-11-01)",
+                          "To (e.g., 2025-11-08)"
+                        ]}
+                        defaultValue={
+                          params.get("dateRange")
+                            ? [
+                                moment(params.get("dateRange").split(",")[0]),
+                                moment(params.get("dateRange").split(",")[1]),
+                              ]
+                            : null
+                        }
+                        onChange={this.handleChangeDateRange}
+                        style={{ maxWidth: 350, marginRight: 10 }}
+                      />
+                    </Col>
+                  </Row>
+
+                  <Table
+                      rowKey="id"
+                      bordered
+                      pagination={{
+                        total: this.state.pagination.total,
+                        pageSize: this.state.pagination.limit,
+                        current: this.state.current,
+                        pageSizeOptions: this.pageSizeOptions,
+                        showTotal: total => `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`,
+                        showSizeChanger: true,
+                        defaultCurrent: this.state.current,
+                        defaultPageSize: this.pageSize,
+                        onShowSizeChange: this.onShowSizeChange,
+                        onChange: this.onChangePagination
+                      }}
+                      rowSelection={rowSelection}
+                      loading={this.state.loading}
+                      columns={this.columns}
+                      dataSource={this.state.data}
+                      onChange={(_, filterParams) => {
+                        const params = new URLSearchParams(document.location.search);
+                        params.set("status", filterParams.status.join(','));
+                        this.fetchList(true, params);
+                      }}
+                      size="middle"
+                  />
+              </TabPane>
+              <TabPane tab={"In"} key="in" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
+                  <Row  style={{ marginBottom: 10 }}>
+                    <Col span={24}>
+                      <Input
+                          name="search"
+                          placeholder="Enter PO number, vendor name, or receiver"
+                          suffix={<Icon type="search" />}
+                          defaultValue={params.get("search") ? params.get("search") : ""}
+                          style={{height: 32, width: 350, marginRight: 10}}
+                          allowClear={true}
+                          onChange={this.handleSearch}
+                      />
+                      <DatePicker.RangePicker
+                        name="date"
+                        placeholder={[
+                          "From (e.g., 2025-11-01)",
+                          "To (e.g., 2025-11-08)"
                         ]}
                         defaultValue={
                           params.get("dateRange")
@@ -568,7 +706,12 @@ export default class StockIOPage extends Datatable {
                       size="middle"
                   />
               </TabPane>
-              <TabPane tab="Batch" key="stock" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
+              <TabPane tab={
+                <span>
+                  Out
+                  <Badge count={57} style={{ marginLeft: 6 }} />
+                </span>
+              } key="out" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
                   <Row  style={{ marginBottom: 10 }}>
                     <Col span={24}>
                       <Input

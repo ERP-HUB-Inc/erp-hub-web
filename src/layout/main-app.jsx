@@ -29,6 +29,8 @@ import ItemManagementUI from './item-management-ai';
 import ItemAIGenerator from './item-ai-tool';
 import StickyFooterPage from './sticky-footer';
 import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
+import StockIOBulkImport from '@inventories/StockIO/form/form.bulk-import';
+import StockIOAIImport from '@inventories/StockIO/form/form.ai-import';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -440,6 +442,8 @@ export default class SiderDemo extends React.Component {
                     {/* StockIO Management */}
                     <Route path="/inventories/stock-io/create" component={NewStockInOut} />
                     <Route path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
+                    <Route path="/inventories/stock-io/import" component={StockIOBulkImport} />
+                    <Route path="/inventories/stock-io/ai-import" component={StockIOAIImport} />
                     <Route path="/inventories/stock-io" component={StockInOut} />
 
                     <Route path="/inventories/transfers" component={Vendor} />

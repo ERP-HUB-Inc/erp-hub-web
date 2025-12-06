@@ -183,6 +183,11 @@ export default {
     "តើអ្នកប្រាកដថាលប់ហើយឬទេ?",
   ],
 
+  text_warning_delete_stock_io: [
+    "This action will permanently remove this stock IO record.",
+    "សកម្មភាពនេះនឹងលុបកំណត់ត្រា Stock IO នេះចោលជាអចិន្ត្រៃយ៍។",
+  ],
+
   text_warning_delete_default_record: [
     "We don't allow you to delete default record",
     "ទិន្នន័យដើមមិនអោយអ្នកលប់ទេ",

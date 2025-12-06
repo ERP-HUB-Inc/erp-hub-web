@@ -206,6 +206,12 @@ class ItemService extends BaseService {
          headers: this.header
       });
    }
+
+   getItemBySKU(sku, locationId) {
+      return this.GET({ 
+         url: `${this.baseUrl}/${sku}/${locationId}`
+      });
+   }
 }
 
 export default new ItemService(); 

@@ -102,7 +102,6 @@ export default class BaseService extends Service {
    }
 
    getById(ids){
-      this.setHeader();
       return this.GET({ 
          url: `${this.baseUrl}/${ids}`,
          data: this.data,
@@ -116,10 +115,11 @@ export default class BaseService extends Service {
       sortField: "",
       sortOrder: "",
       filter: "",
+      startDate: "",
+      endDate: "",
       search: "",
       locationId: ""
    }) {
-      this.setHeader();
       return this.GET({ 
          url: `${this.baseUrl}?${this.bindQueryParam(option)}`,  
          data: this.data,
@@ -128,7 +128,6 @@ export default class BaseService extends Service {
    }
 
    archive(ids) {
-      this.setHeader();
       return this.DELETE({  
          url: `${this.baseUrl}/${ids}`,
          data: this.data,
