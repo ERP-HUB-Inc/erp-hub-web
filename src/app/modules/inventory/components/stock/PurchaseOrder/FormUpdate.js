@@ -20,12 +20,12 @@ export default class PurchaseOrderUpdate extends Component {
     this.wrapClassName = `${this.wrapClassName} wrap-modal-po  modal-po-full-screen`;
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("text_draft", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
-      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color:  this.Enum.PO_STEP_COLOR.PROCESS},
-      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_received", this.props.locale), color:  this.Enum.PO_STEP_COLOR.RECEIVE},
-      [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color:  this.Enum.PO_STEP_COLOR.CANCEL},
-      [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color:  this.Enum.PO_STEP_COLOR.RETURN},
-      [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color:  this.Enum.PO_STEP_COLOR.PAID}
+      [Enum.PO_STATUS.DRAFT]: {name: this.CATranslate("text_draft", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STATUS.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color:  this.Enum.PO_STEP_COLOR.PROCESS},
+      [Enum.PO_STATUS.RECEIVED]: {name: this.CATranslate("text_received", this.props.locale), color:  this.Enum.PO_STEP_COLOR.RECEIVE},
+      [Enum.PO_STATUS.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color:  this.Enum.PO_STEP_COLOR.CANCEL},
+      [Enum.PO_STATUS.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color:  this.Enum.PO_STEP_COLOR.RETURN},
+      [Enum.PO_STATUS.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color:  this.Enum.PO_STEP_COLOR.PAID}
     };
     this.title = <this.Translate id="text_po" />;
     this.dispatch = this.props.dispatch;
@@ -71,7 +71,7 @@ export default class PurchaseOrderUpdate extends Component {
 
   handleSubmit (e) {
     e.preventDefault();
-    if (this.props.purchaseOrderDetail.data.step !== Enum.PO_STEP.DRAFT) {
+    if (this.props.purchaseOrderDetail.data.step !== Enum.PO_STATUS.DRAFT) {
       sweetalert({
         icon: "error",
         title: "Warning!",
@@ -183,7 +183,7 @@ export default class PurchaseOrderUpdate extends Component {
     }
 
     return (
-      this.props.purchaseOrderDetail.data.step === Enum.PO_STEP.DRAFT ?
+      this.props.purchaseOrderDetail.data.step === Enum.PO_STATUS.DRAFT ?
         <this.Button onClick={this.handlePushToSupplier} className="info btn-push-to-supplier">
           <span className="icon-push-button"></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
         </this.Button>

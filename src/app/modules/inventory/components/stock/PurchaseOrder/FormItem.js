@@ -127,15 +127,15 @@ export default class FormItem extends Modal {
             name="step"
             label={<this.Translate id="text_status" />}
             placeholder={this.CATranslate("text_status", locale)}
-            defaultValue={formData.id ? formData.step : (this.state.isAutoReceive ? Enum.PO_STEP.RECEIVED : Enum.PO_STEP.DRAFT)}
+            defaultValue={formData.id ? formData.step : (this.state.isAutoReceive ? Enum.PO_STATUS.RECEIVED : Enum.PO_STATUS.DRAFT)}
             dataSource={[
               {
                 name: <this.Translate id="text_draft" />,
-                value: Enum.PO_STEP.DRAFT
+                value: Enum.PO_STATUS.DRAFT
               },
               {
                 name: <this.Translate id="text_received" />,
-                value: Enum.PO_STEP.RECEIVED
+                value: Enum.PO_STATUS.RECEIVED
               }
             ]}
             form={form}

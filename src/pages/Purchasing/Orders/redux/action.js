@@ -1,7 +1,7 @@
 import Constant from "./constant";
-import PurchaseOrderService from "../../../../services/PurchaseOrderService";
-import VendorService from "../../../../services/VendorService";
-import UnitService from "../../../../services/UnitService";
+import PurchaseOrderService from "@services/PurchaseOrderService";
+import VendorService from "@services/VendorService";
+import UnitService from "@services/UnitService";
 
 export default {
   orderNumber: (ids) => {

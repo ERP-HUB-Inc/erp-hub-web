@@ -1,5 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { PageHeader, Input, Select, DatePicker, Button, Table, InputNumber, Icon, Row, Col, Card, Tag, Alert, Modal, Upload, Divider, Tooltip, Form } from 'antd';
+import { 
+  PageHeader,
+  Input, 
+  Select, 
+  DatePicker, 
+  Button, 
+  Table, 
+  InputNumber, 
+  Icon, 
+  Row, 
+  Col, 
+  Card, 
+  Tag, 
+  Alert, 
+  Modal, 
+  Upload, 
+  Divider, 
+  Tooltip, 
+  Form 
+} from "antd";
 import moment from 'moment';
 import sweetalert from "sweetalert";
 import ItemService from "@services/ItemService";
@@ -8,7 +27,8 @@ import StockIOService from '@services/StockIOService';
 import UnitService from '@services/UnitService';
 import history from "@router/index";
 import Util from "@helper/inventory";
-import { getLocationId } from '@helper/user';
+import { getLocationId } from "@helper/user";
+import { SelectItem } from '@components/stateful';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -202,72 +222,73 @@ const StockIOForm = (props) => {
     })));
   };
 
-  const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='%23f0f0f0'/%3E%3Cg transform='translate(50, 50)'%3E%3Crect x='10' y='15' width='80' height='70' fill='none' stroke='%23bfbfbf' stroke-width='3' rx='4'/%3E%3Cpolygon points='15,75 35,50 55,65 75,45 85,75' fill='%23d9d9d9'/%3E%3Ccircle cx='70' cy='30' r='8' fill='%23bfbfbf'/%3E%3C/g%3E%3Ctext x='100' y='130' font-family='Arial, sans-serif' font-size='12' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
-
+  
   const columns = [
     {
       title: "Item",
-      dataIndex: 'itemId',
+      dataIndex: "itemId",
       width: 250,
       render: (value, record, index) => (
         <div>
           <Form.Item style={{ marginBottom: 0 }}>
-            {
-              props.form.getFieldDecorator(`item[${index}]`, {
-                rules: [
-                  {
-                    required: false,
-                    message: 'Type to search or pick an item'
-                  }
-                ],
-              })(
-                <Select
-                  showSearch
-                  style={{ width: '100%' }}
-                  placeholder="Type to search or pick an item"
-                  onChange={(val) => updateRow(record.key, 'itemId', val)}
-                  onSearch={onSearchItem}
-                  filterOption={false}
-                  notFoundContent={loading ? <Icon type="loading" /> : "No items found"}
-                >
-                  {items.map(item => (
-                    <Option key={item.id} value={item.id}>
-                      <Tooltip title={item.name} placement="right">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <img 
-                            src={item.thumbnail || item.image || '/placeholder-image.png'} 
-                            alt={item.name}
-                            style={{ 
-                              width: '40px', 
-                              height: '40px', 
-                              objectFit: 'cover',
-                              borderRadius: '4px',
-                              flexShrink: 0
-                            }}
-                            onError={(e) => {
-                              e.target.src = FALLBACK_IMAGE;
-                            }}
-                          />
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ 
-                              fontWeight: 500,
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap'
-                            }}>
-                              {item.name}
-                            </div>
-                            <small style={{ color: '#999' }}>
-                              SKU: {Util.getProductSku(item)} | Stock: {Util.getQuantityOnHand(item)}
-                            </small>
-                          </div>
-                        </div>
-                      </Tooltip>
-                    </Option>
-                  ))}
-                </Select>
-              )
-            }
+            {props.form.getFieldDecorator(`item[${index}]`, {
+              rules: [
+                {
+                  required: false,
+                  message: "Type to search or pick an item",
+                },
+              ],
+            })(
+              <SelectItem
+                items={items}
+                onChange={(val) => updateRow(record.key, "itemId", val)}
+              />
+              // <Select
+              //   showSearch
+              //   style={{ width: "100%" }}
+              //   placeholder="Type to search or pick an item"
+              //   onChange={(val) => updateRow(record.key, 'itemId', val)}
+              //   onSearch={onSearchItem}
+              //   filterOption={false}
+              //   notFoundContent={loading ? <Icon type="loading" /> : "No items found"}
+              // >
+              //   {items.map(item => (
+              //     <Option key={item.id} value={item.id}>
+              //       <Tooltip title={item.name} placement="right">
+              //         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              //           <img
+              //             src={item.thumbnail || item.image || '/placeholder-image.png'}
+              //             alt={item.name}
+              //             style={{
+              //               width: '40px',
+              //               height: '40px',
+              //               objectFit: 'cover',
+              //               borderRadius: '4px',
+              //               flexShrink: 0
+              //             }}
+              //             onError={(e) => {
+              //               e.target.src = FALLBACK_IMAGE;
+              //             }}
+              //           />
+              //           <div style={{ flex: 1, minWidth: 0 }}>
+              //             <div style={{
+              //               fontWeight: 500,
+              //               overflow: 'hidden',
+              //               textOverflow: 'ellipsis',
+              //               whiteSpace: 'nowrap'
+              //             }}>
+              //               {item.name}
+              //             </div>
+              //             <small style={{ color: '#999' }}>
+              //               SKU: {Util.getProductSku(item)} | Stock: {Util.getQuantityOnHand(item)}
+              //             </small>
+              //           </div>
+              //         </div>
+              //       </Tooltip>
+              //     </Option>
+              //   ))}
+              // </Select>
+            )}
           </Form.Item>
           {aiSuggestions[record.key] && (
             <Tag color="blue" style={{ marginTop: 4, fontSize: 11 }}>
@@ -278,43 +299,42 @@ const StockIOForm = (props) => {
       ),
     },
     {
-      title: 'SKU',
-      dataIndex: 'sku',
+      title: "SKU",
+      dataIndex: "sku",
       width: 120,
-      render: (value) => <Tag>{value || '-'}</Tag>,
+      render: (value) => <Tag>{value || "-"}</Tag>,
     },
     {
       title: "Quantity",
-      dataIndex: 'quantity',
+      dataIndex: "quantity",
       width: 120,
       render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
-          {
-            props.form.getFieldDecorator(`quantity[${index}]`, {
-              rules: [
-                {
-                  required: false,
-                  message: 'Please enter quantity'
-                },
-                {
-                  type: 'number',
-                  min: 1,
-                  message: 'Quantity must be at least 1'
-                }
-              ],
-              initialValue: value
-            })(
-              <InputNumber
-                style={{ width: '100%' }}
-                min={1}
-                placeholder="Enter quantity (pcs)"
-                onChange={(val) => updateRow(record.key, 'quantity', val)}
-              />
-            )
-          }
+          {props.form.getFieldDecorator(`quantity[${index}]`, {
+            rules: [
+              {
+                required: false,
+                message: "Please enter quantity",
+              },
+              {
+                type: "number",
+                min: 1,
+                message: "Quantity must be at least 1",
+              },
+            ],
+            initialValue: value,
+          })(
+            <InputNumber
+              style={{ width: "100%" }}
+              min={1}
+              placeholder="Enter quantity (pcs)"
+              onChange={(val) => updateRow(record.key, "quantity", val)}
+            />
+          )}
           {validationWarnings[record.key] && (
-            <div style={{ color: '#faad14', fontSize: 12, marginTop: 4 }}>
-              <Icon type="exclamation-circle" /> {validationWarnings[record.key]}
+            <div style={{ color: "#faad14", fontSize: 12, marginTop: 4 }}>
+              <Icon type="exclamation-circle" />{" "}
+              {validationWarnings[record.key]}
             </div>
           )}
         </Form.Item>
@@ -322,131 +342,129 @@ const StockIOForm = (props) => {
     },
     {
       title: "Unit",
-      dataIndex: 'unitId',
+      dataIndex: "unitId",
       width: 160,
       render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
-          {
-            props.form.getFieldDecorator(`unitId[${index}]`, value ? {
-              rules: [
-                {
-                  required: false,
-                  message: 'Please select unit'
+          {props.form.getFieldDecorator(
+            `unitId[${index}]`,
+            value
+              ? {
+                  rules: [
+                    {
+                      required: false,
+                      message: "Please select unit",
+                    },
+                  ],
+                  initialValue: value,
                 }
-              ],
-              initialValue: value
-            } : {}
-            )(
-              <Select
-                style={{ width: '100%' }}
-                placeholder="Pick a Unit (pcs, box, kg...)"
-                onChange={(val) => updateRow(record.key, 'unitId', val)}
-              >
-                {units.map(u => (
-                  <Option key={u.id} value={u.id}>{u.name}</Option>
-                ))}
-              </Select>
-            )
-          }
+              : {}
+          )(
+            <Select
+              style={{ width: "100%" }}
+              placeholder="Pick a Unit (pcs, box, kg...)"
+              onChange={(val) => updateRow(record.key, "unitId", val)}
+            >
+              {units.map((u) => (
+                <Option key={u.id} value={u.id}>
+                  {u.name}
+                </Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
       ),
     },
     {
-      title: 'Reason',
-      dataIndex: 'reason',
+      title: "Reason",
+      dataIndex: "reason",
       width: 150,
       render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
-          {
-            props.form.getFieldDecorator(`reason[${index}]`, {
-              rules: [
-                {
-                  required: false,
-                  message: 'Please select reason'
-                }
-              ],
-              initialValue: value
-            })(
-              <Select
-                style={{ width: '100%' }}
-                onChange={(val) => updateRow(record.key, 'reason', val)}
-              >
-                {reasons[movementType].map(rs => (
-                  <Option key={rs} value={rs}>
-                    <Tooltip title={rs} placement="right">
-                      {rs}
-                    </Tooltip>
-                  </Option>
-                ))}
-              </Select>
-            )
-          }
+          {props.form.getFieldDecorator(`reason[${index}]`, {
+            rules: [
+              {
+                required: false,
+                message: "Please select reason",
+              },
+            ],
+            initialValue: value,
+          })(
+            <Select
+              style={{ width: "100%" }}
+              onChange={(val) => updateRow(record.key, "reason", val)}
+            >
+              {reasons[movementType].map((rs) => (
+                <Option key={rs} value={rs}>
+                  <Tooltip title={rs} placement="right">
+                    {rs}
+                  </Tooltip>
+                </Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
       ),
     },
     {
-      title: 'Batch/Expiry',
-      dataIndex: 'batch',
+      title: "Batch/Expiry",
+      dataIndex: "batch",
       width: 150,
       render: (value, record, index) => (
         <div>
           <Form.Item style={{ marginBottom: 4 }}>
-            {
-              props.form.getFieldDecorator(`batch[${index}]`, {
-                initialValue: value
-              })(
-                <Input
-                  size="small"
-                  placeholder="Batch No."
-                  onChange={(e) => updateRow(record.key, 'batch', e.target.value)}
-                />
-              )
-            }
+            {props.form.getFieldDecorator(`batch[${index}]`, {
+              initialValue: value,
+            })(
+              <Input
+                size="small"
+                placeholder="Batch No."
+                onChange={(e) => updateRow(record.key, "batch", e.target.value)}
+              />
+            )}
           </Form.Item>
           <Form.Item style={{ marginBottom: 0 }}>
-            {
-              props.form.getFieldDecorator(`expiry[${index}]`, {
-                initialValue: record.expiry ? moment(record.expiry) : null
-              })(
-                <DatePicker
-                  size="small"
-                  style={{ width: '100%' }}
-                  placeholder="Expiry Date"
-                  onChange={(date, dateString) => updateRow(record.key, 'expiry', date)}
-                />
-              )
-            }
+            {props.form.getFieldDecorator(`expiry[${index}]`, {
+              initialValue: record.expiry ? moment(record.expiry) : null,
+            })(
+              <DatePicker
+                size="small"
+                style={{ width: "100%" }}
+                placeholder="Expiry Date"
+                onChange={(date, dateString) =>
+                  updateRow(record.key, "expiry", date)
+                }
+              />
+            )}
           </Form.Item>
         </div>
       ),
     },
     {
-      title: 'Notes',
-      dataIndex: 'notes',
+      title: "Notes",
+      dataIndex: "notes",
       width: 150,
       render: (value, record, index) => (
         <Form.Item style={{ marginBottom: 0 }}>
-          {
-            props.form.getFieldDecorator(`notes[${index}]`, {
-              initialValue: value
-            })(
-              <TextArea
-                rows={2}
-                placeholder="Additional notes"
-                onChange={(e) => updateRow(record.key, 'notes', e.target.value)}
-              />
-            )
-          }
+          {props.form.getFieldDecorator(`notes[${index}]`, {
+            initialValue: value,
+          })(
+            <TextArea
+              rows={2}
+              placeholder="Additional notes"
+              onChange={(e) => updateRow(record.key, "notes", e.target.value)}
+            />
+          )}
         </Form.Item>
       ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       width: 100,
-      fixed: 'right',
+      fixed: "right",
       render: (_, record) => (
-        <div style={{ display: 'flex', gap: 4 }}>
+        <div style={{ display: "flex", gap: 4 }}>
           <Tooltip title="Duplicate">
             <Button
               size="small"

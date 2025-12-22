@@ -97,57 +97,92 @@ export default class ProductList extends Datatable {
                };
 
                return (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                     <Avatar 
-                     src={record?.image || record?.imageUrl || "https://ae-pic-a1.aliexpress-media.com/kf/S1dd261bc501a452ab057df05e6c91d823.jpg_960x960q75.jpg_.avif"} 
+                 <div
+                   style={{
+                     display: "flex",
+                     alignItems: "center",
+                     gap: "12px",
+                   }}
+                 >
+                   <Avatar
+                     src={
+                       record?.image ||
+                       record?.imageUrl ||
+                       "https://ae-pic-a1.aliexpress-media.com/kf/S1dd261bc501a452ab057df05e6c91d823.jpg_960x960q75.jpg_.avif"
+                     }
                      size={64}
                      shape="square"
-                     style={{ 
-                        borderRadius: '8px',
-                        backgroundColor: '#f0f0f0'
+                     style={{
+                       borderRadius: "8px",
+                       backgroundColor: "#f0f0f0",
                      }}
-                     />
-                     <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '10px' }}>
-                           {getProductName()}
-                        </div>
-                        
-                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-                           <>
-                              {
-                                 numberOfVariant > 1 ?
-                                 <Tag color="#2db7f5">
-                                    {`${numberOfVariant} variants`}
-                                 </Tag>
-                                 :
-                                 <Text type="secondary" style={{ fontSize: '12px', fontWeight: '500' }}>
-                                    {Util.getItemBarcode(record)}
-                                 </Text>
-                              }
-                              <Text type="secondary" style={{ fontSize: '12px' }}>•</Text>
-                           </>
-                           <Text type="secondary" style={{ fontSize: '12px' }}>
-                              {categoryName}
-                           </Text>
-                           <Text type="secondary" style={{ fontSize: '12px' }}>•</Text>
-                           <Text type="secondary" style={{ 
-                              fontSize: '12px',
-                              fontWeight: '500'
-                           }}>
-                              📦 Current Stock: {stockCount} {record?.unitOfMeasurement?.name}
-                           </Text>
-                           {stockCount <= record.reorderPoint && stockCount > 0 && (
-                              <Text style={{ 
-                              fontSize: '12px', 
-                              color: '#fa8c16',
-                              fontWeight: '500'
-                              }}>
-                                 📉 low
-                              </Text>
-                           )}
-                        </div>
+                   />
+                   <div style={{ flex: 1 }}>
+                     <div
+                       style={{
+                         fontWeight: "bold",
+                         fontSize: "16px",
+                         marginBottom: "10px",
+                       }}
+                     >
+                       {getProductName()}
                      </div>
-                  </div>
+
+                     <div
+                       style={{
+                         display: "flex",
+                         gap: "8px",
+                         alignItems: "center",
+                         flexWrap: "wrap",
+                       }}
+                     >
+                       <>
+                         {numberOfVariant > 1 ? (
+                           <Tag color="#2db7f5">
+                             {`${numberOfVariant} variants`}
+                           </Tag>
+                         ) : (
+                           <Text
+                             type="secondary"
+                             style={{ fontSize: "12px", fontWeight: "500" }}
+                           >
+                             {Util.getItemBarcode(record)}
+                           </Text>
+                         )}
+                         <Text type="secondary" style={{ fontSize: "12px" }}>
+                           •
+                         </Text>
+                       </>
+                       <Text type="secondary" style={{ fontSize: "12px" }}>
+                         {categoryName}
+                       </Text>
+                       <Text type="secondary" style={{ fontSize: "12px" }}>
+                         •
+                       </Text>
+                       <Text
+                         type="secondary"
+                         style={{
+                           fontSize: "12px",
+                           fontWeight: "500",
+                         }}
+                       >
+                         {/* {stockCount} {record?.unitOfMeasurement?.name} On Hand */}
+                         { stockCount } On Hand | 5 Incoming | Future: 15
+                       </Text>
+                       {stockCount <= record.reorderPoint && stockCount > 0 && (
+                         <Text
+                           style={{
+                             fontSize: "12px",
+                             color: "#fa8c16",
+                             fontWeight: "500",
+                           }}
+                         >
+                           📉 low
+                         </Text>
+                       )}
+                     </div>
+                   </div>
+                 </div>
                );
             },
          },

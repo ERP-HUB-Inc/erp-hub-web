@@ -1,14 +1,12 @@
 export default {
   "text_po": [
     "Purchase Order",
-    "ការបញ្ជារទិញ",
-    "Purchase Order"
+    "ការបញ្ជារទិញ"
   ],
 
   "text_diliver_date": [
     "Delivery Date",
-    "កាលបរិច្ឆេតដឹកជញ្ជូន",
-    "Delivery Date"
+    "កាលបរិច្ឆេតដឹកជញ្ជូន"
   ],
 
   "text_payment_due_date": [
@@ -18,32 +16,27 @@ export default {
 
   "text_purchase_date": [
     "Purchase Date",
-    "កាលបរិច្ឆេតទិញចូល",
-    "Purchase Date"
+    "កាលបរិច្ឆេតទិញចូល"
   ],
 
   "text_order_qty": [
     "Order QTY",
-    "ចំនួនបញ្ជាទិញ",
-    "Order QTY"
+    "ចំនួនបញ្ជាទិញ"
   ],
 
   "text_receive_qty": [
     "Received QTY",
-    "ចំនួនទទួល",
-    "Received QTY"
+    "ចំនួនទទួល"
   ],
 
   "text_order_amount": [
     "Order Amount",
-    "ចំនួនទឹកប្រាក់បញ្ជាទិញ",
-    "Order Amount"
+    "ចំនួនទឹកប្រាក់បញ្ជាទិញ"
   ],
 
   "text_receive_amount": [
     "Received Amount",
-    "ចំនួនទឹកប្រាក់ទទួល",
-    "Received Amount"
+    "ចំនួនទឹកប្រាក់ទទួល"
   ],
 
   "text_po_no": [
@@ -66,20 +59,50 @@ export default {
 
   "text_draft": [
     "Draft",
-    "ព្រៀង",
-    "Draft"
+    "ព្រៀង"
+  ],
+
+  "text_pending_approval": [
+    "Pending Approval",
+    "កំពុងរង់ចាំការអនុម័ត"
+  ],
+  "text_approved": [
+    "Approved",
+    "បានអនុម័ត"
+  ],
+  "text_sent_to_supplier": [
+    "Sent to Supplier",
+    "បានផ្ញើទៅអ្នកផ្គត់ផ្គង់"
+  ],
+  "text_supplier_confirmed": [
+    "Supplier Confirmed",
+    "អ្នកផ្គត់ផ្គង់បានបញ្ជាក់"
+  ],
+  "text_partially_received": [
+    "Partially Received",
+    "ទទួលបានមួយផ្នែក"
+  ],
+  "text_fully_received": [
+    "Fully Received",
+    "ទទួលបានគ្រប់ចំនួន"
+  ],
+  "text_closed": [
+    "Closed",
+    "បានបិទ"
+  ],
+  "text_cancelled": [
+    "Cancelled",
+    "បានលុបចោល"
   ],
 
   "text_process": [
     "Process",
-    "ដំណើរការ",
-    "Process"
+    "ដំណើរការ"
   ],
 
   "purchase_order_step_paid": [
     "Paid",
-    "បង់ប្រាក់រួច",
-    "Paid"
+    "បង់ប្រាក់រួច"
   ],
 
   "text_order_number": [
@@ -173,20 +196,17 @@ export default {
 
   "text_confirm_receive_partial": [
     "You have not marked all products as received. Do you want to create a new partial order for the items you are missing, or close this order?",
-    "អ្នកមិនបានទទួលទំនិញទាំងអស់ទេ​ ដូចនេះ អ្នកចង់បង្កើតការបញ្ជារទិញទៅ ការបញ្ជារទិញបន្ទាប់?",
-    "You have not marked all products as received. Do you want to create a new partial order for the items you are missing, or close this order?",
+    "អ្នកមិនបានទទួលទំនិញទាំងអស់ទេ​ ដូចនេះ អ្នកចង់បង្កើតការបញ្ជារទិញទៅ ការបញ្ជារទិញបន្ទាប់?"
   ],
 
   "text_stock_purchase_order_send_mail_comfirm_title": [
     "Are you Sure? Do you want to push to supplier?",
-    "តើអ្នកប្រាកដដែរឬទេ ដែលបញ្ជូនឯកសារទៅ អ្នកផ្គត់ផ្គង់?",
-    "Are you Sure? Do you want to push to supplier?",
+    "តើអ្នកប្រាកដដែរឬទេ ដែលបញ្ជូនឯកសារទៅ អ្នកផ្គត់ផ្គង់?"
   ],
 
   "text_po_general_search": [
     "Search by number,description",
-    "ស្វែងរកតាមលេខ ការពិពណ៌នា",
-    "Search by number,description"
+    "ស្វែងរកតាមលេខ ការពិពណ៌នា"
   ],
 
   "purchase_order_po_number_already_exist": [
@@ -245,8 +265,7 @@ export default {
 
   "error_warning_delete_po": [
     "Sorry, we allow to delete only draff PO.",
-    "​សូមអភ័យទោស អ្នកលប់បានតែ ការបញ្ជារទិញព្រៀងតែប៉ុន្នោះ",
-    "Sorry, we allow to delete only draff PO."
+    "​សូមអភ័យទោស អ្នកលប់បានតែ ការបញ្ជារទិញព្រៀងតែប៉ុន្នោះ"
   ],
 
   "error_price_require": [

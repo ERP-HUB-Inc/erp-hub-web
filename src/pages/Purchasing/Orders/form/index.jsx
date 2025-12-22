@@ -121,9 +121,9 @@ export default class PurchaseOrderPage extends Datatable {
           const returnTotal = record.returnTotal;
 
           let key = "requestTotal";
-          if (record.step === Enum.PO_STEP.RECEIVED) {
+          if (record.step === Enum.PO_STATUS.RECEIVED) {
             key = "receiveTotal";
-          } else if (record.step === Enum.PO_STEP.RETURN) {
+          } else if (record.step === Enum.PO_STATUS.RETURN) {
             key = "returnTotal";
           }
 
@@ -148,12 +148,12 @@ export default class PurchaseOrderPage extends Datatable {
     this.pathUpdate= "/purchase-orders/update";
     this.permissionModuleCode = "purchase_order";
     this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="text_draft" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
-      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
-      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_received" />, color:  this.Enum.PO_STEP_COLOR.RECEIVE},
-      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
-      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_returned" />, color:  this.Enum.PO_STEP_COLOR.RETURN},
-      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color:  this.Enum.PO_STEP_COLOR.PAID}
+      [Enum.PO_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STATUS.PROCESS]: {name: <this.Translate id="text_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
+      [Enum.PO_STATUS.RECEIVED]: {name: <this.Translate id="text_received" />, color:  this.Enum.PO_STEP_COLOR.RECEIVE},
+      [Enum.PO_STATUS.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
+      [Enum.PO_STATUS.RETURN]: {name: <this.Translate id="text_returned" />, color:  this.Enum.PO_STEP_COLOR.RETURN},
+      [Enum.PO_STATUS.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color:  this.Enum.PO_STEP_COLOR.PAID}
     };
     this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
   }
@@ -385,7 +385,7 @@ export default class PurchaseOrderPage extends Datatable {
                   </Link>
                 </Menu.Item>
                 <Divider style={{marginTop: 4, marginBottom: 4}} />
-                <Menu.Item key={4} disabled={record.step === Enum.PO_STEP.RECEIVED} onClick={() => this.handleConfirm(record)}>
+                <Menu.Item key={4} disabled={record.step === Enum.PO_STATUS.RECEIVED} onClick={() => this.handleConfirm(record)}>
                   <Icon type="delete" style={{marginRight: 10}} /> <Translate id="text_delete" />
                 </Menu.Item>
             </Menu>
@@ -449,7 +449,7 @@ export default class PurchaseOrderPage extends Datatable {
               ]}
               actions={[
                   {
-                    text: 'Import Items',
+                    text: 'Import Order',
                     type: 'default',
                     icon: 'upload',
                     onClick: () => {}

@@ -51,7 +51,7 @@ export default class Form extends Modal {
         values["requestTotal"] = 0;
         values["receiveTotal"] = 0;
         values["returnTotal"] = parseFloat(values.returnTotalValue);
-        values["step"] = Enum.PO_STEP.RETURN;
+        values["step"] = Enum.PO_STATUS.RETURN;
         values["type"] = this.props.returnPurchaseDetail.data.type;
         values["status"] = this.props.returnPurchaseDetail.data.status;
 

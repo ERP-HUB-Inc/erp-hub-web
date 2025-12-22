@@ -148,7 +148,7 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const NewPurchaseOrder = Loadable({
-      loader: () => import("../pages/Purchasing/Orders/form.create"),
+      loader: () => import("../pages/Purchasing/Orders/form.create.bk"),
       loading: () => <StartUp />,
     });
     const UpdatePurchaseOrder = Loadable({

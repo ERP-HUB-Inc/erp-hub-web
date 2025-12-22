@@ -94,6 +94,7 @@ export {
   Checkbox,
   Collapse,
   Col,
+  Card,
   Form,
   Icon,
   Input,

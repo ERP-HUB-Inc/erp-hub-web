@@ -282,7 +282,7 @@ export default class SiderDemo extends React.Component {
                         }
                       >
                         <Menu.Item key="31"><Link to="/purchase-orders">Orders</Link></Menu.Item>
-                        <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item>
+                        {/* <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item> */}
                         <Menu.Item key="33"><Link to="/vendors">Vendors</Link></Menu.Item>
                       </SubMenu>
 

@@ -1,16 +1,16 @@
 import React from "react";
-import Enum from "../../../../enums";
+import Enum from "@enums/index";
 import Util from "../../../../helper/purchase";
 import VariantProduct from "../../../../app/modules/pos/containers/transactions/SaleWalkin/VariantProduct";
-import DropDownSearch from "../../../../app/modules/inventory/components/products/Product/DropDownSearch";
 import ProductVariantAction from "../../../../app/modules/inventory/actions/products/productVariant";
 import Action from "../redux/action";
 import Constant from "../redux/constant";
-import UnitService from "../../../../services/UnitService";
-import BaseModal from "../../../../layout/base-modal"
+import UnitService from "@services/UnitService";
+import BaseModal from "@layout/base-modal"
 import "./index.css";
+import { InputText } from "@components/InputText";
 
-export default class PO extends BaseModal {
+export default class POItems extends BaseModal {
   constructor(props){
     super(props);
     this.state = {
@@ -33,12 +33,12 @@ export default class PO extends BaseModal {
           return (
             <div>
               { index + 1 }
-              <this.InputText name={`purchaseEntryId[${index}]`} type="hidden" data={record.purchaseEntryId} form={this.form} />
-              <this.InputText name={`productVariantId[${index}]`} type="hidden" data={record.productVariantId} form={this.form} />
-              <this.InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
-              <this.InputText name={`variantName[${index}]`} type="hidden" data={record.variantName} form={this.form} />
-              <this.InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.purchaseEntryStatus} form={this.form} />
-              <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={this.form} />
+              <InputText name={`purchaseEntryId[${index}]`} type="hidden" data={record.purchaseEntryId} form={this.form} />
+              <InputText name={`productVariantId[${index}]`} type="hidden" data={record.productVariantId} form={this.form} />
+              <InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
+              <InputText name={`variantName[${index}]`} type="hidden" data={record.variantName} form={this.form} />
+              <InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.purchaseEntryStatus} form={this.form} />
+              <InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={this.form} />
             </div>
           );
         }
@@ -62,7 +62,7 @@ export default class PO extends BaseModal {
         key: "unit",
         align: "center",
         render: (text, record, index) => {
-          return <this.Select
+          return <Select
             name={`unitId[${index}]`}
             valueKey="id"
             dataSource={this.state.units}
@@ -97,7 +97,7 @@ export default class PO extends BaseModal {
         key: "price",
         align: "right",
         render: (text, record, index) => {
-          return <this.InputNumber
+          return <InputNumber
             name={`purchasePrice[${index}]`}
             data={`${record.price}`}
             className="text-right"
@@ -146,10 +146,8 @@ export default class PO extends BaseModal {
     ];
 
     this.removeRecord = this.removeRecord.bind(this);
-    this.handleOnSelectList = this.handleOnSelectList.bind(this);
     this.handleOnChangeQuantity = this.handleOnChangeQuantity.bind(this);
     this.handleOnChangePrice = this.handleOnChangePrice.bind(this);
-    this.handleCancelVariantProduct = this.handleCancelVariantProduct.bind(this);
     this.calculateTotalAmountEachRow = this.calculateTotalAmountEachRow.bind(this);
     this.grandTotal = this.grandTotal.bind(this);
   }
@@ -214,9 +212,9 @@ export default class PO extends BaseModal {
           unitId: purchaseOrderEntry.unitId,
           productVariantId: purchaseOrderEntry.productVariantId,
           quantityOnHand: 0,
-          quantity: purchaseOrderEntry.requestQuantity, 
+          quantity: purchaseOrderEntry.quantity, 
           price: purchaseOrderEntry.price,
-          totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
+          totalPrice: purchaseOrderEntry.quantity * purchaseOrderEntry.price,
           purchaseEntryStatus: purchaseOrderEntry.status
         }); 
       }); 
@@ -398,14 +396,6 @@ export default class PO extends BaseModal {
   render(){
     return(
       <div className="main-dropdown-search">
-        <DropDownSearch
-          productSearch={this.props.dataSource}
-          handleOnSelectList={this.handleOnSelectList}
-          dispatch={this.props.dispatch}
-          filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.PRODUCT, Enum.SERIAL_TYPE.SERIAL]})}
-          className="ca-input-v1 purchase-order"
-          locale={this.props.locale}
-          form={this.props.form}/>  
         <this.Table
           rowKey="productVariantId"
           rowClassName={record => record.purchaseEntryStatus === this.Enum.ACTIVE ? "" : "hidden"}

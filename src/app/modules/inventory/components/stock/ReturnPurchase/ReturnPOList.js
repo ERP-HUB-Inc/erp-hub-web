@@ -117,7 +117,7 @@ export default class ReceivedPO extends Modal {
           productName,
           variantName,
           productVariantId: purchaseOrderEntry.productVariantId,
-          requestQuantity: purchaseOrderEntry.requestQuantity, 
+          requestQuantity: purchaseOrderEntry.quantity, 
           receiveQuantity: purchaseOrderEntry.receiveQuantity,
           returnQuantity: 0,
           price: purchaseOrderEntry.price,

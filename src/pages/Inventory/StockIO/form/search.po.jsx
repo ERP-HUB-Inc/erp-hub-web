@@ -214,9 +214,9 @@ export default class PO extends BaseModal {
           unitId: purchaseOrderEntry.unitId,
           productVariantId: purchaseOrderEntry.productVariantId,
           quantityOnHand: 0,
-          quantity: purchaseOrderEntry.requestQuantity, 
+          quantity: purchaseOrderEntry.quantity, 
           price: purchaseOrderEntry.price,
-          totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
+          totalPrice: purchaseOrderEntry.quantity * purchaseOrderEntry.price,
           purchaseEntryStatus: purchaseOrderEntry.status
         }); 
       }); 

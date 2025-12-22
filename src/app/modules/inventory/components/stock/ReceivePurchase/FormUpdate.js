@@ -120,7 +120,7 @@ export default class Form extends Modal {
         values["requestTotal"] = this.props.receivePurchaseDetail.data.requestTotal;
         values["receiveTotal"] = parseFloat(values.receiveTotalValue);
         values["returnTotal"] = this.props.receivePurchaseDetail.data.returnTotal;
-        values["step"] = Enum.PO_STEP.RECEIVED;
+        values["step"] = Enum.PO_STATUS.RECEIVED;
         values["type"] = this.props.receivePurchaseDetail.data.type;
         values["status"] = this.props.receivePurchaseDetail.data.status;
         values["POEntries"] = POEntries;

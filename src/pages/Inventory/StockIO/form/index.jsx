@@ -57,6 +57,13 @@ export default class StockIOPage extends Datatable {
         width: 180,
       },
       {
+        title: <this.Translate id="text_date_created" />,
+        dataIndex: "createdAt",
+        key: "createdAt",
+        width: 180,
+        render: value => this.Util.formatDate(value, "D, MMM YYYY HH:mm")
+      },
+      {
         title: "Total Qty",
         dataIndex: "quantity",
         key: "quantity",
@@ -220,13 +227,6 @@ export default class StockIOPage extends Datatable {
             {receiver.fullName}
           </div>
         ) : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_date_created" />,
-        dataIndex: "createdAt",
-        key: "createdAt",
-        width: 180,
-        render: value => this.Util.formatDate(value, "D, MMM YYYY HH:mm")
       }
     ].concat(this.renderActionColumn());
     this.fetchingProp = "purchaseOrder";

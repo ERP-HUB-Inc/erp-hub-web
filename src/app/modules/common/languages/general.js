@@ -138,6 +138,8 @@ export default {
 
   text_all_location: ["All locations", "គ្រប់ទីតាំង"],
 
+  text_all_warehouse: ["All Warehouses", "គ្រប់ទីតាំង"],
+
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],
 
   text_select_date: ["Select date", "ជ្រើសរើសថ្ងៃទី"],
@@ -415,11 +417,13 @@ export default {
 
   text_geolocation: ["Geolocation", "ទីតាំងភូមិសាស្ត្រ"],
 
-  text_supplier: ["Supplier", "អ្នកផ្គត់ផ្គង់", "Supplier"],
+  text_supplier: ["Supplier", "អ្នកផ្គត់ផ្គង់"],
 
   text_vendor: ["Vendor", "អ្នកផ្គត់ផ្គង់"],
 
-  text_all_supplier: ["All Supplier", "អ្នកផ្គត់ផ្គង់", "All Supplier"],
+  text_all_supplier: ["All Supplier", "អ្នកផ្គត់ផ្គង់"],
+
+  text_all_vendors: ["All Vendors", "អ្នកផ្គត់ផ្គង់"],
 
   text_due_date: ["Due Date", "កាលបរិច្ឆេទ​កំណត់"],
 

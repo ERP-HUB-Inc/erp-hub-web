@@ -82,7 +82,7 @@ export default class ReceivedPo extends Modal {
               name={`receiveQuantity[${index}]`}  
               data={record.receiveQuantity}
               className="text-right"
-              compare={{value: record.requestQuantity, message: <this.Translate id="text_receive_qty_warning"/>}}
+              compare={{value: record.quantity, message: <this.Translate id="text_receive_qty_warning"/>}}
               precision={0}
               isHideTool={true}
               isAutoFocus={index === 0}
@@ -137,7 +137,7 @@ export default class ReceivedPo extends Modal {
           productName,
           variantName,
           productVariantId: purchaseOrderEntry.productVariantId,
-          requestQuantity: purchaseOrderEntry.requestQuantity, 
+          requestQuantity: purchaseOrderEntry.quantity, 
           receiveQuantity: purchaseOrderEntry.receiveQuantity,
           price: purchaseOrderEntry.price,
           totalPrice: 0

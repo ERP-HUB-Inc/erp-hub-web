@@ -19,7 +19,7 @@ export default class FormCreate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {      
         let purchaseOrder =  this.props.formvalue;
-        purchaseOrder["step"] = Enum.PO_STEP.PROCESS;
+        purchaseOrder["step"] = Enum.PO_STATUS.PROCESS;
         this.props.callBackGetEmail(values.supplierEmail);
         this.dispatch(PurchaseOrderAction.pushToSupplier(purchaseOrder));
       }

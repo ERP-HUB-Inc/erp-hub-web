@@ -47,10 +47,6 @@ export default {
     "Note",
     "កត់ចំណាំ"
   ],
-  "text_cancelled": [
-    "Cancelled",
-    "បេាះបង់"
-  ],
   "text_delayed": [
     "Delayed",
     "ពន្យាពេល"

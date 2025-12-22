@@ -88,9 +88,9 @@ export default class PO extends Component {
                             <div style={{fontSize: "7.5pt", marginTop: "2px"}}>{value.variantName}</div>
                           </td>
                           <td style={{padding: "5px"}}>{this.formatCurrency(value.price)}</td>
-                          <td style={{padding: "5px"}}>{value.requestQuantity}</td>
+                          <td style={{padding: "5px"}}>{value.quantity}</td>
                           <td style={{padding: "5px"}}>{value.receiveQuantity ? value.receiveQuantity : 0}</td>
-                          <td style={{padding: "5px", textAlign: "right"}}>{this.formatCurrency(value.price * value.requestQuantity)}</td>
+                          <td style={{padding: "5px", textAlign: "right"}}>{this.formatCurrency(value.price * value.quantity)}</td>
                           <td style={{padding: "5px", textAlign: "right"}}>{this.formatCurrency(0)}</td>
                         </tr>       
                       )
