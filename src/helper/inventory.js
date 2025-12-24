@@ -61,13 +61,13 @@ class Util {
   }
 
   getVariantId(product) {
-    let productVariantId = "";
+    let variantId = "";
 
     if (product && product.productVariants) {
-      productVariantId = product.productVariants[0].id;
+      variantId = product.productVariants[0].id;
     }
 
-    return productVariantId;
+    return variantId;
   }
 
   getVariantName(product) {

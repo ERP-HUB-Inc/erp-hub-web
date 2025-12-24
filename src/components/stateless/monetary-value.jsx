@@ -36,7 +36,7 @@ export function MonetaryValue(props) {
     `;
 
     const Amount = styled.span`
-        color: ${showSign ? color : 'rgb(20, 20, 21)'};
+        color: ${showSign ? color : 'rgba(0, 0, 0, 0.85)'};
         margin-right: 4px;
         margin-bottom: 0px;
         margin-top: 0px;
@@ -59,8 +59,8 @@ export function MonetaryValue(props) {
     return (
         <Wrapper>
             {showSign && <Sign>{status === 0 ? '' : (isPositive ? '+' : '-')}</Sign>}
-            <Amount>{(new Util()).formatCurrency(amount)}</Amount>
-            <Currency>{currency}</Currency>
+            <Amount>{(new Util()).formatCurrency(amount ?? 0)}</Amount>
+            {/* <Currency>{currency}</Currency> */}
         </Wrapper>
     );
 }

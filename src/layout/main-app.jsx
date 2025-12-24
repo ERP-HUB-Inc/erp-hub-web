@@ -31,6 +31,7 @@ import StickyFooterPage from './sticky-footer';
 import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
 import StockIOBulkImport from '@inventories/StockIO/form/form.bulk-import';
 import StockIOAIImport from '@inventories/StockIO/form/form.ai-import';
+import VendorDetailPage from './vendor-detail';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -229,12 +230,13 @@ export default class SiderDemo extends React.Component {
     }
 
 
-    return (<Provider store={store}>
-      <BrowserRouter>
-        <Switch>
-          <Router history={history}>
-            <Layout id='components-layout-demo-custom-trigger'>
-              {/* {
+    return (
+      <Provider store={store}>
+        <BrowserRouter>
+          <Switch>
+            <Router history={history}>
+              <Layout id="components-layout-demo-custom-trigger">
+                {/* {
                 this.state.alertData && 
                 <SystemAlertBanner
                   type="announcement"
@@ -244,18 +246,28 @@ export default class SiderDemo extends React.Component {
                   linkText="Explore Features"
                 />
               } */}
-              {
-                !isPOSPage ?
-                <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: '100vh' }}>
-                  <LogoTextOnly />
-                  {/* <DynamicMenu /> */}
-                  <Menu theme={theme} mode="inline" defaultSelectedKeys={['1']}>
-                    <Menu.Item key="1">
-                      <Link to="/">
+                {!isPOSPage ? (
+                  <Sider
+                    trigger={null}
+                    collapsible
+                    collapsed={this.state.collapsed}
+                    theme={theme}
+                    width={230}
+                    style={{ height: "100vh" }}
+                  >
+                    <LogoTextOnly />
+                    {/* <DynamicMenu /> */}
+                    <Menu
+                      theme={theme}
+                      mode="inline"
+                      defaultSelectedKeys={["1"]}
+                    >
+                      <Menu.Item key="1">
+                        <Link to="/">
                           <Icon type="dashboard" />
                           <span>Dashboard</span>
-                      </Link>
-                    </Menu.Item>
+                        </Link>
+                      </Menu.Item>
 
                       <SubMenu
                         key="2"
@@ -266,10 +278,18 @@ export default class SiderDemo extends React.Component {
                           </span>
                         }
                       >
-                        <Menu.Item key="21"><Link to="/sales-orders">Orders</Link></Menu.Item>
-                        <Menu.Item key="22"><Link to="/quotes">Quotes</Link></Menu.Item>
-                        <Menu.Item key="23"><Link to="/invoices">Invoices</Link></Menu.Item>
-                        <Menu.Item key="24"><Link to="/customers">Customers</Link></Menu.Item>
+                        <Menu.Item key="21">
+                          <Link to="/sales-orders">Orders</Link>
+                        </Menu.Item>
+                        {/* <Menu.Item key="22">
+                          <Link to="/quotes">Quotes</Link>
+                        </Menu.Item> */}
+                        <Menu.Item key="23">
+                          <Link to="/invoices">Invoices</Link>
+                        </Menu.Item>
+                        <Menu.Item key="24">
+                          <Link to="/customers">Customers</Link>
+                        </Menu.Item>
                       </SubMenu>
 
                       <SubMenu
@@ -281,9 +301,13 @@ export default class SiderDemo extends React.Component {
                           </span>
                         }
                       >
-                        <Menu.Item key="31"><Link to="/purchase-orders">Orders</Link></Menu.Item>
+                        <Menu.Item key="31">
+                          <Link to="/purchase-orders">Orders</Link>
+                        </Menu.Item>
                         {/* <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item> */}
-                        <Menu.Item key="33"><Link to="/vendors">Vendors</Link></Menu.Item>
+                        <Menu.Item key="33">
+                          <Link to="/vendors">Vendors</Link>
+                        </Menu.Item>
                       </SubMenu>
 
                       <SubMenu
@@ -295,8 +319,12 @@ export default class SiderDemo extends React.Component {
                           </span>
                         }
                       >
-                        <Menu.Item key="41"><Link to="/inventories/items">Items</Link></Menu.Item>
-                        <Menu.Item key="42"><Link to="/inventories/stock-io">Stock In/Out</Link></Menu.Item>
+                        <Menu.Item key="41">
+                          <Link to="/inventories/items">Items</Link>
+                        </Menu.Item>
+                        <Menu.Item key="42">
+                          <Link to="/inventories/stock-io">Stock In/Out</Link>
+                        </Menu.Item>
                         {/* 
                           Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
                           Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
@@ -316,13 +344,17 @@ export default class SiderDemo extends React.Component {
                         }
                       >
                         <Menu.Item key="51">
-                            <Link to="/general-ledger">General Ledger (GL)</Link>
+                          <Link to="/general-ledger">General Ledger (GL)</Link>
                         </Menu.Item>
                         <Menu.Item key="52">
-                            <Link to="/accounts-receivable">Accounts Receivable (AR)</Link>
+                          <Link to="/accounts-receivable">
+                            Accounts Receivable (AR)
+                          </Link>
                         </Menu.Item>
                         <Menu.Item key="53">
-                            <Link to="/accounts-payable">Accounts Payable (AP)</Link>
+                          <Link to="/accounts-payable">
+                            Accounts Payable (AP)
+                          </Link>
                         </Menu.Item>
                       </SubMenu>
 
@@ -336,21 +368,22 @@ export default class SiderDemo extends React.Component {
                         }
                       >
                         <Menu.Item key="61">
-                          <Link to="/reports/sales-report-center">Sales Report</Link>
+                          <Link to="/reports/sales-report-center">
+                            Sales Report
+                          </Link>
                         </Menu.Item>
                         <Menu.Item key="62">
-                            <Link to="/reports/purchase">Purchase Report</Link>
+                          <Link to="/reports/purchase">Purchase Report</Link>
                         </Menu.Item>
                         <Menu.Item key="63">
-                            <Link to="/reports/stock">Stock Report</Link>
+                          <Link to="/reports/stock">Stock Report</Link>
                         </Menu.Item>
                         <Menu.Item key="64">
-                            <Link to="/reports/product">Product Report</Link>
+                          <Link to="/reports/product">Product Report</Link>
                         </Menu.Item>
                         <Menu.Item key="65">
-                            <Link to="/reports/financial">Financial Reports</Link>
+                          <Link to="/reports/financial">Financial Reports</Link>
                         </Menu.Item>
-
                       </SubMenu>
 
                       <Menu.Item key="7">
@@ -360,120 +393,190 @@ export default class SiderDemo extends React.Component {
                         </Link>
                       </Menu.Item>
                     </Menu>
-                </Sider>
-                :
-                <React.Fragment />
-              }
+                  </Sider>
+                ) : (
+                  <React.Fragment />
+                )}
 
-              <Layout>
-                <Header style={{ 
-                  background: '#fff', 
-                  padding: 0, 
-                  position: 'fixed', 
-                  zIndex: 1, 
-                  width: "87%",
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingRight: '24px'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon
-                      className="trigger"
-                      type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                      onClick={this.toggle}
-                    />
-                  </div>
+                <Layout>
+                  <Header
+                    style={{
+                      background: "#fff",
+                      padding: 0,
+                      position: "fixed",
+                      zIndex: 1,
+                      width: "87%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      paddingRight: "24px",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <Icon
+                        className="trigger"
+                        type={
+                          this.state.collapsed ? "menu-unfold" : "menu-fold"
+                        }
+                        onClick={this.toggle}
+                      />
+                    </div>
 
-                  <Dropdown overlay={(
-                    <Menu>
-                      <Menu.Item>
-                        <Icon type="user" />
-                        Profile
-                      </Menu.Item>
-                      <Menu.Item>
-                        <Icon type="redo" />
-                        Update Now
-                      </Menu.Item>
-                      <Divider style={{ marginTop: 5, marginBottom: 5 }} />
-                      <Menu.Item onClick={this.onLogout}>
-                        <Icon type="logout" />
-                        Logout
-                      </Menu.Item>
-                    </Menu>
-                  )} trigger={["hover"]}>
-                    <Link to="#">
-                      Marco JR
-                    </Link>
-                  </Dropdown>
-                </Header>
+                    <Dropdown
+                      overlay={
+                        <Menu>
+                          <Menu.Item>
+                            <Icon type="user" />
+                            Profile
+                          </Menu.Item>
+                          <Menu.Item>
+                            <Icon type="redo" />
+                            Update Now
+                          </Menu.Item>
+                          <Divider style={{ marginTop: 5, marginBottom: 5 }} />
+                          <Menu.Item onClick={this.onLogout}>
+                            <Icon type="logout" />
+                            Logout
+                          </Menu.Item>
+                        </Menu>
+                      }
+                      trigger={["hover"]}
+                    >
+                      <Link to="#">Marco JR</Link>
+                    </Dropdown>
+                  </Header>
 
-                <Content
-                  style={isPOSPage ? { height: "100vh"} : styledContent}
-                  id="center-container"
-                >
-                  <Switch>
-                    <Route path="/pos" component={POS} />
-                    <Route path="/sales-orders" component={SalesOrder} />
-                    <Route path="/quotes" component={Quotes} />
-                    
-                    <Route path="/invoices/view/:id" component={InvoiceDetail} />
-                    <Route path="/invoices/create" component={NewInoice} />
-                    <Route path="/invoices/update/:id" component={NewInoice} />
-                    <Route path="/invoices" component={Invoice} />
-                    
-                    <Route path="/customers" component={Customers} />
-                    <Route path="/customer-profile/:id" component={CustomerProfile} />
-                    
-                    <Route path="/purchase-orders/create" component={NewPurchaseOrder} />
-                    <Route path="/purchase-orders/update/:id" component={UpdatePurchaseOrder} />
-                    <Route path="/purchase-orders" component={PurchaseOrder} />
+                  <Content
+                    style={isPOSPage ? { height: "100vh" } : styledContent}
+                    id="center-container"
+                  >
+                    <Switch>
+                      <Route path="/pos" component={POS} />
+                      <Route path="/sales-orders" component={SalesOrder} />
+                      <Route path="/quotes" component={Quotes} />
 
-                    <Route path="/vendors/create" component={Vendor} />
-                    <Route path="/vendors/update/:id" component={Vendor} />
-                    <Route path="/vendors" component={Vendor} />
+                      <Route
+                        path="/invoices/view/:id"
+                        component={InvoiceDetail}
+                      />
+                      <Route path="/invoices/create" component={NewInoice} />
+                      <Route
+                        path="/invoices/update/:id"
+                        component={NewInoice}
+                      />
+                      <Route path="/invoices" component={Invoice} />
 
-                    <Route path="/inventories/items/create" component={NewItem} />
-                    <Route path="/inventories/items/update/:id" component={EditItem} />
-                    <Route path="/inventories/items/view/:id" component={ViewItem} />
-                    <Route path="/inventories/items/split/:productVariantId" component={SplitItem} />
-                    <Route path="/inventories/items" component={Item} />
+                      <Route path="/customers" component={Customers} />
+                      <Route
+                        path="/customer-profile/:id"
+                        component={CustomerProfile}
+                      />
 
-                    {/* StockIO Management */}
-                    <Route path="/inventories/stock-io/create" component={NewStockInOut} />
-                    <Route path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
-                    <Route path="/inventories/stock-io/import" component={StockIOBulkImport} />
-                    <Route path="/inventories/stock-io/ai-import" component={StockIOAIImport} />
-                    <Route path="/inventories/stock-io" component={StockInOut} />
+                      <Route
+                        path="/purchase-orders/create"
+                        component={NewPurchaseOrder}
+                      />
+                      <Route
+                        path="/purchase-orders/update/:id"
+                        component={UpdatePurchaseOrder}
+                      />
+                      <Route
+                        path="/purchase-orders"
+                        component={PurchaseOrder}
+                      />
 
-                    <Route path="/inventories/transfers" component={Vendor} />
-                    <Route path="/inventories/adjustments" component={Vendor} />
+                      <Route path="/vendors/create" component={Vendor} />
+                      <Route path="/vendors/update/:id" component={Vendor} />
+                      <Route path="/vendors" component={Vendor} />
 
-                    <Route path="/reports/sales-report-center" component={SaleReportCenter} />
-                    <Route path="/reports/sales-report-receipt" component={SaleReportReceipt} />
+                      <Route
+                        path="/inventories/items/create"
+                        component={NewItem}
+                      />
+                      <Route
+                        path="/inventories/items/update/:id"
+                        component={EditItem}
+                      />
+                      <Route
+                        path="/inventories/items/view/:id"
+                        component={ViewItem}
+                      />
+                      <Route
+                        path="/inventories/items/split/:productVariantId"
+                        component={SplitItem}
+                      />
+                      <Route path="/inventories/items" component={Item} />
 
-                    <Route path="/settings" component={SettingsPage} />
-                    <Route path="/categories" component={Category} />
-                    <Route path="/brands" component={Brand} />
-                    <Route path="/setting-logs" component={SystemLogs} />
-                    <Route path="/order-dashboards" component={OrdersDashboard} />
-                    <Route path="/table-views" component={TabletView} />
-                    <Route path="/columns" component={ColumnSelection} />
-                    <Route path="/stock-in-ui" component={StockInUI} />
-                    <Route path="/item-ai-ui" component={ItemManagementUI} />
-                    <Route path="/item-ai-generator" component={ItemAIGenerator} />
-                    <Route path="/sticky-footer-page" component={StickyFooterPage} />
-                    <Route path="/stock-io-form" component={StockIOForm} />
+                      {/* StockIO Management */}
+                      <Route
+                        path="/inventories/stock-io/create"
+                        component={NewStockInOut}
+                      />
+                      <Route
+                        path="/inventories/stock-io/update/:id"
+                        component={UpdateStockInOut}
+                      />
+                      <Route
+                        path="/inventories/stock-io/import"
+                        component={StockIOBulkImport}
+                      />
+                      <Route
+                        path="/inventories/stock-io/ai-import"
+                        component={StockIOAIImport}
+                      />
+                      <Route
+                        path="/inventories/stock-io"
+                        component={StockInOut}
+                      />
 
-                    <Route path="/" component={Dashboard} />
-                  </Switch>
-                </Content>
+                      <Route path="/inventories/transfers" component={Vendor} />
+                      <Route
+                        path="/inventories/adjustments"
+                        component={Vendor}
+                      />
+
+                      <Route
+                        path="/reports/sales-report-center"
+                        component={SaleReportCenter}
+                      />
+                      <Route
+                        path="/reports/sales-report-receipt"
+                        component={SaleReportReceipt}
+                      />
+
+                      <Route path="/settings" component={SettingsPage} />
+                      <Route path="/categories" component={Category} />
+                      <Route path="/brands" component={Brand} />
+                      <Route path="/setting-logs" component={SystemLogs} />
+                      <Route
+                        path="/order-dashboards"
+                        component={OrdersDashboard}
+                      />
+                      <Route path="/table-views" component={TabletView} />
+                      <Route path="/columns" component={ColumnSelection} />
+                      <Route path="/stock-in-ui" component={StockInUI} />
+                      <Route path="/item-ai-ui" component={ItemManagementUI} />
+                      <Route
+                        path="/item-ai-generator"
+                        component={ItemAIGenerator}
+                      />
+                      <Route
+                        path="/sticky-footer-page"
+                        component={StickyFooterPage}
+                      />
+                      <Route path="/stock-io-form" component={StockIOForm} />
+                      <Route path="/vendor-detail" component={VendorDetailPage} />
+
+                      <Route path="/" component={Dashboard} />
+                    </Switch>
+                  </Content>
+                </Layout>
               </Layout>
-            </Layout>
-          </Router>
-        </Switch>
-      </BrowserRouter>
-    </Provider>);
+            </Router>
+          </Switch>
+        </BrowserRouter>
+      </Provider>
+    );
    }
 }
 

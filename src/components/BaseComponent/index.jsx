@@ -212,7 +212,7 @@ export default class Component extends React.Component {
     this.HttpCode = HttpCode;
 
     // OTHER
-    this.emptyText = "N/A";
+    this.emptyText = "Unknown";
 
   }
 

@@ -11,8 +11,7 @@ import {
   Row, 
   Col, 
   Card, 
-  Tag, 
-  Alert, 
+  Tag,
   Modal, 
   Upload, 
   Divider, 
@@ -21,19 +20,14 @@ import {
 } from "antd";
 import moment from "moment";
 import sweetalert from "sweetalert";
-import Enum from "@enums/index";
 import ItemService from "@services/ItemService";
-import LocationService from '@services/LocationService';
-import StockIOService from '@services/StockIOService';
-import PurchaseOrderService from "@services/PurchaseOrderService";
+import LocationService from "@services/LocationService";
+import POService from "@services/PurchaseOrderService";
 import UnitService from '@services/UnitService';
 import history from "@router/index";
 import Util from "@helper/inventory";
 import { getLocationId } from "@helper/user";
-import { Translate } from "@redux/index"
 import { SelectItem, SelectVendor } from '@components/stateful';
-import POStatusDropdown from "./po.status.dropdown";
-import { InputTextArea } from "@components/index";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -49,42 +43,12 @@ const PurchaseOrderForm = (props) => {
   const [movementType, setMovementType] = useState('IN');
   const [aiSuggestions, setAiSuggestions] = useState({});
   const [validationWarnings, setValidationWarnings] = useState({});
-  let timeout = null;
-
-  const reasons = {
-    IN: [
-      "Buy from Supplier",
-      "Customer Returned Item",
-      "Received from Another Branch",
-      "Fix Stock Mistake",
-      "Made in Production",
-      "Start Initial Stock",
-      "Stock on Consignment",
-      "Free Item from Supplier",
-      "Returned from Branch",
-      "Split / Repack Item",
-      "Free Item / Donation"
-    ],
-    OUT: [
-      "Sale",
-      "Return to Supplier",
-      "Transfer Out",
-      "Damaged / Lost",
-      "Used in Production",
-      "Opening Adjustment",
-      "Internal Use / Staff Use",
-      "Sample / Demo Use",
-      "Donation / Charity",
-      "Promotion / Free Gift",
-      "Expired / Spoiled Write-Off",
-      "Repack / Unit Conversion"
-    ]
-  };
 
   useEffect(() => {
     if (stockIOItems.length === 0) {
       addNewRow();
     }
+
     fetchItems();
     fetchWarehouses();
     fetchUnits();
@@ -132,7 +96,6 @@ const PurchaseOrderForm = (props) => {
       sku: '',
       quantity: null,
       warehouse: warehouses[0]?.id,
-      reason: reasons[movementType][0],
       batch: '',
       expiry: null,
       notes: '',
@@ -168,26 +131,6 @@ const PurchaseOrderForm = (props) => {
             updated.currentStock = selectedItem.currentStock;
             updated.avgQuantity = selectedItem.avgQuantity;
             updated.warehouse = selectedItem.warehouse || warehouses[0].id;
-            
-            // AI suggests quantity based on average
-            setAiSuggestions({
-              ...aiSuggestions,
-              [key]: `Typical quantity: ${selectedItem.avgQuantity} units`
-            });
-          }
-        }
-
-        // Validation: Check stock for OUT movements
-        if (field === 'quantity' && movementType === 'OUT') {
-          if (value > updated.currentStock) {
-            setValidationWarnings({
-              ...validationWarnings,
-              [key]: `⚠️ Quantity exceeds available stock (${updated.currentStock})`
-            });
-          } else {
-            const newWarnings = { ...validationWarnings };
-            delete newWarnings[key];
-            setValidationWarnings(newWarnings);
           }
         }
 
@@ -205,7 +148,6 @@ const PurchaseOrderForm = (props) => {
           sku: '',
           quantity: null,
           warehouse: warehouses[0]?.id,
-          reason: reasons[movementType][0],
           batch: '',
           expiry: null,
           notes: '',
@@ -216,16 +158,6 @@ const PurchaseOrderForm = (props) => {
   
     setStockIOItems(newItems);
   };
-
-  const handleMovementTypeChange = (value) => {
-    setMovementType(value);
-    // Update reason for all stockIOItems
-    setStockIOItems(stockIOItems.map(item => ({
-      ...item,
-      reason: reasons[value][0]
-    })));
-  };
-
   
   const columns = [
     {
@@ -260,7 +192,7 @@ const PurchaseOrderForm = (props) => {
     {
       title: "SKU",
       dataIndex: "sku",
-      width: 120,
+      width: 80,
       render: (value) => <Tag>{value || "-"}</Tag>,
     },
     {
@@ -288,6 +220,42 @@ const PurchaseOrderForm = (props) => {
               min={1}
               placeholder="Enter quantity (pcs)"
               onChange={(val) => updateRow(record.key, "quantity", val)}
+            />
+          )}
+          {validationWarnings[record.key] && (
+            <div style={{ color: "#faad14", fontSize: 12, marginTop: 4 }}>
+              <Icon type="exclamation-circle" />{" "}
+              {validationWarnings[record.key]}
+            </div>
+          )}
+        </Form.Item>
+      ),
+    },
+    {
+      title: "Price",
+      dataIndex: "cost",
+      width: 120,
+      render: (value, record, index) => (
+        <Form.Item style={{ marginBottom: 0 }}>
+          {props.form.getFieldDecorator(`cost[${index}]`, {
+            rules: [
+              {
+                required: false,
+                message: "Please enter price",
+              },
+              {
+                type: "number",
+                min: 0,
+                message: "Price must be at least 0",
+              },
+            ],
+            initialValue: value,
+          })(
+            <InputNumber
+              style={{ width: "100%" }}
+              min={1}
+              placeholder="Enter unit price"
+              onChange={(val) => updateRow(record.key, "cost", val)}
             />
           )}
           {validationWarnings[record.key] && (
@@ -369,28 +337,10 @@ const PurchaseOrderForm = (props) => {
       ),
     },
     {
-      title: "Notes",
-      dataIndex: "notes",
-      width: 150,
-      render: (value, record, index) => (
-        <Form.Item style={{ marginBottom: 0 }}>
-          {props.form.getFieldDecorator(`notes[${index}]`, {
-            initialValue: value,
-          })(
-            <TextArea
-              rows={2}
-              placeholder="Additional notes"
-              onChange={(e) => updateRow(record.key, "notes", e.target.value)}
-            />
-          )}
-        </Form.Item>
-      ),
-    },
-    {
       title: "Actions",
       key: "actions",
-      width: 100,
-      fixed: "right",
+      width: 80,
+      ffixed: "right",
       render: (_, record) => (
         <div style={{ display: "flex", gap: 4 }}>
           <Tooltip title="Duplicate">
@@ -414,35 +364,71 @@ const PurchaseOrderForm = (props) => {
     },
   ];
 
-  const calculateSummary = () => {
-    const totalItems = stockIOItems.filter(i => i.quantity > 0 && i.itemId).length;
-    const totalQuantity = stockIOItems.filter(i => i.quantity > 0 && i.itemId).reduce((sum, item) => sum + (item.quantity || 0), 0);
-    const warehouseSummary = {};
-    
-    stockIOItems.forEach(item => {
-      if (item.warehouse && item.quantity) {
-        warehouseSummary[item.warehouse] = (warehouseSummary[item.warehouse] || 0) + item.quantity;
-      }
-    });
-
-    return { totalItems, totalQuantity, warehouseSummary };
-  };
-
-  const onSearchItem = search => {
-    const limit = 15;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      setLoading(true);
-      ItemService.get({ limit, search })
-      .then(response => {
-        if (response && response.data) {
-          setItems(response.data.data);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
+  const handleDraftSubmit = async () => {
+    try {
+      const value = await new Promise((resolve, reject) => {
+        props.form.validateFields((err, values) => {
+          if (err) return reject(err);
+          resolve(values);
+        });
       });
-    }, 1000);
+
+      setSubmitting(true);
+
+      const payload = {
+        locationId: value.locationId,
+        deliveryDueDate: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
+        supplierId: value.vendorId,
+        discount: value.discount,
+        shippingFee: value.shippingFee,
+        tax: 0,
+        status: "DRAFT",
+        entries: value.item.map((id, index) => {
+          const item = items.find((item) => item.id === id);
+          return {
+            itemId: id,
+            itemName: item?.name || "",
+            variantId: Util.getVariantId(item),
+            variantName: Util.getVariantName(item),
+            unitId: Util.getUnitId(item),
+            unitName: Util.getUnitName(item),
+            cost: value.cost[index],
+            quantity: value.quantity[index],
+            batch: value.batch[index],
+            expiry: value.expiry[index],
+          };
+        }),
+      };
+      await POService.createPurchaseOrder(payload);
+    } catch (error) {
+      console.error("❌ PO Creation Failed:", error);
+    } finally {
+      sweetalert({
+        icon: "success",
+        title: "PO In Recorded",
+        text: "Your PO has been saved.",
+        buttons: false,
+        timer: 1500
+      })
+      .then(() => {
+        setSubmitting(false);
+        props.form.resetFields();
+        const newItem = {
+          key: Date.now(),
+          itemId: null,
+          itemName: "",
+          sku: "",
+          quantity: null,
+          warehouse: warehouses[0]?.id,
+          batch: "",
+          expiry: null,
+          notes: "",
+          currentStock: 0,
+          avgQuantity: 0,
+        };
+        setStockIOItems([newItem]);
+      });
+    }
   };
 
   const handleSubmit = async () => {
@@ -456,105 +442,59 @@ const PurchaseOrderForm = (props) => {
       setSubmitting(true);
 
       const payload = {
-        type: value.movementType,
-        name: "Stock In from Supplier",
         locationId: value.locationId,
-        date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
-        description: value.referenceNo,
-        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
-        amount: 0,
-        status: 2,
-        entries: value.item.map((id, index) => {
-          const item = items.find(item => item.id === id);
-          return {
-            itemId: id,
-            itemName: item?.name || "",
-            variantId: Util.getVariantId(item),
-            variantName: Util.getVariantName(item),
-            unitId: value.unitId[index],
-            unitName: units.find(unit => unit.id === value.unitId[index])?.name || "",
-            quantity: value.quantity[index],
-            reason: value.reason[index],
-            batch: value.batch[index],
-            expiryDate: moment(value.expiry[index]).isValid() ? moment(value.expiry[index]).format("YYYY-MM-DD") : null,
-            notes: value.notes[index]
-          };
-        })
+        deliveryDueDate: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
+        supplierId: value.vendorId,
+        discount: value.discount,
+        shippingFee: value.shippingFee,
+        tax: 0,
+        status: "ORDERED",
+        // status: "FULL_RECEIVED",
+        entries: value.item
+          .map((id, index) => {
+            const item = items.find((item) => item.id === id);
+            return {
+              itemId: id,
+              itemName: item?.name || "",
+              variantId: Util.getVariantId(item),
+              variantName: Util.getVariantName(item),
+              unitId: Util.getUnitId(item),
+              unitName: Util.getUnitName(item),
+              cost: value.cost[index],
+              quantity: value.quantity[index],
+              batch: value.batch[index],
+              expiry: value.expiry[index],
+            };
+          })
+          .filter((item) => item.variantId !== ""),
       };
-      await StockIOService.stockIn(payload);
-
+      await POService.createPurchaseOrder(payload);
     } catch (error) {
-      console.error("❌ Stock In Failed:", error);
+      console.error("❌ PO Creation Failed:", error);
     } finally {
       sweetalert({
         icon: "success",
-        title: props.form.getFieldValue("movementType") === "IN" ? "Stock In Recorded" : "Stock Out Recorded",
-        text: "Your stock quantity has been updated.",
+        title: "PO In Recorded",
+        text: "Your PO has been saved.",
         buttons: false,
-        timer: 1500
-      })
-      .then(() => {
+        timer: 1500,
+      }).then(() => {
         setSubmitting(false);
-        setStockIOItems([]);
         props.form.resetFields();
-      });
-    }
-  };
-
-  const handleDraftSubmit = async () => {
-    try {
-      const value = await new Promise((resolve, reject) => {
-        props.form.validateFields((err, values) => {
-          if (err) return reject(err);
-          resolve(values);
-        });
-      });
-
-      setSubmitting(true);
-
-      const payload = {
-        type: value.movementType,
-        name: "Stock In from Supplier",
-        locationId: value.locationId,
-        date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
-        description: value.referenceNo,
-        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
-        amount: 0,
-        status: 0,
-        entries: value.item.map((id, index) => {
-          const item = items.find(item => item.id === id);
-          return {
-            itemId: id,
-            itemName: item?.name || "",
-            variantId: Util.getVariantId(item),
-            variantName: Util.getVariantName(item),
-            unitId: Util.getUnitId(item),
-            unitName: Util.getUnitName(item),
-            quantity: value.quantity[index],
-            reason: value.reason[index],
-            batch: value.batch[index],
-            expiry: value.expiry[index],
-            notes: value.notes[index]
-          };
-        })
-      };
-
-      await StockIOService.stockIn(payload);
-
-    } catch (error) {
-      console.error("❌ Stock In Failed:", error);
-    } finally {
-      sweetalert({
-        icon: "success",
-        title: "Stock In Recorded",
-        text: "Your stock quantity has been updated.",
-        buttons: false,
-        timer: 1500
-      })
-      .then(() => {
-        setSubmitting(false);
-        setStockIOItems([]);
-        props.form.resetFields();
+        const newItem = {
+          key: Date.now(),
+          itemId: null,
+          itemName: "",
+          sku: "",
+          quantity: null,
+          warehouse: warehouses[0]?.id,
+          batch: "",
+          expiry: null,
+          notes: "",
+          currentStock: 0,
+          avgQuantity: 0,
+        };
+        setStockIOItems([newItem]);
       });
     }
   };
@@ -630,7 +570,6 @@ const PurchaseOrderForm = (props) => {
             itemName: rowData['Item Name'],
             sku: rowData['SKU'],
             quantity: parseInt(rowData['Quantity']) || null,
-            reason: rowData['Reason'] || reasons[movementType][0],
             batch: rowData['Batch'] || '',
             expiry: rowData['Expiry'] ? moment(rowData['Expiry']) : null,
             notes: rowData['Notes'] || '',
@@ -705,10 +644,8 @@ const PurchaseOrderForm = (props) => {
     };
 
     reader.readAsText(file);
-    return false; // Prevent default upload behavior
+    return false;
   };
-
-  const summary = calculateSummary();
 
   return (
     <div style={{ padding: 24, background: "#f0f2f5", minHeight: "100vh" }}>
@@ -722,36 +659,28 @@ const PurchaseOrderForm = (props) => {
           title={"New Purchase Order"}
           subTitle={"Easily create, track, and manage purchase orders"}
         />
-        <Card
-        // title={
-        //   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        //     <Icon type="swap" style={{ fontSize: 24 }} />
-        //     <span>Stock IO Movement</span>
-        //     <Tag color={movementType === 'IN' ? 'green' : 'orange'}>
-        //       {movementType === 'IN' ? 'STOCK IN' : 'STOCK OUT'}
-        //     </Tag>
-        //   </div>
-        // }
-        // extra={
-        //   <Button type="link" onClick={() => window.location.reload()}>
-        //     <Icon type="reload" /> Reset
-        //   </Button>
-        // }
-        >
+        <Card>
           {/* Header Form */}
-          <Row gutter={16} style={{ marginBottom: 24 }}>
-            <Col span={6}>
+          <Row gutter={16}>
+            <Col md={6}>
               <Form.Item label="Supplier / Vendor">
-                <SelectVendor
-                  form={props.form}
-                  size="meduim"
-                  width={"100%"}
-                  // placeholder={this.CATranslate("text_location", props.locale)}
-                  onChange={() => console.log("Hello World")}
-                />
+                {props.form.getFieldDecorator("vendorId", {
+                  rules: [
+                    {
+                      required: true,
+                      message: "Please select vendor",
+                    },
+                  ],
+                })(
+                  <SelectVendor
+                    form={props.form}
+                    size="meduim"
+                    width={"100%"}
+                  />
+                )}
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col md={6}>
               <Form.Item label="Expected Delivery Date">
                 {props.form.getFieldDecorator("date", {
                   rules: [{ required: false }],
@@ -764,7 +693,7 @@ const PurchaseOrderForm = (props) => {
                 )}
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col md={6}>
               <Form.Item label="Warehouse">
                 {props.form.getFieldDecorator("locationId", {
                   rules: [
@@ -791,7 +720,7 @@ const PurchaseOrderForm = (props) => {
                 )}
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col md={6}>
               <div style={{ marginBottom: 8 }}>
                 <strong>Quick Actions</strong>
               </div>
@@ -814,19 +743,37 @@ const PurchaseOrderForm = (props) => {
               />
             </Col> */}
           </Row>
+          <Row gutter={16} style={{ marginBottom: 24 }}>
+            <Col md={6}>
+              <Form.Item
+                label="Discount"
+                extra="Discount provided by the supplier or seller."
+              >
+                {props.form.getFieldDecorator("discount", {
+                  rules: [],
+                })(
+                  <InputNumber
+                    size="medium"
+                    placeholder="Enter discount amount (e.g., 5.00)"
+                  />
+                )}
+              </Form.Item>
+            </Col>
+            <Col md={6}>
+              <Form.Item label="Shipping Fee">
+                {props.form.getFieldDecorator("shippingFee", {
+                  rules: [],
+                })(
+                  <InputNumber
+                    size="meduim"
+                    placeholder="Enter shipping fee (e.g., 2.50)"
+                  />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Divider />
-
-          {/* AI Assistant Alert */}
-          <Alert
-            message="AI Assistant Active"
-            description="AI will auto-fill quantities, warehouse locations, and suggest typical values based on your history."
-            type="info"
-            icon={<Icon type="robot" />}
-            showIcon
-            closable
-            style={{ marginBottom: 16 }}
-          />
 
           {/* Items Table */}
           <div style={{ marginBottom: 16 }}>
@@ -871,12 +818,7 @@ const PurchaseOrderForm = (props) => {
             >
               Save as Draft
             </Button>
-            <POStatusDropdown
-              selectedStatus="ORDERED"
-              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
-              onSelect={(status) => console.log("Selected:", status)}
-            />
-            {/* <Button
+            <Button
               type="primary"
               size="large"
               icon="check"
@@ -884,8 +826,16 @@ const PurchaseOrderForm = (props) => {
               loading={submitting}
               disabled={stockIOItems.filter((i) => i.itemId).length === 0}
             >
-              Submit All Items
-            </Button> */}
+              Create Order
+            </Button>
+            <Button
+              size="large"
+              icon="inbox"
+              onClick={handleSubmit}
+              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
+            >
+              Create Received Order
+            </Button>
           </div>
         </Card>
       </Form>

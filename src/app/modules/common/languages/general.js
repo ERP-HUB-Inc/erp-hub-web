@@ -297,6 +297,8 @@ export default {
 
   text_received: ["Received", "បានទទួល"],
 
+  text_ordered: ["Ordered", "បានបញ្ជាទិញ"],
+
   text_done: ["Done", "បញ្ចប់"],
 
   text_success: ["Success", "ជោគជ័យ"],
