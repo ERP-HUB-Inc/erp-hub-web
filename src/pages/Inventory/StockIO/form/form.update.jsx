@@ -174,7 +174,7 @@ const StockIOForm = (props) => {
           const selectedItem = items.find(i => i.id === value);
           if (selectedItem) {
             updated.itemName = selectedItem.name;
-            updated.sku = Util.getProductSku(selectedItem);
+            updated.sku = Util.getItemSku(selectedItem);
             updated.unitId = Util.getUnitId(selectedItem);
             updated.currentStock = selectedItem.currentStock;
             updated.avgQuantity = selectedItem.avgQuantity;
@@ -294,7 +294,7 @@ const StockIOForm = (props) => {
                               {item.name}
                             </div>
                             <small style={{ color: '#999' }}>
-                              SKU: {Util.getProductSku(item)} | Stock: {Util.getQuantityOnHand(item)}
+                              SKU: {Util.getItemSku(item)} | Stock: {Util.getQuantityOnHand(item)}
                             </small>
                           </div>
                         </div>

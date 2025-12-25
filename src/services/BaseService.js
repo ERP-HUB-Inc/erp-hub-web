@@ -94,11 +94,10 @@ export default class BaseService extends Service {
       headers: {},
       data: {},
    }) {
-      const response = axios({
+      return api({
          method: "DELETE",
          ...option
       });
-      return response;
    }
 
    getById(ids){

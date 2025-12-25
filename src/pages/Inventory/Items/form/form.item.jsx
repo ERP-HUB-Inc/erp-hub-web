@@ -1177,7 +1177,7 @@ export default class FormItem extends BaseModal {
             <InputText
               name="sku"
               label={"Stock Keeping Unit (SKU)"}
-              data={Util.getProductSku(formData)}
+              data={Util.getItemSku(formData)}
               placeholder="SKU code (e.g., ABC123)"
               form={form}
             />

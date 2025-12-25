@@ -273,10 +273,6 @@ export default class Datatable extends Component {
    * it will overide in child class
    */
   handleConfirm() {
-    if (this.checkIsAllowDeleteRecordOrNot()) {
-      return;
-    }
-
     if (this.state.selectedRowKeys.length > 0) {
       this.setState({modalVisible: true});
     } else {

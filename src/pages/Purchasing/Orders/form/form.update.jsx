@@ -15,7 +15,8 @@ import {
   Modal, 
   Upload, 
   Divider, 
-  Tooltip, 
+  Tooltip,
+  Spin,
   Form 
 } from "antd";
 import moment from "moment";
@@ -27,143 +28,38 @@ import UnitService from '@services/UnitService';
 import history from "@router/index";
 import Util from "@helper/inventory";
 import { getLocationId } from "@helper/user";
-import { SelectItem, SelectVendor } from '@components/stateful';
+import { SelectItem, SelectVendor } from "@components/stateful";
 
 const { Option } = Select;
 
 const PurchaseOrderForm = (props) => {
-  const [stockIOItems, setStockIOItems] = useState([]);
+  const [po, setPO] = useState(null);
+  const [poItems, setPOItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
   const [units, setUnits] = useState([]);
   const [items, setItems] = useState([]);
-  const [pagination, setPagination] = useState({});
-  const [movementType, setMovementType] = useState('IN');
-  const [aiSuggestions, setAiSuggestions] = useState({});
-  const [validationWarnings, setValidationWarnings] = useState({});
 
   useEffect(() => {
-    if (stockIOItems.length === 0) {
+    if (poItems.length === 0) {
       addNewRow();
     }
 
     fetchItems();
     fetchWarehouses();
     fetchUnits();
+
+    const { id } = props.match.params;
+    getPODetailAndBuildPayload(id);
   }, []);
 
-  const fetchItems = (locationId) => {
-    const option = { limit: 15, offset: 0 };
-    if (locationId) option.locationId = locationId;
-
-    ItemService.get(option)
-    .then(response => {
-      if (response.data) {
-          setItems(response.data.data);
-          setPagination(response.data.pagination);
-      }
-    })
-    .finally(() => console.log("hello world"));
-  }
-
-  const fetchWarehouses = () => {
-    LocationService.get()
-    .then(response => {
-      if (response.data) {
-        setWarehouses(response.data.data);
-      }
-    })
-    .finally(() => console.log("hello world"));
-  }
-
-  const fetchUnits = () => {
-    UnitService.get()
-    .then(response => {
-      if (response.data) {
-        setUnits(response.data.data);
-      }
-    })
-    .finally(() => console.log("hello world"));
-  }
-
-  const addNewRow = () => {
-    const newItem = {
-      key: Date.now(),
-      itemId: null,
-      itemName: '',
-      sku: '',
-      quantity: null,
-      warehouse: warehouses[0]?.id,
-      batch: '',
-      expiry: null,
-      notes: '',
-      currentStock: 0,
-      avgQuantity: 0
-    };
-    setStockIOItems([...stockIOItems, newItem]);
-  };
-
-  const removeRow = (key) => {
-    setStockIOItems(stockIOItems.filter(item => item.key !== key));
-  };
-
-  const duplicateRow = (record) => {
-    const newItem = {
-      ...record,
-      key: Date.now(),
-      quantity: null
-    };
-    setStockIOItems([...stockIOItems, newItem]);
-  };
-
-  const updateRow = (key, field, value) => {
-    const newItems = stockIOItems.map(stockIOItem => {
-      if (stockIOItem.key === key) {
-        const updated = { ...stockIOItem, [field]: value };
-        if (field === 'itemId' && value) {
-          const selectedItem = items.find(i => i.id === value);
-          if (selectedItem) {
-            updated.itemName = selectedItem.name;
-            updated.sku = Util.getProductSku(selectedItem);
-            updated.unitId = Util.getUnitId(selectedItem);
-            updated.currentStock = selectedItem.currentStock;
-            updated.avgQuantity = selectedItem.avgQuantity;
-            updated.warehouse = selectedItem.warehouse || warehouses[0].id;
-          }
-        }
-
-        return updated;
-      }
-      return stockIOItem;
-    });
-
-    // Ensure there's always an empty row at the end
-    if (newItems.findIndex(i => i.itemId === null) === -1) {
-      newItems.push({
-          key: Date.now(),
-          itemId: null,
-          itemName: '',
-          sku: '',
-          quantity: null,
-          warehouse: warehouses[0]?.id,
-          batch: '',
-          expiry: null,
-          notes: '',
-          currentStock: 0,
-          avgQuantity: 0
-      });
-    }
-  
-    setStockIOItems(newItems);
-  };
-  
   const columns = [
     {
       title: "Item",
       dataIndex: "itemId",
       width: 250,
-      render: (value, record, index) => (
+      render: (itemId, record, index) => (
         <div>
           <Form.Item style={{ marginBottom: 0 }}>
             {props.form.getFieldDecorator(`item[${index}]`, {
@@ -173,18 +69,14 @@ const PurchaseOrderForm = (props) => {
                   message: "Type to search or pick an item",
                 },
               ],
+              initialValue: itemId,
             })(
               <SelectItem
                 items={items}
-                onChange={(val) => updateRow(record.key, "itemId", val)}
+                defaultValue={itemId}
               />
             )}
           </Form.Item>
-          {aiSuggestions[record.key] && (
-            <Tag color="blue" style={{ marginTop: 4, fontSize: 11 }}>
-              <Icon type="bulb" /> {aiSuggestions[record.key]}
-            </Tag>
-          )}
         </div>
       ),
     },
@@ -218,14 +110,7 @@ const PurchaseOrderForm = (props) => {
               style={{ width: "100%" }}
               min={1}
               placeholder="Enter quantity (pcs)"
-              onChange={(val) => updateRow(record.key, "quantity", val)}
             />
-          )}
-          {validationWarnings[record.key] && (
-            <div style={{ color: "#faad14", fontSize: 12, marginTop: 4 }}>
-              <Icon type="exclamation-circle" />{" "}
-              {validationWarnings[record.key]}
-            </div>
           )}
         </Form.Item>
       ),
@@ -254,14 +139,7 @@ const PurchaseOrderForm = (props) => {
               style={{ width: "100%" }}
               min={1}
               placeholder="Enter unit price"
-              onChange={(val) => updateRow(record.key, "cost", val)}
             />
-          )}
-          {validationWarnings[record.key] && (
-            <div style={{ color: "#faad14", fontSize: 12, marginTop: 4 }}>
-              <Icon type="exclamation-circle" />{" "}
-              {validationWarnings[record.key]}
-            </div>
           )}
         </Form.Item>
       ),
@@ -289,7 +167,6 @@ const PurchaseOrderForm = (props) => {
             <Select
               style={{ width: "100%" }}
               placeholder="Pick a Unit (pcs, box, kg...)"
-              onChange={(val) => updateRow(record.key, "unitId", val)}
             >
               {units.map((u) => (
                 <Option key={u.id} value={u.id}>
@@ -339,9 +216,14 @@ const PurchaseOrderForm = (props) => {
       title: "Actions",
       key: "actions",
       width: 80,
-      ffixed: "right",
-      render: (_, record) => (
+      fixed: "right",
+      render: (_, record, index) => (
         <div style={{ display: "flex", gap: 4 }}>
+          <Form.Item style={{ display: "none" }}>
+            {props.form.getFieldDecorator(`entryId[${index}]`, {
+              initialValue: record.id,
+            })(<InputNumber />)}
+          </Form.Item>
           <Tooltip title="Duplicate">
             <Button
               size="small"
@@ -355,13 +237,163 @@ const PurchaseOrderForm = (props) => {
               type="danger"
               icon="delete"
               onClick={() => removeRow(record.key)}
-              disabled={stockIOItems.length === 1}
+              disabled={poItems.length === 1}
             />
           </Tooltip>
         </div>
       ),
     },
   ];
+
+  const getPODetailAndBuildPayload = async (id) => {
+    try {
+      setLoading(true);
+      const po = (await POService.getById(id))?.data;
+
+      const payload = {
+        id: po.id,
+        locationId: po.locationId,
+        deliveryDueDate: moment(po.deliveryDueDate).format(
+          "YYYY-MM-DD HH:mm:ss"
+        ),
+        supplierId: po.supplierId,
+        supplier: po.supplier,
+        discount: po.discount,
+        shippingFee: po.shippingFee,
+        tax: po.tax || 0,
+        status: po.status || "DRAFT",
+      };
+
+
+      setPO(payload);
+      setPOItems(
+        po.entries.map((entry) => ({
+          id: entry.id,
+          itemId: entry.itemId,
+          itemName: entry.itemName,
+          variantId: entry.variantId,
+          variantName: entry.variantName,
+          sku: entry.sku,
+          unitId: entry.unitId,
+          unitName: entry.unitName,
+          cost: entry.cost,
+          quantity: entry.quantity,
+          batch: entry.batch,
+          expiry: entry.expiry,
+        }))
+      );
+
+    } catch (error) {
+      console.error("Error fetching PO detail:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const fetchItems = (locationId) => {
+    const option = { limit: 15, offset: 0 };
+    if (locationId) option.locationId = locationId;
+
+    ItemService.get(option)
+    .then(response => {
+      if (response.data) {
+          setItems(response.data.data);
+      }
+    })
+    .finally(() => console.log("hello world"));
+  }
+
+  const fetchWarehouses = () => {
+    LocationService.get()
+    .then(response => {
+      if (response.data) {
+        setWarehouses(response.data.data);
+      }
+    })
+    .finally(() => console.log("hello world"));
+  }
+
+  const fetchUnits = () => {
+    UnitService.get()
+    .then(response => {
+      if (response.data) {
+        setUnits(response.data.data);
+      }
+    })
+    .finally(() => console.log("hello world"));
+  }
+
+  const addNewRow = () => {
+    const newItem = {
+      key: Date.now(),
+      itemId: null,
+      itemName: '',
+      sku: '',
+      quantity: null,
+      warehouse: warehouses[0]?.id,
+      batch: '',
+      expiry: null,
+      notes: '',
+      currentStock: 0,
+      avgQuantity: 0
+    };
+    setPOItems([...poItems, newItem]);
+  };
+
+  const removeRow = (key) => {
+    setPOItems(poItems.filter(item => item.key !== key));
+  };
+
+  const duplicateRow = (record) => {
+    const newItem = {
+      ...record,
+      key: Date.now(),
+      quantity: null
+    };
+    setPOItems([...poItems, newItem]);
+  };
+
+  const updateRow = (key, field, value) => {
+    const newItems = poItems.map(stockIOItem => {
+      if (stockIOItem.key === key) {
+        const updated = { ...stockIOItem, [field]: value };
+        if (field === 'itemId' && value) {
+          const selectedItem = items.find(i => i.id === value);
+          if (selectedItem) {
+            updated.itemName = selectedItem.name;
+            updated.sku = Util.getItemSku(selectedItem);
+            updated.unitId = Util.getUnitId(selectedItem);
+            updated.currentStock = selectedItem.currentStock;
+            updated.avgQuantity = selectedItem.avgQuantity;
+            updated.warehouse = selectedItem.warehouse || warehouses[0].id;
+          }
+        }
+
+        return updated;
+      }
+      return stockIOItem;
+    });
+
+    // Ensure there's always an empty row at the end
+    if (newItems.findIndex(i => i.itemId === null) === -1) {
+      newItems.push({
+          key: Date.now(),
+          itemId: null,
+          itemName: '',
+          sku: '',
+          quantity: null,
+          warehouse: warehouses[0]?.id,
+          batch: '',
+          expiry: null,
+          notes: '',
+          currentStock: 0,
+          avgQuantity: 0
+      });
+    }
+  
+    setPOItems(newItems);
+  };
 
   const handleDraftSubmit = async () => {
     try {
@@ -385,6 +417,7 @@ const PurchaseOrderForm = (props) => {
         entries: value.item.map((id, index) => {
           const item = items.find((item) => item.id === id);
           return {
+            id: value.entryId[index],
             itemId: id,
             itemName: item?.name || "",
             variantId: Util.getVariantId(item),
@@ -398,7 +431,7 @@ const PurchaseOrderForm = (props) => {
           };
         }),
       };
-      await POService.createPurchaseOrder(payload);
+      await POService.updatePurchaseOrder(po.id, payload);
     } catch (error) {
       console.error("❌ PO Creation Failed:", error);
     } finally {
@@ -425,7 +458,7 @@ const PurchaseOrderForm = (props) => {
           currentStock: 0,
           avgQuantity: 0,
         };
-        setStockIOItems([newItem]);
+        setPOItems([newItem]);
       });
     }
   };
@@ -438,27 +471,32 @@ const PurchaseOrderForm = (props) => {
           resolve(values);
         });
       });
+      
       setSubmitting(true);
 
       const payload = {
-        locationId: value.locationId,
-        deliveryDueDate: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
+        locationId: `${value.locationId}`,
+        deliveryDueDate: moment(value.deliveryDueDate).format("YYYY-MM-DD"),
         supplierId: value.vendorId,
         discount: value.discount,
         shippingFee: value.shippingFee,
         tax: 0,
         status: "ORDERED",
-        // status: "FULL_RECEIVED",
         entries: value.item
           .map((id, index) => {
             const item = items.find((item) => item.id === id);
+
+            const unitId = value.unitId[index];
+            const unit = units.find((unit) => unit.id === unitId);
             return {
+              id: value.entryId[index],
               itemId: id,
               itemName: item?.name || "",
               variantId: Util.getVariantId(item),
               variantName: Util.getVariantName(item),
-              unitId: Util.getUnitId(item),
-              unitName: Util.getUnitName(item),
+              sku: Util.getItemSku(item),
+              unitId,
+              unitName: unit?.name || "",
               cost: value.cost[index],
               quantity: value.quantity[index],
               batch: value.batch[index],
@@ -467,7 +505,7 @@ const PurchaseOrderForm = (props) => {
           })
           .filter((item) => item.variantId !== ""),
       };
-      await POService.createPurchaseOrder(payload);
+      await POService.updatePurchaseOrder(po.id, payload);
     } catch (error) {
       console.error("❌ PO Creation Failed:", error);
     } finally {
@@ -479,21 +517,6 @@ const PurchaseOrderForm = (props) => {
         timer: 1500,
       }).then(() => {
         setSubmitting(false);
-        props.form.resetFields();
-        const newItem = {
-          key: Date.now(),
-          itemId: null,
-          itemName: "",
-          sku: "",
-          quantity: null,
-          warehouse: warehouses[0]?.id,
-          batch: "",
-          expiry: null,
-          notes: "",
-          currentStock: 0,
-          avgQuantity: 0,
-        };
-        setStockIOItems([newItem]);
       });
     }
   };
@@ -583,23 +606,15 @@ const PurchaseOrderForm = (props) => {
             continue;
           }
 
-          // AI Suggestion for unmatched stockIOItems
-          if (!matchedItem) {
-            setAiSuggestions(prev => ({
-              ...prev,
-              [newItem.key]: `⚠️ New item - not found in inventory`
-            }));
-          }
-
           parsedItems.push(newItem);
           successCount++;
         }
 
-        // Add parsed stockIOItems to the table
+        // Add parsed poItems to the table
         if (parsedItems.length > 0) {
           // Remove empty initial row if exists
-          const filteredItems = stockIOItems.filter(item => item.itemId !== null);
-          setStockIOItems([...filteredItems, ...parsedItems]);
+          const filteredItems = poItems.filter(item => item.itemId !== null);
+          setPOItems([...filteredItems, ...parsedItems]);
         }
 
         // Show result modal
@@ -607,10 +622,10 @@ const PurchaseOrderForm = (props) => {
           title: 'Bulk Upload Complete',
           content: (
             <div>
-              <p><Icon type="check-circle" style={{ color: '#52c41a' }} /> <strong>{successCount}</strong> stockIOItems imported successfully</p>
+              <p><Icon type="check-circle" style={{ color: '#52c41a' }} /> <strong>{successCount}</strong> poItems imported successfully</p>
               {errorCount > 0 && (
                 <div>
-                  <p><Icon type="exclamation-circle" style={{ color: '#faad14' }} /> <strong>{errorCount}</strong> stockIOItems failed</p>
+                  <p><Icon type="exclamation-circle" style={{ color: '#faad14' }} /> <strong>{errorCount}</strong> poItems failed</p>
                   <div style={{ maxHeight: 150, overflow: 'auto', background: '#fff1f0', padding: 8, borderRadius: 4, marginTop: 8 }}>
                     {errors.map((err, idx) => (
                       <div key={idx} style={{ fontSize: 12, color: '#cf1322' }}>• {err}</div>
@@ -646,7 +661,9 @@ const PurchaseOrderForm = (props) => {
     return false;
   };
 
-  return (
+  return loading ? (
+    <Spin spinning={true} />
+  ) : (
     <div style={{ padding: 24, background: "#f0f2f5", minHeight: "100vh" }}>
       <Form autoComplete="off" onSubmit={() => console.log("hello world")}>
         <PageHeader
@@ -670,9 +687,12 @@ const PurchaseOrderForm = (props) => {
                       message: "Please select vendor",
                     },
                   ],
+                  initialValue: po?.supplierId,
                 })(
                   <SelectVendor
                     form={props.form}
+                    defaultValue={po?.supplierId}
+                    selectedItem={po?.supplier}
                     size="meduim"
                     width={"100%"}
                   />
@@ -681,9 +701,9 @@ const PurchaseOrderForm = (props) => {
             </Col>
             <Col md={6}>
               <Form.Item label="Expected Delivery Date">
-                {props.form.getFieldDecorator("date", {
+                {props.form.getFieldDecorator("deliveryDueDate", {
                   rules: [{ required: false }],
-                  initialValue: moment(new Date()),
+                  initialValue: moment(po?.deliveryDueDate),
                 })(
                   <DatePicker
                     format={"DD/MM/YYYYY"}
@@ -701,14 +721,12 @@ const PurchaseOrderForm = (props) => {
                       message: "Please select location",
                     },
                   ],
-                  initialValue: getLocationId(),
+                  initialValue: po?.locationId,
                 })(
                   <Select
                     style={{ width: "100%" }}
                     placeholder="Select warehouse"
-                    onChange={(locationId) => {
-                      fetchItems(locationId);
-                    }}
+                    onChange={(locationId) => fetchItems(locationId)}
                   >
                     {warehouses.map((wh) => (
                       <Option key={wh.id} value={wh.id}>
@@ -750,6 +768,7 @@ const PurchaseOrderForm = (props) => {
               >
                 {props.form.getFieldDecorator("discount", {
                   rules: [],
+                  initialValue: po?.discount,
                 })(
                   <InputNumber
                     size="medium"
@@ -762,6 +781,7 @@ const PurchaseOrderForm = (props) => {
               <Form.Item label="Shipping Fee">
                 {props.form.getFieldDecorator("shippingFee", {
                   rules: [],
+                  initialValue: po?.shippingFee,
                 })(
                   <InputNumber
                     size="meduim"
@@ -785,7 +805,8 @@ const PurchaseOrderForm = (props) => {
               }}
             >
               <h3 style={{ margin: 0 }}>
-                <Icon type="unordered-list" /> Items ({stockIOItems.length})
+                <Icon type="unordered-list" /> Items (
+                {poItems.filter((poItem) => poItem.itemId !== "").length})
               </h3>
               <Button type="dashed" icon="plus" onClick={addNewRow}>
                 Add Item Row
@@ -793,7 +814,7 @@ const PurchaseOrderForm = (props) => {
             </div>
             <Table
               columns={columns}
-              dataSource={stockIOItems}
+              dataSource={poItems}
               pagination={false}
               scroll={{ x: 1400 }}
               size="small"
@@ -813,9 +834,9 @@ const PurchaseOrderForm = (props) => {
             <Button
               size="large"
               onClick={handleDraftSubmit}
-              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
+              disabled={poItems.filter((i) => i.itemId).length === 0}
             >
-              Save as Draft
+              Update Draft
             </Button>
             <Button
               type="primary"
@@ -823,17 +844,17 @@ const PurchaseOrderForm = (props) => {
               icon="check"
               onClick={handleSubmit}
               loading={submitting}
-              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
+              disabled={poItems.filter((i) => i.itemId).length === 0}
             >
-              Create Order
+              Update Order
             </Button>
             <Button
               size="large"
               icon="inbox"
               onClick={handleSubmit}
-              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
+              disabled={poItems.filter((i) => i.itemId).length === 0}
             >
-              Create Received Order
+              Update Received Order
             </Button>
           </div>
         </Card>

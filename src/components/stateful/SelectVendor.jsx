@@ -13,7 +13,7 @@ import { Translate } from "@redux/index";
 const SelectVendor = forwardRef((props, ref) => {
   const vendors = [{ name: <Translate id="text_all_vendors" />, id: 0 }];
   const [data, setData] = useState([]);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize] = useState(20);
 
   const debounceRef = useRef(null);
   const loadingRef = useRef(true);
@@ -22,7 +22,19 @@ const SelectVendor = forwardRef((props, ref) => {
     VendorService.get({ limit: pageSize })
       .then((response) => {
         if (response && response.data) {
-          setData(response.data.data);
+          let responseVendors = response.data.data;
+
+          if (props.selectedItem) {
+            const exists = responseVendors.some(
+              (v) => v.id === props.selectedItem.id
+            );
+
+            if (!exists) {
+              responseVendors = [props.selectedItem, ...responseVendors];
+            }
+          }
+
+          setData(responseVendors);
         }
       })
       .finally(() => {
@@ -37,12 +49,10 @@ const SelectVendor = forwardRef((props, ref) => {
   };
 
   const handleSearch = (search) => {
-    // Clear existing timer
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
 
-    // Set new debounce timer
     debounceRef.current = setTimeout(() => {
       loadingRef.current = true;
 
@@ -55,7 +65,7 @@ const SelectVendor = forwardRef((props, ref) => {
         .finally(() => {
           loadingRef.current = false;
         });
-    }, 400); // delay in ms (e.g. 400ms)
+    }, 400);
   };
 
   useImperativeHandle(ref, () => ({
@@ -67,7 +77,7 @@ const SelectVendor = forwardRef((props, ref) => {
       showSearch
       allowClear
       placeholder={<Translate id="text_all_vendors" />}
-      defaultValue={0}
+      defaultValue={props.defaultValue}
       size={props.size ? props.size : "large"}
       filterOption={false}
       onChange={handleChange}

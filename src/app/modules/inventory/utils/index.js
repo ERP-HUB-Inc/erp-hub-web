@@ -63,7 +63,7 @@ class Util {
     return this.isValidProductVariant(product) ? product.productVariants[0].barcode : "";
   }
 
-  getProductSku(product) {
+  getItemSku(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].sku : "";
   }
 

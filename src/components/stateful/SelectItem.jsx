@@ -45,6 +45,7 @@ export function SelectItem(props) {
          placeholder="Type to search or pick an item"
          onChange={props.onChange}
          onSearch={onSearchItem}
+         defaultValue={props.defaultValue}
          filterOption={false}
          notFoundContent={loading ? <Icon type="loading" /> : "No items found"}
        >
@@ -82,7 +83,7 @@ export function SelectItem(props) {
                      {item.name}
                    </div>
                    <small style={{ color: "#999" }}>
-                     SKU: {Util.getProductSku(item)} | Stock:{" "}
+                     SKU: {Util.getItemSku(item)} | Stock:{" "}
                      {Util.getQuantityOnHand(item)}
                    </small>
                  </div>

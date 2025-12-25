@@ -1,6 +1,7 @@
 import React from "react";
 import moment from "moment";
 import ReactGA from "react-ga4";
+import swal from "sweetalert";
 import {
   Col, 
   DatePicker, 
@@ -301,7 +302,8 @@ export default class PurchaseOrderPage extends Datatable {
     let startDate = "";
     let endDate = "";
     let offset = this.state.current;
-    const params = urlSearchParams ?? new URLSearchParams(window.location.search);
+    const params =
+      urlSearchParams ?? new URLSearchParams(window.location.search);
 
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -391,12 +393,22 @@ export default class PurchaseOrderPage extends Datatable {
 
   handleChangeDateRange = (dates) => {
     const params = new URLSearchParams(document.location.search);
-    params.set("from", dates[0] && moment(dates[0]).isValid() ? moment(dates[0]).format("YYYY-MM-DD") : "");
-    params.set("to", dates[1] && moment(dates[1]).isValid()  ? moment(dates[1]).format("YYYY-MM-DD") : "");
+    params.set(
+      "from",
+      dates[0] && moment(dates[0]).isValid()
+        ? moment(dates[0]).format("YYYY-MM-DD")
+        : ""
+    );
+    params.set(
+      "to",
+      dates[1] && moment(dates[1]).isValid()
+        ? moment(dates[1]).format("YYYY-MM-DD")
+        : ""
+    );
 
     history.push({ pathname: this.pathname, search: params.toString() });
     this.fetchList(true, params);
-  }
+  };
 
   onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
@@ -430,31 +442,6 @@ export default class PurchaseOrderPage extends Datatable {
     return values.map((value) => value.id);
   }
 
-  handleDelete = () => {
-    if (this.service) {
-      this.setState({ deleting: true });
-      this.service
-        .archive(this.state.selectedListIds)
-        .then(() => {
-          this.fetchList(true);
-          this.setState({
-            selectedRowKeys: [],
-          });
-        })
-        .catch(() => {
-          this.Message.error(
-            this.CATranslate("error_warning_delete_po", this.props.locale)
-          );
-        })
-        .finally(() => {
-          this.setState({
-            modalVisible: false,
-            deleting: false,
-          });
-        });
-    }
-  };
-
   showDeleteModal = () => {
     if (this.checkIsAllowDeleteRecordOrNot()) {
       return;
@@ -467,6 +454,32 @@ export default class PurchaseOrderPage extends Datatable {
       );
     }
   };
+
+  handleConfirm(record) {
+    this.Util.sweetAlertConfirm(
+      this.CATranslate("text_confirm_delete", this.props.locale),
+      "This action will permanently remove this PO record."
+    ).then((willDelete) => {
+      if (willDelete) {
+        PurchaseService.deletePurchaseOrder(record.id)
+          .then(() => {
+            // Show success message
+            swal(
+              "Deleted!",
+              "The Purchase Order has been successfully removed.",
+              "success"
+            );
+
+            this.fetchList(true);
+          })
+          .catch(() => {
+            this.Message.error(
+              this.CATranslate("error_warning_delete_po", this.props.locale)
+            );
+          });
+      }
+    });
+  }
 
   renderActionColumn() {
     return {
@@ -491,11 +504,7 @@ export default class PurchaseOrderPage extends Datatable {
               </Link>
             </Menu.Item>
             <Divider style={{ marginTop: 4, marginBottom: 4 }} />
-            <Menu.Item
-              key={4}
-              disabled={record.step === Enum.PO_STATUS.RECEIVED}
-              onClick={() => this.handleConfirm(record)}
-            >
+            <Menu.Item key={4} onClick={() => this.handleConfirm(record)}>
               <Icon type="delete" style={{ marginRight: 10 }} />{" "}
               <Translate id="text_delete" />
             </Menu.Item>
@@ -691,23 +700,6 @@ export default class PurchaseOrderPage extends Datatable {
                 </span>
               </React.Fragment>
             )}
-          </div>
-          <div className="ant-modal-footer">
-            <this.Button
-              className="danger"
-              onClick={() => this.setState({ modalVisible: false })}
-            >
-              <span className="icon-cancel icon-padding-right"></span>
-              <Translate id="text_cancel" />
-            </this.Button>
-            <this.Button
-              onClick={this.handleDelete}
-              loading={this.state.deleting}
-              className="info"
-            >
-              <span className="icon-checked icon-padding-right"></span>
-              <Translate id="text_yes" />
-            </this.Button>
           </div>
         </this.Modal>
       </React.Fragment>

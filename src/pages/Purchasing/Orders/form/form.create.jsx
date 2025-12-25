@@ -33,19 +33,14 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const PurchaseOrderForm = (props) => {
-  const [stockIOItems, setStockIOItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [poItems, setPOItems] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [warehouses, setWarehouses] = useState([]);
   const [units, setUnits] = useState([]);
   const [items, setItems] = useState([]);
-  const [pagination, setPagination] = useState({});
-  const [movementType, setMovementType] = useState('IN');
-  const [aiSuggestions, setAiSuggestions] = useState({});
-  const [validationWarnings, setValidationWarnings] = useState({});
 
   useEffect(() => {
-    if (stockIOItems.length === 0) {
+    if (poItems.length === 0) {
       addNewRow();
     }
 
@@ -62,7 +57,6 @@ const PurchaseOrderForm = (props) => {
     .then(response => {
       if (response.data) {
           setItems(response.data.data);
-          setPagination(response.data.pagination);
       }
     })
     .finally(() => console.log("hello world"));
@@ -102,11 +96,11 @@ const PurchaseOrderForm = (props) => {
       currentStock: 0,
       avgQuantity: 0
     };
-    setStockIOItems([...stockIOItems, newItem]);
+    setPOItems([...poItems, newItem]);
   };
 
   const removeRow = (key) => {
-    setStockIOItems(stockIOItems.filter(item => item.key !== key));
+    setPOItems(poItems.filter(item => item.key !== key));
   };
 
   const duplicateRow = (record) => {
@@ -115,18 +109,18 @@ const PurchaseOrderForm = (props) => {
       key: Date.now(),
       quantity: null
     };
-    setStockIOItems([...stockIOItems, newItem]);
+    setPOItems([...poItems, newItem]);
   };
 
   const updateRow = (key, field, value) => {
-    const newItems = stockIOItems.map(stockIOItem => {
+    const newItems = poItems.map(stockIOItem => {
       if (stockIOItem.key === key) {
         const updated = { ...stockIOItem, [field]: value };
         if (field === 'itemId' && value) {
           const selectedItem = items.find(i => i.id === value);
           if (selectedItem) {
             updated.itemName = selectedItem.name;
-            updated.sku = Util.getProductSku(selectedItem);
+            updated.sku = Util.getItemSku(selectedItem);
             updated.unitId = Util.getUnitId(selectedItem);
             updated.currentStock = selectedItem.currentStock;
             updated.avgQuantity = selectedItem.avgQuantity;
@@ -156,7 +150,7 @@ const PurchaseOrderForm = (props) => {
       });
     }
   
-    setStockIOItems(newItems);
+    setPOItems(newItems);
   };
   
   const columns = [
@@ -164,7 +158,7 @@ const PurchaseOrderForm = (props) => {
       title: "Item",
       dataIndex: "itemId",
       width: 250,
-      render: (value, record, index) => (
+      render: (itemId, record, index) => (
         <div>
           <Form.Item style={{ marginBottom: 0 }}>
             {props.form.getFieldDecorator(`item[${index}]`, {
@@ -181,11 +175,6 @@ const PurchaseOrderForm = (props) => {
               />
             )}
           </Form.Item>
-          {aiSuggestions[record.key] && (
-            <Tag color="blue" style={{ marginTop: 4, fontSize: 11 }}>
-              <Icon type="bulb" /> {aiSuggestions[record.key]}
-            </Tag>
-          )}
         </div>
       ),
     },
@@ -193,7 +182,7 @@ const PurchaseOrderForm = (props) => {
       title: "SKU",
       dataIndex: "sku",
       width: 80,
-      render: (value) => <Tag>{value || "-"}</Tag>,
+      render: (sku) => <Tag>{sku || "-"}</Tag>,
     },
     {
       title: "Quantity",
@@ -221,12 +210,6 @@ const PurchaseOrderForm = (props) => {
               placeholder="Enter quantity (pcs)"
               onChange={(val) => updateRow(record.key, "quantity", val)}
             />
-          )}
-          {validationWarnings[record.key] && (
-            <div style={{ color: "#faad14", fontSize: 12, marginTop: 4 }}>
-              <Icon type="exclamation-circle" />{" "}
-              {validationWarnings[record.key]}
-            </div>
           )}
         </Form.Item>
       ),
@@ -257,12 +240,6 @@ const PurchaseOrderForm = (props) => {
               placeholder="Enter unit price"
               onChange={(val) => updateRow(record.key, "cost", val)}
             />
-          )}
-          {validationWarnings[record.key] && (
-            <div style={{ color: "#faad14", fontSize: 12, marginTop: 4 }}>
-              <Icon type="exclamation-circle" />{" "}
-              {validationWarnings[record.key]}
-            </div>
           )}
         </Form.Item>
       ),
@@ -356,7 +333,7 @@ const PurchaseOrderForm = (props) => {
               type="danger"
               icon="delete"
               onClick={() => removeRow(record.key)}
-              disabled={stockIOItems.length === 1}
+              disabled={poItems.length === 1}
             />
           </Tooltip>
         </div>
@@ -390,6 +367,7 @@ const PurchaseOrderForm = (props) => {
             itemName: item?.name || "",
             variantId: Util.getVariantId(item),
             variantName: Util.getVariantName(item),
+            sku: Util.getItemSku(item),
             unitId: Util.getUnitId(item),
             unitName: Util.getUnitName(item),
             cost: value.cost[index],
@@ -426,7 +404,7 @@ const PurchaseOrderForm = (props) => {
           currentStock: 0,
           avgQuantity: 0,
         };
-        setStockIOItems([newItem]);
+        setPOItems([newItem]);
       });
     }
   };
@@ -451,13 +429,14 @@ const PurchaseOrderForm = (props) => {
         status: "ORDERED",
         // status: "FULL_RECEIVED",
         entries: value.item
-          .map((id, index) => {
-            const item = items.find((item) => item.id === id);
+          .map((itemId, index) => {
+            const item = items.find((item) => item.id === itemId);
             return {
-              itemId: id,
+              itemId: itemId,
               itemName: item?.name || "",
               variantId: Util.getVariantId(item),
               variantName: Util.getVariantName(item),
+              sku: Util.getItemSku(item),
               unitId: Util.getUnitId(item),
               unitName: Util.getUnitName(item),
               cost: value.cost[index],
@@ -468,6 +447,7 @@ const PurchaseOrderForm = (props) => {
           })
           .filter((item) => item.variantId !== ""),
       };
+      console.log(payload);
       await POService.createPurchaseOrder(payload);
     } catch (error) {
       console.error("❌ PO Creation Failed:", error);
@@ -494,7 +474,7 @@ const PurchaseOrderForm = (props) => {
           currentStock: 0,
           avgQuantity: 0,
         };
-        setStockIOItems([newItem]);
+        setPOItems([newItem]);
       });
     }
   };
@@ -584,23 +564,15 @@ const PurchaseOrderForm = (props) => {
             continue;
           }
 
-          // AI Suggestion for unmatched stockIOItems
-          if (!matchedItem) {
-            setAiSuggestions(prev => ({
-              ...prev,
-              [newItem.key]: `⚠️ New item - not found in inventory`
-            }));
-          }
-
           parsedItems.push(newItem);
           successCount++;
         }
 
-        // Add parsed stockIOItems to the table
+        // Add parsed poItems to the table
         if (parsedItems.length > 0) {
           // Remove empty initial row if exists
-          const filteredItems = stockIOItems.filter(item => item.itemId !== null);
-          setStockIOItems([...filteredItems, ...parsedItems]);
+          const filteredItems = poItems.filter(item => item.itemId !== null);
+          setPOItems([...filteredItems, ...parsedItems]);
         }
 
         // Show result modal
@@ -608,10 +580,10 @@ const PurchaseOrderForm = (props) => {
           title: 'Bulk Upload Complete',
           content: (
             <div>
-              <p><Icon type="check-circle" style={{ color: '#52c41a' }} /> <strong>{successCount}</strong> stockIOItems imported successfully</p>
+              <p><Icon type="check-circle" style={{ color: '#52c41a' }} /> <strong>{successCount}</strong> poItems imported successfully</p>
               {errorCount > 0 && (
                 <div>
-                  <p><Icon type="exclamation-circle" style={{ color: '#faad14' }} /> <strong>{errorCount}</strong> stockIOItems failed</p>
+                  <p><Icon type="exclamation-circle" style={{ color: '#faad14' }} /> <strong>{errorCount}</strong> poItems failed</p>
                   <div style={{ maxHeight: 150, overflow: 'auto', background: '#fff1f0', padding: 8, borderRadius: 4, marginTop: 8 }}>
                     {errors.map((err, idx) => (
                       <div key={idx} style={{ fontSize: 12, color: '#cf1322' }}>• {err}</div>
@@ -786,7 +758,7 @@ const PurchaseOrderForm = (props) => {
               }}
             >
               <h3 style={{ margin: 0 }}>
-                <Icon type="unordered-list" /> Items ({stockIOItems.length})
+                <Icon type="unordered-list" /> Items ({poItems.length})
               </h3>
               <Button type="dashed" icon="plus" onClick={addNewRow}>
                 Add Item Row
@@ -794,7 +766,7 @@ const PurchaseOrderForm = (props) => {
             </div>
             <Table
               columns={columns}
-              dataSource={stockIOItems}
+              dataSource={poItems}
               pagination={false}
               scroll={{ x: 1400 }}
               size="small"
@@ -814,7 +786,7 @@ const PurchaseOrderForm = (props) => {
             <Button
               size="large"
               onClick={handleDraftSubmit}
-              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
+              disabled={poItems.filter((i) => i.itemId).length === 0}
             >
               Save as Draft
             </Button>
@@ -824,7 +796,7 @@ const PurchaseOrderForm = (props) => {
               icon="check"
               onClick={handleSubmit}
               loading={submitting}
-              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
+              disabled={poItems.filter((i) => i.itemId).length === 0}
             >
               Create Order
             </Button>
@@ -832,7 +804,7 @@ const PurchaseOrderForm = (props) => {
               size="large"
               icon="inbox"
               onClick={handleSubmit}
-              disabled={stockIOItems.filter((i) => i.itemId).length === 0}
+              disabled={poItems.filter((i) => i.itemId).length === 0}
             >
               Create Received Order
             </Button>
