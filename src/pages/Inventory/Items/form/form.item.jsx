@@ -870,19 +870,22 @@ export default class FormItem extends BaseModal {
       url: this.Util.getProductImage(formData.image).url
     };
 
-    return (<Row gutter={[16, 16]}>
-      <Col 
-        xs={{ span: 24, offset: 0 }}
-        sm={{ span: 20, offset: 2 }}
-        md={{ span: 16, offset: 4 }}
-        lg={{ span: 16, offset: 4 }}
-      >
-        <CustomCollapse
-          defaultActiveKey={["general_info"]}
-          headerTitle={"Item Details"}
-          subtitle={"Enter the essential information about the item, such as its name, category, and condition, to properly define and categorize it within the inventory system."}
+    return (
+      <Row gutter={[16, 16]}>
+        <Col
+          xs={{ span: 24, offset: 0 }}
+          sm={{ span: 20, offset: 2 }}
+          md={{ span: 16, offset: 4 }}
+          lg={{ span: 16, offset: 4 }}
         >
-          <InputText
+          <CustomCollapse
+            defaultActiveKey={["general_info"]}
+            headerTitle={"Item Details"}
+            subtitle={
+              "Enter the essential information about the item, such as its name, category, and condition, to properly define and categorize it within the inventory system."
+            }
+          >
+            <InputText
               name="name"
               label={<Translate id="text_item_name" />}
               data={formData.name}
@@ -894,7 +897,7 @@ export default class FormItem extends BaseModal {
               form={form}
             />
 
-          <Col md={24} className="hidden">
+            <Col md={24} className="hidden">
               <this.InputText
                 name="namekm"
                 label={<Translate id="text_item_name" />}
@@ -903,154 +906,190 @@ export default class FormItem extends BaseModal {
                 errorRequired={<Translate id="error_require_name" />}
                 errorLenght={<Translate id="text.error.item.length" />}
                 form={form}
-                suffix={this.getLanguageIcon("km")}/>
-          </Col>
+                suffix={this.getLanguageIcon("km")}
+              />
+            </Col>
 
-          {
-            productNoVariant && <>
-              <Form.Item label="Enable Auto Barcode">
-                {
-                  form.getFieldDecorator("isAutoGenerateBarcode", { valuePropName: "checked", initialValue: (formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO })(
+            {productNoVariant && (
+              <>
+                <Form.Item label="Enable Auto Barcode">
+                  {form.getFieldDecorator("isAutoGenerateBarcode", {
+                    valuePropName: "checked",
+                    initialValue:
+                      (formData.id != null &&
+                        formData.isAutoGenerateBarcode ===
+                          this.Enum.GENERATE_PRODUCT_CODE.AUTO) ||
+                      this.state.isAutoGenerateBarcode ===
+                        this.Enum.GENERATE_PRODUCT_CODE.AUTO,
+                  })(
                     <Switch
                       // defaultChecked={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                       // defaultChecked={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                       onChange={this.handleEnableAutoBarcode}
                       // disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO)}
                     />
-                  )
-                }
-              </Form.Item>
-            
-              <InputText
-                name="barcode"
-                label={<Translate id="text_barcode" />}
-                data={Util.getItemBarcode(formData)}
-                placeholder="Scan or type the barcode here..."
-                // required={this.state.isRequireInputBarcode}
-                errorRequired={<Translate id="error_require_sku" />}
-                max={20}
-                form={form}
-                disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode == true}
-              />
-            </>
-          }
+                  )}
+                </Form.Item>
 
-          <SelectCategory
-            defaultValue={formData.categoryId}
-            selected={formData?.category}
-            placeholder="Choose a category..."
-            form={form}
-          />
-
-          <SelectCondition
-            defaultValue={formData.conditionId}
-            placeholder={this.CATranslate("text_select_condition", locale)}
-            form={form}
-          />
-
-          <Form.Item label={<Translate id="text_description" />}>
-            <CKEditor
-              editor={ClassicEditor}
-              data={formData.description ? formData.description : "<p></p>"}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                this.props.form.setFieldsValue({
-                  description: data
-                });
-                this.setState({ description: data });
-              }}
-            />
-            <this.InputText
-              name="description"
-              data={form.description}
-              form={form}
-              className="hidden"
-              max={null}
-            />
-          </Form.Item>
-
-          <CustomCheckbox
-            name="enableDescription"
-            label={<Translate id="text_enable_pro_des_imei_serial_number" />}
-            defaultValue={formData.enableDescription}
-            form={form}
-          />
-
-          <Form.Item
-            name="serialType"
-            label={
-              <div style={{ textAlign: "left" }}>
-                <div>Choose an item type</div>
-                <div style={{ fontSize: 13, color: "#888", marginTop: 5 }}>Pick the type that matches how this item will be used or managed.</div>
-              </div>
-            }
-          >
-            <div style={{ marginTop: 10 }}>
-              {[Enum.SERIAL_TYPE.PRODUCT, Enum.SERIAL_TYPE.SERVICE].map((value, key) => (
-                <div
-                key={key}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "16px",
-                  border: this.state.serialType === value ? "2px solid #1890ff" : "1px solid #d9d9d9",
-                  borderRadius: 3,
-                  cursor: "pointer",
-                  marginBottom: 15,
-                  transition: "border-color 0.3s",
-                }}
-                onClick={() => this.setState({ serialType: value })}
-              >
-                {/* Image on the left */}
-                <img
-                  src={value === Enum.SERIAL_TYPE.PRODUCT ? "https://cdn-icons-png.flaticon.com/128/10951/10951884.png" : "https://cdn-icons-png.flaticon.com/128/2706/2706962.png"}
-                  alt={`Option ${value}`}
-                  style={{ borderRadius: 4, marginRight: 16, width: 60 }}
+                <InputText
+                  name="barcode"
+                  label={<Translate id="text_barcode" />}
+                  data={Util.getItemBarcode(formData)}
+                  placeholder="Scan or type the barcode here..."
+                  // required={this.state.isRequireInputBarcode}
+                  errorRequired={<Translate id="error_require_sku" />}
+                  max={20}
+                  form={form}
+                  disabled={
+                    (formData.id != null &&
+                      formData.isAutoGenerateBarcode ===
+                        this.Enum.GENERATE_PRODUCT_CODE.AUTO) ||
+                    this.state.isAutoGenerateBarcode == true
+                  }
                 />
-                {/* Title and Subtitle on the right */}
-                <div style={{ lineHeight: "24px" }}>
-                  <div style={{ fontWeight: "bold", fontSize: "16px" }}>
-                    {value === Enum.SERIAL_TYPE.PRODUCT ? "Good" : "Service"}
-                  </div>
-                  <div style={{ color: "#888", fontSize: "14px" }}>
-                    {value === Enum.SERIAL_TYPE.PRODUCT
-                      ? "Physical items like products, materials, or inventory."
-                      : "Non-physical offerings like maintenance, repair, or consulting."}
+              </>
+            )}
+
+            <SelectCategory
+              defaultValue={formData.categoryId}
+              selected={formData?.category}
+              placeholder="Choose a category..."
+              form={form}
+            />
+
+            <SelectCondition
+              defaultValue={formData.conditionId}
+              placeholder={this.CATranslate("text_select_condition", locale)}
+              form={form}
+            />
+
+            <Form.Item label={<Translate id="text_description" />}>
+              <CKEditor
+                editor={ClassicEditor}
+                data={formData.description ? formData.description : "<p></p>"}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  this.props.form.setFieldsValue({
+                    description: data,
+                  });
+                  this.setState({ description: data });
+                }}
+              />
+              <this.InputText
+                name="description"
+                data={form.description}
+                form={form}
+                className="hidden"
+                max={null}
+              />
+            </Form.Item>
+
+            <CustomCheckbox
+              name="enableDescription"
+              label={<Translate id="text_enable_pro_des_imei_serial_number" />}
+              defaultValue={formData.enableDescription}
+              form={form}
+            />
+
+            <Form.Item
+              name="serialType"
+              label={
+                <div style={{ textAlign: "left" }}>
+                  <div>Choose an item type</div>
+                  <div style={{ fontSize: 13, color: "#888", marginTop: 5 }}>
+                    Pick the type that matches how this item will be used or
+                    managed.
                   </div>
                 </div>
+              }
+            >
+              <div style={{ marginTop: 10 }}>
+                {[Enum.SERIAL_TYPE.PRODUCT, Enum.SERIAL_TYPE.SERVICE].map(
+                  (value, key) => (
+                    <div
+                      key={key}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "16px",
+                        border:
+                          this.state.serialType === value
+                            ? "2px solid #1890ff"
+                            : "1px solid #d9d9d9",
+                        borderRadius: 3,
+                        cursor: "pointer",
+                        marginBottom: 15,
+                        transition: "border-color 0.3s",
+                      }}
+                      onClick={() => this.setState({ serialType: value })}
+                    >
+                      {/* Image on the left */}
+                      <img
+                        src={
+                          value === Enum.SERIAL_TYPE.PRODUCT
+                            ? "https://cdn-icons-png.flaticon.com/128/10951/10951884.png"
+                            : "https://cdn-icons-png.flaticon.com/128/2706/2706962.png"
+                        }
+                        alt={`Option ${value}`}
+                        style={{ borderRadius: 4, marginRight: 16, width: 60 }}
+                      />
+                      {/* Title and Subtitle on the right */}
+                      <div style={{ lineHeight: "24px" }}>
+                        <div style={{ fontWeight: "bold", fontSize: "16px" }}>
+                          {value === Enum.SERIAL_TYPE.PRODUCT
+                            ? "Good"
+                            : "Service"}
+                        </div>
+                        <div style={{ color: "#888", fontSize: "14px" }}>
+                          {value === Enum.SERIAL_TYPE.PRODUCT
+                            ? "Physical items like products, materials, or inventory."
+                            : "Non-physical offerings like maintenance, repair, or consulting."}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
-              ))}
-            </div>
-            <InputNumber
-              name="serialType"
-              data={this.state.serialType}
-              form={form}
-              style={{ display: "none" }}
-            />
-          </Form.Item>
+              <InputNumber
+                name="serialType"
+                data={this.state.serialType}
+                form={form}
+                style={{ display: "none" }}
+              />
+            </Form.Item>
 
-          <Select
-            name="status"
-            label={
-              <div>
-                <div><Translate id="text_status" /></div>
-                <div style={{ fontSize: 13, color: "#888" }}>Specify whether this item is currently active or inactive in the system.</div>
-              </div>
-            }
-            dataSource={this.statuses}
-            value={formData.status}
-            defaultValue={formData.status !== "" ? formData.status : this.statuses[0].status}
-            form={form}
-          />
-        </CustomCollapse>
-        
-        {
-          productHasVariant ? 
-          <CustomCollapse
-            headerTitle={`Variants(${this.state.variants?.pagination?.total})`}
-            subtitle={"Manage product variations like size, color, and style while setting custom pricing and stock levels for each option."}
-            collapseStyle={{ marginTop: "30px" }}
-          >
+            <Select
+              name="status"
+              label={
+                <div>
+                  <div>
+                    <Translate id="text_status" />
+                  </div>
+                  <div style={{ fontSize: 13, color: "#888" }}>
+                    Specify whether this item is currently active or inactive in
+                    the system.
+                  </div>
+                </div>
+              }
+              dataSource={this.statuses}
+              value={formData.status}
+              defaultValue={
+                formData.status !== ""
+                  ? formData.status
+                  : this.statuses[0].status
+              }
+              form={form}
+            />
+          </CustomCollapse>
+
+          {productHasVariant ? (
+            <CustomCollapse
+              headerTitle={`Variants(${this.state.variants?.pagination?.total})`}
+              subtitle={
+                "Manage product variations like size, color, and style while setting custom pricing and stock levels for each option."
+              }
+              collapseStyle={{ marginTop: "30px" }}
+            >
               <FormVariant
                 currentUser={currentUser}
                 dispatch={dispatch}
@@ -1058,16 +1097,28 @@ export default class FormItem extends BaseModal {
                 locale={locale}
                 formData={formData}
                 exchangeRate={exchangeRate}
-                getPrecisionByCurrency={(length) => this.getPrecisionByCurrency(length)}
+                getPrecisionByCurrency={(length) =>
+                  this.getPrecisionByCurrency(length)
+                }
                 switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
                 productVariantArchive={this.props.productVariantArchive}
                 productVariantCheckStatus={this.props.productVariantCheckStatus}
-                productAttributeCheckStatus={this.props.productAttributeCheckStatus}
-                productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
-                callBackGetProductAttribute={this.props.callBackGetProductAttribute}
+                productAttributeCheckStatus={
+                  this.props.productAttributeCheckStatus
+                }
+                productAttributeValueCheckStatus={
+                  this.props.productAttributeValueCheckStatus
+                }
+                callBackGetProductAttribute={
+                  this.props.callBackGetProductAttribute
+                }
                 callBackGetProductVariant={this.props.callBackGetProductVariant}
-                handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
-                handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
+                handleCallBackGetArchiveProductVariant={
+                  this.props.handleCallBackGetArchiveProductVariant
+                }
+                handleCallBackGetArchiveProductAttributes={
+                  this.props.handleCallBackGetArchiveProductAttributes
+                }
                 productVariants={this.state.variants}
                 onSearch={this.onSearchVariant}
                 productAttributes={formData.productAttributes}
@@ -1075,17 +1126,22 @@ export default class FormItem extends BaseModal {
                 variantAttributeAdd={variantAttributeAdd}
                 handleAddVariantAttribute={this.props.handleAddVariantAttribute}
               />
-          </CustomCollapse>
-          :
-          <CustomCollapse
-            headerTitle={"Pricing"}
-            subtitle={"Define the pricing for your item across different sales channels: retail, wholesale, and distribution."}
-            collapseStyle={{ marginTop: "30px" }}
-          >
-            <InputNumber
+            </CustomCollapse>
+          ) : (
+            <CustomCollapse
+              headerTitle={"Pricing"}
+              subtitle={
+                "Define the pricing for your item across different sales channels: retail, wholesale, and distribution."
+              }
+              collapseStyle={{ marginTop: "30px" }}
+            >
+              <InputNumber
                 name="price"
                 label={<Translate id="text_retial_price" />}
-                data={Exchange.dollarToRiel(Util.getItemPrice(this.state.variants), exchangeRate)}
+                data={Exchange.dollarToRiel(
+                  Util.getItemPrice(this.state.variants),
+                  exchangeRate
+                )}
                 precision={this.getPrecisionByCurrency()}
                 placeholder={"0.00"}
                 errorRequired={<Translate id="error_require_price" />}
@@ -1093,324 +1149,364 @@ export default class FormItem extends BaseModal {
                 form={form}
               />
 
-            <InputNumber
+              {/* <InputNumber
                 name="wholePrice"
                 label={<Translate id="text_whole_price" />}
-                data={Exchange.dollarToRiel(Util.getItemWholeSalePrice(this.state.variants), exchangeRate)}
+                data={Exchange.dollarToRiel(
+                  Util.getItemWholeSalePrice(this.state.variants),
+                  exchangeRate
+                )}
                 precision={this.getPrecisionByCurrency()}
                 placeholder={"0.00"}
                 form={form}
               />
 
-            <InputNumber
+              <InputNumber
                 name="distributePrice"
                 label={<Translate id="text_price_to_distributors" />}
-                data={Exchange.dollarToRiel(Util.getItemDistributePrice(this.state.variants), exchangeRate)}
+                data={Exchange.dollarToRiel(
+                  Util.getItemDistributePrice(this.state.variants),
+                  exchangeRate
+                )}
                 precision={this.getPrecisionByCurrency()}
                 placeholder={"0.00"}
                 form={form}
-              />
-          </CustomCollapse>
-        }
+              /> */}
+            </CustomCollapse>
+          )}
 
-        <CustomCollapse
-          headerTitle={"Images and Media"}
-          subtitle={"Upload and manage images or videos to visually represent your item, enhancing its appeal and providing detailed insights for users."}
-          collapseStyle={{ marginTop: "30px" }}
-        >
-          <UploadImageCrop 
-            name="image"
-            data={{file: image}}
-            fileList={[image]}
-            endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
-            endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
-            accessToken={this.Util.getAccessToken()}
-            locale={locale}
-            form={form}
-          />
+          <CustomCollapse
+            headerTitle={"Images and Media"}
+            subtitle={
+              "Upload and manage images or videos to visually represent your item, enhancing its appeal and providing detailed insights for users."
+            }
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <UploadImageCrop
+              name="image"
+              data={{ file: image }}
+              fileList={[image]}
+              endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+              endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+              accessToken={this.Util.getAccessToken()}
+              locale={locale}
+              form={form}
+            />
 
-          <InputText
+            <InputText
               name="imageUrl"
               label="Image URL (e.g., product demo or marketing banner)"
               data={formData.imageUrl}
               placeholder="Enter image URL (e.g., https://example.com/image.png)"
               form={form}
-          />
+            />
 
-          <InputText
+            <InputText
               name="videoUrl"
               label={"Video URL (e.g., product demo or marketing video)"}
               data={formData.videoUrl}
               placeholder="Enter video URL (e.g., https://youtu.be/example)"
               form={form}
             />
-        </CustomCollapse>
+          </CustomCollapse>
 
-        <CustomCollapse
-          headerTitle={"Inventory Details"}
-          subtitle={"Provide details on stock levels, warehouse locations, and inventory management."}
-          collapseStyle={{ marginTop: "30px" }}
-        >
-          <CustomCheckbox
-            name="enableInventoryTracking"
-            defaultValue={formData.enableInventoryTracking}
-            label={"Track Inventory for this Item"}
-            subtitle={"You cannot enable/disable inventory tracking once you've created transactions for this item"}
-            tooltip={"Enable this option to track this item's stock based on its sales and purchase transactions."}
-            disabled={this.state.serialType === Enum.SERIAL_TYPE.SERVICE}
-            form={form}
-          />
-
-          <Select
-            name="type"
-            label={<Translate id="text_type" />}
-            tooltip={"Select 'Raw Material' if the item is used in production, or 'Final Goods' if it is ready for direct sale."}
-            dataSource={this.typesOfProduct}
-            defaultValue={formData.type !== "" ? formData.type : this.typesOfProduct[0].value}
-            disabled={!!formData.id}
-            onChange={this.handleChangeType}
-            form={form}
-          />
-
-          {
-            productNoVariant && 
-            <InputText
-              name="sku"
-              label={"Stock Keeping Unit (SKU)"}
-              data={Util.getItemSku(formData)}
-              placeholder="SKU code (e.g., ABC123)"
+          <CustomCollapse
+            headerTitle={"Inventory Details"}
+            subtitle={
+              "Provide details on stock levels, warehouse locations, and inventory management."
+            }
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <CustomCheckbox
+              name="enableInventoryTracking"
+              defaultValue={formData.enableInventoryTracking}
+              label={"Track Inventory for this Item"}
+              subtitle={
+                "You cannot enable/disable inventory tracking once you've created transactions for this item"
+              }
+              tooltip={
+                "Enable this option to track this item's stock based on its sales and purchase transactions."
+              }
+              disabled={this.state.serialType === Enum.SERIAL_TYPE.SERVICE}
               form={form}
             />
-          }
 
-          {
-            !formData.id && 
+            <Select
+              name="type"
+              label={<Translate id="text_type" />}
+              tooltip={
+                "Select 'Raw Material' if the item is used in production, or 'Final Goods' if it is ready for direct sale."
+              }
+              dataSource={this.typesOfProduct}
+              defaultValue={
+                formData.type !== ""
+                  ? formData.type
+                  : this.typesOfProduct[0].value
+              }
+              disabled={!!formData.id}
+              onChange={this.handleChangeType}
+              form={form}
+            />
+
+            {productNoVariant && (
+              <InputText
+                name="sku"
+                label={"Stock Keeping Unit (SKU)"}
+                data={Util.getItemSku(formData)}
+                placeholder="SKU code (e.g., ABC123)"
+                form={form}
+              />
+            )}
+
+            {!formData.id && (
+              <InputNumber
+                name="intialStockQuantity"
+                label={"Initial Stock Quantity"}
+                data={formData.intialStockQuantity}
+                placeholder="Enter initial stock quantity"
+                form={form}
+              />
+            )}
+
+            {productNoVariant && (
+              <InputNumber
+                name="reorderPoint"
+                label={"Reorder Level"}
+                data={formData.reorderPoint}
+                placeholder="Enter reorder point"
+                form={form}
+              />
+            )}
+
+            <Select
+              name="defaultLocationId"
+              label={"Default Warehouse"}
+              placeholder="Please select default wharehouse"
+              valueKey="id"
+              dataSource={this.props.locations.list}
+              defaultValue={parseInt(formData.defaultLocationId)}
+              form={form}
+            />
+          </CustomCollapse>
+
+          <CustomCollapse
+            headerTitle={"Supplier Information"}
+            subtitle={
+              "Provide the supplier’s name, their item code for the product, purchase price, and lead time (in days) to ensure accurate order tracking and timely procurement."
+            }
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <SelectOwner
+              defaultValue={formData.supplierId}
+              selected={formData.supplier}
+              placeholder={this.CATranslate("text_owner", locale)}
+              form={form}
+            />
+
             <InputNumber
-              name="intialStockQuantity"
-              label={"Initial Stock Quantity"}
-              data={formData.intialStockQuantity}
-              placeholder="Enter initial stock quantity"
-              form={form}
-            />
-          }
-          
-          {
-            productNoVariant && 
-            <InputNumber
-              name="reorderPoint"
-              label={"Reorder Level"}
-              data={formData.reorderPoint}
-              placeholder="Enter reorder point"
-              form={form}
-            />
-          }
-          
-          <Select
-            name="defaultLocationId"
-            label={"Default Warehouse"}
-            placeholder="Please select default wharehouse"
-            valueKey="id"
-            dataSource={this.props.locations.list}
-            defaultValue={parseInt(formData.defaultLocationId)}
-            form={form}
-          />
-        </CustomCollapse>
-
-        <CustomCollapse
-          headerTitle={"Supplier Information"}
-          subtitle={"Provide the supplier’s name, their item code for the product, purchase price, and lead time (in days) to ensure accurate order tracking and timely procurement."}
-          collapseStyle={{ marginTop: "30px" }}
-        >
-          <SelectOwner
-            defaultValue={formData.supplierId}
-            selected={formData.supplier}
-            placeholder={this.CATranslate("text_owner", locale)}
-            form={form}
-          />
-
-          <InputNumber
               name="supplierPercentage"
               label={"Percentage for Supplier on Sale"}
               placeholder={"0.00"}
               data={formData.supplierPercentage}
               form={form}
-          />
+            />
 
-          <SelectPreferredSupplier
-            defaultValue={formData.preferredSupplierId}
-            selected={formData.preferredSupplier}
-            placeholder={"Select your preferred supplier from the list"}
-            form={form}
-          />
+            <SelectPreferredSupplier
+              defaultValue={formData.preferredSupplierId}
+              selected={formData.preferredSupplier}
+              placeholder={"Select your preferred supplier from the list"}
+              form={form}
+            />
 
-          <InputText
-            name="supplierItemCode"
-            label={"Supplier Item Code"}
-            data={formData.supplierItemCode}
-            placeholder="Enter the item code provided by the supplier"
-            form={form}
-          />
+            <InputText
+              name="supplierItemCode"
+              label={"Supplier Item Code"}
+              data={formData.supplierItemCode}
+              placeholder="Enter the item code provided by the supplier"
+              form={form}
+            />
 
-          <InputNumber
+            <InputNumber
               name="purchasePrice"
               label={"Purchase Price"}
               placeholder={"0.00"}
               data={formData.purchasePrice}
               form={form}
-          />
+            />
 
-          <InputNumber
+            <InputNumber
               name="costDisplay"
               label={"Average Cost"}
-              tooltip={"Costing is automatically generated based on the average cost calculation during purchasing transactions."}
-              data={Exchange.dollarToRiel(Util.getProductCost(formData), exchangeRate)}
+              tooltip={
+                "Costing is automatically generated based on the average cost calculation during purchasing transactions."
+              }
+              data={Exchange.dollarToRiel(
+                Util.getProductCost(formData),
+                exchangeRate
+              )}
               precision={this.getPrecisionByCurrency()}
               placeholder={this.CATranslate("text_cost_placeholder", locale)}
               disabled={true}
               form={form}
-          />
-        </CustomCollapse>
+            />
+          </CustomCollapse>
 
-        <CustomCollapse
-          headerTitle={"Unit and Measurement"}
-          subtitle={"Specify the unit of measurement for the product (e.g., pieces, kilograms, liters) to ensure accurate inventory tracking and order quantities."}
-          collapseStyle={{ marginTop: "30px" }}
-        >
-          <CustomCheckbox
-            name="isSplittable"
-            label={<Translate id="text_splittable" />}
-            subtitle={"Enable this option to allow the item to be sold in smaller retail units derived from the base unit."}
-            defaultValue={formData.isSplittable}
-            form={this.props.form}
-          />
+          <CustomCollapse
+            headerTitle={"Unit and Measurement"}
+            subtitle={
+              "Specify the unit of measurement for the product (e.g., pieces, kilograms, liters) to ensure accurate inventory tracking and order quantities."
+            }
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <CustomCheckbox
+              name="isSplittable"
+              label={<Translate id="text_splittable" />}
+              subtitle={
+                "Enable this option to allow the item to be sold in smaller retail units derived from the base unit."
+              }
+              defaultValue={formData.isSplittable}
+              form={this.props.form}
+            />
 
-          <SelectUnitOfMeasurement
-            defaultValue={formData.unitOfMeasurementId}
-            form={form}
-          />
+            <SelectUnitOfMeasurement
+              defaultValue={formData.unitOfMeasurementId}
+              form={form}
+            />
 
-          <SelectSellingUnit
-            defaultValue={formData.sellUnitId}
-            form={form}
-          />
+            <SelectSellingUnit defaultValue={formData.sellUnitId} form={form} />
 
-          <SelectStockUnit
-            defaultValue={formData.stockUnitId}
-            form={form}
-          />
+            <SelectStockUnit defaultValue={formData.stockUnitId} form={form} />
 
-          <InputNumber
+            <InputNumber
               name="unitConversion"
               label={"Conversion Factor (e.g., 1 box = 12 pieces)"}
               placeholder={"0.00"}
               data={formData.unitConversion}
               form={form}
             />
-        </CustomCollapse>
-
-        <CustomCollapse
-          headerTitle={"Classification & Tags"}
-          subtitle={"Define the units for tracking inventory and sales. The Selling Unit is used for sales, while the Stock Unit is used for storage, ensuring accurate management and reporting."}
-          collapseStyle={{ marginTop: "30px" }}
-        >
-          <Form.Item label={"Tags (e.g., Organic, Fragile, Perishable)"}>
-            <div>
-              {tags.map((tag) => {
-                const isLongTag = tag.length > 20;
-                const tagElem = (
-                  <Tag
-                    key={tag}
-                    style={{ marginBottom: 5, marginTop: 5 }}
-                    closable={true}
-                    onClose={() => this.handleClose(tag)}
-                  >
-                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                  </Tag>
-                );
-                return isLongTag ? (
-                  <Tooltip title={tag} key={tag}>
-                    {tagElem}
-                  </Tooltip>
+          </CustomCollapse>
+          {/* 
+          <CustomCollapse
+            headerTitle={"Classification & Tags"}
+            subtitle={
+              "Define the units for tracking inventory and sales. The Selling Unit is used for sales, while the Stock Unit is used for storage, ensuring accurate management and reporting."
+            }
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <Form.Item label={"Tags (e.g., Organic, Fragile, Perishable)"}>
+              <div>
+                {tags.map((tag) => {
+                  const isLongTag = tag.length > 20;
+                  const tagElem = (
+                    <Tag
+                      key={tag}
+                      style={{ marginBottom: 5, marginTop: 5 }}
+                      closable={true}
+                      onClose={() => this.handleClose(tag)}
+                    >
+                      {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                    </Tag>
+                  );
+                  return isLongTag ? (
+                    <Tooltip title={tag} key={tag}>
+                      {tagElem}
+                    </Tooltip>
+                  ) : (
+                    tagElem
+                  );
+                })}
+                {inputVisible ? (
+                  <Input
+                    ref={this.saveInputRef}
+                    type="text"
+                    size="small"
+                    style={{ width: 78 }}
+                    value={inputValue}
+                    onChange={this.handleInputChange}
+                    onBlur={this.handleInputConfirm}
+                    onPressEnter={this.handleInputConfirm}
+                  />
                 ) : (
-                  tagElem
-                );
-              })}
-              {inputVisible ? (
-                <Input
-                  ref={this.saveInputRef}
-                  type="text"
-                  size="small"
-                  style={{ width: 78 }}
-                  value={inputValue}
-                  onChange={this.handleInputChange}
-                  onBlur={this.handleInputConfirm}
-                  onPressEnter={this.handleInputConfirm}
-                />
-              ) : (
-                <Tag onClick={this.showInput} style={{ background: "#fff", borderStyle: "dashed" }}>
-                  <Icon type="plus" /> New Tag
-                </Tag>
-              )}
-            </div>
-          </Form.Item>
+                  <Tag
+                    onClick={this.showInput}
+                    style={{ background: "#fff", borderStyle: "dashed" }}
+                  >
+                    <Icon type="plus" /> New Tag
+                  </Tag>
+                )}
+              </div>
+            </Form.Item>
 
-          <SelectBrand
-            placeholder={"Select item brand..."}
-            selected={formData?.brand}
-            form={form}
-            defaultValue={formData.brandId}
-          />
-
-          <SelectManufacturer
-            placeholder={"Select item manufacturer..."}
-            form={form}
-            defaultValue={formData.manufacturerId}
-          />
-
-          <Form.Item label={<Translate id="text_specification" />}>
-            <CKEditor
-              editor={ClassicEditor}
-              data={formData.specification ? formData.specification : "<p></p>"}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                this.props.form.setFieldsValue({
-                  specification: data
-                });
-                this.setState({ specification: data });
-              }}
+            <SelectBrand
+              placeholder={"Select item brand..."}
+              selected={formData?.brand}
+              form={form}
+              defaultValue={formData.brandId}
             />
-            <this.InputText name="specification" data={form.specification} form={form} className="hidden" max={null} />
-          </Form.Item>
-        </CustomCollapse>
 
-        <CustomCollapse
-          headerTitle={"Web Display Settings"}
-          subtitle={"Configure how this item will appear on your eCommerce platform, including options for featured products and availability online."}
-          collapseStyle={{ marginTop: "30px" }}
-        >
-          <CustomCheckbox
-            name="isFeatured"
-            label={<Translate id="text_featured_product" />}
-            defaultValue={formData.isFeatured ? true : false}
-            form={this.props.form}
-          />
+            <SelectManufacturer
+              placeholder={"Select item manufacturer..."}
+              form={form}
+              defaultValue={formData.manufacturerId}
+            />
 
-          <CustomCheckbox
-            name="isPublic"
-            label={<Translate id="text_avialable_on_ecommerce" />}
-            defaultValue={formData.isPublic ? true : false}
-            form={this.props.form}
-          />
+            <Form.Item label={<Translate id="text_specification" />}>
+              <CKEditor
+                editor={ClassicEditor}
+                data={
+                  formData.specification ? formData.specification : "<p></p>"
+                }
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  this.props.form.setFieldsValue({
+                    specification: data,
+                  });
+                  this.setState({ specification: data });
+                }}
+              />
+              <this.InputText
+                name="specification"
+                data={form.specification}
+                form={form}
+                className="hidden"
+                max={null}
+              />
+            </Form.Item>
+          </CustomCollapse>
 
-          <InputText
+          <CustomCollapse
+            headerTitle={"Web Display Settings"}
+            subtitle={
+              "Configure how this item will appear on your eCommerce platform, including options for featured products and availability online."
+            }
+            collapseStyle={{ marginTop: "30px" }}
+          >
+            <CustomCheckbox
+              name="isFeatured"
+              label={<Translate id="text_featured_product" />}
+              defaultValue={formData.isFeatured ? true : false}
+              form={this.props.form}
+            />
+
+            <CustomCheckbox
+              name="isPublic"
+              label={<Translate id="text_avialable_on_ecommerce" />}
+              defaultValue={formData.isPublic ? true : false}
+              form={this.props.form}
+            />
+
+            <InputText
               name="highlightTag"
               label={"Highlight Tags"}
-              placeholder={"Enter for promotional tags like `Best Seller` or `New Arrival`"}
+              placeholder={
+                "Enter for promotional tags like `Best Seller` or `New Arrival`"
+              }
               data={formData.highlightTag}
               form={form}
             />
-        </CustomCollapse>
-      </Col>
+          </CustomCollapse>
+           */}
+        </Col>
       </Row>
     );
   }

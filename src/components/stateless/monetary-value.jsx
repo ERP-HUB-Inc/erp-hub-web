@@ -2,6 +2,47 @@ import React from "react";
 import styled from "styled-components";
 import Util from "@helper/util";
 
+const Wrapper = styled.div`
+  box-sizing: border-box;
+  justify-content: flex-end;
+  display: flex;
+  min-width: 100px;
+  margin: 8px 16px 8px auto;
+  font-size: 16px;
+`;
+
+const Sign = styled.span`
+  color: ${(props) => props.color};
+  margin-right: 2px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: -0.4px;
+  line-height: 1.15em;
+`;
+
+const Amount = styled.span`
+  color: ${(props) => (props.showSign ? props.color : "rgba(0, 0, 0, 0.85)")};
+  margin-right: 4px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: -0.4px;
+  line-height: 1.15em;
+`;
+
+const Currency = styled.span`
+  color: ${(props) => (props.showSign ? props.color : "rgb(77, 79, 81)")};
+  margin-bottom: 0px;
+  margin-top: 0px;
+  font-size: 16px;
+  letter-spacing: -0.4px;
+  line-height: 1.15em;
+  text-transform: uppercase;
+`;
+
 export function MonetaryValue(props) {
     const { showSign, type, status, amount, currency } = props;
 
@@ -14,47 +55,6 @@ export function MonetaryValue(props) {
 
     const color = getColor();
     const isPositive = type === "IN";
-
-    const Wrapper = styled.div`
-        box-sizing: border-box;
-        justify-content: flex-end;
-        display: flex;
-        min-width: 100px;
-        margin: 8px 16px 8px auto;
-        font-size: 16px;
-    `;
-
-    const Sign = styled.span`
-        color: ${color};
-        margin-right: 2px;
-        margin-bottom: 0px;
-        margin-top: 0px;
-        font-weight: bold;
-        font-size: 16px;
-        letter-spacing: -0.4px;
-        line-height: 1.15em;
-    `;
-
-    const Amount = styled.span`
-        color: ${showSign ? color : 'rgba(0, 0, 0, 0.85)'};
-        margin-right: 4px;
-        margin-bottom: 0px;
-        margin-top: 0px;
-        font-weight: bold;
-        font-size: 16px;
-        letter-spacing: -0.4px;
-        line-height: 1.15em;
-    `;
-
-    const Currency = styled.span`
-        color: ${showSign ? color : 'rgb(77, 79, 81)'};
-        margin-bottom: 0px;
-        margin-top: 0px;
-        font-size: 16px;
-        letter-spacing: -0.4px;
-        line-height: 1.15em;
-        text-transform: uppercase;
-    `;
 
     return (
         <Wrapper>

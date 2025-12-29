@@ -41,6 +41,7 @@ export default class BaseService extends Service {
       if (option.locationId) queryParams.push(`locationId=${option.locationId}`);
       if (option.startDate) queryParams.push(`startDate=${option.startDate}`);
       if (option.endDate) queryParams.push(`endDate=${option.endDate}`);
+      if (option.type) queryParams.push(`type=${option.type}`);
    
       return queryParams.map((param, index) => index === 0 ? param : `&${param}`).join('');
    }
@@ -117,7 +118,8 @@ export default class BaseService extends Service {
       startDate: "",
       endDate: "",
       search: "",
-      locationId: ""
+      locationId: "",
+      type: ""
    }) {
       return this.GET({ 
          url: `${this.baseUrl}?${this.bindQueryParam(option)}`,  

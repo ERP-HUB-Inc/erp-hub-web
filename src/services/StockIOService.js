@@ -28,9 +28,9 @@ class StockIOService extends BaseService {
    * @param {Object} payload - Stock-in details
    * @returns {Promise<Object>}
    */
-  async stockIn(payload = {}) {
+  stockIn(payload = {}) {
     try {
-      return await this.POST({
+      return this.POST({
         url: `${this.baseUrl}/in`,
         data: payload,
         headers: this.header
@@ -45,9 +45,9 @@ class StockIOService extends BaseService {
    * @param {Object} payload - Stock-out details
    * @returns {Promise<Object>}
    */
-  async stockOut(payload = {}) {
+  stockOut(payload = {}) {
     try {
-      return await this.POST({
+      return this.POST({
         url: `${this.baseUrl}/out`,
         data: payload,
         headers: this.header
@@ -63,10 +63,10 @@ class StockIOService extends BaseService {
    * @param {Object} payload - Updated data
    * @returns {Promise<Object>}
    */
-  async updateStockOutById(id, payload = {}) {
+  updateStockOutById(id, payload = {}) {
     if (!id) throw new Error("Missing ID for updateStockOutById()");
     try {
-      return await this.PUT({
+      return this.PUT({
         url: `${this.baseUrl}/out/${id}`,
         data: payload,
         headers: this.header
@@ -82,10 +82,10 @@ class StockIOService extends BaseService {
    * @param {Object} payload - Updated data
    * @returns {Promise<Object>}
    */
-  async updateStockInById(id, payload = {}) {
+  updateStockInById(id, payload = {}) {
     if (!id) throw new Error("Missing ID for updateStockInById()");
     try {
-      return await this.PUT({
+      return this.PUT({
         url: `${this.baseUrl}/in/${id}`,
         data: payload,
         headers: this.header

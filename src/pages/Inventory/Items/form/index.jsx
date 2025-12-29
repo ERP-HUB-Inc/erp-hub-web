@@ -33,8 +33,7 @@ import Util from "@helper/inventory";
 import Enum from "@enums/index";
 import { 
    SelectCategory,
-   SelectLocation,
-   StatisticCard
+   SelectLocation
 } from "@components/index";
 import FormCreate from "../form.create";
 import ProductAction from "../redux/action";
@@ -80,183 +79,223 @@ export default class ProductList extends Datatable {
          {name: <Translate id="text_out_of_stock"/>, id: 2}
       ];
       this.columns = [
-         {
-            title: <Translate id="text_item_name" />,
-            dataIndex: "name",
-            key: "name",
-            sorter: (a, b) => a.name - b.name,
-            render: (name, record) => {
-               const numberOfVariant = record?.productVariants?.length || 0;
-               const stockCount = this.calculateTotalQuantity(record);
-               const categoryName = record?.category?.name || 'Uncategorized';
-               
-               // Helper function to get product name (you'll need to implement this based on your Util)
-               const getProductName = () => {
-                  // Replace this with your actual utility function
-                  return record?.name || name || 'Product Name';
-               };
+        {
+          title: <Translate id="text_item_name" />,
+          dataIndex: "name",
+          key: "name",
+          sorter: (a, b) => a.name - b.name,
+          render: (name, record) => {
+            const numberOfVariant = record?.productVariants?.length || 0;
+            const categoryName = record?.category?.name || "Uncategorized";
 
-               return (
-                 <div
-                   style={{
-                     display: "flex",
-                     alignItems: "center",
-                     gap: "12px",
-                   }}
-                 >
-                   <Avatar
-                     src={
-                       record?.image ||
-                       record?.imageUrl ||
-                       "https://ae-pic-a1.aliexpress-media.com/kf/S1dd261bc501a452ab057df05e6c91d823.jpg_960x960q75.jpg_.avif"
-                     }
-                     size={64}
-                     shape="square"
-                     style={{
-                       borderRadius: "8px",
-                       backgroundColor: "#f0f0f0",
-                     }}
-                   />
-                   <div style={{ flex: 1 }}>
-                     <div
-                       style={{
-                         fontWeight: "bold",
-                         fontSize: "16px",
-                         marginBottom: "10px",
-                       }}
-                     >
-                       {getProductName()}
-                     </div>
+            // Helper function to get product name (you'll need to implement this based on your Util)
+            const getProductName = () => {
+              // Replace this with your actual utility function
+              return record?.name || name || "Product Name";
+            };
 
-                     <div
-                       style={{
-                         display: "flex",
-                         gap: "8px",
-                         alignItems: "center",
-                         flexWrap: "wrap",
-                       }}
-                     >
-                       <>
-                         {numberOfVariant > 1 ? (
-                           <Tag color="#2db7f5">
-                             {`${numberOfVariant} variants`}
-                           </Tag>
-                         ) : (
-                           <Text
-                             type="secondary"
-                             style={{ fontSize: "12px", fontWeight: "500" }}
-                           >
-                             {Util.getItemBarcode(record)}
-                           </Text>
-                         )}
-                         <Text type="secondary" style={{ fontSize: "12px" }}>
-                           •
-                         </Text>
-                       </>
-                       <Text type="secondary" style={{ fontSize: "12px" }}>
-                         {categoryName}
-                       </Text>
-                       <Text type="secondary" style={{ fontSize: "12px" }}>
-                         •
-                       </Text>
-                       <Text
-                         type="secondary"
-                         style={{
-                           fontSize: "12px",
-                           fontWeight: "500",
-                         }}
-                       >
-                         {/* {stockCount} {record?.unitOfMeasurement?.name} On Hand */}
-                         { stockCount } On Hand | 5 Incoming | Future: 15
-                       </Text>
-                       {stockCount <= record.reorderPoint && stockCount > 0 && (
-                         <Text
-                           style={{
-                             fontSize: "12px",
-                             color: "#fa8c16",
-                             fontWeight: "500",
-                           }}
-                         >
-                           📉 low
-                         </Text>
-                       )}
-                     </div>
-                   </div>
-                 </div>
-               );
-            },
-         },
-         {
-            title: <Translate id="text_retial_price" />,
-            key: "price",
-            dataIndex: "price",
-            width: 180,
-            align: "right",
-            sorter: (a, b) => a.price - b.price,
-            render: (_, record) => {
-               return <Text strong style={{ fontSize: '16px' }}>
-                  {exchangeAndFormatCurrency(Util.getProductPrice(record))}
-               </Text>
-            }
-         },
-         {
-            title: <Translate id="text_whole_price" />,
-            key: "wholePrice",
-            dataIndex: "wholePrice",
-            width: 180,
-            align: "right",
-            sorter: (a, b) => a.wholePrice - b.wholePrice,
-            render: (_, record) => {
-               return <Text strong style={{ fontSize: '16px' }}>{exchangeAndFormatCurrency(Util.getProductWholeSalePrice(record))}</Text>
-            }
-         },
-         {
-            title: <Translate id="text_distribute_price" />,
-            key: "distributePrice",
-            dataIndex: "distributePrice",
-            width: 180,
-            align: "right",
-            sorter: (a, b) => a.distributePrice - b.distributePrice,
-            render: (_, record) => <Text strong style={{ fontSize: '16px' }}>{exchangeAndFormatCurrency(Util.getProductDistributePrice(record))}</Text>
-         },
-         {
-            title: <Translate id="text_action" />,
-            key: "action",
-            dataIndex: "action",
-            align: "center",
-            width: 100,
-            render: (_, record) => {
-               const menu = (
-                  <Menu>
-                     <Menu.Item key={1}>
-                        <Link to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}>
-                           <Icon type="eye" style={{marginRight: 10}} /> <Translate id="text_view" />
-                        </Link>
-                     </Menu.Item>
-                     <Menu.Item key={2}>
-                        <Link to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}>
-                           <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit" />
-                        </Link>
-                     </Menu.Item>
-                     <Menu.Item key={3} className={record.isSplittable ? "" : "hidden"}>
-                        <Link to={`/inventories/items/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
-                           <Icon type="scissor" style={{marginRight: 10}} /> <Translate id="text_slit_item" />
-                        </Link>
-                     </Menu.Item>
-                     <Divider style={{marginTop: 4, marginBottom: 4}} />
-                     <Menu.Item key={4} onClick={() => this.handleConfirm(record)}>
-                        <Icon type="delete" style={{marginRight: 10}} /> <Translate id="text_delete" />
-                     </Menu.Item>
-                     <Menu.Item key={5} onClick={() => this.editStockRef.showDrawer(record)}>
-                        <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit_stock" />
-                     </Menu.Item>
-                  </Menu>
-               );
-               return <Dropdown overlay={menu} placement="bottomLeft">
-                  <Button icon="more" />
-               </Dropdown>;
-            }
-         }
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <Avatar
+                  src={
+                    record?.image ||
+                    record?.imageUrl ||
+                    "https://ae-pic-a1.aliexpress-media.com/kf/S1dd261bc501a452ab057df05e6c91d823.jpg_960x960q75.jpg_.avif"
+                  }
+                  size={64}
+                  shape="square"
+                  style={{
+                    borderRadius: "8px",
+                    backgroundColor: "#f0f0f0",
+                  }}
+                />
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "16px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {getProductName()}
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <>
+                      {numberOfVariant > 1 ? (
+                        <Tag color="#2db7f5">
+                          {`${numberOfVariant} variants`}
+                        </Tag>
+                      ) : (
+                        <Text
+                          type="secondary"
+                          style={{ fontSize: "12px", fontWeight: "500" }}
+                        >
+                          {Util.getItemBarcode(record)}
+                        </Text>
+                      )}
+                      <Text type="secondary" style={{ fontSize: "12px" }}>
+                        •
+                      </Text>
+                    </>
+                    <Text type="secondary" style={{ fontSize: "12px" }}>
+                      {categoryName}
+                    </Text>
+
+                    {/* <Text type="secondary" style={{ fontSize: "12px" }}>
+                      •
+                    </Text>
+                    <Text
+                      type="secondary"
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {stockCount} {record?.unitOfMeasurement?.name} On Hand
+                    </Text>
+                    {stockCount <= record.reorderPoint && stockCount > 0 && (
+                      <Text
+                        style={{
+                          fontSize: "12px",
+                          color: "#fa8c16",
+                          fontWeight: "500",
+                        }}
+                      >
+                        📉 low
+                      </Text>
+                    )} */}
+                  </div>
+                </div>
+              </div>
+            );
+          },
+        },
+        {
+          title: "Stock on Hand",
+          key: "quantity",
+          dataIndex: "quantity",
+          width: 180,
+          align: "right",
+          sorter: (a, b) => a.quantity - b.quantity,
+          render: (_, record) => {
+            const stockCount = this.getTotalQuantity(record);
+            return (
+              <QuantityValue
+                quantity={stockCount}
+                unit={record?.unitOfMeasurement?.name}
+                decimals={0}
+              />
+            );
+          },
+        },
+        {
+          title: <Translate id="text_retial_price" />,
+          key: "price",
+          dataIndex: "price",
+          width: 180,
+          align: "right",
+          sorter: (a, b) => a.price - b.price,
+          render: (_, record) => {
+            return (
+              <Text strong style={{ fontSize: "16px" }}>
+                {exchangeAndFormatCurrency(Util.getProductPrice(record))}
+              </Text>
+            );
+          },
+        },
+        // {
+        //    title: <Translate id="text_whole_price" />,
+        //    key: "wholePrice",
+        //    dataIndex: "wholePrice",
+        //    width: 180,
+        //    align: "right",
+        //    sorter: (a, b) => a.wholePrice - b.wholePrice,
+        //    render: (_, record) => {
+        //       return <Text strong style={{ fontSize: '16px' }}>{exchangeAndFormatCurrency(Util.getProductWholeSalePrice(record))}</Text>
+        //    }
+        // },
+        // {
+        //    title: <Translate id="text_distribute_price" />,
+        //    key: "distributePrice",
+        //    dataIndex: "distributePrice",
+        //    width: 180,
+        //    align: "right",
+        //    sorter: (a, b) => a.distributePrice - b.distributePrice,
+        //    render: (_, record) => <Text strong style={{ fontSize: '16px' }}>{exchangeAndFormatCurrency(Util.getProductDistributePrice(record))}</Text>
+        // },
+        {
+          title: <Translate id="text_action" />,
+          key: "action",
+          dataIndex: "action",
+          align: "center",
+          width: 100,
+          render: (_, record) => {
+            const menu = (
+              <Menu>
+                <Menu.Item key={1}>
+                  <Link
+                    to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}
+                  >
+                    <Icon type="eye" style={{ marginRight: 10 }} />{" "}
+                    <Translate id="text_view" />
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key={2}>
+                  <Link
+                    to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}
+                  >
+                    <Icon type="edit" style={{ marginRight: 10 }} />{" "}
+                    <Translate id="text_edit" />
+                  </Link>
+                </Menu.Item>
+                {/* <Menu.Item
+                  key={3}
+                  className={record.isSplittable ? "" : "hidden"}
+                >
+                  <Link
+                    to={`/inventories/items/split/${Util.getProductVariantId(
+                      record
+                    )}?productOption=${record.productOption}`}
+                  >
+                    <Icon type="scissor" style={{ marginRight: 10 }} />{" "}
+                    <Translate id="text_slit_item" />
+                  </Link>
+                </Menu.Item> */}
+                <Divider style={{ marginTop: 4, marginBottom: 4 }} />
+                <Menu.Item key={4} onClick={() => this.handleConfirm(record)}>
+                  <Icon type="delete" style={{ marginRight: 10 }} />{" "}
+                  <Translate id="text_delete" />
+                </Menu.Item>
+                <Menu.Item
+                  key={5}
+                  onClick={() => this.editStockRef.showDrawer(record)}
+                >
+                  <Icon type="edit" style={{ marginRight: 10 }} />{" "}
+                  <Translate id="text_edit_stock" />
+                </Menu.Item>
+              </Menu>
+            );
+            return (
+              <Dropdown overlay={menu} placement="bottomLeft">
+                <Button icon="more" />
+              </Dropdown>
+            );
+          },
+        },
       ];
       this.stockColumns = [
          {
@@ -267,7 +306,7 @@ export default class ProductList extends Datatable {
             sorter: (a, b) => a.name - b.name,
             render: (name, record) => {
                const numberOfVariant = record?.productVariants?.length || 0;
-               const stockCount = this.calculateTotalQuantity(record);
+               const stockCount = this.getTotalQuantity(record);
                const categoryName = record?.category?.name || 'Uncategorized';
                
                const getProductName = () => {
@@ -332,12 +371,14 @@ export default class ProductList extends Datatable {
             width: 60,
             sorter: (a, b) => a.reorderPoint - b.reorderPoint,
             render: (_, record) => {
-               const stockCount = this.calculateTotalQuantity(record);
-               return <QuantityValue
-                        value={stockCount}
-                        unit={record?.unitOfMeasurement?.name}
-                        decimals={2}
-                     />
+               const stockCount = this.getTotalQuantity(record);
+               return (
+                 <QuantityValue
+                   quantity={stockCount}
+                   unit={record?.unitOfMeasurement?.name}
+                   decimals={2}
+                 />
+               );
             }
          },
          {
@@ -380,15 +421,17 @@ export default class ProductList extends Datatable {
             width: 60,
             sorter: (a, b) => a.reorderPoint - b.reorderPoint,
             render: (_, record) => {
-               const currentQty = this.calculateTotalQuantity(record);
+               const currentQty = this.getTotalQuantity(record);
                const adjustmentValue = this.state.stockInItems?.[record.id]?.qtyIn || 0;
                const newQty = currentQty + parseFloat(adjustmentValue || 0);
-               return <QuantityValue
-                        value={newQty}
-                        unit={record?.unitOfMeasurement?.name}
-                        showSign={true}
-                        decimals={2}
-                     />
+               return (
+                 <QuantityValue
+                   quantity={newQty}
+                   unit={record?.unitOfMeasurement?.name}
+                   showSign={true}
+                   decimals={2}
+                 />
+               );
             }
          },
       ];
@@ -480,7 +523,7 @@ export default class ProductList extends Datatable {
       }
    }
 
-   handleStockIn = async () => {
+   handleStockIn = () => {
       this.setState({ submittingStockIn: true });
       const stockIO = {
          locationId: getLocationId(),
@@ -490,21 +533,16 @@ export default class ProductList extends Datatable {
       };
       const payload = buildStockInPayload(stockIO);
       try {
-         const response = await StockIOService.stockIn(payload);
-         console.log("✅ Stock In Success:", response);
-
-         this.props.form.validateFields((err, values) => {
-            if (!err) {
-               console.log('Form values:', values);
-
-               // do something with the values, like saving...
-
-               // reset form after submit
-               this.props.form.resetFields();
-               this.setState({ stockInItems: [] })
-            }
+         StockIOService.stockIn(payload)
+         .then(() => {
+            this.props.form.validateFields((err) => {
+              if (!err) {
+                this.props.form.resetFields();
+                this.setState({ stockInItems: [] });
+                this.fetchList();
+              }
+            });
          });
-         return response;
       } catch (error) {
          console.error("❌ Stock In Failed:", error);
          throw error;
@@ -571,7 +609,7 @@ export default class ProductList extends Datatable {
       }
    }
 
-   calculateTotalQuantity(record) {
+   getTotalQuantity(record) {
       let quantity = 0;
       let isNotFilterByLocation = true;
       record["productVariants"].forEach(productVariant => {
@@ -712,7 +750,7 @@ export default class ProductList extends Datatable {
                variantName,
                unitId,
                unitName,
-               quantity: this.calculateTotalQuantity(item),
+               quantity: this.getTotalQuantity(item),
                qtyIn,
                cost: 0
             },
@@ -846,19 +884,19 @@ export default class ProductList extends Datatable {
                      { text: 'Items Management' }
                   ]}
                   actions={[
-                     <Button
-                        type="default"
-                        size="large"
-                        onClick={() => console.log("generate item with AI")}
-                        style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                        >
-                        <img 
-                           src="/images/ai-technology.png" 
-                           alt="AI Icon" 
-                           style={{ width: 20, height: 20 }} 
-                        />
-                        <span>AI Generate</span>
-                        </Button>,
+                     // <Button
+                     //    type="default"
+                     //    size="large"
+                     //    onClick={() => console.log("generate item with AI")}
+                     //    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                     //    >
+                     //    <img 
+                     //       src="/images/ai-technology.png" 
+                     //       alt="AI Icon" 
+                     //       style={{ width: 20, height: 20 }} 
+                     //    />
+                     //    <span>AI Generate</span>
+                     //    </Button>,
 
                      {
                         text: this.state.activeTab === "item" ? 'Import Items' : "Import Stock IO",
@@ -885,7 +923,7 @@ export default class ProductList extends Datatable {
 
                {/* TODO: apply memo to both tab content to avoid re-render */}
                <Tabs defaultActiveKey="item" onChange={(activeKey) => this.setState({ activeTab: activeKey })}>
-                  <TabPane tab={`Items(${this.state.pagination.total})`} key="item" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
+                  <TabPane tab={`Items(${this.state.pagination.total || 0})`} key="item" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
                      <Row style={{ marginBottom: 10 }}>
                         <Col md={24}>
                            <Input
@@ -1070,13 +1108,13 @@ export default class ProductList extends Datatable {
                            >
                               Cancel
                            </Button>
-                           <Button 
+                           {/* <Button 
                               onClick={() => console.log("")}
                               size="large"
                               style={{ marginRight: 12, width: '180px' }}
                            >
                               Print Stock IN Slip
-                           </Button>
+                           </Button> */}
                            <Button 
                               type="primary" 
                               onClick={this.handleStockIn}

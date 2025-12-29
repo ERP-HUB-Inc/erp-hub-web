@@ -158,7 +158,7 @@ const PurchaseOrderForm = (props) => {
       title: "Item",
       dataIndex: "itemId",
       width: 250,
-      render: (itemId, record, index) => (
+      render: (_, record, index) => (
         <div>
           <Form.Item style={{ marginBottom: 0 }}>
             {props.form.getFieldDecorator(`item[${index}]`, {
@@ -368,7 +368,7 @@ const PurchaseOrderForm = (props) => {
             variantId: Util.getVariantId(item),
             variantName: Util.getVariantName(item),
             sku: Util.getItemSku(item),
-            unitId: Util.getUnitId(item),
+            unitId: value.unitId[index],
             unitName: Util.getUnitName(item),
             cost: value.cost[index],
             quantity: value.quantity[index],
@@ -377,18 +377,16 @@ const PurchaseOrderForm = (props) => {
           };
         }),
       };
+
       await POService.createPurchaseOrder(payload);
-    } catch (error) {
-      console.error("❌ PO Creation Failed:", error);
-    } finally {
+
       sweetalert({
         icon: "success",
         title: "PO In Recorded",
         text: "Your PO has been saved.",
         buttons: false,
-        timer: 1500
-      })
-      .then(() => {
+        timer: 1500,
+      }).then(() => {
         setSubmitting(false);
         props.form.resetFields();
         const newItem = {
@@ -406,6 +404,9 @@ const PurchaseOrderForm = (props) => {
         };
         setPOItems([newItem]);
       });
+
+    } catch (error) {
+      console.error("❌ PO Creation Failed:", error);
     }
   };
 
@@ -437,7 +438,7 @@ const PurchaseOrderForm = (props) => {
               variantId: Util.getVariantId(item),
               variantName: Util.getVariantName(item),
               sku: Util.getItemSku(item),
-              unitId: Util.getUnitId(item),
+              unitId: value.unitId[index],
               unitName: Util.getUnitName(item),
               cost: value.cost[index],
               quantity: value.quantity[index],
@@ -447,11 +448,9 @@ const PurchaseOrderForm = (props) => {
           })
           .filter((item) => item.variantId !== ""),
       };
-      console.log(payload);
+
       await POService.createPurchaseOrder(payload);
-    } catch (error) {
-      console.error("❌ PO Creation Failed:", error);
-    } finally {
+
       sweetalert({
         icon: "success",
         title: "PO In Recorded",
@@ -476,6 +475,8 @@ const PurchaseOrderForm = (props) => {
         };
         setPOItems([newItem]);
       });
+    } catch (error) {
+      console.error("❌ PO Creation Failed:", error);
     }
   };
 
@@ -693,30 +694,6 @@ const PurchaseOrderForm = (props) => {
               </Form.Item>
             </Col>
             <Col md={6}>
-              <div style={{ marginBottom: 8 }}>
-                <strong>Quick Actions</strong>
-              </div>
-              <Upload
-                beforeUpload={handleBulkUpload}
-                accept=".csv,.xlsx"
-                showUploadList={false}
-              >
-                <Button icon="upload" block>
-                  Bulk Upload
-                </Button>
-              </Upload>
-            </Col>
-            {/* <Col md={24}>
-              <InputTextArea
-                name="description"
-                label={<Translate id="text_notes" />}
-                max={255}
-                form={props.form}
-              />
-            </Col> */}
-          </Row>
-          <Row gutter={16} style={{ marginBottom: 24 }}>
-            <Col md={6}>
               <Form.Item
                 label="Discount"
                 extra="Discount provided by the supplier or seller."
@@ -731,6 +708,30 @@ const PurchaseOrderForm = (props) => {
                 )}
               </Form.Item>
             </Col>
+            {/* <Col md={6}>
+              <div style={{ marginBottom: 8 }}>
+                <strong>Quick Actions</strong>
+              </div>
+              <Upload
+                beforeUpload={handleBulkUpload}
+                accept=".csv,.xlsx"
+                showUploadList={false}
+              >
+                <Button icon="upload" block>
+                  Bulk Upload
+                </Button>
+              </Upload>
+            </Col> */}
+            {/* <Col md={24}>
+              <InputTextArea
+                name="description"
+                label={<Translate id="text_notes" />}
+                max={255}
+                form={props.form}
+              />
+            </Col> */}
+          </Row>
+          <Row gutter={16} style={{ marginBottom: 24 }}>
             <Col md={6}>
               <Form.Item label="Shipping Fee">
                 {props.form.getFieldDecorator("shippingFee", {
@@ -758,7 +759,8 @@ const PurchaseOrderForm = (props) => {
               }}
             >
               <h3 style={{ margin: 0 }}>
-                <Icon type="unordered-list" /> Items ({poItems.length})
+                <Icon type="unordered-list" /> Items (
+                {poItems.filter((poItem) => poItem.itemId !== null).length})
               </h3>
               <Button type="dashed" icon="plus" onClick={addNewRow}>
                 Add Item Row

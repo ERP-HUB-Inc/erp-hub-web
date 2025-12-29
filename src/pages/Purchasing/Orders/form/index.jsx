@@ -567,19 +567,19 @@ export default class PurchaseOrderPage extends Datatable {
         <div className="content-list">
           <div className="table-wrapper">
             <PageHeader
-              title="Purchase Orders"
+              title={`Purchase Orders(${this.state?.pagination?.total || 0})`}
               subtitle="See and manage your purchase orders"
               breadcrumbs={[
                 { text: "Dashboard", href: "/dashboard" },
                 { text: "Purchase Orders" },
               ]}
               actions={[
-                {
-                  text: "Import Order",
-                  type: "default",
-                  icon: "upload",
-                  onClick: () => {},
-                },
+                // {
+                //   text: "Import Order",
+                //   type: "default",
+                //   icon: "upload",
+                //   onClick: () => {},
+                // },
                 {
                   text: "New Purchase Order",
                   type: "primary",
@@ -597,111 +597,79 @@ export default class PurchaseOrderPage extends Datatable {
               ]}
             />
 
-            <Tabs defaultActiveKey="item">
-              <TabPane
-                tab={`Purchase Orders(${this.state?.pagination?.total})`}
-                key="purchase-orders"
-                style={{ paddingLeft: "40px", paddingRight: "40px" }}
-              >
-                <Row style={{ marginBottom: 10 }}>
-                  <Col md={24}>
-                    <Input
-                      name="search"
-                      placeholder="Enter PO number, vendor name, or receiver"
-                      suffix={<Icon type="search" />}
-                      defaultValue={
-                        params.get("search") ? params.get("search") : ""
-                      }
-                      style={{ height: 32, width: 350, marginRight: 10 }}
-                      allowClear={true}
-                      onChange={this.handleSearch}
-                    />
-                    <DatePicker.RangePicker
-                      name="date"
-                      placeholder={[
-                        "From (e.g., 2025-11-01)",
-                        "To (e.g., 2025-11-08)",
-                      ]}
-                      defaultValue={
-                        params.get("dateRange")
-                          ? [
-                              moment(params.get("dateRange").split(",")[0]),
-                              moment(params.get("dateRange").split(",")[1]),
-                            ]
-                          : null
-                      }
-                      onChange={this.handleChangeDateRange}
-                      style={{ maxWidth: 350, marginRight: 10 }}
-                    />
-                    {/* <Button shape="circle" icon="reload" />
+            <div style={{ paddingLeft: 40, paddingRight: 40, paddingTop: 25 }}>
+              <Row style={{ marginBottom: 10 }}>
+                <Col md={24}>
+                  <Input
+                    name="search"
+                    placeholder="Enter PO number, vendor name, or receiver"
+                    suffix={<Icon type="search" />}
+                    defaultValue={
+                      params.get("search") ? params.get("search") : ""
+                    }
+                    style={{ height: 32, width: 350, marginRight: 10 }}
+                    allowClear={true}
+                    onChange={this.handleSearch}
+                  />
+                  <DatePicker.RangePicker
+                    name="date"
+                    placeholder={[
+                      "From (e.g., 2025-11-01)",
+                      "To (e.g., 2025-11-08)",
+                    ]}
+                    defaultValue={
+                      params.get("dateRange")
+                        ? [
+                            moment(params.get("dateRange").split(",")[0]),
+                            moment(params.get("dateRange").split(",")[1]),
+                          ]
+                        : null
+                    }
+                    onChange={this.handleChangeDateRange}
+                    style={{ maxWidth: 350, marginRight: 10 }}
+                  />
+                  {/* <Button shape="circle" icon="reload" />
                       <Button shape="circle" icon="setting" /> */}
-                  </Col>
-                </Row>
+                </Col>
+              </Row>
 
-                <Table
-                  rowKey="id"
-                  bordered
-                  pagination={{
-                    total: this.state.pagination.total,
-                    pageSize: this.state.pagination.limit,
-                    current: this.state.current,
-                    pageSizeOptions: this.pageSizeOptions,
-                    showTotal: (total) =>
-                      `${this.CATranslate(
-                        "text_total",
-                        this.props.locale
-                      )} ${total} ${this.CATranslate(
-                        "text_records",
-                        this.props.locale
-                      )}`,
-                    showSizeChanger: true,
-                    defaultCurrent: this.state.current,
-                    defaultPageSize: this.pageSize,
-                    onShowSizeChange: this.onShowSizeChange,
-                    onChange: this.onChangePagination,
-                  }}
-                  rowSelection={rowSelection}
-                  loading={this.state.loading}
-                  columns={this.columns}
-                  dataSource={this.state.data}
-                  onRow={(record) => ({
-                    onDoubleClick: () =>
-                      history.push({
-                        pathname: this.pathUpdate + "/" + record.id,
-                      }),
-                  })}
-                  size="middle"
-                />
-              </TabPane>
-              <TabPane
-                tab="Stock"
-                key="stock"
-                style={{ paddingLeft: "40px", paddingRight: "40px" }}
-              >
-                Content of Tab Pane 3
-              </TabPane>
-            </Tabs>
+              <Table
+                rowKey="id"
+                bordered
+                pagination={{
+                  total: this.state.pagination.total,
+                  pageSize: this.state.pagination.limit,
+                  current: this.state.current,
+                  pageSizeOptions: this.pageSizeOptions,
+                  showTotal: (total) =>
+                    `${this.CATranslate(
+                      "text_total",
+                      this.props.locale
+                    )} ${total} ${this.CATranslate(
+                      "text_records",
+                      this.props.locale
+                    )}`,
+                  showSizeChanger: true,
+                  defaultCurrent: this.state.current,
+                  defaultPageSize: this.pageSize,
+                  onShowSizeChange: this.onShowSizeChange,
+                  onChange: this.onChangePagination,
+                }}
+                rowSelection={rowSelection}
+                loading={this.state.loading}
+                columns={this.columns}
+                dataSource={this.state.data}
+                onRow={(record) => ({
+                  onDoubleClick: () =>
+                    history.push({
+                      pathname: this.pathUpdate + "/" + record.id,
+                    }),
+                })}
+                size="middle"
+              />
+            </div>
           </div>
         </div>
-
-        <this.Modal
-          visible={this.state.modalVisible}
-          wrapClassName="confirm-delete"
-          footer={null}
-        >
-          <div>
-            {this.state.showDeleteModal && (
-              <React.Fragment>
-                <span className="icon-help icon-padding-right"></span>
-                <span className="title">COMPLETED</span>
-                <br />
-                <span>
-                  <Translate id="text_confirm_delete" />
-                </span>
-              </React.Fragment>
-            )}
-          </div>
-        </this.Modal>
       </React.Fragment>
     );
   }

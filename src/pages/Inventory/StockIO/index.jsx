@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {Form} from "antd";
 import StockInOutPage from "./form";
 
-function PurchaseOrderContainer(props) {
+function StockInOutContainer(props) {
   return <StockInOutPage {...props} />;
 }
 
@@ -14,11 +14,7 @@ function mapStateToProps(state) {
     purchaseOrderDetail: state.reducer.purchaseOrder.detail,
     purchaseOrderArchive: state.reducer.purchaseOrder.archive,
     purchaseOrderUpdate: state.reducer.purchaseOrder.update,
-    purchaseOrderPushToSupplier: state.reducer.purchaseOrder.pushToSupplier,
     supplier: state.reducer.supplier.request,
-    mail: state.reducer.mail.send,
-    storeLocation: state.reducer.location.request,
-    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }
@@ -29,6 +25,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const purchaseOrderContainer = Form.create(mapPropsToFields)(PurchaseOrderContainer);
+const stockInOutContainer = Form.create(mapPropsToFields)(StockInOutContainer);
 
-export default connect(mapStateToProps)(purchaseOrderContainer);
+export default connect(mapStateToProps)(stockInOutContainer);

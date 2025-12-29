@@ -29,12 +29,6 @@ export default class ProductUpdate extends BaseComponent {
 
     this.title = <Translate id="text_item" />;
     this.dispatch = this.props.dispatch;
-    this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
-    this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
-    this.handleCallBackGetArchiveProductVariant = this.handleCallBackGetArchiveProductVariant.bind(this);
-    this.handleCallBackGetArchiveProductAttributes = this.handleCallBackGetArchiveProductAttributes.bind(this);
-    this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
-    this.handleAddTax = this.handleAddTax.bind(this);
     this.productTags = [];
     this.exchangeRate= 1;
   }
@@ -77,19 +71,19 @@ export default class ProductUpdate extends BaseComponent {
     }
   }
 
-  handleCallBackGetProductAttribute(productAttributes) {
+  handleCallBackGetProductAttribute = (productAttributes) => {
     this.setState({productAttributes});
   }
 
-  handleCallBackGetProductVariant(productVariants) {
+  handleCallBackGetProductVariant = (productVariants) => {
     this.setState({productVariants});
   }
 
-  handleCallBackGetArchiveProductVariant(productArchiveVariants) {
+  handleCallBackGetArchiveProductVariant = (productArchiveVariants) => {
     this.setState({productArchiveVariants});
   }
 
-  handleCallBackGetArchiveProductAttributes(productArchiveAttributes) {
+  handleCallBackGetArchiveProductAttributes = (productArchiveAttributes) => {
     this.setState({productArchiveAttributes});
   }
 
@@ -202,7 +196,7 @@ export default class ProductUpdate extends BaseComponent {
     history.goBack();
   }
 
-  handleAddVariantAttribute(index, callBack) {
+  handleAddVariantAttribute = (index, callBack) => {
     this.dispatch(ProductAction.showVariantOptionForm());
     this.modal1 = <FormCreateOption />;
     if (callBack) {
@@ -210,7 +204,7 @@ export default class ProductUpdate extends BaseComponent {
     }
   }
 
-  handleAddTax() {
+  handleAddTax = () => {
     this.dispatch(ProductAction.showTaxForm());
     this.modal1 = <FormCreateTax />;
   }
@@ -237,63 +231,87 @@ export default class ProductUpdate extends BaseComponent {
       storeLanguage
     } = this.props;
 
-    return <div style={{marginBottom: 25}}>
-      {
-        productDetail.fetched ?
-        <Form autoComplete="off" onSubmit={this.onSubmit}>
-          <PageHeader
-            style={{
-                paddingLeft: 0,
-                paddingRight: 0
-            }}
-            onBack={() => history.goBack()}
-            title={<Translate id="text_item" />}
-            subTitle={<Translate id="text_edit_item" />}
-            extra={[
-              <Button size="large" key="1" htmlType="submit" title="Ctrl + s" loading={this.props.productUpdate.updating} type="primary" style={{marginLeft: 15}} id="btnSubmit">
-                <Translate id="text_save" />
-              </Button>
-            ]}
-        />
-          <FormItem
-            form={form}
-            languages={storeLanguage}
-            locale={locale}
-            dispatch={dispatch}
-            formData={productDetail.data}
-            productLog={productLog}
-            productCostLog={productCostLog}
-            locations={this.props.locations}
-            switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
-            productVariantArchive={this.props.productVariantArchive}
-            productVariantCheckStatus={this.props.productVariantCheckStatus}
-            productAttributeCheckStatus={this.props.productAttributeCheckStatus}
-            productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
-            brands={brands}
-            brandAdd={brandAdd}
-            productsType={productsType}
-            productsTypeAdd={productsTypeAdd}
-            units={units}
-            unitAdd={unitAdd}
-            taxs={taxs}
-            taxAdd={taxAdd}
-            handleAddTax={this.handleAddTax}
-            setExchangeRateCallBack={(rate) => this.exchangeRate = rate}
-            callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
-            callBackGetProductVariant={this.handleCallBackGetProductVariant}
-            handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
-            handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
-            callBackGetProductTags={(tags) => this.handleCallBackGetProductTags(tags)}
-            variantAttributes={variantAttributes}
-            variantAttributeAdd={variantAttributeAdd}
-            handleAddVariantAttribute={this.handleAddVariantAttribute}
-            productSearch={productSearch} />
-      </Form>
-      :
-      <div style={{width: 30, margin: "0 auto"}}>
-        <Spin />
+    return (
+      <div style={{ marginBottom: 25 }}>
+        {productDetail.fetched ? (
+          <Form autoComplete="off" onSubmit={this.onSubmit}>
+            <PageHeader
+              style={{
+                paddingLeft: 25,
+                paddingRight: 25,
+                marginTop: 15,
+              }}
+              onBack={() => history.goBack()}
+              title={<Translate id="text_item" />}
+              subTitle={<Translate id="text_edit_item" />}
+              extra={[
+                <Button
+                  size="large"
+                  key="1"
+                  htmlType="submit"
+                  title="Ctrl + s"
+                  loading={this.props.productUpdate.updating}
+                  type="primary"
+                  style={{ marginLeft: 15 }}
+                  id="btnSubmit"
+                >
+                  Save Changes
+                </Button>,
+              ]}
+            />
+            <FormItem
+              form={form}
+              languages={storeLanguage}
+              locale={locale}
+              dispatch={dispatch}
+              formData={productDetail.data}
+              productLog={productLog}
+              productCostLog={productCostLog}
+              locations={this.props.locations}
+              switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+              productVariantArchive={this.props.productVariantArchive}
+              productVariantCheckStatus={this.props.productVariantCheckStatus}
+              productAttributeCheckStatus={
+                this.props.productAttributeCheckStatus
+              }
+              productAttributeValueCheckStatus={
+                this.props.productAttributeValueCheckStatus
+              }
+              brands={brands}
+              brandAdd={brandAdd}
+              productsType={productsType}
+              productsTypeAdd={productsTypeAdd}
+              units={units}
+              unitAdd={unitAdd}
+              taxs={taxs}
+              taxAdd={taxAdd}
+              handleAddTax={this.handleAddTax}
+              setExchangeRateCallBack={(rate) => (this.exchangeRate = rate)}
+              callBackGetProductAttribute={
+                this.handleCallBackGetProductAttribute
+              }
+              callBackGetProductVariant={this.handleCallBackGetProductVariant}
+              handleCallBackGetArchiveProductVariant={
+                this.handleCallBackGetArchiveProductVariant
+              }
+              handleCallBackGetArchiveProductAttributes={
+                this.handleCallBackGetArchiveProductAttributes
+              }
+              callBackGetProductTags={(tags) =>
+                this.handleCallBackGetProductTags(tags)
+              }
+              variantAttributes={variantAttributes}
+              variantAttributeAdd={variantAttributeAdd}
+              handleAddVariantAttribute={this.handleAddVariantAttribute}
+              productSearch={productSearch}
+            />
+          </Form>
+        ) : (
+          <div style={{ width: 30, margin: "0 auto" }}>
+            <Spin />
+          </div>
+        )}
       </div>
-    }
-    </div>;
+    );
   }
 }

@@ -738,30 +738,6 @@ const PurchaseOrderForm = (props) => {
               </Form.Item>
             </Col>
             <Col md={6}>
-              <div style={{ marginBottom: 8 }}>
-                <strong>Quick Actions</strong>
-              </div>
-              <Upload
-                beforeUpload={handleBulkUpload}
-                accept=".csv,.xlsx"
-                showUploadList={false}
-              >
-                <Button icon="upload" block>
-                  Bulk Upload
-                </Button>
-              </Upload>
-            </Col>
-            {/* <Col md={24}>
-              <InputTextArea
-                name="description"
-                label={<Translate id="text_notes" />}
-                max={255}
-                form={props.form}
-              />
-            </Col> */}
-          </Row>
-          <Row gutter={16} style={{ marginBottom: 24 }}>
-            <Col md={6}>
               <Form.Item
                 label="Discount"
                 extra="Discount provided by the supplier or seller."
@@ -777,6 +753,30 @@ const PurchaseOrderForm = (props) => {
                 )}
               </Form.Item>
             </Col>
+            {/* <Col md={6}>
+              <div style={{ marginBottom: 8 }}>
+                <strong>Quick Actions</strong>
+              </div>
+              <Upload
+                beforeUpload={handleBulkUpload}
+                accept=".csv,.xlsx"
+                showUploadList={false}
+              >
+                <Button icon="upload" block>
+                  Bulk Upload
+                </Button>
+              </Upload>
+            </Col> */}
+            {/* <Col md={24}>
+              <InputTextArea
+                name="description"
+                label={<Translate id="text_notes" />}
+                max={255}
+                form={props.form}
+              />
+            </Col> */}
+          </Row>
+          <Row gutter={16} style={{ marginBottom: 24 }}>
             <Col md={6}>
               <Form.Item label="Shipping Fee">
                 {props.form.getFieldDecorator("shippingFee", {
