@@ -55,7 +55,7 @@ const PageHeader = ({
         {/* Action Buttons */}
         {actions.length > 0 && (
           <Col>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '15px' }}>
               {actions.map((action, index) => {
                 // If the action is a React element, just render it directly
                 if (React.isValidElement(action)) {
