@@ -32,6 +32,8 @@ import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
 import StockIOBulkImport from '@inventories/StockIO/form/form.bulk-import';
 import StockIOAIImport from '@inventories/StockIO/form/form.ai-import';
 import VendorDetailPage from './vendor-detail';
+import Receipt from './receipt';
+import SalesDashboard from './sales-dashboard';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -109,7 +111,7 @@ export default class SiderDemo extends React.Component {
     });
     
     const Dashboard = Loadable({
-      loader: () => import("../app/modules/common/containers/home"),
+      loader: () => import("../pages/Dashboard"),
       loading: () => <StartUp />,
     });
 
@@ -454,7 +456,6 @@ export default class SiderDemo extends React.Component {
                       <Route path="/pos" component={POS} />
                       <Route path="/sales-orders" component={SalesOrder} />
                       <Route path="/quotes" component={Quotes} />
-
                       <Route
                         path="/invoices/view/:id"
                         component={InvoiceDetail}
@@ -465,13 +466,11 @@ export default class SiderDemo extends React.Component {
                         component={NewInoice}
                       />
                       <Route path="/invoices" component={Invoice} />
-
                       <Route path="/customers" component={Customers} />
                       <Route
                         path="/customer-profile/:id"
                         component={CustomerProfile}
                       />
-
                       <Route
                         path="/purchase-orders/create"
                         component={NewPurchaseOrder}
@@ -484,11 +483,9 @@ export default class SiderDemo extends React.Component {
                         path="/purchase-orders"
                         component={PurchaseOrder}
                       />
-
                       <Route path="/vendors/create" component={Vendor} />
                       <Route path="/vendors/update/:id" component={Vendor} />
                       <Route path="/vendors" component={Vendor} />
-
                       <Route
                         path="/inventories/items/create"
                         component={NewItem}
@@ -506,7 +503,6 @@ export default class SiderDemo extends React.Component {
                         component={SplitItem}
                       />
                       <Route path="/inventories/items" component={Item} />
-
                       {/* StockIO Management */}
                       <Route
                         path="/inventories/stock-io/create"
@@ -528,13 +524,11 @@ export default class SiderDemo extends React.Component {
                         path="/inventories/stock-io"
                         component={StockInOut}
                       />
-
                       <Route path="/inventories/transfers" component={Vendor} />
                       <Route
                         path="/inventories/adjustments"
                         component={Vendor}
                       />
-
                       <Route
                         path="/reports/sales-report-center"
                         component={SaleReportCenter}
@@ -543,11 +537,15 @@ export default class SiderDemo extends React.Component {
                         path="/reports/sales-report-receipt"
                         component={SaleReportReceipt}
                       />
-
                       <Route path="/settings" component={SettingsPage} />
                       <Route path="/categories" component={Category} />
                       <Route path="/brands" component={Brand} />
                       <Route path="/setting-logs" component={SystemLogs} />
+                      <Route path="/receipt" component={Receipt} />
+                      <Route
+                        path="/SalesDashboard"
+                        component={SalesDashboard}
+                      />
                       <Route
                         path="/order-dashboards"
                         component={OrdersDashboard}
@@ -565,8 +563,10 @@ export default class SiderDemo extends React.Component {
                         component={StickyFooterPage}
                       />
                       <Route path="/stock-io-form" component={StockIOForm} />
-                      <Route path="/vendor-detail" component={VendorDetailPage} />
-
+                      <Route
+                        path="/vendor-detail"
+                        component={VendorDetailPage}
+                      />
                       <Route path="/" component={Dashboard} />
                     </Switch>
                   </Content>

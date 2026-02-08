@@ -240,7 +240,7 @@ const Dashboard = () => {
               <li className="nav-left">
                 <div className="nav-title">
                   <h4><Translate id="text_dashboard" /></h4>
-                  <span>Here’s your analytic detail</span>
+                  <span>Here’s your analytic for this:</span>
                 </div>
               </li>
               <li className="nav-right">

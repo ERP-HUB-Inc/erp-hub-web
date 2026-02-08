@@ -1,0 +1,311 @@
+.dashboard ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    padding-top: 8px;
+    padding-bottom: 10px;
+}
+
+.dashboard ul li {
+    list-style-type: none;
+    display: inline-block
+}
+
+.dashboard ul li h4 {
+    margin-bottom: 0
+}
+
+.dashboard-report-title {
+    color: #9A9A9A;
+    font-weight: 500 
+}
+
+.dash-wrap-guide,
+.dash-wrap-report{
+    padding: 15px
+}
+
+
+.c3 text {
+    font-size: 10.5pt;
+    font-weight: 500;
+    fill: #9A9A9A
+}
+
+.dash-wrap-report {
+    margin-bottom: 20px;
+    height: 398px;
+}
+
+.dash-wrap-report,
+.dash-wrap-guide {
+    background-color: white
+}
+
+.dash-wrap-guide {
+    margin-bottom: 15px
+}
+#taskDadhboardFirst .ant-card-body {
+    padding: 0 !important;
+}
+#dashboard #navDaskboard ul {
+    list-style-type: none;
+    padding: 0 !important;
+}
+#dashboard #navDaskboard ul .nav-right {
+    float: right;
+    margin: 21px 0;
+}
+#dashboard #navDaskboard .nav-title {
+    display: block;
+    margin-top: 13px;
+}
+#dashboard #navDaskboard .nav-title h4 {
+    font-size: 18px;
+    color: #030303;
+    font-weight: 500;
+    margin: 0;
+}
+#dashboard #navDaskboard .nav-title span {
+    font-size: 14px;
+    color: #9A9A9A;
+    font-weight: 400;
+}
+#dashboard #navDaskboard ul li {
+    display: inline-flex;
+}
+#taskDadhboardFirst .ant-card {
+    height: 177px;
+    border-radius: 6px;
+}
+#overall-sales .header-task {
+    display: inline-flex;
+    width: 100%;
+}
+#taskDadhboardFirst .header-task-item {
+    display: inline-flex;
+    width: 100%;
+    /* padding: 0px 10px 0px 10px; */
+}
+#taskDadhboardFirst .menu-right {
+    font-size: 30px;
+    color: #575757;
+    opacity: 45%;
+    position: absolute;
+    right: 0;
+    margin-right: 11px;
+    margin-top: 1px;
+}
+#taskDadhboardFirst .icon-left {
+    font-size: 17px;
+    color: #000000;
+    border-radius: 6px;
+    background: #F1F1F1;
+    height: 34px;
+    width: 37px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: 12px;
+    margin-left: 12px;
+}
+#taskDadhboardFirst .subtitle {
+    margin-left: 12px;
+    margin-top: 12px;
+    color: #000000;
+    opacity: 45%;
+    font-size: 14px;
+    font-weight: 400;
+}
+#taskDadhboardFirst  .sub-total {
+    color: #1F1F39;
+    font-size: 30px;
+    font-weight: 600;
+    margin-left: 12px;
+    margin-top: 7px;
+}
+#taskDadhboardFirst .total-footer {
+    color: #87D068;
+    font-size: 15px;
+    font-weight: 500;
+    margin-left: 12px;
+}
+#taskDadhboardFirst .total-footer span .anticon {
+    margin-right: 5px;
+}
+#overall-sales .ant-card{
+    height: 450px;
+}
+#overall-sales .ant-card-body {
+    padding: 0 !important;
+}
+#overall-sales .header-task .pull-left {
+    margin-top: 12px;
+    margin-left: 12px;
+}
+#overall-sales .header-task .pull-right {
+    width: 100%;
+}
+#overall-sales .header-task .pull-right .select-pull-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+    margin-right: 12px;
+}
+#overall-sales .header-task .pull-left h4{
+    color: #000000;
+    opacity: 45%;
+    font-size: 14px;
+    font-weight: 400;
+} 
+#overall-sales 
+.header-task
+.pull-left 
+.sub-left 
+.sub-total {
+    font-size: 20px;
+    color: #1F1F39;
+    font-weight: 600;
+    margin-right: 20px;
+}
+#overall-sales 
+.header-task 
+.pull-left 
+.sub-left {
+    display: flex;
+}
+#overall-sales 
+.header-task 
+.pull-left 
+.sub-left .footer-task {
+    color: #87D068;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center
+}
+#overall-sales 
+.header-task 
+.pull-left 
+.sub-left .footer-task .anticon {
+    margin-right: 5px;
+    margin-top: 4px;
+}
+#mainDashboadCategory .ant-card{
+    height: 500px;
+    border-radius: 6px;
+}
+#mainDashboadCategory .ant-card-body {
+    padding: 0 !important;
+}
+#mainDashboadCategory .header-category .title-category {
+    font-size: 16px;
+    font-weight: 600;
+    color: #030303;
+}
+#mainDashboadCategory .header-category {
+    margin-left: 12px;
+    margin-top: 15px;
+}
+#mainDashboadCategory .category-progress {
+    margin: 12px;
+}
+#mainDashboadCategory .category-progress ul {
+    list-style-type: none;
+    padding: 0;
+}
+#mainDashboadCategory .category-progress ul li {
+    padding: 4px 0;
+}
+#mainDashboadCategory 
+.category-progress 
+.label-progress ul li {
+    display: inline-flex;
+}
+#mainDashboadCategory 
+.category-progress  
+.label-progress ul 
+.label-right {
+    float: right;
+}
+#mainDashboadCategory 
+.category-progress 
+.label-progress 
+.label-left {
+    font-size: 14px;
+    color: #1F1F39;
+    font-weight: 500;
+}
+#mainDashboadCategory 
+.category-progress 
+.label-progress 
+.label-right {
+    font-size: 14px;
+    color: #000000;
+    font-weight: 500;
+    opacity: 45%;
+}
+#mainDashboadCategory .ant-progress-text{
+    display: none;
+}
+#mainDashboadCategory .ant-progress-show-info .ant-progress-outer {
+    margin: 0;
+    padding: 0;
+}
+#mainDashboadCategory .ant-progress-success-bg, .ant-progress-bg {
+    background: #1F1F39;
+}
+#mainTableList .header-task {
+    display: block;
+    margin-left: 17px;
+    margin-top: 12px;
+}
+#mainTableList .header-task .title-task {
+    font-weight: 600;
+    font-size: 16px;
+    color: #030303;
+}
+#mainTableList .ant-card-body {
+    padding: 0;
+}
+#mainTableList  .ant-card {
+    height: 500px;
+    border-radius: 6px;
+}
+#mainTableList .header-task .btn-header-task {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    display: flex;
+}
+#mainTableList .header-task .btn-header-task .ant-radio-button {
+    color: #102A43;
+    font-size: 14px;
+    font-weight: 400;
+}
+#mainTableList .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
+    border-color: #1F5A92;
+}
+#mainTableList .ant-radio-button-wrapper:hover {
+    color: #1F5A92;
+}
+#mainTableList .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    border-color: #1F5A92;
+    color: #1F5A92;
+}
+#mainTableList .header-task .btn-header-task .select {
+    margin-left: 30px;
+}
+#mainTableList .table-list-product {
+    margin: 0 17px;
+}
+#mainTableList .table-list-product .ant-table-body table tr td {
+    color: #4D4F5C;
+    font-size: 10pt;
+    font-weight: 400;
+    padding: 16px !important;
+}
+#mainTableList .table-list-product .ant-table-body table tr th {
+    padding: 10px 16px !important;
+}
+#mainTableList .table-list-product .ant-table-content {
+    margin-top: 0px;
+}

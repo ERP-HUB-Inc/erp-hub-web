@@ -1034,4 +1034,10 @@ export default class Util {
     return Number(number);
   }
 
+  getImageUrl(filename) {
+    if (!filename) return '';
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3080';
+    return `${baseUrl}/public/temp_uploads/item/${filename}`;
+  }
+
 }

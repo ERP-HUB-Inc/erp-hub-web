@@ -67,7 +67,7 @@ export default class StockIOPage extends Datatable {
         width: 120,
         render: (quantity, record) => (
           <QuantityValue
-            value={quantity}
+            quantity={quantity}
             showSign={true}
             sign={
               record.status === 3
@@ -81,7 +81,7 @@ export default class StockIOPage extends Datatable {
             type={record.type}
             status={record.status}
             unit="pcs"
-            decimals={2}
+            decimals={0}
           />
         ),
       },

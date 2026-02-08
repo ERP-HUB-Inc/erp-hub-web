@@ -3,6 +3,11 @@ export default {
     "Dashboad",
     "ផ្ទាំងគ្រប់គ្រង"
   ],
+
+  "text_overview": [
+    "Overview",
+    "ផ្ទាំងគ្រប់គ្រង"
+  ],
   
   "home_page_title_today_is_sale": [
     "Today's Sale",

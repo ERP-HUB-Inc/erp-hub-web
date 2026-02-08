@@ -36,10 +36,10 @@ const OptionZero = ({data}) => {
         </Row>
         <Row>
           <Col span={12}>
-              <DescriptionItem title={<Translate id="text_category" />} content={data.productType ? data.productType.name : ""} />
+              <DescriptionItem title={<Translate id="text_category" />} content={data.category ? data.category.name : "Uncategorized"} />
           </Col>
           <Col span={12}>
-              <DescriptionItem title={<Translate id="text_brand" />} content={data.brand ? data.brand.name : ""} />
+              <DescriptionItem title={<Translate id="text_brand" />} content={data.brand ? data.brand.name : "Unknown"} />
           </Col>
         </Row>
     </Card>;

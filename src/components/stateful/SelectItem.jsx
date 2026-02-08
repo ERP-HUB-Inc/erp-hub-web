@@ -84,7 +84,7 @@ export function SelectItem(props) {
                    </div>
                    <small style={{ color: "#999" }}>
                      SKU: {Util.getItemSku(item)} | Stock:{" "}
-                     {Util.getQuantityOnHand(item)}
+                     {Util.getQuantityOnHand(item)} {item.stockUnit ? item.stockUnit.name : "Pcs"}
                    </small>
                  </div>
                </div>

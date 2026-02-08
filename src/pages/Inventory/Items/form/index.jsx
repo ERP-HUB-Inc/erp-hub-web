@@ -88,9 +88,7 @@ export default class ProductList extends Datatable {
             const numberOfVariant = record?.productVariants?.length || 0;
             const categoryName = record?.category?.name || "Uncategorized";
 
-            // Helper function to get product name (you'll need to implement this based on your Util)
             const getProductName = () => {
-              // Replace this with your actual utility function
               return record?.name || name || "Product Name";
             };
 
@@ -104,11 +102,11 @@ export default class ProductList extends Datatable {
               >
                 <Avatar
                   src={
-                    record?.image ||
+                    (new CommonUtil()).getImageUrl(record?.image) ||
                     record?.imageUrl ||
                     "https://ae-pic-a1.aliexpress-media.com/kf/S1dd261bc501a452ab057df05e6c91d823.jpg_960x960q75.jpg_.avif"
                   }
-                  size={64}
+                  size={50}
                   shape="square"
                   style={{
                     borderRadius: "8px",
@@ -196,7 +194,7 @@ export default class ProductList extends Datatable {
             return (
               <QuantityValue
                 quantity={stockCount}
-                unit={record?.unitOfMeasurement?.name}
+                unit={record?.stockUnit?.name}
                 decimals={0}
               />
             );
@@ -479,6 +477,10 @@ export default class ProductList extends Datatable {
                }
             });
          }
+
+         if (this.searchItemInput) {
+            this.searchItemInput.focus();
+         }
    }
 
    componentWillUpdate(nextProps) {
@@ -639,7 +641,7 @@ export default class ProductList extends Datatable {
       if (product) {
          const quantity = this.getAllQTY(product[0]);
 
-         if (product[0].serialType === Enum.SERIAL_TYPE.SERVICE || quantity <= 0){
+         if (product[0].serialType === Enum.SERIAL_TYPE.SERVICE || quantity <= 0 || true){
             this.setState({deleting: true});
             ProductService.archive(this.state.selectedListIds)
             .then(() => {
@@ -871,317 +873,396 @@ export default class ProductList extends Datatable {
     }
 
    render() {
-
       return (
-         <div className="content-list">
-            <EditStock ref={f => this.editStockRef = f} locale={this.props.locale} callback={() => this.fetchList(true)} />
-            <div className="table-wrapper">
-               <PageHeader
-                  title="Items Management"
-                  subtitle="Manage all products and services"
-                  breadcrumbs={[
-                     { text: 'Dashboard', href: '/dashboard' },
-                     { text: 'Items Management' }
-                  ]}
-                  actions={[
-                     // <Button
-                     //    type="default"
-                     //    size="large"
-                     //    onClick={() => console.log("generate item with AI")}
-                     //    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                     //    >
-                     //    <img 
-                     //       src="/images/ai-technology.png" 
-                     //       alt="AI Icon" 
-                     //       style={{ width: 20, height: 20 }} 
-                     //    />
-                     //    <span>AI Generate</span>
-                     //    </Button>,
+        <div className="content-list">
+          <EditStock
+            ref={(f) => (this.editStockRef = f)}
+            locale={this.props.locale}
+            callback={() => this.fetchList(true)}
+          />
+          <div className="table-wrapper">
+            <PageHeader
+              title="Items Management"
+              subtitle="Manage all products and services"
+              breadcrumbs={[
+                { text: "Dashboard", href: "/dashboard" },
+                { text: "Items Management" },
+              ]}
+              actions={[
+                // <Button
+                //    type="default"
+                //    size="large"
+                //    onClick={() => console.log("generate item with AI")}
+                //    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+                //    >
+                //    <img
+                //       src="/images/ai-technology.png"
+                //       alt="AI Icon"
+                //       style={{ width: 20, height: 20 }}
+                //    />
+                //    <span>AI Generate</span>
+                //    </Button>,
 
-                     {
-                        text: this.state.activeTab === "item" ? 'Import Items' : "Import Stock IO",
-                        type: 'default',
-                        icon: 'upload',
-                        onClick: () => {}
-                     },
-                     {
-                        text: "Add New Item",
-                        type: 'primary',
-                        icon: 'plus',
-                        onClick: () => {
-                           ReactGA.event({
-                              category: "Action Button",
-                              action: "Add New Item",
-                              label: "ERP HUB Web",
-                           });
+                {
+                  text:
+                    this.state.activeTab === "item"
+                      ? "Import Items"
+                      : "Import Stock IO",
+                  type: "default",
+                  icon: "upload",
+                  onClick: () => {},
+                },
+                {
+                  text: "Add New Item",
+                  type: "primary",
+                  icon: "plus",
+                  onClick: () => {
+                    ReactGA.event({
+                      category: "Action Button",
+                      action: "Add New Item",
+                      label: "ERP HUB Web",
+                    });
 
-                           history.push("/inventories/items/create");
-                        }
-                     }
-                  ]}
-               />
+                    history.push("/inventories/items/create");
+                  },
+                },
+              ]}
+            />
 
-               {/* TODO: apply memo to both tab content to avoid re-render */}
-               <Tabs defaultActiveKey="item" onChange={(activeKey) => this.setState({ activeTab: activeKey })}>
-                  <TabPane tab={`Items(${this.state.pagination.total || 0})`} key="item" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
-                     <Row style={{ marginBottom: 10 }}>
-                        <Col md={24}>
-                           <Input
-                              placeholder={this.CATranslate("text_search_item", this.props.locale)}
-                              form={this.props.form}
-                              onChange={this.onSearch}
-                              suffix={<Icon type="search" />}
-                              style={{width: 350, marginBottom: 0}}
-                              allowClear={true}
-                           />
+            {/* TODO: apply memo to both tab content to avoid re-render */}
+            <Tabs
+              defaultActiveKey="item"
+              onChange={(activeKey) => this.setState({ activeTab: activeKey })}
+            >
+              <TabPane
+                tab={`Items(${this.state.pagination.total || 0})`}
+                key="item"
+                style={{ paddingLeft: "40px", paddingRight: "40px" }}
+              >
+                <Row style={{ marginBottom: 10 }}>
+                  <Col md={24}>
+                    <Input
+                      ref={(input) => {
+                        this.searchItemInput = input;
+                      }}
+                      placeholder={this.CATranslate(
+                        "text_search_item",
+                        this.props.locale,
+                      )}
+                      form={this.props.form}
+                      onChange={this.onSearch}
+                      suffix={<Icon type="search" />}
+                      style={{ width: 350, marginBottom: 0 }}
+                      allowClear={true}
+                    />
 
-                           <SelectCategory
-                              ref={this.SelectCategoryRef}
-                              onChange={this.onChangeCategory}
-                           />
+                    <SelectCategory
+                      ref={this.SelectCategoryRef}
+                      onChange={this.onChangeCategory}
+                    />
 
-                           <SelectLocation
-                              ref={this.SelectLocationRef}
-                              onChange={this.onChangeLocation}
-                           />
-                        </Col>
-                     </Row>
+                    <SelectLocation
+                      ref={this.SelectLocationRef}
+                      onChange={this.onChangeLocation}
+                    />
+                  </Col>
+                </Row>
 
-                     <Table
-                        rowKey="id"
-                        bordered={true}
-                        pagination={false}
-                        dataSource={this.state.products}
-                        columns={this.columns}
-                        rowClassName={this.rowClassName}
-                        locale={{emptyText: <Translate id="table_empty_data"/>}}
-                        onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
-                        loading={this.state.loading}
-                        // scroll={{ y: 550, x: 1200 }}
-                        size="middle"
-                     />
+                <Table
+                  rowKey="id"
+                  bordered={true}
+                  pagination={false}
+                  dataSource={this.state.products}
+                  columns={this.columns}
+                  rowClassName={this.rowClassName}
+                  locale={{ emptyText: <Translate id="table_empty_data" /> }}
+                  onRow={(record) => ({
+                    onDoubleClick: () => this.handleShowFormEdit(record),
+                  })}
+                  loading={this.state.loading}
+                  // scroll={{ y: 550, x: 1200 }}
+                  size="middle"
+                />
 
-                     <div style={{marginTop: 15}}>
-                        {this.renderPagination()}
-                     </div>
+                <div style={{ marginTop: 15 }}>{this.renderPagination()}</div>
 
-                     <this.clearFloating/>
-                  </TabPane>
-                  <TabPane tab="Stock IO" key="stock" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
-                     <Row style={{ marginBottom: 10 }}>
-                        <Col md={24}>
-                           <Input
-                              placeholder={this.CATranslate("text_search_item", this.props.locale)}
-                              form={this.props.form}
-                              onChange={this.onSearch}
-                              suffix={<Icon type="search" />}
-                              style={{width: 350, marginBottom: 0}}
-                              allowClear={true}
-                           />
+                <this.clearFloating />
+              </TabPane>
+              <TabPane
+                tab="Stock IO"
+                key="stock"
+                style={{ paddingLeft: "40px", paddingRight: "40px" }}
+              >
+                <Row style={{ marginBottom: 10 }}>
+                  <Col md={24}>
+                    <Input
+                      placeholder={this.CATranslate(
+                        "text_search_item",
+                        this.props.locale,
+                      )}
+                      form={this.props.form}
+                      onChange={this.onSearch}
+                      suffix={<Icon type="search" />}
+                      style={{ width: 350, marginBottom: 0 }}
+                      allowClear={true}
+                    />
 
-                           <SelectCategory
-                              ref={this.SelectCategoryRef}
-                              onChange={this.onChangeCategory}
-                           />
-                        </Col>
-                     </Row>
+                    <SelectCategory
+                      ref={this.SelectCategoryRef}
+                      onChange={this.onChangeCategory}
+                    />
+                  </Col>
+                </Row>
 
-                     <Table
-                        rowKey="id"
-                        bordered={true}
-                        pagination={false}
-                        dataSource={this.state.products}
-                        columns={this.stockColumns}
-                        rowClassName={this.rowClassName}
-                        locale={{emptyText: <Translate id="table_empty_data"/>}}
-                        // expandedRowRender={this.expandedRender}
-                        // onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
-                        loading={this.state.loading}
-                        size="middle"
-                     />
+                <Table
+                  rowKey="id"
+                  bordered={true}
+                  pagination={false}
+                  dataSource={this.state.products}
+                  columns={this.stockColumns}
+                  rowClassName={this.rowClassName}
+                  locale={{ emptyText: <Translate id="table_empty_data" /> }}
+                  // expandedRowRender={this.expandedRender}
+                  // onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
+                  loading={this.state.loading}
+                  size="middle"
+                />
 
-                     <div style={{marginTop: 15}}>
-                        {this.renderPagination()}
-                     </div>
+                <div style={{ marginTop: 15 }}>{this.renderPagination()}</div>
 
-                     <this.clearFloating/>
+                <this.clearFloating />
 
-                     {/* Confirmation Drawer */}
-                     <Drawer
-                        title="Confirm Stock IN"
-                        placement="right"
-                        width={720}
-                        onClose={() => this.setState({ drawerVisible: false })}
-                        visible={this.state.drawerVisible}
-                        >
-                        {/* Summary Section */}
-                        <Card style={{ marginBottom: '24px', background: '#f6ffed', borderColor: '#b7eb8f' }}>
-                           <Row gutter={16}>
-                              <Col span={12}>
-                                 <Statistic
-                                    title="Items to Stock IN"
-                                    value={Object.values(this.state.stockInItems).length}
-                                    valueStyle={{ color: '#52c41a', fontSize: '28px', fontWeight: 600 }}
-                                 />
-                              </Col>
-                              <Col span={12}>
-                                 <Statistic
-                                    title="Total Quantity"
-                                    value={this.getQuantityStockIn()}
-                                    precision={2}
-                                    valueStyle={{ color: '#52c41a', fontSize: '28px', fontWeight: 600 }}
-                                 />
-                              </Col>
-                           </Row>
-                        </Card>
-
-                        <Divider orientation="left">Items Details</Divider>
-
-                        {/* Items Detail Table */}
-                        <Table
-                           rowKey={"itemId"}
-                           columns={[
-                               {
-                                 title: 'Item',
-                                 dataIndex: 'itemName',
-                                 key: 'itemName',
-                                 render: (text, record) => (
-                                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                     <div style={{ fontSize: '20px' }}>{record.image}</div>
-                                     <div>
-                                       <div style={{ fontWeight: 500 }}>{text}</div>
-                                       <div style={{ fontSize: '12px', color: '#888' }}>{record.barcode}</div>
-                                     </div>
-                                   </div>
-                                 )
-                               },
-                               {
-                                 title: 'Current',
-                                 dataIndex: 'quantity',
-                                 key: 'quantity',
-                                 align: 'right',
-                                 render: (value) => <span>{value.toFixed(2)}</span>
-                               },
-                               {
-                                 title: 'Qty IN',
-                                 dataIndex: 'qtyIn',
-                                 key: 'qtyIn',
-                                 align: 'right',
-                                 render: (value) => (
-                                   <Tag color="blue" style={{ fontSize: '14px', padding: '4px 12px' }}>
-                                     +{value.toFixed(2)}
-                                   </Tag>
-                                 )
-                               },
-                               {
-                                 title: 'New Stock',
-                                 key: 'newStock',
-                                 align: 'right',
-                                 render: (_, record) => (
-                                   <span style={{ color: '#52c41a', fontWeight: 600 }}>
-                                     {(record.quantity + record.qtyIn).toFixed(2)}
-                                   </span>
-                                 )
-                               }
-                             ]
-                           }
-                           dataSource={Object.entries(this.state.stockInItems).map(([key, value]) => value)}
-                           pagination={false}
-                           size="small"
+                {/* Confirmation Drawer */}
+                <Drawer
+                  title="Confirm Stock IN"
+                  placement="right"
+                  width={720}
+                  onClose={() => this.setState({ drawerVisible: false })}
+                  visible={this.state.drawerVisible}
+                >
+                  {/* Summary Section */}
+                  <Card
+                    style={{
+                      marginBottom: "24px",
+                      background: "#f6ffed",
+                      borderColor: "#b7eb8f",
+                    }}
+                  >
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <Statistic
+                          title="Items to Stock IN"
+                          value={Object.values(this.state.stockInItems).length}
+                          valueStyle={{
+                            color: "#52c41a",
+                            fontSize: "28px",
+                            fontWeight: 600,
+                          }}
                         />
+                      </Col>
+                      <Col span={12}>
+                        <Statistic
+                          title="Total Quantity"
+                          value={this.getQuantityStockIn()}
+                          precision={2}
+                          valueStyle={{
+                            color: "#52c41a",
+                            fontSize: "28px",
+                            fontWeight: 600,
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Card>
 
-                        <div style={{ 
-                           marginTop: '24px', 
-                           padding: '16px', 
-                           background: '#fffbe6', 
-                           border: '1px solid #ffe58f',
-                           borderRadius: '4px'
-                        }}>
-                           <strong>⚠️ Important:</strong> Once confirmed, the stock quantities will be updated and cannot be undone. Please review carefully before confirming.
-                        </div>
+                  <Divider orientation="left">Items Details</Divider>
 
-                        <div style={{ marginTop: '24px', textAlign: 'center' }}>
-                           <Button 
-                              onClick={() => this.setState({ drawerVisible: false })} 
-                              size="large"
-                              style={{ marginRight: 12, width: '150px' }}
-                           >
-                              Cancel
-                           </Button>
-                           {/* <Button 
+                  {/* Items Detail Table */}
+                  <Table
+                    rowKey={"itemId"}
+                    columns={[
+                      {
+                        title: "Item",
+                        dataIndex: "itemName",
+                        key: "itemName",
+                        render: (text, record) => (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "12px",
+                            }}
+                          >
+                            <div style={{ fontSize: "20px" }}>
+                              {record.image}
+                            </div>
+                            <div>
+                              <div style={{ fontWeight: 500 }}>{text}</div>
+                              <div style={{ fontSize: "12px", color: "#888" }}>
+                                {record.barcode}
+                              </div>
+                            </div>
+                          </div>
+                        ),
+                      },
+                      {
+                        title: "Current",
+                        dataIndex: "quantity",
+                        key: "quantity",
+                        align: "right",
+                        render: (value) => <span>{value.toFixed(2)}</span>,
+                      },
+                      {
+                        title: "Qty IN",
+                        dataIndex: "qtyIn",
+                        key: "qtyIn",
+                        align: "right",
+                        render: (value) => (
+                          <Tag
+                            color="blue"
+                            style={{ fontSize: "14px", padding: "4px 12px" }}
+                          >
+                            +{value.toFixed(2)}
+                          </Tag>
+                        ),
+                      },
+                      {
+                        title: "New Stock",
+                        key: "newStock",
+                        align: "right",
+                        render: (_, record) => (
+                          <span style={{ color: "#52c41a", fontWeight: 600 }}>
+                            {(record.quantity + record.qtyIn).toFixed(2)}
+                          </span>
+                        ),
+                      },
+                    ]}
+                    dataSource={Object.entries(this.state.stockInItems).map(
+                      ([key, value]) => value,
+                    )}
+                    pagination={false}
+                    size="small"
+                  />
+
+                  <div
+                    style={{
+                      marginTop: "24px",
+                      padding: "16px",
+                      background: "#fffbe6",
+                      border: "1px solid #ffe58f",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    <strong>⚠️ Important:</strong> Once confirmed, the stock
+                    quantities will be updated and cannot be undone. Please
+                    review carefully before confirming.
+                  </div>
+
+                  <div style={{ marginTop: "24px", textAlign: "center" }}>
+                    <Button
+                      onClick={() => this.setState({ drawerVisible: false })}
+                      size="large"
+                      style={{ marginRight: 12, width: "150px" }}
+                    >
+                      Cancel
+                    </Button>
+                    {/* <Button 
                               onClick={() => console.log("")}
                               size="large"
                               style={{ marginRight: 12, width: '180px' }}
                            >
                               Print Stock IN Slip
                            </Button> */}
-                           <Button 
-                              type="primary" 
-                              onClick={this.handleStockIn}
-                              disabled={this.state.submittingStockIn}
-                              loading={this.state.submittingStockIn}
-                              size="large"
-                              style={{ width: '200px' }}
-                           >
-                              Confirm Stock IN
-                           </Button>
-                        </div>
-                     </Drawer>
+                    <Button
+                      type="primary"
+                      onClick={this.handleStockIn}
+                      disabled={this.state.submittingStockIn}
+                      loading={this.state.submittingStockIn}
+                      size="large"
+                      style={{ width: "200px" }}
+                    >
+                      Confirm Stock IN
+                    </Button>
+                  </div>
+                </Drawer>
 
-                     {/* Sticky Summary Bar at Bottom */}
-                     <div style={{
-                        position: 'fixed',
-                        bottom: 0,
-                        left: 0,
-                        marginLeft: 230,
-                        right: 0,
-                        background: '#fff',
-                        boxShadow: '0 -2px 8px rgba(0,0,0,0.15)',
-                        zIndex: 999,
-                        padding: '16px 24px',
-                        borderTop: '1px solid #e8e8e8'
-                     }}>
-                        <Row gutter={24} align="middle">
-                           <Col span={6}>
-                              <Statistic
-                                 title="Total Items to Stock IN"
-                                 value={Object.values(this.state.stockInItems).length}
-                                 suffix={`/ ${this.state?.pagination?.total}`}
-                                 valueStyle={{ color: '#1890ff', fontWeight: 600, fontSize: '20px' }}
-                              />
-                           </Col>
-                           <Col span={6}>
-                              <Statistic
-                                 title="Total Quantity"
-                                 value={this.getQuantityStockIn()}
-                                 precision={2}
-                                 valueStyle={{ color: '#52c41a', fontWeight: 600, fontSize: '20px' }}
-                              />
-                           </Col>
-                           <Col span={6}>
-                              <Statistic
-                                 title="Destination Location"
-                                 value={"Back Warehouse (ឃ្លាំងក្រោយ)"}
-                                 valueStyle={{ color: '#52c41a', fontWeight: 600, fontSize: '20px' }}
-                              />
-                           </Col>
-                           <Col span={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                              <Button
-                                 type="primary"
-                                 size="large"
-                                 onClick={() => this.setState({ drawerVisible: true })}
-                                 disabled={Object.values(this.state.stockInItems).length <= 0}
-                                 style={{ width: '250px', height: '48px', fontSize: '16px' }}
-                              >
-                                 Review & Confirm Stock IN
-                              </Button>
-                           </Col>
-                        </Row>
-                     </div>
-                  </TabPane>
-               </Tabs>
-            </div>
-         </div>
+                {/* Sticky Summary Bar at Bottom */}
+                <div
+                  style={{
+                    position: "fixed",
+                    bottom: 0,
+                    left: 0,
+                    marginLeft: 230,
+                    right: 0,
+                    background: "#fff",
+                    boxShadow: "0 -2px 8px rgba(0,0,0,0.15)",
+                    zIndex: 999,
+                    padding: "16px 24px",
+                    borderTop: "1px solid #e8e8e8",
+                  }}
+                >
+                  <Row gutter={24} align="middle">
+                    <Col span={6}>
+                      <Statistic
+                        title="Total Items to Stock IN"
+                        value={Object.values(this.state.stockInItems).length}
+                        suffix={`/ ${this.state?.pagination?.total}`}
+                        valueStyle={{
+                          color: "#1890ff",
+                          fontWeight: 600,
+                          fontSize: "20px",
+                        }}
+                      />
+                    </Col>
+                    <Col span={6}>
+                      <Statistic
+                        title="Total Quantity"
+                        value={this.getQuantityStockIn()}
+                        precision={2}
+                        valueStyle={{
+                          color: "#52c41a",
+                          fontWeight: 600,
+                          fontSize: "20px",
+                        }}
+                      />
+                    </Col>
+                    <Col span={6}>
+                      <Statistic
+                        title="Destination Location"
+                        value={"Back Warehouse (ឃ្លាំងក្រោយ)"}
+                        valueStyle={{
+                          color: "#52c41a",
+                          fontWeight: 600,
+                          fontSize: "20px",
+                        }}
+                      />
+                    </Col>
+                    <Col
+                      span={6}
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <Button
+                        type="primary"
+                        size="large"
+                        onClick={() => this.setState({ drawerVisible: true })}
+                        disabled={
+                          Object.values(this.state.stockInItems).length <= 0
+                        }
+                        style={{
+                          width: "250px",
+                          height: "48px",
+                          fontSize: "16px",
+                        }}
+                      >
+                        Review & Confirm Stock IN
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              </TabPane>
+            </Tabs>
+          </div>
+        </div>
       );
    }
 }

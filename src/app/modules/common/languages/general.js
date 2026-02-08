@@ -158,7 +158,7 @@ export default {
 
   text_output_quantity: ["Output Quantity", "បរិមាណបំបែកបាន"],
 
-  text_quantity_buy_in: ["Quantity Buy In", "បរិមាណទិញចូល"],
+  text_quantity_buy_in: ["PO Quantity", "បរិមាណទិញចូល"],
 
   text_quantity_to_split: ["Quantity to Split", "បរិមាណយកមកបំបែក"],
 

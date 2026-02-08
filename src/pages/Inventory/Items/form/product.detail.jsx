@@ -10,10 +10,10 @@ import {
 import {Translate} from "@redux/index";
 import history from "@router/index";
 import ProductService from "@services/ItemService";
-import ProductDetailOption from "./ProductDetailOption";
-import ProductDetailStockInformation from "./ProductDetailStockInformation";
+import ProductDetailOption from "./product.detail.option";
+import ProductDetailStockInformation from "./item.stock.info";
 import MovementLog from "./movement.log";
-import PurchaseHistory from "./PurchaseHistory";
+import PurchaseHistory from "./purchase.history";
 
 
 export default function ProductDetail(props) {
@@ -56,36 +56,50 @@ export default function ProductDetail(props) {
   );
 
   return (
-    <React.Fragment>
+    <div
+      className="content-list"
+      style={{ paddingLeft: "40px", paddingRight: "40px" }}
+    >
       <PageHeader
         style={{
-            backgroundColor: "#f7f7f7",
-            paddingLeft: 0,
-            paddingRight: 0
+          // backgroundColor: "#fff",
+          paddingLeft: 0,
+          paddingRight: 0,
         }}
         onBack={() => history.goBack()}
         title={<Translate id="text_product" />}
         subTitle={data.name}
-        extra={
-          [
-            <Dropdown.Button type="primary" onClick={handleButtonUpdate} overlay={menu}>
-              Edit
-            </Dropdown.Button>
-          ]
-        }
+        extra={[
+          <Dropdown.Button
+            type="primary"
+            onClick={handleButtonUpdate}
+            overlay={menu}
+          >
+            Edit
+          </Dropdown.Button>,
+        ]}
       />
 
-      {
-        loading ? <Spin spinning={loading} style={{width: "100%",justifyContent: "center"}}/> :
-        <React.Fragment> 
-           <ProductDetailOption option={params.get("productOption")} data={data}/>
-           <ProductDetailStockInformation option={params.get("productOption")} data={data} id={props.match.params.id}/>
-           <MovementLog id={props.match.params.id}/>
-           <PurchaseHistory id={props.match.params.id}/>
+      {loading ? (
+        <Spin
+          spinning={loading}
+          style={{ width: "100%", justifyContent: "center" }}
+        />
+      ) : (
+        <React.Fragment>
+          <ProductDetailOption
+            option={params.get("productOption")}
+            data={data}
+          />
+          <ProductDetailStockInformation
+            option={params.get("productOption")}
+            data={data}
+            id={props.match.params.id}
+          />
+          <MovementLog id={props.match.params.id} />
+          <PurchaseHistory id={props.match.params.id} />
         </React.Fragment>
-      
-      }
-    
-    </React.Fragment>
+      )}
+    </div>
   );
 }

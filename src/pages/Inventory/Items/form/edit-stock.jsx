@@ -96,12 +96,11 @@ class EditStock extends React.Component {
       const data = {
          reason: this.state.reason,
          locationId: this.state.locationId,
-         step: 1,
+         status: 1,
          entries: [
             {
-               currentQuantity: 0,
-               productVariantId: Util.getProductVariantId(product),
-               productName: product.name,
+               variantId: Util.getProductVariantId(product),
+               itemName: product.name,
                variantName: "",
                barcode: Util.getItemBarcode(product),
                unitId: product.unit ? product.unit.id : null,
@@ -110,7 +109,7 @@ class EditStock extends React.Component {
          ]
       };
 
-      this.setState({submitting: true});
+      this.setState({ submitting: true });
       StockAdjustmentService.add(data)
       .then(() => {
          this.onClose();
@@ -146,7 +145,7 @@ class EditStock extends React.Component {
                      <Form.Item required={true} label={<Translate id="text_location" />}>
                         <Select
                            placeholder={this.CATranslate("text_location")}
-                           defaultValue={this.state.locationId}
+                           defaultValue={this.state.locationId ? this.state.locationId : undefined}
                            onChange={(value) => this.onChange("locationId", value)}
                         >
                            {

@@ -1,10 +1,10 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import FormUpdatPage from "./form/form.update";
+import { ItemFormUpdate } from "./form/form.update";
 
 function FormUpdateContainer(props) {
-  return <FormUpdatPage {...props} />;
+  return <ItemFormUpdate {...props} />;
 }
 
 function mapStateToProps(state) {

@@ -70,12 +70,7 @@ const PurchaseOrderForm = (props) => {
                 },
               ],
               initialValue: itemId,
-            })(
-              <SelectItem
-                items={items}
-                defaultValue={itemId}
-              />
-            )}
+            })(<SelectItem items={items} defaultValue={itemId} />)}
           </Form.Item>
         </div>
       ),
@@ -110,7 +105,7 @@ const PurchaseOrderForm = (props) => {
               style={{ width: "100%" }}
               min={1}
               placeholder="Enter quantity (pcs)"
-            />
+            />,
           )}
         </Form.Item>
       ),
@@ -139,44 +134,47 @@ const PurchaseOrderForm = (props) => {
               style={{ width: "100%" }}
               min={1}
               placeholder="Enter unit price"
-            />
+            />,
           )}
         </Form.Item>
       ),
     },
     {
       title: "Unit",
-      dataIndex: "unitId",
+      dataIndex: "unit",
       width: 160,
-      render: (value, record, index) => (
-        <Form.Item style={{ marginBottom: 0 }}>
-          {props.form.getFieldDecorator(
-            `unitId[${index}]`,
-            value
-              ? {
-                  rules: [
-                    {
-                      required: false,
-                      message: "Please select unit",
-                    },
-                  ],
-                  initialValue: value,
-                }
-              : {}
-          )(
-            <Select
-              style={{ width: "100%" }}
-              placeholder="Pick a Unit (pcs, box, kg...)"
-            >
-              {units.map((u) => (
-                <Option key={u.id} value={u.id}>
-                  {u.name}
-                </Option>
-              ))}
-            </Select>
-          )}
-        </Form.Item>
-      ),
+      render: (unit, record, index) => {
+        const unitList = unit ? [unit].concat(units) : units;
+        return (
+          <Form.Item style={{ marginBottom: 0 }}>
+            {props.form.getFieldDecorator(
+              `unitId[${index}]`,
+              unit
+                ? {
+                    rules: [
+                      {
+                        required: false,
+                        message: "Please select unit",
+                      },
+                    ],
+                    initialValue: unit.id,
+                  }
+                : {},
+            )(
+              <Select
+                style={{ width: "100%" }}
+                placeholder="Pick a Unit (pcs, box, kg...)"
+              >
+                {unitList.map((u) => (
+                  <Option key={u.id} value={u.id}>
+                    {u.name}
+                  </Option>
+                ))}
+              </Select>,
+            )}
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Batch/Expiry",
@@ -192,7 +190,7 @@ const PurchaseOrderForm = (props) => {
                 size="small"
                 placeholder="Batch No."
                 onChange={(e) => updateRow(record.key, "batch", e.target.value)}
-              />
+              />,
             )}
           </Form.Item>
           <Form.Item style={{ marginBottom: 0 }}>
@@ -206,7 +204,7 @@ const PurchaseOrderForm = (props) => {
                 onChange={(date, dateString) =>
                   updateRow(record.key, "expiry", date)
                 }
-              />
+              />,
             )}
           </Form.Item>
         </div>
@@ -280,6 +278,7 @@ const PurchaseOrderForm = (props) => {
           quantity: entry.quantity,
           batch: entry.batch,
           expiry: entry.expiry,
+          unit: entry.unit,
         }))
       );
 
@@ -463,7 +462,7 @@ const PurchaseOrderForm = (props) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async ({ status }) => {
     try {
       const value = await new Promise((resolve, reject) => {
         props.form.validateFields((err, values) => {
@@ -481,7 +480,7 @@ const PurchaseOrderForm = (props) => {
         discount: value.discount,
         shippingFee: value.shippingFee,
         tax: 0,
-        status: "ORDERED",
+        status: status || "ORDERED",
         entries: value.item
           .map((id, index) => {
             const item = items.find((item) => item.id === id);
@@ -695,7 +694,7 @@ const PurchaseOrderForm = (props) => {
                     selectedItem={po?.supplier}
                     size="meduim"
                     width={"100%"}
-                  />
+                  />,
                 )}
               </Form.Item>
             </Col>
@@ -708,7 +707,7 @@ const PurchaseOrderForm = (props) => {
                   <DatePicker
                     format={"DD/MM/YYYYY"}
                     style={{ width: "100%" }}
-                  />
+                  />,
                 )}
               </Form.Item>
             </Col>
@@ -733,7 +732,7 @@ const PurchaseOrderForm = (props) => {
                         {wh.name}
                       </Option>
                     ))}
-                  </Select>
+                  </Select>,
                 )}
               </Form.Item>
             </Col>
@@ -749,7 +748,7 @@ const PurchaseOrderForm = (props) => {
                   <InputNumber
                     size="medium"
                     placeholder="Enter discount amount (e.g., 5.00)"
-                  />
+                  />,
                 )}
               </Form.Item>
             </Col>
@@ -786,7 +785,7 @@ const PurchaseOrderForm = (props) => {
                   <InputNumber
                     size="meduim"
                     placeholder="Enter shipping fee (e.g., 2.50)"
-                  />
+                  />,
                 )}
               </Form.Item>
             </Col>
@@ -814,10 +813,10 @@ const PurchaseOrderForm = (props) => {
             </div>
             <Table
               columns={columns}
+              size="small"
               dataSource={poItems}
               pagination={false}
               scroll={{ x: 1400 }}
-              size="small"
               bordered
             />
           </div>
@@ -851,7 +850,7 @@ const PurchaseOrderForm = (props) => {
             <Button
               size="large"
               icon="inbox"
-              onClick={handleSubmit}
+              onClick={() => handleSubmit({ status: "FULL_RECEIVED" })}
               disabled={poItems.filter((i) => i.itemId).length === 0}
             >
               Update Received Order

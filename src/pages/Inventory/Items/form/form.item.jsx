@@ -2,14 +2,11 @@ import React from "react";
 import {
   Form,
   Spin,
-  Tag,
-  Input,
-  Tooltip,
-  Icon,
   Row,
   Col,
   Switch
 } from "antd";
+import { orderBy } from "lodash";
 import {
   Translate
 } from "@redux/index";
@@ -26,6 +23,7 @@ import {
   CustomCollapse,
   CustomCheckbox
 } from "@components/index";
+import CommonUtil from "@common/util/index";
 import ProductAction from "../redux/action";
 import CategoryService from "@services/CategoryService";
 import BrandService from "@services//BrandService";
@@ -37,7 +35,6 @@ import ProductConditionService from "@services/ProductConditionService";
 import VendorService from "@services/VendorService";
 import ExchangeRateService from "@services/ExchangeRateService";
 import BaseModal from "@layout/base-modal";
-import { orderBy } from "lodash";
 import Exchange from "./exchange-money-func";
 import "./index.css";
 import FormVariant from "./form.variant";
@@ -263,15 +260,26 @@ function SelectUnitOfMeasurement(props) {
   React.useEffect(() => {
     setLoading(true);
     UnitService.get(limit)
-    .then(response => {
-      if (response && response.data) {
-        setUnits(response.data.data);
-      }
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }, [])
+      .then((response) => {
+        if (response && response.data) {
+          if (
+            props.selected &&
+            response.data.data.findIndex(
+              (value) => value.id === props.selected.id,
+            ) <= -1
+          ) {
+            setUnits(
+              orderBy([props.selected].concat(response.data.data), ["name"]),
+            );
+          } else {
+            setUnits(orderBy(response.data.data, ["name"]));
+          }
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   return <SelectSearch
     name="unitOfMeasurementId"
@@ -328,13 +336,24 @@ function SelectSellingUnit(props) {
     UnitService.get(limit)
     .then(response => {
       if (response && response.data) {
-        setUnits(response.data.data);
+        if (
+          props.selected &&
+          response.data.data.findIndex(
+            (value) => value.id === props.selected.id,
+          ) <= -1
+        ) {
+          setUnits(
+            orderBy([props.selected].concat(response.data.data), ["name"]),
+          );
+        } else {
+          setUnits(orderBy(response.data.data, ["name"]));
+        }
       }
     })
     .finally(() => {
       setLoading(false);
     });
-  }, [])
+  }, []);
 
   return <SelectSearch
     name="sellUnitId"
@@ -391,7 +410,18 @@ function SelectStockUnit(props) {
     UnitService.get(limit)
     .then(response => {
       if (response && response.data) {
-        setUnits(response.data.data);
+        if (
+          props.selected &&
+          response.data.data.findIndex(
+            (value) => value.id === props.selected.id,
+          ) <= -1
+        ) {
+          setUnits(
+            orderBy([props.selected].concat(response.data.data), ["name"]),
+          );
+        } else {
+          setUnits(orderBy(response.data.data, ["name"]));
+        }
       }
     })
     .finally(() => {
@@ -867,7 +897,7 @@ export default class FormItem extends BaseModal {
       uid: "-1",
       name: formData.image,
       status: "done",
-      url: this.Util.getProductImage(formData.image).url
+      url: (new CommonUtil()).getImageUrl(formData.image)
     };
 
     return (
@@ -1186,8 +1216,8 @@ export default class FormItem extends BaseModal {
               name="image"
               data={{ file: image }}
               fileList={[image]}
-              endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
-              endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+              endPoint={`${this.Util.getAPIURL()}/files/upload/item`}
+              endPointDelete={`${this.Util.getAPIURL()}/files/delete/item`}
               accessToken={this.Util.getAccessToken()}
               locale={locale}
               form={form}
@@ -1370,12 +1400,13 @@ export default class FormItem extends BaseModal {
 
             <SelectUnitOfMeasurement
               defaultValue={formData.unitOfMeasurementId}
+              selected={formData.unitOfMeasurement}
               form={form}
             />
 
-            <SelectSellingUnit defaultValue={formData.sellUnitId} form={form} />
+            <SelectSellingUnit defaultValue={formData.sellUnitId} selected={formData.sellUnit} form={form} />
 
-            <SelectStockUnit defaultValue={formData.stockUnitId} form={form} />
+            <SelectStockUnit defaultValue={formData.stockUnitId} selected={formData.stockUnit} form={form} />
 
             <InputNumber
               name="unitConversion"

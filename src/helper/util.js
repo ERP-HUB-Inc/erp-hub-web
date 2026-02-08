@@ -9,15 +9,9 @@ import Enum from "../enums";
 export default class Util {
   getAPIURL() {
     let host = process.env.REACT_APP_API_HOST;
-    let port = process.env.REACT_APP_API_PROD_PORT;
-    if (process.env.REACT_APP_ENV === "DEV") {
-      host = process.env.REACT_APP_API_DEV_HOST;
-      port = process.env.REACT_APP_API_PORT;
-    } else if (process.env.REACT_APP_ENV === "PREPROD") {
-      port = process.env.REACT_APP_API_PRE_PROD_PORT;
-    }
-    const rootPath = process.env.REACT_APP_API_ROOT;
-    const url = `${host}:${port}/${rootPath}`;
+    let port = process.env.REACT_APP_API_PORT;
+
+    const url = `${host}:${port}/g8w4y-32as9v`;
     return url;
   }
 

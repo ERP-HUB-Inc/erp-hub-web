@@ -1,13 +1,13 @@
-import React,{useEffect,useState} from "react";
-import {
-    Col,
-    Row,
-    Card,
-    Table,
-} from "antd";
-import {Translate} from "@redux/index";
-import ProductService from "@services/ItemService";
 import Util from "@common/util";
+import { Translate } from "@redux/index";
+import ProductService from "@services/ItemService";
+import {
+  Card,
+  Col,
+  Row,
+  Table,
+} from "antd";
+import React, { useEffect, useState } from "react";
 
 const util = new Util();
 
@@ -23,16 +23,18 @@ const OptionZero = ({data,id}) => {
     const locationId = util.getLocationId();
 
     const columns = [
-        {
-          title: <Translate id="text_location" />,
-          dataIndex: "location",
-          key: "location",
-        },
-        {
-          title: <Translate id="text_quantity" />,
-          dataIndex: "quantity",
-          key: "quantity",
-        },
+      {
+        title: <Translate id="text_location" />,
+        dataIndex: "location",
+        key: "location",
+      },
+      {
+        title: <Translate id="text_quantity" />,
+        dataIndex: "quantity",
+        key: "quantity",
+        render: (quantity, record) =>
+          (quantity ? quantity : 0) + ` ${record?.unitName || "Pcs"}`,
+      },
     ];
 
     useEffect(() => {
@@ -76,6 +78,7 @@ const OptionZero = ({data,id}) => {
                 <Col span={24}>
                   <p style={{margin: 0}}><Translate id="text_stock_detail" /></p>
                   <Table
+                    size="small"
                      dataSource={detailStock}
                      columns={columns}
                      pagination={false}
@@ -119,6 +122,7 @@ const OptionOne = ({id}) => {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
+      render: (quantity, record) => (quantity ? quantity : 0) + ` ${record?.unitName || "Pcs"}`,
     },
   ];
 
@@ -128,8 +132,8 @@ const OptionOne = ({id}) => {
         <Col span={24}>
           <p style={{marginRight: 8,display: "inline-block",color: "rgba(0, 0, 0, 0.85)"}}>Detail Stock</p>
            <Table
+            size="small"
             dataSource={detailStock}
-            bordered={true}
             loading={loading}
             columns={columns}
             pagination={false}

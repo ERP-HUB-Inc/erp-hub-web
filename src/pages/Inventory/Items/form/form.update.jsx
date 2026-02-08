@@ -15,8 +15,9 @@ import { Translate } from "@redux/index";
 import ProductAction from "../redux/action";
 import Enum from "@enums/index";
 import Exchange from "./exchange-money-func";
+import FormItem404 from "./form.item.404";
 
-export default class ProductUpdate extends BaseComponent {
+export class ItemFormUpdate extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,7 +49,6 @@ export default class ProductUpdate extends BaseComponent {
         }
       }
     });
-
   }
 
   componentWillUnmount() {
@@ -259,57 +259,60 @@ export default class ProductUpdate extends BaseComponent {
                 </Button>,
               ]}
             />
-            <FormItem
-              form={form}
-              languages={storeLanguage}
-              locale={locale}
-              dispatch={dispatch}
-              formData={productDetail.data}
-              productLog={productLog}
-              productCostLog={productCostLog}
-              locations={this.props.locations}
-              switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
-              productVariantArchive={this.props.productVariantArchive}
-              productVariantCheckStatus={this.props.productVariantCheckStatus}
-              productAttributeCheckStatus={
-                this.props.productAttributeCheckStatus
-              }
-              productAttributeValueCheckStatus={
-                this.props.productAttributeValueCheckStatus
-              }
-              brands={brands}
-              brandAdd={brandAdd}
-              productsType={productsType}
-              productsTypeAdd={productsTypeAdd}
-              units={units}
-              unitAdd={unitAdd}
-              taxs={taxs}
-              taxAdd={taxAdd}
-              handleAddTax={this.handleAddTax}
-              setExchangeRateCallBack={(rate) => (this.exchangeRate = rate)}
-              callBackGetProductAttribute={
-                this.handleCallBackGetProductAttribute
-              }
-              callBackGetProductVariant={this.handleCallBackGetProductVariant}
-              handleCallBackGetArchiveProductVariant={
-                this.handleCallBackGetArchiveProductVariant
-              }
-              handleCallBackGetArchiveProductAttributes={
-                this.handleCallBackGetArchiveProductAttributes
-              }
-              callBackGetProductTags={(tags) =>
-                this.handleCallBackGetProductTags(tags)
-              }
-              variantAttributes={variantAttributes}
-              variantAttributeAdd={variantAttributeAdd}
-              handleAddVariantAttribute={this.handleAddVariantAttribute}
-              productSearch={productSearch}
-            />
+              <FormItem
+                form={form}
+                languages={storeLanguage}
+                locale={locale}
+                dispatch={dispatch}
+                formData={productDetail.data}
+                productLog={productLog}
+                productCostLog={productCostLog}
+                locations={this.props.locations}
+                switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+                productVariantArchive={this.props.productVariantArchive}
+                productVariantCheckStatus={this.props.productVariantCheckStatus}
+                productAttributeCheckStatus={
+                  this.props.productAttributeCheckStatus
+                }
+                productAttributeValueCheckStatus={
+                  this.props.productAttributeValueCheckStatus
+                }
+                brands={brands}
+                brandAdd={brandAdd}
+                productsType={productsType}
+                productsTypeAdd={productsTypeAdd}
+                units={units}
+                unitAdd={unitAdd}
+                taxs={taxs}
+                taxAdd={taxAdd}
+                handleAddTax={this.handleAddTax}
+                setExchangeRateCallBack={(rate) => (this.exchangeRate = rate)}
+                callBackGetProductAttribute={
+                  this.handleCallBackGetProductAttribute
+                }
+                callBackGetProductVariant={this.handleCallBackGetProductVariant}
+                handleCallBackGetArchiveProductVariant={
+                  this.handleCallBackGetArchiveProductVariant
+                }
+                handleCallBackGetArchiveProductAttributes={
+                  this.handleCallBackGetArchiveProductAttributes
+                }
+                callBackGetProductTags={(tags) =>
+                  this.handleCallBackGetProductTags(tags)
+                }
+                variantAttributes={variantAttributes}
+                variantAttributeAdd={variantAttributeAdd}
+                handleAddVariantAttribute={this.handleAddVariantAttribute}
+                productSearch={productSearch}
+              />
           </Form>
         ) : (
-          <div style={{ width: 30, margin: "0 auto" }}>
-            <Spin />
-          </div>
+          productDetail.fetching ?
+            <div style={{ width: 30, margin: "0 auto" }}>
+              <Spin />
+            </div>
+          :
+          <FormItem404 />
         )}
       </div>
     );
