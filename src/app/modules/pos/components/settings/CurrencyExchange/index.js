@@ -4,7 +4,7 @@ import FormCreate from "../../../containers/settings/CurrencyExchange/FormCreate
 import FormUpdate from "../../../containers/settings/CurrencyExchange/FormUpdate";
 import Constant from "../../../constants/settings/currencyExchange";
 import CurrencyExchangeAction from "../../../action/settings/currencyExchange";
-import CurrencyExchangeService from "../../../services/settings/CurrencyExchangeService";
+import CurrencyExchangeService from "../../../services/settings/ExchangeRateService";
 
 export default class CurrencyExchangeList extends List {
   constructor(props) {

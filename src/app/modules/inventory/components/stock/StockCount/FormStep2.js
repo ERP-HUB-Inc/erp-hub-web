@@ -20,7 +20,7 @@ import ProductVariantService from "../../../services/products/ProductVariantServ
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
-import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/variant.product";
 import "./style.css";
 
 const {TabPane} = Tabs;

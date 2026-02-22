@@ -51,7 +51,7 @@ import CAInvoice from "../Invoice/CAInvoice";
 import ReceiptTemplate from "../receipt/template";
 import SerialForm from "../Invoice/SerialForm";
 import SerialFormDelete from "../Invoice/SerialFormDelete";
-import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../containers/transactions/SaleWalkin/variant.product";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 
 const styles = {

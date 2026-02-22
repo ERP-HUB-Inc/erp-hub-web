@@ -174,11 +174,11 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const ViewItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/product.detail"),
+      loader: () => import("../pages/Inventory/Items/form/item.detail"),
       loading: () => <StartUp />,
     });
     const SplitItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/product.split"),
+      loader: () => import("../pages/Inventory/Items/form/item.split"),
       loading: () => <StartUp />,
     });
 

@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import Payment from "../../../components/transactions/RetailSale/Payment";
+import Payment from "../../../components/transactions/RetailSale/payment";
 class PaymentForm extends React.Component {
   render() {
     return (

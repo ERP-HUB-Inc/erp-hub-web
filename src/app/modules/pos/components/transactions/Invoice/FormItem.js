@@ -49,7 +49,7 @@ import EnumCustomer from "../../../../crm/enum";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
-import CurrencyExchangeService from "../../../services/settings/CurrencyExchangeService";
+import CurrencyExchangeService from "../../../services/settings/ExchangeRateService";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
@@ -58,7 +58,7 @@ import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import QuotationService from "../../../services/transactions/QuotationService";
 import SerialService from "../../../services/transactions/SerialService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
-import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../containers/transactions/SaleWalkin/variant.product";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 
 const {TabPane} = Tabs;

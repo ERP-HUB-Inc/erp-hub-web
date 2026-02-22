@@ -4,7 +4,7 @@ class ProductService extends BaseService {
 
    constructor() {
       super();
-      this.module = "products";
+      this.module = "items";
       this.baseUrl = `${this.baseUrl}/${this.module}`;
       this.initializeRoute();
    }

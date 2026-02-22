@@ -2,6 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
 import VaraintProduct from "../../../components/transactions/RetailSale/VaraintProduct";
+  
 class VaraintProductForm extends React.Component {
   render() {
     return (

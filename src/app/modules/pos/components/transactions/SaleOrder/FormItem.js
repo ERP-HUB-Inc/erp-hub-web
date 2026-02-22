@@ -41,7 +41,7 @@ import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import SearchProductDropdown from "../Invoice/SearchProduct";
-import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../containers/transactions/SaleWalkin/variant.product";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 import SaleOrderInvoice from "./Invoice";
 import styles from "../styles";

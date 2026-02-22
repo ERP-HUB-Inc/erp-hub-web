@@ -4,15 +4,15 @@ class CurrencyExchangeService extends BaseService {
 
    constructor() {
       super();
-      this.module = "currency/exchange";
-      this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+      this.module = "exchange-rates";
+      this.baseUrl = `${this.baseUrl}/${this.module}`;
       this.initializeRoute();
    }
 
    getExchangeRate(filter) {
       this.setHeader();
       return this.GET({
-         url: `${this.baseUrl}/lists?limit=1&filter=${filter}`,
+         url: `${this.baseUrl}?limit=1&filter=${filter}`,
          data: this.data,
          headers: this.header
       });

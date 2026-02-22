@@ -28,7 +28,7 @@ import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
-import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/variant.product";
 
 class FormItem extends React.PureComponent {
   state = {

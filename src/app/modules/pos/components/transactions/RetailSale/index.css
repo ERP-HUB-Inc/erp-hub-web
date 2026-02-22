@@ -1,11 +1,24 @@
 #retail-sale {
-    height: 100%;
+    height: calc(100vh - 88px);
     width: 100%;
     overflow: hidden;
     margin-left: 0;
     margin-right: 0;
     display: flex;
-    justify-content: space-between
+    justify-content: space-between;
+}
+
+.top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.top-header .action-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 #retail-sale .category,
@@ -19,7 +32,7 @@
 #retail-sale .category,
 #retail-sale .product,
 #retail-sale .wrap-category {
-    border-radius: 3px
+    border-radius: 10px
 }
 
 #retail-sale .wrap-category {
@@ -96,18 +109,12 @@
 #retail-sale .category,
 #retail-sale .product {
     background-color: white;
-    position: relative
-}
-
-#retail-sale .product {
-    height: 160px;
-    padding: 5px;
-    border: 1.5px solid white
+    position: relative;
+    border: 1.5px solid #f0f0f0
 }
 
 
 /* #retail-sale .category-box, */
-#retail-sale .product-box,
 .wrap-product-varaint .product-variant .variant-box {
     padding: 5px !important
 }
@@ -121,24 +128,35 @@
 #retail-sale .category.selected,
 #retail-sale .category:hover {
     color: #FFFFFF;
-    background-color: #0D62AF;
-    border: 1px solid #0D62AF
+    background-color: #14b8a6;
+    border: 1px solid #14b8a6
 }
 
 #retail-sale .product.selected,
 #retail-sale .product:hover,
 .product-variant .variant-box .variant-item:hover
  {
-    border: 1.5px solid #0D62AF;
-    box-shadow: 0 0 3px 2px rgba(0,138,232,.35);
-    border-color: #008ae8;
+    border: 1.5px solid #14b8a6;
+    box-shadow: 0 0 3px 2px rgb(18 184 166 / 45%);
+    border-color: #12b8a6;
+}
+
+.image-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
 }
 
 #retail-sale .product-box .product .image {
-    /* height: 82px; */
-    /* margin-bottom: 22px; */
-    margin-bottom: 10px;
-    overflow: hidden
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #retail-sale .product-box .product .image img {
@@ -147,18 +165,23 @@
 }
 
 #retail-sale .product-box .product .name {
-    font-size: 10pt;
-    color: #4D4F5C
+    font-size: 14px;            /* better readability */
+    font-weight: 500;
+    color: #111827;             /* darker, cleaner */
+    margin-top: 6px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #retail-sale .product-box .product .price {
-    font-size: 12pt;
-    font-weight: 500;
-    background-color: #0070e6;
-    color: white;
-    margin-top: 2px;
-    border-radius: 3px;
-    display: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #14b8a6;
+    margin-top: 4px;
+    text-align: left;
+    padding: 5px 10px;
 }
 
 
@@ -262,8 +285,21 @@
 }
 
 #retail-sale .product-order-list .product-order-item .price {
-    margin-left: 25px;
-    position: relative
+    position: relative;
+    width: 70px;
+    text-align: right;
+}
+
+/* OrderList.css */
+@keyframes highlightFlash {
+  0% { background-color: #14b8a6; }
+  50% { background-color: #71d5ce; }
+  100% { background-color: white; }
+}
+
+
+.flash-highlight {
+  animation: highlightFlash 1s ease-in-out;
 }
 
 .price .strike-price {
@@ -301,7 +337,7 @@
     color: #B90000;
     cursor: pointer;
     background-color: white;
-    border: 1.5px solid #0D62AF;
+    border: 1.5px solid #14b8a6;
     box-shadow: 0 0 3px 2px rgba(0,138,232,.35);
     border-color: #008ae8;
     width: 40px;
@@ -320,7 +356,7 @@
 }
 
 #retail-sale .product-order-list .product-order-item.expanded {
-    border-left: 4px solid #0D62AF;
+    border-left: 4px solid #14b8a6;
     overflow: hidden
 }
 
@@ -328,6 +364,7 @@
     display: block;
     opacity: 1;
     height: fit-content;
+    margin-top: 10px;
     margin-bottom: 10px
 }
 
@@ -359,22 +396,41 @@
 }
 
 #retail-sale #left-block {
-    display: flex;
-    flex-direction: column;
-    height: 100%
+    flex: 1;              /* take remaining space */
+    min-width: 0;         /* prevent overflow */
+    overflow: hidden;
+    padding-right: 15px;
 }
 
+/* #retail-sale #left-block .wrap-product-box-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 10px;
+    overflow-y: auto;
+} */
+
 #retail-sale #left-block .wrap-product-box-list {
-    overflow: auto;
-    height: 100%;
-    align-content: flex-start
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.product-box {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 #retail-sale #right-block {
-    flex-direction: column;
-    display: flex;
     height: 100%;
-    padding-right: 0
+    padding-right: 0;
+    width: 400px;         /* fixed width */
+    flex-shrink: 0;       /* never shrink */
+    display: flex;
+    flex-direction: column;
 }
 
 #retail-sale #right-block #wrap-cashier {
@@ -393,16 +449,19 @@
 #retail-sale #right-block .product-order-list {
     height: 100%;
     overflow: hidden auto;
-    margin-top: 10px;
-    border: 1.5px solid #ECECEC;
-    border-radius: 3px;
-    margin-bottom: 10px
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+
+#retail-sale #wrap-payment {
+    background-color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
 }
 
 #retail-sale #wrap-payment .payment {
-    background-color: #FAFAFA;
-    box-shadow: 0 0 4px 0 rgba(0,0,0,0.3);
-    padding: 5px 0px;
+    padding: 10px 0px;
     line-height: 26px;
     overflow-y: hidden;
     overflow-x: auto;
@@ -451,12 +510,13 @@
 }
 
 #retail-sale #wrap-payment .payment-action button{
-    width: 48.5%;
+    width: 100%;
     font-size: 15pt;
     height: auto;
     letter-spacing: 2px;
     padding-top: 8px;
-    padding-bottom: 8px
+    padding-bottom: 8px;
+    border-radius: 25px !important;
 }
 
 #retail-sale #wrap-payment .add-discount {
@@ -664,4 +724,8 @@
 
 .load-more-button:hover {
     box-shadow: 0 0 3px 2px rgba(0,138,232,.35)
+}
+
+.search-item-input input {
+    border-radius: 20px !important;
 }

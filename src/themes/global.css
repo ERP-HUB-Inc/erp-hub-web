@@ -140,7 +140,7 @@ a:hover {
 .ant-input,
 .ant-input-number,
 .ant-select-selection {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 

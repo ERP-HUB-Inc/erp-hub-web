@@ -29,9 +29,10 @@ const OptionZero = ({data,id}) => {
         key: "location",
       },
       {
-        title: <Translate id="text_quantity" />,
+        title: "Stock on Hand",
         dataIndex: "quantity",
         key: "quantity",
+        align: "right",
         render: (quantity, record) =>
           (quantity ? quantity : 0) + ` ${record?.unitName || "Pcs"}`,
       },

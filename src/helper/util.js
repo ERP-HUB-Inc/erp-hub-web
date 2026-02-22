@@ -318,25 +318,29 @@ export default class Util {
   }
 
   formatCurrency(n, currency = "$", position = 0, precision = 2) {
-    let unsigne = "";
+    let unsigne = ""
     if (n < 0) {
-      n = Math.abs(n);
-      unsigne = "-";
+      n = Math.abs(n)
+      unsigne = "-"
     }
-    // 0: BEFORE, 1: AFTER
-    let result = parseFloat(n)
-      .toFixed(precision)
-      .replace(/./g, function (c, i, a) {
-        return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
-      });
 
+    // Determine if n has a fractional part
+    const hasFraction = n % 1 !== 0
+
+    // Use precision only if there is a fractional part
+    let fixed = hasFraction ? n.toFixed(precision) : n.toFixed(0)
+
+    // Add commas
+    let result = fixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+    // Position currency
     if (position === 0) {
-      result = `${currency}${result}`;
+      result = `${currency}${result}`
     } else {
-      result = `${result}${currency}`;
+      result = `${result}${currency}`
     }
 
-    return `${unsigne}${result}`;
+    return `${unsigne}${result}`
   }
 
   toValidKHMoney(money) {

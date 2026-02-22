@@ -40,7 +40,7 @@ import CustomerService from "../../../../crm/services/customers/CustomerService"
 import QuotationService from "../../../services/transactions/QuotationService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import CustomerAction from "../../../../crm/actions/customers/customer";
-import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../containers/transactions/SaleWalkin/variant.product";
 import QuotationNo from "./QuotationNo";
 import SearchProductDropdown from "../Invoice/SearchProduct";
 import CAInvoice from "../Invoice/CAInvoice";

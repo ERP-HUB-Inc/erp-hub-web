@@ -30,7 +30,7 @@ import LocationService from "../../../../pos/services/settings/LocationService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import {stringTranslate} from "../../../../common/helper/stringTranslate";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
-import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/variant.product";
 import ProductVariantService from "../../../services/products/ProductVariantService";
 
 export default class FormStep1 extends React.Component  {

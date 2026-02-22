@@ -5,7 +5,7 @@ import DropDownSearch from "../Product/DropDownSearch";
 import Enum from "../../../enums";
 import Util from "../../../utils";
 import List from "../../List";
-import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/variant.product";
 import ProductVariantAction from "../../../actions/products/productVariant";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import "./index.css";

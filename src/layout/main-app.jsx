@@ -1,6 +1,16 @@
-import React from 'react'
-import Loadable from "react-loadable"
-import { Dropdown, Layout, Menu, Icon, Divider, Badge, Avatar, List } from "antd";
+import SystemAlertBanner from '@components/stateless/system-alert-banner';
+import StockIOAIImport from '@inventories/StockIO/form/form.ai-import';
+import StockIOBulkImport from '@inventories/StockIO/form/form.bulk-import';
+import history from '@router/index';
+import { ColumnSelection } from '@settings/ColumnSelection';
+import OrdersDashboard from '@settings/OrderDashboard';
+import SettingsPage from '@settings/SettingPage';
+import SystemLogs from '@settings/SystemLogs';
+import TabletView from '@settings/TableView';
+import { Avatar, Badge, Divider, Dropdown, Icon, Layout, List, Menu } from "antd";
+import React from 'react';
+import ReactGA from "react-ga4";
+import Loadable from "react-loadable";
 import { Provider } from "react-redux";
 import {
   BrowserRouter,
@@ -9,31 +19,21 @@ import {
   Router,
   Switch
 } from "react-router-dom";
-import ReactGA from "react-ga4";
-import { io } from "socket.io-client"
-import history from '@router/index';
-import Util from "../app/modules/common/util";
-import configureStore from "../app/store/configureStore";
+import { io } from "socket.io-client";
 import Localization from "../app/localization";
 import StartUp from "../app/modules/common/components/StartUp";
-import './NewSidebar.css'
+import Util from "../app/modules/common/util";
+import configureStore from "../app/store/configureStore";
 import { ERPHub, LogoTextOnly } from '../components';
-import SettingsPage from '@settings/SettingPage';
-import SystemLogs from '@settings/SystemLogs';
-import OrdersDashboard from '@settings/OrderDashboard';
-import TabletView from '@settings/TableView';
-import { ColumnSelection } from '@settings/ColumnSelection';
-import SystemAlertBanner from '@components/stateless/system-alert-banner';
-import StockInUI from './stock-in-summary';
-import ItemManagementUI from './item-management-ai';
-import ItemAIGenerator from './item-ai-tool';
-import StickyFooterPage from './sticky-footer';
 import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
-import StockIOBulkImport from '@inventories/StockIO/form/form.bulk-import';
-import StockIOAIImport from '@inventories/StockIO/form/form.ai-import';
-import VendorDetailPage from './vendor-detail';
+import ItemAIGenerator from './item-ai-tool';
+import ItemManagementUI from './item-management-ai';
+import './NewSidebar.css';
 import Receipt from './receipt';
 import SalesDashboard from './sales-dashboard';
+import StickyFooterPage from './sticky-footer';
+import StockInUI from './stock-in-summary';
+import VendorDetailPage from './vendor-detail';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -179,11 +179,11 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const ViewItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/product.detail"),
+      loader: () => import("../pages/Inventory/Items/form/item.detail"),
       loading: () => <StartUp />,
     });
     const SplitItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/product.split"),
+      loader: () => import("../pages/Inventory/Items/form/item.split"),
       loading: () => <StartUp />,
     });
 
@@ -401,52 +401,56 @@ export default class SiderDemo extends React.Component {
                 )}
 
                 <Layout>
-                  <Header
-                    style={{
-                      background: "#fff",
-                      padding: 0,
-                      position: "fixed",
-                      zIndex: 1,
-                      width: "87%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      paddingRight: "24px",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <Icon
-                        className="trigger"
-                        type={
-                          this.state.collapsed ? "menu-unfold" : "menu-fold"
-                        }
-                        onClick={this.toggle}
-                      />
-                    </div>
-
-                    <Dropdown
-                      overlay={
-                        <Menu>
-                          <Menu.Item>
-                            <Icon type="user" />
-                            Profile
-                          </Menu.Item>
-                          <Menu.Item>
-                            <Icon type="redo" />
-                            Update Now
-                          </Menu.Item>
-                          <Divider style={{ marginTop: 5, marginBottom: 5 }} />
-                          <Menu.Item onClick={this.onLogout}>
-                            <Icon type="logout" />
-                            Logout
-                          </Menu.Item>
-                        </Menu>
-                      }
-                      trigger={["hover"]}
+                  {!isPOSPage && (
+                    <Header
+                      style={{
+                        background: "#fff",
+                        padding: 0,
+                        position: "fixed",
+                        zIndex: 1,
+                        // width: "87%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        paddingRight: "24px",
+                      }}
                     >
-                      <Link to="#">Marco JR</Link>
-                    </Dropdown>
-                  </Header>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <Icon
+                          className="trigger"
+                          type={
+                            this.state.collapsed ? "menu-unfold" : "menu-fold"
+                          }
+                          onClick={this.toggle}
+                        />
+                      </div>
+
+                      <Dropdown
+                        overlay={
+                          <Menu>
+                            <Menu.Item>
+                              <Icon type="user" />
+                              Profile
+                            </Menu.Item>
+                            <Menu.Item>
+                              <Icon type="redo" />
+                              Update Now
+                            </Menu.Item>
+                            <Divider
+                              style={{ marginTop: 5, marginBottom: 5 }}
+                            />
+                            <Menu.Item onClick={this.onLogout}>
+                              <Icon type="logout" />
+                              Logout
+                            </Menu.Item>
+                          </Menu>
+                        }
+                        trigger={["hover"]}
+                      >
+                        <Link to="#">Marco JR</Link>
+                      </Dropdown>
+                    </Header>
+                  )}
 
                   <Content
                     style={isPOSPage ? { height: "100vh" } : styledContent}

@@ -21,14 +21,14 @@
 .main-guide .row ul li {
     float: left;
     list-style-type: none;
-    color: #0D62AF;
+    color: #14b8a6;
     margin-right: 27px;
     text-align: center;
     text-transform: uppercase;
 }
 
 .main-guide .row ul li a{
-    color: #0D62AF;
+    color: #14b8a6;
     text-decoration:  none;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .main-guide .row ul li .grap-title {
-    color: #0D62AF;
+    color: #14b8a6;
     margin-top: -10px;
     font-weight: bold;
     text-align: center;

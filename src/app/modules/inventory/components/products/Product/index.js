@@ -23,7 +23,7 @@ import ProductAction from "../../../actions/products/product";
 import ProductService from "../../../services/products/ProductService";
 import ProductsTypeService from "../../../services/products/ProductsTypeService";
 import "./index.css";
-import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
+import CurrencyExchangeService from "../../../../pos/services/settings/ExchangeRateService";
 
 export default class ProductList extends List {
 

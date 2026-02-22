@@ -38,7 +38,7 @@ html,
 
 /* MAIN LAYOUT */
 .main-layout {
-    padding: 8px 15px;
+    padding: 15px 15px;
     border-radius: 3px
 }
 
@@ -436,7 +436,7 @@ html,
 .ca-box.active,
 .main-radio-acc .ant-radio-button-wrapper:hover,
 .main-radio-acc .ant-radio-button-wrapper-checked {
-    border: 1.5px solid #0D62AF;
+    border: 1.5px solid #14b8a6;
     box-shadow: 0 0 3px 2px rgba(0,138,232,.35) !important;
     border-color: #008ae8;
 }

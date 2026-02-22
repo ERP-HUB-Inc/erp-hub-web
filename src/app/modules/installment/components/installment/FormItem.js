@@ -43,7 +43,7 @@ import {stringTranslate} from "../../../common/helper/stringTranslate";
 import SearchProductDropdown from "../../../pos/components/transactions/Invoice/SearchProduct";
 import DownPaymentTable from "./DownPayment";
 import CustomerCreate from "../../../crm/containers/customers/Customer/FormCreate";
-import VariantProduct from "../../../pos/containers/transactions/SaleWalkin/VariantProduct";
+import VariantProduct from "../../../pos/containers/transactions/SaleWalkin/variant.product";
 
 class FormItem extends React.Component {
   state = {

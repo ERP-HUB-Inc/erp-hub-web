@@ -146,6 +146,8 @@ export default {
 
   text_price: ["Price", "តម្លៃ"],
 
+  text_unit_price: ["Unit Price", "តម្លៃឯកតា"],
+
   text_current_price: ["Current Price", "តម្លៃលក់បច្ចុប្បន្ន"],
 
   text_retail_price: ["Retail Price", "តម្លៃលក់រាយ"],

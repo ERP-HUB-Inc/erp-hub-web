@@ -102,7 +102,7 @@ export default class ProductList extends Datatable {
               >
                 <Avatar
                   src={
-                    (new CommonUtil()).getImageUrl(record?.image) ||
+                    new CommonUtil().getImageUrl(record?.image) ||
                     record?.imageUrl ||
                     "https://ae-pic-a1.aliexpress-media.com/kf/S1dd261bc501a452ab057df05e6c91d823.jpg_960x960q75.jpg_.avif"
                   }
@@ -179,6 +179,24 @@ export default class ProductList extends Datatable {
                   </div>
                 </div>
               </div>
+            );
+          },
+        },
+        {
+          title: "Incoming Stock",
+          key: "incomingStock",
+          dataIndex: "incomingStock",
+          width: 180,
+          align: "right",
+          sorter: (a, b) => a.incomingStock - b.incomingStock,
+          render: (_, record) => {
+            const stockCount = this.getTotalQuantity(record);
+            return (
+              <QuantityValue
+                quantity={stockCount}
+                unit={record?.stockUnit?.name}
+                decimals={0}
+              />
             );
           },
         },

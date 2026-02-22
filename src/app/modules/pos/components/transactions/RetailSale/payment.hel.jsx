@@ -32,9 +32,6 @@ export default class Payment extends Modal {
     this.width = window.innerWidth < 1000 ? window.innerWidth : 1000;
     this.height = window.innerHeight < 700 ? window.innerHeight - 10 : 700;
     this.currentUser = this.getCurrentUser();
-    this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);
-    this.handleOnSendMailReceipt = this.handleOnSendMailReceipt.bind(this);
-    this.handleOnFocusInputAmount = this.handleOnFocusInputAmount.bind(this);
   }
 
   componentDidUpdate() {
@@ -70,17 +67,23 @@ export default class Payment extends Modal {
   }
 
   mapFreeProductsToOrder() {
-    let orderProducts = [];
-    this.props.productOrderList.forEach(value => {
-      const orderProduct = {...value};
-      orderProducts.push(orderProduct);
-      if (Array.isArray(orderProduct.freeProducts)) {
-        orderProducts = orderProducts.concat(orderProduct.freeProducts);
-        delete orderProduct.freeProducts;
+    let items = [];
+    this.props.orderItems.forEach((item) => {
+      const orderItem = {
+        ...item,
+        categoryId: item.categoryId ? item.categoryId : null,
+        addons: []
+      };
+
+      items.push(orderItem);
+
+      if (Array.isArray(item.freeProducts)) {
+        items = items.concat(item.freeProducts);
+        delete item.freeProducts;
       }
     });
 
-    return orderProducts;
+    return items;
   }
 
   getGrandTotal() {
@@ -105,7 +108,7 @@ export default class Payment extends Modal {
     return totalCustomerHasGiveMoney - this.getGrandTotal();
   }
 
-  handleOnFocusInputAmount(isFocusOnBaseCurrency) {
+  handleOnFocusInputAmount = (isFocusOnBaseCurrency) => {
     if (isFocusOnBaseCurrency) {
       this.setState({isFocusOnInputBaseCurrency: true});
     } else {
@@ -139,7 +142,7 @@ export default class Payment extends Modal {
     this.setState({customerPaymentList});
   }
 
-  handleOnSendMailReceipt() {
+  handleOnSendMailReceipt = () => {
     const email = this.props.form.getFieldValue("email");
     let element = document.getElementById("pos-receipt-preview");
     if (email && element) {
@@ -153,7 +156,7 @@ export default class Payment extends Modal {
     }
   }
 
-  handleOnCompletePayment() {
+  handleOnCompletePayment = () => {
     if (this.props.transaction.paid && this.state.isNotYetPaid) {
       this.props.dispatch(TransactionAction.reset());
       this.setState({
@@ -223,16 +226,20 @@ export default class Payment extends Modal {
 
       const dataValue = {
         customerId: this.props.customer ? this.props.customer.id : null,
-        deviceNumber: this.Util.getDeviceNumber(),
+        saleType: "RETAIL",
+        paymentFlow: "PAY_FIRST",
+        table: {},
         deposit: 0,
         discount: discountAmount,
         total: this.getGrandTotalIncludeTax(),
         totalExcludeTax: summaryTotal.subTotal,
         type: Enum.TRANSACTION_TYPE.RECEIPT,
-        transactionEntries: this.mapFreeProductsToOrder(),
+        items: this.mapFreeProductsToOrder(),
         paymentMethodId,
-        transactionPaymentEntries: this.state.customerPaymentList
-      };
+        tenderCash: amountToPay,
+        tenderBank: 0,
+        paymentItems: this.state.customerPaymentList,
+      };console.log("dataValue", dataValue);return;
 
       if (typeof _.sumBy(this.state.customerPaymentList, "tender") === "number") {
         this.props.dispatch(TransactionAction.add(dataValue));
@@ -406,7 +413,7 @@ export default class Payment extends Modal {
                   orderProducts.map((productOrder, productOrderIndex) => 
                     <li key={productOrderIndex}>
                       <div className="title">
-                        {productOrder.name}
+                        {productOrder.itemName}
                         {
                           productOrder.variantName ?
                             <div className="variant-name">{productOrder.variantName}</div>
@@ -666,6 +673,6 @@ export default class Payment extends Modal {
 }
 
 Payment.defaultProps = {
-  productOrderList: [],
-  customerFieldPrice: "price"
+  orderItems: [],
+  customerFieldPrice: "price",
 };

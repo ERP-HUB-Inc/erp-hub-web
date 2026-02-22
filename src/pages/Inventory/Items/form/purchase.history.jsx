@@ -65,6 +65,7 @@ export default function PurchaseHistory({ id }) {
       title: "Shipping Fee",
       dataIndex: "shippingFee",
       key: "shippingFee",
+      align: "right",
       render: (shippingFee) => util.formatCurrency(shippingFee ?? 0),
     },
     {
@@ -77,18 +78,21 @@ export default function PurchaseHistory({ id }) {
       title: <Translate id="text_unit_cost" />,
       dataIndex: "cost",
       key: "cost",
+      align: "right",
       render: (cost) => util.formatCurrency(cost ?? 0),
     },
     {
       title: <Translate id="text_discount" />,
       dataIndex: "discount",
       key: "discount",
+      align: "right",
       render: (discount) => util.formatCurrency(discount ?? 0),
     },
     {
       title: <Translate id="text_total" />,
       dataIndex: "total",
       key: "total",
+      align: "right",
       render: (total) => util.formatCurrency(total ?? 0),
     },
   ];

@@ -10,7 +10,7 @@ import {
 import {Translate} from "@redux/index";
 import history from "@router/index";
 import ProductService from "@services/ItemService";
-import ProductDetailOption from "./product.detail.option";
+import ProductDetailOption from "./item.detail.option";
 import ProductDetailStockInformation from "./item.stock.info";
 import MovementLog from "./movement.log";
 import PurchaseHistory from "./purchase.history";
@@ -58,7 +58,7 @@ export default function ProductDetail(props) {
   return (
     <div
       className="content-list"
-      style={{ paddingLeft: "40px", paddingRight: "40px" }}
+      style={{ paddingLeft: "40px", paddingRight: "40px", marginTop: "20px" }}
     >
       <PageHeader
         style={{

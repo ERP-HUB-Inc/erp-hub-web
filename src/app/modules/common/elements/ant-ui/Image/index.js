@@ -13,11 +13,11 @@ export class Image extends Element {
 
   componentDidMount() {
     this.mounted = true;
-    if (this.mounted) {
+    if (this.mounted && this.props.url) {
       let imageUrl = this.props.url;
       const findIndex = imageUrl.search(process.env.REACT_APP_RESOURCE_HOST);
       if (findIndex !== 0) {
-        imageUrl = imageUrl.substring(findIndex, imageUrl.lenght);
+        imageUrl = imageUrl.substring(findIndex, imageUrl.length);
       }
       this.Util.validImage(imageUrl, this.initializeImage);
     }

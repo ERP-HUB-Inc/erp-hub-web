@@ -1,6 +1,6 @@
   
 import Constant from "../../constants/settings/currencyExchange";
-import CurrencyService from "../../services/settings/CurrencyExchangeService";
+import CurrencyService from "../../services/settings/ExchangeRateService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {

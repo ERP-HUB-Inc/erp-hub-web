@@ -33,7 +33,7 @@ import SupplierService from "../../../services/stock/SupplierService";
 import Modal from "../../../../common/components/shares/Modal";
 import CommonEnum from "../../../../common/enums";
 import "./index.css";
-import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
+import CurrencyExchangeService from "../../../../pos/services/settings/ExchangeRateService";
 import Exchange from "./ExchangeMoneyFunc";
 
 function SelectBrand(props) {

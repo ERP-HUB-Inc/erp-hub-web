@@ -234,7 +234,7 @@ const DashboardPage = () => {
 
   return (
     <React.Fragment>
-      <div id="dashboard">
+      <div id="dashboard" style={{ paddingLeft: "40px", paddingRight: "40px", marginTop: "20px" }}>
         <div id="navDaskboard">
           <ul>
             <li className="nav-left">
@@ -346,7 +346,7 @@ const DashboardPage = () => {
                           type={diffSaleAsPercentage >= 0 ? "rise" : "fall"}
                         />
                         {new Util().formatCurrency(
-                          Math.abs(diffSaleAsPercentage)
+                          Math.abs(diffSaleAsPercentage),
                         )}
                       </span>
                     </div>
@@ -394,7 +394,7 @@ const DashboardPage = () => {
                   <div className="sub-left">
                     <span className="sub-total">
                       {new Util().formatCurrency(
-                        overallSales.currentPeriodAmount
+                        overallSales.currentPeriodAmount,
                       )}
                     </span>
                     <div
@@ -492,7 +492,7 @@ const DashboardPage = () => {
                             <li className="label-right">
                               <span>
                                 {new Util().formatCurrency(
-                                  totalSaleOfPopularCategory
+                                  totalSaleOfPopularCategory,
                                 )}
                               </span>
                             </li>
@@ -506,7 +506,7 @@ const DashboardPage = () => {
                     {popularCategories
                       .filter(
                         (value) =>
-                          value.categoryId !== mostPopularCategory.categoryId
+                          value.categoryId !== mostPopularCategory.categoryId,
                       )
                       .map((popularCategory, key) => (
                         <li key={key}>
@@ -518,7 +518,7 @@ const DashboardPage = () => {
                               <li className="label-right">
                                 <span>
                                   {new Util().formatCurrency(
-                                    popularCategory.total
+                                    popularCategory.total,
                                   )}
                                 </span>
                               </li>
