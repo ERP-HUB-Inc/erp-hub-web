@@ -13,7 +13,7 @@ import CRMUtil from "../../../../crm/util";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
-import CurrencyExchangeService from "../../../services/settings/ExchangeRateService";
+import ExchangeRateService from "../../../services/settings/ExchangeRateService";
 import ReceiptTemplateService from "../../../services/settings/ReceiptTemplateService";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
@@ -82,6 +82,10 @@ export default class Retail extends Component {
       subCurrency: {},
       modalVisible: false,
       currencyExchange: {},
+      exchangeRate: {
+        sellRate: 0,
+        buyRate: 0,
+      }
     };
 
     this.isSetFocusOnSearchProduct = false;
@@ -94,7 +98,6 @@ export default class Retail extends Component {
     this.orderListRef = null;
     this.orderItemRefs = {};
 
-    this.handleCancelMakePayment = this.handleCancelMakePayment.bind(this);
     this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
     this.handleOnSetupDiscount = this.handleOnSetupDiscount.bind(this);
     this.handleOnOpenTaxSetting = this.handleOnOpenTaxSetting.bind(this);
@@ -133,68 +136,36 @@ export default class Retail extends Component {
       ),
     );
 
-    new Promise(() => {
-      ReceiptTemplateService.default().then((response) => {
-        if (response.data && response.data.data) {
-          const receiptTemplate = response.data.data;
-          this.setState({
-            receiptTemplate,
-            baseCurrency: receiptTemplate.baseCurrency,
-            isHasSubCurrency: receiptTemplate.isHasSubCurrency,
-            subCurrency: receiptTemplate.subCurrency,
-          });
-        }
-      });
-      this.props.dispatch(
-        PaymentMethodAction.fetch(
-          2,
-          "",
-          "createdAt",
-          "ASC",
-          JSON.stringify({
-            isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS],
-          }),
-        ),
-      );
-    });
-
     window.addEventListener("keydown", (e) => {
       const EndKey = 35,
         F2 = 113,
         F11 = 122,
         F = 70,
         S = 83;
-      if (e.keyCode === EndKey) {
+      if (e.key === EndKey) {
         this.handleOnMakePayment();
-      } else if (e.keyCode === F2) {
+      } else if (e.key === F2) {
         this.handleOnSetupDiscount();
-      } else if (e.keyCode === F11 && e.shiftKey) {
+      } else if (e.key === F11 && e.shiftKey) {
         this.setState({ orderItems: [] });
-      } else if (e.keyCode === F && e.ctrlKey) {
+      } else if (e.key === F && e.ctrlKey) {
         e.preventDefault();
         document.getElementById("searchProduct").focus();
-      } else if (e.keyCode === S && e.ctrlKey) {
+      } else if (e.key === S && e.ctrlKey) {
         e.preventDefault();
         this.handleOnSaveParkReceipt();
       }
     });
 
-    CurrencyExchangeService.getExchangeRate().then((response) => {
-      const data = response.data.data;
-      if (data.length) {
-        this.setState({ currencyExchange: data[0] });
-        if (
-          this.state.subCurrency &&
-          data[0].value !== this.state.subCurrency.value
-        ) {
-          this.setState((preState) => {
-            if (preState.subCurrency) {
-              preState.subCurrency.value = data[0].value;
-            }
-
-            return preState;
-          });
-        }
+    ExchangeRateService.getCurrentExchangeRate().then((response) => {
+      const data = response.data;
+      if (data) {
+        this.setState({ 
+          exchangeRate: {
+            sellRate: parseFloat(data.sellRate),
+            buyRate: parseFloat(data.buyRate),
+          },
+        });
       }
     });
 
@@ -972,7 +943,7 @@ export default class Retail extends Component {
     }
   };
 
-  handleCancelMakePayment() {
+  handleCancelMakePayment = () => {
     this.setState({ modalContent: null });
   }
 
@@ -1372,18 +1343,7 @@ export default class Retail extends Component {
       <Row className="main-layout main-store-account">
         {/* <ReceiptV2 /> */}
         <div id="receiptLogoPreLoading" style={{ display: "none" }}>
-          <img
-            style={{ width: 100 }}
-            src={
-              this.Util.getProductImage(
-                this.state.receiptTemplate
-                  ? this.state.receiptTemplate.logo
-                  : "",
-                "general",
-              ).url
-            }
-            alt=""
-          />
+          <img style={{ width: 100 }} src={this.Util.getProductImage(this.state.receiptTemplate ? this.state.receiptTemplate.logo : "", "general").url} alt="" />
         </div>
         <div className="top-header">
           <div className="search-container">
@@ -1401,29 +1361,11 @@ export default class Retail extends Component {
             />
           </div>
           <div className="action-container">
-            <Button
-              type="primary"
-              shape="round"
-              icon="plus-circle"
-              size={"large"}
-              onClick={() => this.setState({ orderItems: [] })}
-            >
+            <Button type="primary" shape="round" icon="plus-circle" size={"large"} onClick={() => this.setState({ orderItems: [] })}>
               New Sale
             </Button>
-            <Button
-              type="default"
-              shape="circle"
-              icon="printer"
-              size={"large"}
-              style={{ borderRadius: "50%" }}
-            />
-            <Button
-              type="default"
-              shape="circle"
-              icon="setting"
-              size={"large"}
-              style={{ borderRadius: "50%" }}
-            />
+            <Button type="default" shape="circle" icon="printer" size={"large"} style={{ borderRadius: "50%" }} />
+            <Button type="default" shape="circle" icon="setting" size={"large"} style={{ borderRadius: "50%" }} />
             <ProfileDropdown />
           </div>
         </div>
@@ -1450,12 +1392,7 @@ export default class Retail extends Component {
             }
           </this.Row> */}
             <div className="wrap-product-box-list" id="wrap-product-box-list">
-              {this.props.products.fetching &&
-              !this.state.isRequestLoadingMore ? (
-                <StartUp />
-              ) : (
-                this.renderProductList()
-              )}
+              {this.props.products.fetching && !this.state.isRequestLoadingMore ? <StartUp /> : this.renderProductList()}
             </div>
           </div>
           <div id="right-block">
@@ -1498,32 +1435,15 @@ export default class Retail extends Component {
               form={this.props.form}
               isShowBarcodeScannerIcon={true}
               dispatch={this.props.dispatch} /> */}
-            <OrderHeader
-              totalQty={this.state.orderItems.reduce(
-                (acc, item) => acc + item.quantity,
-                0,
-              )}
-            />
-            <div
-              className="product-order-list"
-              ref={(el) => (this.orderListRef = el)}
-            >
+            <OrderHeader totalQty={this.state.orderItems.reduce((acc, item) => acc + item.quantity, 0)} />
+            <div className="product-order-list" ref={(el) => (this.orderListRef = el)}>
               {this.state.orderItems.length === 0 && <EmptyOrder />}
               {this.state.orderItems.map((productOrder, productOrderIndex) => {
-                const flashClass =
-                  this.state.selectedProduct &&
-                  productOrder.itemId === this.state.selectedProduct.id
-                    ? "flash-highlight"
-                    : "";
+                const flashClass = this.state.selectedProduct && productOrder.itemId === this.state.selectedProduct.id ? "flash-highlight" : "";
                 return (
                   <React.Fragment key={productOrderIndex}>
                     {/* Main Order Product */}
-                    <div
-                      className={`product-order-item ${this.state.expandOrderItemRow.includes(`${productOrder.variantId}-${productOrder.status}`) ? "expanded" : ""} ${flashClass}`}
-                      ref={(el) =>
-                        (this.orderItemRefs[productOrder.itemId] = el)
-                      }
-                    >
+                    <div className={`product-order-item ${this.state.expandOrderItemRow.includes(`${productOrder.variantId}-${productOrder.status}`) ? "expanded" : ""} ${flashClass}`} ref={(el) => (this.orderItemRefs[productOrder.itemId] = el)}>
                       <div
                         style={{
                           display: "flex",
@@ -1531,19 +1451,8 @@ export default class Retail extends Component {
                           alignItems: "center",
                         }}
                       >
-                        <div
-                          className="item"
-                          onClick={() =>
-                            this.handleExpandOrderItem(
-                              productOrder,
-                              productOrderIndex,
-                              productOrder.status,
-                            )
-                          }
-                        >
-                          <div
-                            className={`epxand-icon ${this.state.expandOrderItemRow.includes(`${productOrder.variantId}-${productOrder.status}`) ? "icon-move-down" : "icon-next"}`}
-                          ></div>
+                        <div className="item" onClick={() => this.handleExpandOrderItem(productOrder, productOrderIndex, productOrder.status)}>
+                          <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(`${productOrder.variantId}-${productOrder.status}`) ? "icon-move-down" : "icon-next"}`}></div>
                           <div className="description">
                             <div
                               style={{
@@ -1553,72 +1462,32 @@ export default class Retail extends Component {
                                 wordBreak: "break-all",
                               }}
                             >
-                              <div className="name">
-                                {productOrder.itemName}
-                              </div>
+                              <div className="name">{productOrder.itemName}</div>
                             </div>
                             {productOrder.variantName ? (
-                              <div
-                                className="barcode-number variant-name"
-                                style={{ marginTop: 5 }}
-                              >
+                              <div className="barcode-number variant-name" style={{ marginTop: 5 }}>
                                 {productOrder.variantName}
                               </div>
                             ) : (
                               ""
                             )}
 
-                            <div
-                              className="barcode-number"
-                              style={{ marginTop: 5 }}
-                            >
+                            <div className="barcode-number" style={{ marginTop: 5 }}>
                               {productOrder.barcode}
                             </div>
                           </div>
-                          <div className="quantity">
-                            {`${productOrder.quantity}x`}
-                          </div>
+                          <div className="quantity">{`${productOrder.quantity}x`}</div>
                           <div className="price">
                             {productOrder.discount > 0 ? (
-                              <div className="after-discount-price">
-                                {this.formatCurrency(
-                                  POSUtil.getTotalAmountAfterDiscount(
-                                    productOrder.quantity,
-                                    productOrder[
-                                      this.state.customerFieldPrice
-                                    ] * exchangeRate,
-                                    productOrder.discount,
-                                  ),
-                                  "",
-                                  false,
-                                )}
-                              </div>
+                              <div className="after-discount-price">{this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate, productOrder.discount), "", false)}</div>
                             ) : (
                               ""
                             )}
-                            <div
-                              className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}
-                            >
-                              {this.formatCurrency(
-                                POSUtil.getTotalAmount(
-                                  productOrder.quantity,
-                                  productOrder[this.state.customerFieldPrice] *
-                                    exchangeRate,
-                                ),
-                              )}
-                            </div>
+                            <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>{this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate))}</div>
                           </div>
                         </div>
                         {productOrder.status === this.Enum.ACTIVE && (
-                          <div
-                            className="delete"
-                            onClick={() =>
-                              this.handleOnRemoveProductFromOrderList(
-                                productOrder,
-                                productOrderIndex,
-                              )
-                            }
-                          >
+                          <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex)}>
                             <Icon type="delete" size="small" />
                           </div>
                         )}
@@ -1627,21 +1496,9 @@ export default class Retail extends Component {
                         <div className="detail-row-1">
                           <this.InputNumber
                             name={`quantity[${productOrderIndex}]`}
-                            label={
-                              productOrder.status === this.Enum.ACTIVE ? (
-                                <this.Translate id="text_quantity" />
-                              ) : (
-                                <this.Translate id="text_return_quantity" />
-                              )
-                            }
+                            label={productOrder.status === this.Enum.ACTIVE ? <this.Translate id="text_quantity" /> : <this.Translate id="text_return_quantity" />}
                             data={productOrder.quantity}
-                            handleKeyUp={(event) =>
-                              this.handleOnChangOrderField(
-                                event,
-                                productOrderIndex,
-                                "quantity",
-                              )
-                            }
+                            handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
                             handleOnBlur={this.handleOnChangOrderFieldBlur}
                             className="ca-input-v1 order-quantity"
                             min={0}
@@ -1649,38 +1506,20 @@ export default class Retail extends Component {
                             precision={1}
                             isAutoSelect={true}
                             isAutoFocus={true}
-                            didUpdateMakeAutoFocus={
-                              this.state.expandRowOrderIndex ===
-                              productOrderIndex
-                            }
+                            didUpdateMakeAutoFocus={this.state.expandRowOrderIndex === productOrderIndex}
                             form={this.props.form}
                           />
                           <this.InputNumber
                             name={`price[${productOrderIndex}]`}
                             label={<this.Translate id="text_unit_price" />}
-                            data={POSUtil.getTotalAmountAfterDiscount(
-                              1,
-                              productOrder[this.state.customerFieldPrice],
-                              productOrder.discount,
-                            )}
-                            handleKeyUp={(event) =>
-                              this.handleOnChangOrderField(
-                                event,
-                                productOrderIndex,
-                                "newPrice",
-                              )
-                            }
+                            data={POSUtil.getTotalAmountAfterDiscount(1, productOrder[this.state.customerFieldPrice], productOrder.discount)}
+                            handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
                             handleOnBlur={this.handleOnChangOrderFieldBlur}
                             className="ca-input-v1"
                             precision={2}
                             isAutoSelect={true}
                             isHideTool={true}
-                            disabled={
-                              this.Util.getCurrentUser().isAllowEditPrice ===
-                                HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW ||
-                              productOrder.status ===
-                                this.Enum.TRANSACTION_ENTRY_STATUS.RETURN
-                            }
+                            disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
                             form={this.props.form}
                           />
                           <this.InputNumber
@@ -1691,24 +1530,13 @@ export default class Retail extends Component {
                               </span>
                             }
                             data={productOrder.discount}
-                            handleKeyUp={(event) =>
-                              this.handleOnChangOrderField(
-                                event,
-                                productOrderIndex,
-                                "discount",
-                              )
-                            }
+                            handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
                             handleOnBlur={this.handleOnChangOrderFieldBlur}
                             className="ca-input-v1"
                             precision={2}
                             isAutoSelect={true}
                             isHideTool={true}
-                            disabled={
-                              this.Util.getCurrentUser().isAllowEditPrice ===
-                                HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW ||
-                              productOrder.status ===
-                                this.Enum.TRANSACTION_ENTRY_STATUS.RETURN
-                            }
+                            disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
                             form={this.props.form}
                           />
                         </div>
@@ -1718,70 +1546,49 @@ export default class Retail extends Component {
 
                     {/* Free Product Order */}
                     {Array.isArray(productOrder.freeProducts) &&
-                      productOrder.freeProducts.map(
-                        (freeProductOrder, freeProductIndex) => (
+                      productOrder.freeProducts.map((freeProductOrder, freeProductIndex) => (
+                        <div className="product-order-item" key={freeProductIndex}>
+                          <img src={require("../../../../common/components/layout/styles/images/free.png")} alt="Free Product" style={{ position: "absolute", top: 15, left: 5 }} />
                           <div
-                            className="product-order-item"
-                            key={freeProductIndex}
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
                           >
-                            <img
-                              src={require("../../../../common/components/layout/styles/images/free.png")}
-                              alt="Free Product"
-                              style={{ position: "absolute", top: 15, left: 5 }}
-                            />
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                              }}
-                            >
-                              <div className="item">
-                                <div className="epxand-icon icon-next"></div>
-                                <div className="description">
-                                  <div
-                                    style={{
-                                      maxHeight: "20px",
-                                      maxWidth: "160px",
-                                      overflow: "hidden",
-                                      wordBreak: "break-all",
-                                    }}
-                                  >
-                                    <div className="name">
-                                      {freeProductOrder.name}
-                                    </div>
+                            <div className="item">
+                              <div className="epxand-icon icon-next"></div>
+                              <div className="description">
+                                <div
+                                  style={{
+                                    maxHeight: "20px",
+                                    maxWidth: "160px",
+                                    overflow: "hidden",
+                                    wordBreak: "break-all",
+                                  }}
+                                >
+                                  <div className="name">{freeProductOrder.name}</div>
+                                </div>
+                                {freeProductOrder.variantName ? (
+                                  <div className="barcode-number variant-name" style={{ marginTop: 5 }}>
+                                    {freeProductOrder.variantName}
                                   </div>
-                                  {freeProductOrder.variantName ? (
-                                    <div
-                                      className="barcode-number variant-name"
-                                      style={{ marginTop: 5 }}
-                                    >
-                                      {freeProductOrder.variantName}
-                                    </div>
-                                  ) : (
-                                    ""
-                                  )}
+                                ) : (
+                                  ""
+                                )}
 
-                                  <div
-                                    className="barcode-number"
-                                    style={{ marginTop: 5 }}
-                                  >
-                                    {freeProductOrder.barcode}
-                                  </div>
+                                <div className="barcode-number" style={{ marginTop: 5 }}>
+                                  {freeProductOrder.barcode}
                                 </div>
-                                <div className="quantity">
-                                  {`${freeProductOrder.quantity}x`}
-                                </div>
-                                <div className="price">
-                                  <div className="main-price">
-                                    {this.formatCurrency(0)}
-                                  </div>
-                                </div>
+                              </div>
+                              <div className="quantity">{`${freeProductOrder.quantity}x`}</div>
+                              <div className="price">
+                                <div className="main-price">{this.formatCurrency(0)}</div>
                               </div>
                             </div>
                           </div>
-                        ),
-                      )}
+                        </div>
+                      ))}
                   </React.Fragment>
                 );
               })}
@@ -1803,23 +1610,13 @@ export default class Retail extends Component {
                     <div className="sub-total-title">
                       <this.Translate id="text_sub_total" />
                     </div>
-                    <div className="sub-total-value">
-                      {this.formatCurrency(
-                        summaryTotal.subTotalAfterDiscount * exchangeRate,
-                      )}
-                    </div>
+                    <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount * exchangeRate)}</div>
                   </div>
                   <div className="sub-total">
-                    <div
-                      className="sub-total-title"
-                      style={{ fontWeight: 600 }}
-                    >
+                    <div className="sub-total-title" style={{ fontWeight: 600 }}>
                       <this.Translate id="text_discount" />
                     </div>
-                    <div
-                      className="sub-total-value"
-                      style={{ color: "#e85757" }}
-                    >
+                    <div className="sub-total-value" style={{ color: "#e85757" }}>
                       -{this.formatCurrency(discountAmount * exchangeRate)}
                     </div>
                   </div>
@@ -1828,46 +1625,28 @@ export default class Retail extends Component {
                   {/* TAX ROW */}
                   {taxTotal > 0 && (
                     <div className="sub-total">
-                      <div
-                        className="sub-total-title"
-                        onClick={
-                          countTax > 0 ? this.handleOnOpenTaxSetting : null
-                        }
-                      >
+                      <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
                         <span className={`${countTax > 0 ? "ca-link" : ""}`}>
                           <this.Translate id="text_tax" />
                         </span>{" "}
                         {taxTitle}
                       </div>
-                      <div className="sub-total-value">
-                        {this.formatCurrency(taxTotal * exchangeRate)}
-                      </div>
+                      <div className="sub-total-value">{this.formatCurrency(taxTotal * exchangeRate)}</div>
                     </div>
                   )}
                   {/*END TAX ROW */}
 
                   {/* DISCOUNT ROW */}
-                  {this.state.isDiscountHasAdded &&
-                  summaryTotal.discount <= 0 ? (
+                  {this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ? (
                     <div className="sub-total">
-                      <div
-                        className="ca-link sub-total-title"
-                        style={{ fontWeight: 600, position: "relative" }}
-                        onClick={this.handleOnSetupDiscount}
-                      >
-                        <div
-                          className="delete remove-discount"
-                          onClick={this.handleRemoveDiscount}
-                        >
+                      <div className="ca-link sub-total-title" style={{ fontWeight: 600, position: "relative" }} onClick={this.handleOnSetupDiscount}>
+                        <div className="delete remove-discount" onClick={this.handleRemoveDiscount}>
                           <span className="icon-delete"></span>
                         </div>
                         <this.Translate id="text_discount" />
                         {discountTypeStr}
                       </div>
-                      <div
-                        className="sub-total-value"
-                        style={{ position: "relative", color: "#e85757" }}
-                      >
+                      <div className="sub-total-value" style={{ position: "relative", color: "#e85757" }}>
                         {this.formatCurrency(discountAmount * exchangeRate)}
                       </div>
                     </div>
@@ -1884,65 +1663,28 @@ export default class Retail extends Component {
                       paddingTop: 10,
                     }}
                   >
-                    <div
-                      className="sub-total-title"
-                      style={{ fontSize: "16pt", fontWeight: 600 }}
-                    >
+                    <div className="sub-total-title" style={{ fontSize: "16pt", fontWeight: 600 }}>
+                      <this.Translate id="text_total" />
+                    </div>
+                    <div className="sub-total-value" style={{ fontSize: "16pt", fontWeight: 600, color: "#00897B" }}>
+                      {this.Util.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.state.exchangeRate.sellRate, "៛", 1, 0)}
+                    </div>
+                  </div>
+
+                  <div className="sub-total">
+                    <div className="sub-total-title" style={{ visibility: "hidden" }}>
                       <this.Translate id="text_total" />
                     </div>
                     <div
                       className="sub-total-value"
-                      style={{ fontSize: "16pt", fontWeight: 600 }}
+                      style={{
+                        fontSize: "16pt",
+                        fontWeight: 600,
+                      }}
                     >
-                      {this.formatCurrency(
-                        POSUtil.getGrandTotal(
-                          summaryTotal.subTotal,
-                          taxAmount,
-                          discountAmount,
-                        ),
-                        `${this.state.baseCurrency ? this.state.baseCurrency.symbol : ""}`,
-                        0,
-                      )}
+                      {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), "$", 0)}
                     </div>
                   </div>
-
-                  {this.state.isHasSubCurrency ? (
-                    <div className="sub-total">
-                      <div
-                        className="sub-total-title"
-                        style={{ visibility: "hidden" }}
-                      >
-                        <this.Translate id="text_total" />
-                      </div>
-                      <div
-                        className="sub-total-value"
-                        style={{
-                          fontSize: "16pt",
-                          fontWeight: 600,
-                          color: "#00897B",
-                        }}
-                      >
-                        {this.Util.formatCurrency(
-                          POSUtil.toSubCurrencyGrantTotal(
-                            POSUtil.getGrandTotal(
-                              summaryTotal.subTotal,
-                              taxAmount,
-                              discountAmount,
-                            ),
-                            this.state.baseCurrency,
-                            this.state.subCurrency,
-                          ),
-                          this.state.subCurrency
-                            ? this.state.subCurrency.symbol
-                            : "",
-                          1,
-                          0,
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
                 </div>
               </div>
               {this.renderSaveAndPayButton()}
@@ -1962,14 +1704,10 @@ export default class Retail extends Component {
           orderItems={this.state.orderItems}
           paymentMethodList={this.props.paymentMethod}
           productTaxList={this.state.productTaxList}
-          exchangeRate={exchangeRate}
+          exchangeRate={this.state.exchangeRate}
           handleOnResetOrder={this.handleOnResetOrder}
           summaryTotal={this.getSummaryTotal()}
-          summaryTax={POSUtil.getSummaryTax(
-            this.state.productTaxList,
-            <this.Translate id="text_no_tax" />,
-            this.CATranslate("text_taxes", this.props.locale),
-          )}
+          summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale))}
         />
       </Row>
     );

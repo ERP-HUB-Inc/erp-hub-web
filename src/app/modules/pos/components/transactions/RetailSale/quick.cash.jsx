@@ -1,6 +1,7 @@
 import React from "react";
 import { Radio } from "antd";
 import styled from "styled-components";
+import { generateQuickCashSuggestions, generateQuickCashSuggestionsUSD } from "@helper/sales";
 
 const QuickWrapper = styled.div`
   margin-top: 20px;
@@ -18,7 +19,7 @@ const QuickHeader = styled.div`
 
 const QuickButtons = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 `;
 
@@ -51,6 +52,10 @@ class QuickCash extends React.Component {
     selected: null,
   };
 
+  setCurrency = (currency) => {
+    this.setState({ currency });
+  };
+
   handleCurrencyChange = (e) => {
     this.setState({ currency: e.target.value, selected: null });
   };
@@ -67,9 +72,24 @@ class QuickCash extends React.Component {
     const { currency, selected } = this.state;
 
     const usdValues = [1, 5, 10, 20, 50, 100];
-    const khrValues = [1000, 5000, 10000, 20000, 50000, 100000];
+    const suggestedUsdValues = generateQuickCashSuggestionsUSD(this.props.totalUSD);
+    // Make a copy to avoid mutating original
+    const usdSuggestions = [...usdValues];
+    // Insert first suggestion at index 0
+    usdSuggestions.splice(0, 0, suggestedUsdValues[0]);
+    // Insert second suggestion at index 3 (after insertion, array shifts automatically)
+    usdSuggestions.splice(4, 0, suggestedUsdValues[1]);
 
-    const values = currency === "USD" ? usdValues : khrValues;
+    const khrValues = [500, 1000, 5000, 10000, 20000, 50000];
+    const suggestedKhrValues = generateQuickCashSuggestions(this.props.totalKHR);
+    // Make a copy to avoid mutating original
+    const khrSuggestions = [...khrValues];
+    // Insert first suggestion at index 0
+    khrSuggestions.splice(0, 0, suggestedKhrValues[0]);
+    // Insert second suggestion at index 3 (after insertion, array shifts automatically)
+    khrSuggestions.splice(4, 0, suggestedKhrValues[1]);
+
+    const values = currency === "USD" ? usdSuggestions : khrSuggestions;
 
     return (
       <QuickWrapper>
@@ -83,9 +103,9 @@ class QuickCash extends React.Component {
         </QuickHeader>
 
         <QuickButtons>
-          {values.map((val) => (
-            <QuickButton key={val} active={selected === val} onClick={() => this.props.onClick(val, currency)}>
-              {currency === "USD" ? `$${val}` : `${val}៛`}
+          {values.map((val, index) => (
+            <QuickButton key={index} active={selected === val} onClick={() => this.props.onClick(val, currency)}>
+              {currency === "USD" ? `$${val}` : `${val.toLocaleString("en-US")}៛`}
             </QuickButton>
           ))}
         </QuickButtons>

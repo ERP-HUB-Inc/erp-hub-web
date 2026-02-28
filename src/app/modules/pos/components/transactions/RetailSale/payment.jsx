@@ -1,7 +1,7 @@
 import React from "react";
 import _ from "lodash";
 import sweetalert from "sweetalert";
-import { Button, Checkbox, Col, Drawer, Form, InputNumber, Row } from "antd";
+import { Button, Checkbox, Col, Drawer, Form, InputNumber, Row, Tooltip } from "antd";
 import Receipt from "./Receipt";
 import "./Payment.css";
 import RetailSaleService from "@services/RetailSaleService";
@@ -29,6 +29,7 @@ export default class PaymentScreen extends Modal {
       isFocusOnInputBaseCurrency: true,
       validateStatus: "",
       errorMsg: "",
+      tenderInputFocus: "KHR",
       formData: {},
       loadingSubmit: false,
       submittingPayment: false,
@@ -39,6 +40,7 @@ export default class PaymentScreen extends Modal {
     this.height = window.innerHeight < 700 ? window.innerHeight - 10 : 700;
     this.currentUser = this.getCurrentUser();
     this.khrInputRef = React.createRef();
+    this.quickCashRef = React.createRef();
   }
 
   componentDidMount() {
@@ -107,11 +109,6 @@ export default class PaymentScreen extends Modal {
     return value < 0 ? `(${temp})` : temp;
   }
 
-  calculateBalance(grandTotal, amountToPay) {
-    const balance = grandTotal - amountToPay;
-    return balance < 0 ? 0 : Math.abs(balance);
-  }
-
   mapFreeProductsToOrder() {
     let items = [];
     this.props.orderItems.forEach((item) => {
@@ -134,36 +131,39 @@ export default class PaymentScreen extends Modal {
   }
 
   handleGlobalKeyDown = (e) => {
-    console.log("Key pressed: ", e.key);
-    console.log("Payment screen visible: ", this.props.paymentVisible);
     if (!this.props.paymentVisible) return;
 
     const allowedControlKeys = ["Backspace", "Delete", "Enter"];
 
     // Handle numbers
     if (e.key >= "0" && e.key <= "9") {
-      const tenderInCashKHR = (this.props.form.getFieldValue("tenderInCashKHR") || 0) + e.key;
-      this.props.form.setFieldsValue({ tenderInCashKHR });
+      if (this.state.tenderInputFocus === "KHR") {
+        const tenderInCashKHR = (this.props.form.getFieldValue("tenderInCashKHR") || 0) + e.key;
+        this.props.form.setFieldsValue({ tenderInCashKHR });
+      }
       return;
     }
 
     // Handle decimal
-    if (e.key === "." && !this.state.tenderAmount.includes(".")) {
-      this.setState((prev) => ({
-        tenderAmount: prev.tenderAmount + ".",
-      }));
+    if (e.key === ".") {
       return;
     }
 
     // Handle backspace
     if (e.key === "Backspace") {
-      let tenderInCashKHR = this.props.form.getFieldValue("tenderInCashKHR") || "";
-
-      tenderInCashKHR = tenderInCashKHR.toString().slice(0, -1);
-
-      this.props.form.setFieldsValue({
-        tenderInCashKHR,
-      });
+      if (this.state.tenderInputFocus === "USD") {
+        let tenderInCashUSD = this.props.form.getFieldValue("tenderInCashUSD") || "";
+        tenderInCashUSD = tenderInCashUSD.toString().slice(0, -1);
+        this.props.form.setFieldsValue({
+          tenderInCashUSD,
+        });
+      } else {
+        let tenderInCashKHR = this.props.form.getFieldValue("tenderInCashKHR") || "";
+        tenderInCashKHR = tenderInCashKHR.toString().slice(0, -1);
+        this.props.form.setFieldsValue({
+          tenderInCashKHR,
+        });
+      }
 
       return;
     }
@@ -174,19 +174,15 @@ export default class PaymentScreen extends Modal {
       return;
     }
 
-    if (!allowedControlKeys.includes(e.key)) {
+    if (e.key === "F5") {
       e.preventDefault();
+      this.props.form.resetFields();
     }
   };
 
-  getExchangeRateOfSubCurrency() {
-    const { subCurrency } = this.props;
-    return subCurrency && subCurrency.value ? subCurrency.value : 0;
-  }
-
   getTotalTenderUSD() {
     const tenderInCashKHR = this.props.form.getFieldValue("tenderInCashKHR") || 0;
-    const tenderInCashUSDFromKHR = convertKHRToUSD(tenderInCashKHR, this.props.subCurrency);
+    const tenderInCashUSDFromKHR = convertKHRToUSD(tenderInCashKHR, this.props.exchangeRate.sellRate);
     const tenderInCashUSD = this.props.form.getFieldValue("tenderInCashUSD") || 0;
     const totalTender = parseFloat(tenderInCashUSDFromKHR) + parseFloat(tenderInCashUSD);
     return totalTender;
@@ -195,7 +191,7 @@ export default class PaymentScreen extends Modal {
   getTotalTenderKHR() {
     const tenderInCashKHR = this.props.form.getFieldValue("tenderInCashKHR") || 0;
     const tenderInCashUSD = this.props.form.getFieldValue("tenderInCashUSD") || 0;
-    const tenderInCashKHRFromUSD = convertUSDToKHR(tenderInCashUSD, this.props.subCurrency);
+    const tenderInCashKHRFromUSD = convertUSDToKHR(tenderInCashUSD, this.props.exchangeRate.sellRate);
     const totalTender = parseFloat(tenderInCashKHR) + parseFloat(tenderInCashKHRFromUSD);
     return totalTender;
   }
@@ -207,7 +203,7 @@ export default class PaymentScreen extends Modal {
 
   getGrandTotalInKHR() {
     const { summaryTotal, discountAmount, taxAmount } = this.props.summaryTotal;
-    return POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.getExchangeRateOfSubCurrency();
+    return POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.props.exchangeRate.sellRate;
   }
 
   getChangeAmountInUSD() {
@@ -215,7 +211,7 @@ export default class PaymentScreen extends Modal {
   }
 
   getChangeAmountInKHR() {
-    return Math.max(convertUSDToKHR(this.getChangeAmountInUSD(), this.props.subCurrency), 0);
+    return Math.max(convertUSDToKHR(this.getChangeAmountInUSD(), this.props.exchangeRate.buyRate), 0);
   }
 
   handleOnFocusInputAmount = (isFocusOnBaseCurrency) => {
@@ -230,17 +226,20 @@ export default class PaymentScreen extends Modal {
     this.props.handleCancel();
   }
 
-  totalCustomerPaymentList() {
-    let result = 0;
-    this.state.customerPaymentList.forEach((value) => {
-      result += value.tender;
-    });
-    return result;
-  }
-
-  appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance) {
-    customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance);
-    this.setState({ customerPaymentList });
+  handleOnQuickCash = (value, currency) => {
+    if (currency === "USD") {
+      const currentTenderInCashUSD = this.props.form.getFieldValue("tenderInCashUSD") || 0;
+      this.props.form.setFieldsValue({
+        tenderInCashUSD: currentTenderInCashUSD + parseFloat(value),
+      });
+      this.setState({ tenderInputFocus: "USD" });
+    } else {
+      const currentTenderInCashKHR = this.props.form.getFieldValue("tenderInCashKHR") || 0;
+      this.props.form.setFieldsValue({
+        tenderInCashKHR: currentTenderInCashKHR + parseFloat(value),
+      });
+      this.setState({ tenderInputFocus: "KHR" });
+    }
   }
 
   handleOnSendMailReceipt = () => {
@@ -277,7 +276,7 @@ export default class PaymentScreen extends Modal {
       if (!err) {
         const totalTender = this.getTotalTenderUSD();
         const { discountAmount } = this.props.summaryTotal;
-        const grandTotal = this.getGrandTotal();
+        const grandTotalUSD = this.getGrandTotal();
 
         const saleData = {
           customerId: this.props.customer ? this.props.customer.id : null,
@@ -286,7 +285,7 @@ export default class PaymentScreen extends Modal {
           table: {},
           deposit: 0,
           discount: discountAmount,
-          total: grandTotal,
+          total: grandTotalUSD,
           // totalExcludeTax: summaryTotal.subTotal,
           items: this.mapFreeProductsToOrder(),
           tenderCash: totalTender,
@@ -379,25 +378,14 @@ export default class PaymentScreen extends Modal {
     const orderProducts = this.mapFreeProductsToOrder();
     const { summaryTotal, taxRate, discountAmount, taxAmount, discountTypeStr } = this.props.summaryTotal;
     const { exchangeRate, baseCurrency, isHasSubCurrency, subCurrency, receiptTemplate } = this.props;
-    const exchangeRateOfSubCurrency = this.getExchangeRateOfSubCurrency();
 
     const { taxTitle, countTax } = this.props.summaryTax;
 
-    const grandTotal = this.getGrandTotal();
+    const grandTotalUSD = this.getGrandTotal();
+    const grandTotalKHR = convertUSDToKHR(grandTotalUSD, this.props.exchangeRate.sellRate);
     const changeAmount = this.getChangeAmountInUSD();
-    const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
 
-    const balanceUSD = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney);
-    const balanceKHR = convertUSDToKHR(balanceUSD, subCurrency);
-
-    let paymentMethodList = [];
     let customer = {};
-    if (this.props.paymentMethodList) {
-      paymentMethodList = this.Util.chuckCollection(
-        this.props.paymentMethodList.list.filter((paymentMethod) => paymentMethod.code !== PaymentScreen.PAYMENT_METHOD_CREDIT_CODE),
-        2,
-      );
-    }
 
     if (this.props.transaction.paid) {
       this.wrapClassName += " pos-payment-paid"; //hidden close modal
@@ -424,7 +412,7 @@ export default class PaymentScreen extends Modal {
         productTaxList: this.props.productTaxList,
         summaryTotal,
         summaryTax: this.props.summaryTax,
-        grandTotal,
+        grandTotalUSD,
         changeAmount,
         taxRate,
         taxAmount,
@@ -448,16 +436,6 @@ export default class PaymentScreen extends Modal {
         className="pos-payment-drawer"
       >
         <Row>
-          {/* {this.props.transaction.response ? (
-              <div
-                style={{ display: "none" }}
-                id="content-receipt-and-delivery-order"
-              >
-                <Receipt {...dataForReceipt} />
-              </div>
-            ) : (
-              ""
-            )} */}
           <Col span={6} className="sale-summary">
             {/* <div className="title">
               <this.Translate id="text_sale_summary" />
@@ -575,10 +553,10 @@ export default class PaymentScreen extends Modal {
                   </div>
                 </div>
                 <div className="grand-total-value">
-                  {this.formatCurrency(grandTotal * exchangeRate)}
+                  {this.formatCurrency(grandTotalUSD * exchangeRate)}
                 </div>
               </li>
-              {this.renderMoneyExhangeAfterPay(balanceUSD, changeAmount).map(
+              {this.renderMoneyExhangeAfterPay(grandTotalUSD, changeAmount).map(
                 (element) => element,
               )}
             </ul> */}
@@ -588,7 +566,7 @@ export default class PaymentScreen extends Modal {
             <div className="flex items-center justify-center p-4">
               <div className="w-full">
                 <div className="bg-white" style={{ fontFamily: "monospace" }}>
-                  <div className="text-center border-b-2 border-dashed border-gray-300">
+                  <div className="text-center border-gray-300">
                     <h1 className="text-3xl font-bold mb-2">187</h1>
                     <h2 className="text-lg mb-2">Byte Store Center</h2>
                     <p className="text-sm">855069526809</p>
@@ -606,37 +584,34 @@ export default class PaymentScreen extends Modal {
                         </tr>
                       </thead>
                       <tbody>
-                        {this.props.orderItems.map(function (orderItem, index) {
-                          return (
-                            <tr key={index} className="border-b border-gray-200">
-                              <td className="py-2">{orderItem.itemName}</td>
-                              <td className="text-center">{orderItem.quantity}</td>
-                              <td className="text-right">{orderItem.price.toFixed(2)}</td>
-                              <td className="text-right">{orderItem.discount}%</td>
-                              <td className="text-right">{(orderItem.price * orderItem.quantity).toFixed(2)}</td>
-                            </tr>
-                          );
-                        })}
+                        {this.props.orderItems.map((orderItem, index) => (
+                          <tr key={index} className="border-b border-gray-200">
+                            <td className="py-2">{orderItem.itemName}</td>
+                            <td className="text-center">{orderItem.quantity}</td>
+                            <td className="text-right">{this.formatCurrency({ value: orderItem.price, showSymbol: false, position: 1 })}</td>
+                            <td className="text-right">{orderItem.discount}%</td>
+                            <td className="text-right">{this.formatCurrency({ value: orderItem.price * orderItem.quantity, showSymbol: false, position: 1 })}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
 
                     <div className="border-t-2 border-gray-400 pt-3 mb-2">
                       <div className="flex justify-between font-bold mb-2">
-                        <span>Sub Total($):</span>
+                        <span>Subtotal:</span>
                         <span>{this.formatCurrency({ value: summaryTotal.subTotal, currency: "$", position: 1 })}</span>
                       </div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span>Discount:</span>
-                        <span>0%</span>
+                        <span>Discount(0%):</span>
                         <span>{this.formatCurrency({ value: discountAmount, currency: "$", position: 1 })}</span>
                       </div>
                       <div className="flex justify-between font-bold text-lg mb-2">
                         <span>Grand Total:</span>
-                        <span>{this.formatCurrency({ value: grandTotal, currency: "$", position: 1 })}</span>
+                        <span>{this.formatCurrency({ value: grandTotalUSD, currency: "$", position: 1 })}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Exchange rate: {exchangeRateOfSubCurrency.toLocaleString()}៛</span>
-                        <span>{this.formatCurrency({ value: exchangeRateOfSubCurrency * grandTotal, currency: "៛", position: 1 })}</span>
+                        <span>Exchange rate: {this.props.exchangeRate.sellRate.toLocaleString()}៛</span>
+                        <span>{this.formatCurrency({ value: this.props.exchangeRate.sellRate * grandTotalUSD, currency: "៛", position: 1 })}</span>
                       </div>
                     </div>
                   </div>
@@ -645,220 +620,177 @@ export default class PaymentScreen extends Modal {
             </div>
           </Col>
           <Col span={18} className="wrap-payment-tool" style={{ padding: 25 }}>
-            {
-              // this.totalCustomerPaymentList() < grandTotal && !this.props.transaction.paid ?
-              !this.props.transaction.paid ? (
-                <div className="payment-tool">
-                  <Button
-                    shape="circle"
-                    icon="close"
-                    style={{
-                      border: "1px solid #e0e0e0",
-                      color: "#999",
-                      fontSize: 14,
-                      position: "absolute",
-                      right: 10,
-                      marginRight: 30,
-                      borderRadius: "50%",
-                    }}
-                    onClick={this.props.handleCancel}
-                  />
-                  <div className="total-display">
-                    <div className="title-total-display">
-                      <this.Translate id="text_amount_to_pay" />:
+            {!this.props.transaction.paid ? (
+              <div className="payment-tool">
+                <Button
+                  shape="circle"
+                  icon="close"
+                  style={{
+                    border: "1px solid #e0e0e0",
+                    color: "#999",
+                    fontSize: 14,
+                    position: "absolute",
+                    right: 10,
+                    marginRight: 30,
+                    borderRadius: "50%",
+                  }}
+                  onClick={this.props.handleCancel}
+                />
+                <div className="total-display">
+                  <div className="title-total-display">
+                    <this.Translate id="text_amount_to_pay" />:
+                  </div>
+                  <div className="value-total-display">
+                    <div className="payment-amount" id="drawerTotalKHR">
+                      {this.formatCurrency({
+                        value: grandTotalKHR,
+                        currency: "៛",
+                        position: 1,
+                      })}
                     </div>
-                    <div className="value-total-display">
-                      <div className="payment-amount" id="drawerTotalKHR">
-                        {this.formatCurrency({
-                          value: balanceKHR,
-                          currency: "៛",
-                          position: 1,
-                        })}
-                      </div>
-                      <div className="payment-amount-khr" id="drawerTotal">
-                        {this.formatCurrency({
-                          value: balanceUSD,
-                          currency: "$",
-                          position: 0,
-                        })}
-                      </div>
-                      {/* {this.state.isFocusOnInputBaseCurrency
-                        ? this.formatCurrency(balanceUSD, "$")
-                        : this.Util.formatCurrency(
-                            POSUtil.toSubCurrencyGrantTotal(
-                              balanceUSD,
-                              this.props.baseCurrency,
-                              this.props.subCurrency,
-                            ),
-                            this.props.subCurrency.symbol,
-                          )} */}
+                    <div className="payment-amount-khr" id="drawerTotal">
+                      {this.formatCurrency({
+                        value: grandTotalUSD,
+                        currency: "$",
+                        position: 0,
+                      })}
                     </div>
                   </div>
-                  <div style={{ display: "flex", gap: 15, marginTop: 30 }}>
-                    <div className="amount-to-pay">
-                      <Form.Item label="🇰🇭 Cash (KHR)" style={{ marginBottom: 0 }}>
-                        {this.props.form.getFieldDecorator("tenderInCashKHR", {
-                          initialValue: 0,
-                          rules: [],
-                        })(
-                          <InputNumber
-                            size="large"
-                            parser={(value) => {
-                              if (isNaN(value)) {
-                                const regex = /\D+/;
-                                return value.replace(regex, "");
-                              }
-                              return value;
-                            }}
-                            className="khr-input"
-                            ref={this.khrInputRef}
-                            form={this.props.form}
-                            handleOnFocus={() => this.handleOnFocusInputAmount(false)}
-                            handleOnBlur={() => this.handleOnFocusInputAmount(true)}
-                          />,
-                        )}
-                      </Form.Item>
-                    </div>
-                    <div className="amount-to-pay">
-                      <Form.Item label="💵 Cash (USD)" style={{ marginBottom: 0 }}>
-                        {this.props.form.getFieldDecorator("tenderInCashUSD", {
-                          initialValue: 0,
-                          rules: [],
-                        })(
-                          <InputNumber
-                            size="large"
-                            parser={(value) => {
-                              if (isNaN(value)) {
-                                const regex = /\D+/;
-                                return value.replace(regex, "");
-                              }
-                              return value;
-                            }}
-                            ref={this.usdInputRef}
-                            className="usd-input"
-                            form={this.props.form}
-                            handleOnFocus={() => this.handleOnFocusInputAmount(true)}
-                          />,
-                        )}
-                      </Form.Item>
-                    </div>
+                </div>
+                <div style={{ display: "flex", gap: 15, marginTop: 30 }}>
+                  <div className="amount-to-pay">
+                    <Form.Item label="🇰🇭 Cash (KHR)" style={{ marginBottom: 0 }}>
+                      {this.props.form.getFieldDecorator("tenderInCashKHR", {
+                        initialValue: 0,
+                        rules: [],
+                      })(
+                        <InputNumber
+                          size="large"
+                          className="khr-input"
+                          ref={this.khrInputRef}
+                          tabIndex={1}
+                          form={this.props.form}
+                          onFocus={(e) => {
+                            e.target.select();
+                            this.quickCashRef.current.setCurrency("KHR");
+                            this.setState({ tenderInputFocus: "KHR" });
+                          }}
+                          handleOnBlur={() => this.handleOnFocusInputAmount(true)}
+                        />,
+                      )}
+                    </Form.Item>
                   </div>
-                  <div className="action-button-to-pay" style={{ display: "none" }}>
-                    {paymentMethodList.map((paymentMethodListChild, index1) =>
-                      paymentMethodListChild.map((paymentMethod, index2) => (
-                        <this.Button
-                          htmlType="submit"
-                          key={parseInt(`${index1}${index2}`, 10)} // duplicate key index of loop
-                          loading={this.paymentMethodSelectedIndex === parseInt(`${index1}${index2}`, 10) && this.props.transaction.paying}
-                          type="info"
-                          className={index2 === 0 && paymentMethodListChild.length > 1 ? "mg-right" : ""}
-                          width="308px"
-                          onClick={() => this.handleOnMakePayment(paymentMethod, parseInt(`${index1}${index2}`, 10))}
+                  <div className="amount-to-pay">
+                    <Form.Item label="💵 Cash (USD)" style={{ marginBottom: 0 }}>
+                      {this.props.form.getFieldDecorator("tenderInCashUSD", {
+                        initialValue: 0,
+                        rules: [],
+                      })(
+                        <InputNumber
+                          size="large"
+                          ref={this.usdInputRef}
+                          tabIndex={2}
+                          className="usd-input"
+                          form={this.props.form}
+                          onFocus={(e) => {
+                            e.target.select();
+                            this.quickCashRef.current.setCurrency("USD");
+                            this.setState({ tenderInputFocus: "USD" });
+                          }}
+                        />,
+                      )}
+                    </Form.Item>
+                  </div>
+                </div>
+
+                <QuickCash totalUSD={grandTotalUSD} totalKHR={grandTotalKHR} ref={this.quickCashRef} onClick={this.handleOnQuickCash} />
+
+                <PaymentSummary
+                  tendered={this.formatCurrency({ value: this.getTotalTenderKHR(), currency: "៛", position: 1 })}
+                  remaining={this.formatCurrency({ value: Math.max(grandTotalKHR - this.getTotalTenderKHR(), 0), currency: "៛", position: 1 })}
+                  change={this.formatCurrency({ value: this.getChangeAmountInKHR(), currency: "៛", position: 1 })}
+                  currency={"KHR"}
+                />
+              </div>
+            ) : (
+              <div className="confirm-payment">
+                <div className="text-center title">
+                  {changeAmount > 0 ? (
+                    <span>
+                      <this.Translate id="text_give" /> {this.formatCurrency(changeAmount * exchangeRate)} <this.Translate id="text_change" />
+                    </span>
+                  ) : (
+                    <span>
+                      <this.Translate id="text_payment" /> <this.Translate id="text_received" />
+                    </span>
+                  )}
+                </div>
+                <div className="wrap-email-receipt">
+                  <this.InputEmail name="email" className="ca-input-v1" placeholder={this.CATranslate("text_email", this.props.locale)} form={this.props.form} />
+                  <this.Button loading={this.props.mail.sending} type="info" className="margin-left-8 ca-button-v1 btn-send-email-receipt" onClick={this.handleOnSendMailReceipt}>
+                    <this.Translate id="text_email_receipt" />
+                  </this.Button>
+                </div>
+                <div className="complete-action">
+                  <this.Button type="info" className="ca-button-v1 btn-send-email-receipt" onClick={this.handleOnCompletePayment}>
+                    <this.Translate id="text_done" /> (ESC)
+                  </this.Button>
+                </div>
+                {this.props.customer ? (
+                  <table id="table-customer-reward-point">
+                    <thead>
+                      <tr>
+                        <td
+                          colSpan={2}
+                          style={{
+                            padding: 10,
+                            borderBottom: "1px solid #ddd",
+                          }}
                         >
+                          {customer.firstName} {customer.lastName}
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td
+                          style={{
+                            width: "50%",
+                            borderRight: "1px solid #ddd",
+                            padding: 20,
+                          }}
+                        >
+                          Redeem Points
+                          <div>{customer.redeemedPoint}</div>
+                        </td>
+                        <td>
+                          Points
                           <div
                             style={{
                               display: "flex",
                               justifyContent: "center",
-                              alignItems: "center",
                             }}
                           >
-                            <img src={this.Util.getGeneralImage("storeVein/cash-payment-method.svg").url} alt="cash" style={{ width: 40, marginRight: 15 }} />
-                            <div>{paymentMethod.name}</div>
-                          </div>
-                        </this.Button>
-                      )),
-                    )}
-                  </div>
-
-                  <QuickCash onClick={this.handleQuickCashClick} />
-
-                  <PaymentSummary
-                    tendered={this.getTotalTenderKHR()}
-                    remaining={this.formatCurrency({ value: Math.max(balanceKHR - this.getTotalTenderKHR(), 0), currency: "៛", position: 1 })}
-                    change={this.formatCurrency({ value: this.getChangeAmountInKHR(), currency: "៛", position: 1 })}
-                    currency={"KHR"}
-                  />
-                </div>
-              ) : (
-                <div className="confirm-payment">
-                  <div className="text-center title">
-                    {changeAmount > 0 ? (
-                      <span>
-                        <this.Translate id="text_give" /> {this.formatCurrency(changeAmount * exchangeRate)} <this.Translate id="text_change" />
-                      </span>
-                    ) : (
-                      <span>
-                        <this.Translate id="text_payment" /> <this.Translate id="text_received" />
-                      </span>
-                    )}
-                  </div>
-                  <div className="wrap-email-receipt">
-                    <this.InputEmail name="email" className="ca-input-v1" placeholder={this.CATranslate("text_email", this.props.locale)} form={this.props.form} />
-                    <this.Button loading={this.props.mail.sending} type="info" className="margin-left-8 ca-button-v1 btn-send-email-receipt" onClick={this.handleOnSendMailReceipt}>
-                      <this.Translate id="text_email_receipt" />
-                    </this.Button>
-                  </div>
-                  <div className="complete-action">
-                    <this.Button type="info" className="ca-button-v1 btn-send-email-receipt" onClick={this.handleOnCompletePayment}>
-                      <this.Translate id="text_done" /> (ESC)
-                    </this.Button>
-                  </div>
-                  {this.props.customer ? (
-                    <table id="table-customer-reward-point">
-                      <thead>
-                        <tr>
-                          <td
-                            colSpan={2}
-                            style={{
-                              padding: 10,
-                              borderBottom: "1px solid #ddd",
-                            }}
-                          >
-                            {customer.firstName} {customer.lastName}
-                          </td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td
-                            style={{
-                              width: "50%",
-                              borderRight: "1px solid #ddd",
-                              padding: 20,
-                            }}
-                          >
-                            Redeem Points
-                            <div>{customer.redeemedPoint}</div>
-                          </td>
-                          <td>
-                            Points
-                            <div
+                            {this.Util.floor(customer.previousPoint)}
+                            <span
                               style={{
-                                display: "flex",
-                                justifyContent: "center",
+                                color: "green",
+                                fontSize: 13,
+                                marginTop: -1,
+                                marginLeft: 3,
                               }}
                             >
-                              {this.Util.floor(customer.previousPoint)}
-                              <span
-                                style={{
-                                  color: "green",
-                                  fontSize: 13,
-                                  marginTop: -1,
-                                  marginLeft: 3,
-                                }}
-                              >
-                                {" "}
-                                + {this.Util.floor(customer.additionalPoint)}
-                              </span>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  ) : null}
-                </div>
-              )
-            }
+                              {" "}
+                              + {this.Util.floor(customer.additionalPoint)}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                ) : null}
+              </div>
+            )}
           </Col>
         </Row>
         <div
@@ -877,16 +809,24 @@ export default class PaymentScreen extends Modal {
           <Checkbox style={{ marginRight: 25 }} checked={true}>
             Print Receipt
           </Checkbox>
-          <Button
-            size="large"
-            style={{
-              marginRight: 15,
-            }}
-            onClick={() => console.log("Reset Payment")}
-          >
-            Reset
-          </Button>
-          <Button size="large" onClick={this.handleOnMakePayment} type="primary" loading={this.state.submittingPayment} disabled={this.state.submittingPayment}>
+          <Tooltip title="Shortcut: F5">
+            <Button size="large" style={{ marginRight: 15 }} onClick={() => this.props.form.resetFields()}>
+              Reset
+              <span
+                style={{
+                  background: "#eee",
+                  borderRadius: 3,
+                  padding: "2px 5px",
+                  fontSize: 12,
+                  color: "#333",
+                  marginLeft: 5,
+                }}
+              >
+                F5
+              </span>
+            </Button>
+          </Tooltip>
+          <Button size="large" onClick={this.handleOnMakePayment} type="primary" loading={this.state.submittingPayment} disabled={this.state.submittingPayment || this.getTotalTenderUSD() < grandTotalUSD}>
             Confirm Payment
           </Button>
         </div>
