@@ -27,7 +27,7 @@ export function LogoTextOnly({ collapsed = false }) {
         }
         
         .company-name {
-          font-size: 1.5rem;
+          font-size: 1.2rem;
           font-weight: bold;
           letter-spacing: 0.05em;
           color: var(--primary-color);
@@ -70,8 +70,8 @@ export function LogoTextOnly({ collapsed = false }) {
       ) : (
         <div className="logo-sider">
           <div className="logo-text-wrapper">
-            <h1 className="company-name">ERP HUB INC.</h1>
-            <p className="slogan">CONNECTED. EFFICIENT</p>
+            <h1 className="company-name">MARKETCHAIN ERP</h1>
+            <p className="slogan">LOCAL. SMART. CONNECTED</p>
           </div>
         </div>
       )}

@@ -266,8 +266,6 @@
     font-size: 8pt
 }
 
-#retail-sale .product-order-list .product-order-item .name,
-#retail-sale .product-order-list .product-order-item .quantity,
 #retail-sale .product-order-list .product-order-item .price,
 #retail-sale .product-order-list .product-order-item-detail .ant-form-item-label label,
 #retail-sale .product-order-list .product-order-item-detail input {
@@ -276,18 +274,43 @@
     color: #093163
 }
 
+#retail-sale .product-order-list .product-order-item .name {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #1a2332;
+}
+
+#retail-sale .product-order-list .product-order-item .quantity {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 11pt;
+    font-weight: 700;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
 #retail-sale .product-order-list .product-order-item-detail input {
     font-weight: 400
 }
 
 #retail-sale .product-order-list .product-order-item .barcode-number {
-    font-size: 8.5pt;
+    font-size: 9.5pt;
+    color: #b0bec5;
 }
 
 #retail-sale .product-order-list .product-order-item .price {
     position: relative;
     width: 70px;
     text-align: right;
+}
+
+#retail-sale .product-order-list .product-order-item .price .main-price {
+    font-weight: 700;
+    color: #1a2332;
+
 }
 
 /* OrderList.css */
@@ -325,7 +348,7 @@
 }
 
 #retail-sale .delete {
-    font-size: 18pt;
+    font-size: 13pt;
     text-align: center;
     border-radius: 3px;
     color: #093163;
@@ -449,7 +472,8 @@
 #retail-sale #right-block .product-order-list {
     height: 100%;
     overflow: hidden auto;
-    border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     margin-bottom: 10px;
     background-color: #fff;
 }
@@ -487,8 +511,8 @@
 }
 
 #retail-sale #wrap-payment .payment .sub-total-value {
-    font-size: 14pt;
-    font-weight: 500;
+    font-size: 12pt;
+    font-weight: 600;
     color: #4D4F5C
 }
 

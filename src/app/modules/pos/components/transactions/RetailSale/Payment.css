@@ -199,6 +199,40 @@
     padding-top: 30px
 }
 
+.amount-to-pay label[for="tenderInCashKHR"],
+.amount-to-pay label[for="tenderInCashUSD"] {
+    color: #607d8b;
+    font-weight: 600;
+}
+
+.amount-to-pay .khr-input{
+    border-radius: 10px;
+    border-color: rgb(0, 137, 123) !important;
+}
+
+.amount-to-pay .usd-input{
+    border-radius: 10px;
+    border-color: #f9a825 !important;
+}
+
+.amount-to-pay .usd-input input{
+    background: #fffde7 !important;
+    border-width: 1.5px !important;
+}
+
+.amount-to-pay .khr-input input,
+.amount-to-pay .usd-input input {
+    border-radius: 10px;
+}
+
+.amount-to-pay .usd-input input {
+    background: #fffde7 !important;
+}
+
+.payment-tool .amount-to-pay {
+    flex: 1;
+}
+
 .pos-payment .ant-modal-body {
     padding: 0 15px !important
 }
@@ -245,27 +279,21 @@
     height: 50px;
 }
 
+.pos-payment-drawer .ant-drawer-content {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.pos-payment-drawer .ant-drawer-wrapper-body {
+    overflow: hidden;
+}
+
 .btn-send-email-receipt {
     height: 43px
 }
 
-.currency-symbol-payment {
-    width: 60px;
-    border: 0.5px solid #ECECEC;
-    border-right: 0;
-    height: 44px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
-    font-size: 20pt;
-    font-weight: 600;
-}
-
 .total-display {
     margin-bottom: 15px;
-    display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
@@ -273,21 +301,34 @@
 }
 
 .value-total-display {
-    margin-left: 5px;
-    font-family: serif
-}
-
-.total-display .value-total-display,
-.total-display .title-total-display {
-    font-size: 20pt;
-    color: #093163;
-    font-weight: 600
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .total-display .title-total-display {
+    font-size: 12px;
+    color: #90a4ae;
     text-transform: uppercase;
-    font-size: 16pt;
-    letter-spacing: 1.5px
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.payment-amount {
+    font-size: 34px;
+    font-weight: 800;
+    color: #1a2332;
+    line-height: 1;
+}
+
+.payment-amount-khr {
+    font-size: 16px;
+    color: #f9a825;
+    background: #f0f0f0;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 8px;
 }
 
 .separate-title-line {

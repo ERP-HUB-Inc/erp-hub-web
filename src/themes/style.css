@@ -28,7 +28,9 @@ body,
 .ant-pagination.mini .ant-pagination-total-text,
 .ant-statistic-content
 {
-    font-family: enfont,khfont !important;
+    font-family: 'Segoe UI', sans-serif;
+    /* enfont */
+    /* , khfont !important */
 }
 
 html,

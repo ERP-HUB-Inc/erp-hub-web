@@ -324,6 +324,11 @@ export default class Util {
       unsigne = "-"
     }
 
+    // ✅ KHR rounding to nearest 100
+    if (currency === "៛") {
+      n = Math.round(n / 100) * 100;
+    }
+
     // Determine if n has a fractional part
     const hasFraction = n % 1 !== 0
 

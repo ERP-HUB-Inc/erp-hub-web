@@ -1,6 +1,6 @@
 import React from "react";
 import { isMobile, isAndroid, isIOS } from "react-device-detect";
-import { Button, Icon, Input, Row, Divider } from "antd";
+import { Button, Icon, Input, Row, Divider, Drawer } from "antd";
 import _ from "lodash";
 import CommonUtil from "@common/util/index";
 import ProductTypeList from "./ProductTypeList";
@@ -38,16 +38,17 @@ import VaraintProduct from "../../../containers/transactions/SaleWalkin/variant.
 import "./index.css";
 import ProfileDropdown from "@components/ProfileDropdown/profile.dropdown";
 import { ItemImage } from "./item.image";
-import { or } from "ajv/dist/compile/codegen";
 import OrderHeader from "./order.header";
 import EmptyOrder from "./empty.order";
 import ReceiptV2 from "./receipt-v2";
+import payment from "../../../containers/transactions/SaleWalkin/Payment";
 
 export default class Retail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isOutOfStock: true,
+      paymentVisible: false,
       modalContent: null,
       expandRowOrderIndex: null,
       selectedCustomer: null,
@@ -93,8 +94,6 @@ export default class Retail extends Component {
     this.orderListRef = null;
     this.orderItemRefs = {};
 
-    this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
-    this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
     this.handleCancelMakePayment = this.handleCancelMakePayment.bind(this);
     this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
     this.handleOnSetupDiscount = this.handleOnSetupDiscount.bind(this);
@@ -346,9 +345,9 @@ export default class Retail extends Component {
     }
   }
 
-  appendProductOrder(
+  appendItemOrder(
     orderItems,
-    product,
+    item,
     variant,
     newPrice,
     discount,
@@ -361,36 +360,33 @@ export default class Retail extends Component {
       return;
     }
 
-    const tax = POSUtil.getTaxFromProduct(product);
+    const tax = POSUtil.getTaxFromProduct(item);
     const price = isNaN(parseFloat(variant.price)) ? 0 : variant.price;
-    const wholePrice = isNaN(parseFloat(variant.wholePrice))
-      ? 0
-      : variant.wholePrice;
-    const distributePrice = isNaN(parseFloat(variant.distributePrice))
-      ? 0
-      : variant.distributePrice;
+    const wholePrice = isNaN(parseFloat(variant.wholePrice)) ? 0 : variant.wholePrice;
+    const distributePrice = isNaN(parseFloat(variant.distributePrice)) ? 0: variant.distributePrice;
 
     orderItems.push({
-      itemId: product.id,
-      itemName: product.name,
+      itemId: item.id,
+      itemName: item.name,
       variantId: variant.id,
       variantName: variant.name,
-      namekm: product.namekm,
-      categoryId: product.categoryId,
-      unitId: product.sellUnitId,
-      unitName: product.sellUnitName,
+      namekm: item.namekm,
+      categoryId: item.categoryId,
+      unitId: item.sellUnitId,
+      unitName: item.sellUnitName,
       barcode: variant.barcode,
       price,
       newPrice: newPrice ? newPrice : price,
+      unitPrice: newPrice ? newPrice : price,
       wholePrice,
       distributePrice,
       quantity: this.state.initialOrderQuantity,
       discount,
       discountType,
-      enableDescription: product.enableDescription,
+      enableDescription: item.enableDescription,
       tax: tax.taxRate / 100,
       taxDescription: tax,
-      description: product.name,
+      description: item.name,
       options: [],
       status: this.Enum.ACTIVE,
     });
@@ -707,7 +703,7 @@ export default class Retail extends Component {
     //##End checking promotion
 
     if (orderItems.length === 0) {
-      this.appendProductOrder(
+      this.appendItemOrder(
         orderItems,
         product,
         productVariant,
@@ -731,7 +727,7 @@ export default class Retail extends Component {
       });
 
       if (isNotTheSame)
-        this.appendProductOrder(
+        this.appendItemOrder(
           orderItems,
           product,
           productVariant,
@@ -999,7 +995,7 @@ export default class Retail extends Component {
     });
   }
 
-  handleOnMakePayment() {
+  handleOnMakePayment = () => {
     this.handleonSearchFails();
     if (this.openFormSaleRegisration()) {
       return;
@@ -1014,31 +1010,32 @@ export default class Retail extends Component {
           this.state.currencyExchange && this.state.currencyExchange.value;
       }
 
-      this.props.dispatch(TransactionAction.showForm());
-      this.setState({
-        modalContent: (
-          <PaymentForm
-            isHasSubCurrency={this.state.isHasSubCurrency}
-            baseCurrency={this.state.baseCurrency}
-            subCurrency={this.state.subCurrency}
-            receiptTemplate={this.state.receiptTemplate}
-            customer={this.state.selectedCustomer}
-            customerFieldPrice={this.state.customerFieldPrice}
-            orderItems={this.state.orderItems}
-            paymentMethodList={this.props.paymentMethod}
-            productTaxList={this.state.productTaxList}
-            exchangeRate={exchangeRate}
-            handleCancel={this.handleCancelMakePayment}
-            handleOnResetOrder={this.handleOnResetOrder}
-            summaryTotal={this.getSummaryTotal()}
-            summaryTax={POSUtil.getSummaryTax(
-              this.state.productTaxList,
-              <this.Translate id="text_no_tax" />,
-              this.CATranslate("text_taxes", this.props.locale),
-            )}
-          />
-        ),
-      });
+      this.setState({ paymentVisible: true });
+      // this.props.dispatch(TransactionAction.showForm());
+      // this.setState({
+      //   modalContent: (
+      //     <PaymentForm
+      //       isHasSubCurrency={this.state.isHasSubCurrency}
+      //       baseCurrency={this.state.baseCurrency}
+      //       subCurrency={this.state.subCurrency}
+      //       receiptTemplate={this.state.receiptTemplate}
+      //       customer={this.state.selectedCustomer}
+      //       customerFieldPrice={this.state.customerFieldPrice}
+      //       orderItems={this.state.orderItems}
+      //       paymentMethodList={this.props.paymentMethod}
+      //       productTaxList={this.state.productTaxList}
+      //       exchangeRate={exchangeRate}
+      //       handleCancel={this.handleCancelMakePayment}
+      //       handleOnResetOrder={this.handleOnResetOrder}
+      //       summaryTotal={this.getSummaryTotal()}
+      //       summaryTax={POSUtil.getSummaryTax(
+      //         this.state.productTaxList,
+      //         <this.Translate id="text_no_tax" />,
+      //         this.CATranslate("text_taxes", this.props.locale),
+      //       )}
+      //     />
+      //   ),
+      // });
 
       if (this.state.selectedReceiptType === Enum.PARK_RECEIPT) {
         // CLEAR PARK RECEIPT IN CASE USER HAS RESTORE IT AND MAKE PAYMENT
@@ -1147,7 +1144,7 @@ export default class Retail extends Component {
     history.push("/transactions/invoice");
   };
 
-  handleLinkCloseShift() {
+  handleLinkCloseShift = () => {
     this.handleSetFullScreen();
 
     history.push("/transactions/saleregister");
@@ -1501,16 +1498,21 @@ export default class Retail extends Component {
               form={this.props.form}
               isShowBarcodeScannerIcon={true}
               dispatch={this.props.dispatch} /> */}
+            <OrderHeader
+              totalQty={this.state.orderItems.reduce(
+                (acc, item) => acc + item.quantity,
+                0,
+              )}
+            />
             <div
               className="product-order-list"
               ref={(el) => (this.orderListRef = el)}
             >
-              <OrderHeader totalQty={this.state.orderItems.length} />
               {this.state.orderItems.length === 0 && <EmptyOrder />}
               {this.state.orderItems.map((productOrder, productOrderIndex) => {
                 const flashClass =
-                  this.state.selectedProduct && productOrder.itemId ===
-                  this.state.selectedProduct.id
+                  this.state.selectedProduct &&
+                  productOrder.itemId === this.state.selectedProduct.id
                     ? "flash-highlight"
                     : "";
                 return (
@@ -1807,24 +1809,20 @@ export default class Retail extends Component {
                       )}
                     </div>
                   </div>
-                  {summaryTotal.discount >= 0 ? (
-                    <div className="sub-total">
-                      <div
-                        className="sub-total-title"
-                        style={{ fontWeight: 600 }}
-                      >
-                        <this.Translate id="text_discount" />
-                      </div>
-                      <div
-                        className="sub-total-value"
-                        style={{ color: "#e85757" }}
-                      >
-                        -{this.formatCurrency(discountAmount * exchangeRate)}
-                      </div>
+                  <div className="sub-total">
+                    <div
+                      className="sub-total-title"
+                      style={{ fontWeight: 600 }}
+                    >
+                      <this.Translate id="text_discount" />
                     </div>
-                  ) : (
-                    ""
-                  )}
+                    <div
+                      className="sub-total-value"
+                      style={{ color: "#e85757" }}
+                    >
+                      -{this.formatCurrency(discountAmount * exchangeRate)}
+                    </div>
+                  </div>
                   {/* END SUB TOTAL ROW */}
 
                   {/* TAX ROW */}
@@ -1903,6 +1901,7 @@ export default class Retail extends Component {
                           discountAmount,
                         ),
                         `${this.state.baseCurrency ? this.state.baseCurrency.symbol : ""}`,
+                        0,
                       )}
                     </div>
                   </div>
@@ -1917,7 +1916,11 @@ export default class Retail extends Component {
                       </div>
                       <div
                         className="sub-total-value"
-                        style={{ fontSize: "16pt", fontWeight: 600 }}
+                        style={{
+                          fontSize: "16pt",
+                          fontWeight: 600,
+                          color: "#00897B",
+                        }}
                       >
                         {this.Util.formatCurrency(
                           POSUtil.toSubCurrencyGrantTotal(
@@ -1932,7 +1935,7 @@ export default class Retail extends Component {
                           this.state.subCurrency
                             ? this.state.subCurrency.symbol
                             : "",
-                          0,
+                          1,
                           0,
                         )}
                       </div>
@@ -1947,6 +1950,27 @@ export default class Retail extends Component {
           </div>
         </div>
         {this.state.modalContent}
+        <PaymentForm
+          handleCancel={() => this.setState({ paymentVisible: false })}
+          paymentVisible={this.state.paymentVisible}
+          isHasSubCurrency={this.state.isHasSubCurrency}
+          baseCurrency={this.state.baseCurrency}
+          subCurrency={this.state.subCurrency}
+          receiptTemplate={this.state.receiptTemplate}
+          customer={this.state.selectedCustomer}
+          customerFieldPrice={this.state.customerFieldPrice}
+          orderItems={this.state.orderItems}
+          paymentMethodList={this.props.paymentMethod}
+          productTaxList={this.state.productTaxList}
+          exchangeRate={exchangeRate}
+          handleOnResetOrder={this.handleOnResetOrder}
+          summaryTotal={this.getSummaryTotal()}
+          summaryTax={POSUtil.getSummaryTax(
+            this.state.productTaxList,
+            <this.Translate id="text_no_tax" />,
+            this.CATranslate("text_taxes", this.props.locale),
+          )}
+        />
       </Row>
     );
   }

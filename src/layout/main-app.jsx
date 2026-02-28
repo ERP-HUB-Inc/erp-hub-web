@@ -34,6 +34,8 @@ import SalesDashboard from './sales-dashboard';
 import StickyFooterPage from './sticky-footer';
 import StockInUI from './stock-in-summary';
 import VendorDetailPage from './vendor-detail';
+import POSPaymentDrawer from './payment-screen';
+import POSMonitor from './pos-monitor';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -545,7 +547,7 @@ export default class SiderDemo extends React.Component {
                       <Route path="/categories" component={Category} />
                       <Route path="/brands" component={Brand} />
                       <Route path="/setting-logs" component={SystemLogs} />
-                      <Route path="/receipt" component={Receipt} />
+                      <Route path="/receipt" component={POSPaymentDrawer} />
                       <Route
                         path="/SalesDashboard"
                         component={SalesDashboard}
@@ -556,7 +558,7 @@ export default class SiderDemo extends React.Component {
                       />
                       <Route path="/table-views" component={TabletView} />
                       <Route path="/columns" component={ColumnSelection} />
-                      <Route path="/stock-in-ui" component={StockInUI} />
+                      <Route path="/stock-in-ui" component={POSMonitor} />
                       <Route path="/item-ai-ui" component={ItemManagementUI} />
                       <Route
                         path="/item-ai-generator"

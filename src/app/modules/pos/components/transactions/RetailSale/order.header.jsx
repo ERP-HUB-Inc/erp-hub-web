@@ -5,10 +5,11 @@ const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 14px 16px;
   background: #ffffff;
   border-bottom: 1px solid #f0f0f0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 `;
 
 const Title = styled.div`
