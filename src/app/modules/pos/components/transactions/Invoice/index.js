@@ -26,7 +26,7 @@ import CAInvoice from "./CAInvoice";
 import PackingSlip from "../SaleOrder/Invoice/PackingSlip";
 import DeliveryNote from "../SaleOrder/Invoice/DeliveryNote";
 import Enum from "../../../enums";
-import POSUtil from "../../../utils";
+import SalesUtil from "../../../utils";
 import TransactionService from "../../../services/transactions/TransactionService";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
@@ -478,7 +478,7 @@ getCustomerPaymentList(data) {
 			changeAmount = payment.change;
 		}
 
-		customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
+		customerPaymentList = SalesUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
 	});
 	}
 	return {
@@ -557,7 +557,7 @@ getProductOrderList(data) {
 	data.transactionEntries.forEach(transactionEntry => {
 		if (transactionEntry.productVariant && transactionEntry.productVariant.product) {
 			const productVariant = transactionEntry.productVariant;
-			const tax = POSUtil.getTaxFromProduct(productVariant.product);
+			const tax = SalesUtil.getTaxFromProduct(productVariant.product);
 			productOrderList.push({
 			quantity: transactionEntry.quantity,
 			// name: InventoryUtil.getProductNameV2(productVariant.product),

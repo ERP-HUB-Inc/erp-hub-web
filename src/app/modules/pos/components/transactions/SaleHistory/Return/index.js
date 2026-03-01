@@ -4,7 +4,7 @@ import Constant from "../../../../constants/transactions/transaction";
 import Enum from "../../../../enums";
 import Retail from "../../../../../pos/components/transactions/RetailSale";
 import TransactionAction from "../../../../action/transaction/transaction";
-import POSUtil from "../../../../../pos/utils";
+import SalesUtil from "../../../../../pos/utils";
 import Util from "../../../../../inventory/utils";
 import history from "../../../../../common/router/history";
 import "./index.css";
@@ -122,7 +122,7 @@ export default class Form extends Retail {
                             } = this.getSummaryTotal();
 
 
-                            values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+                            values["total"] = SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                             values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
                             values["discount"] = discountAmount;
                             values["transactionEntries"] = productOrderList;

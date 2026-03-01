@@ -7,7 +7,7 @@ import Enum from "../../../enums";
 import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
-import POSUtil from "../../../utils";
+import SalesUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import "./Payment.css";
 import ReactToPrint from "react-to-print";
@@ -91,7 +91,7 @@ export default class Payment extends Modal {
       discountAmount,
       taxAmount
     } = this.props.summaryTotal;
-    return  POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+    return  SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
   }
 
   getGrandTotalIncludeTax() {
@@ -99,7 +99,7 @@ export default class Payment extends Modal {
       summaryTotal,
       taxAmount
     } = this.props.summaryTotal;
-    return  POSUtil.getGrandTotalWithOutDiscount(summaryTotal.subTotal, taxAmount);
+    return  SalesUtil.getGrandTotalWithOutDiscount(summaryTotal.subTotal, taxAmount);
   }
 
   getChangeAmount() {
@@ -137,7 +137,7 @@ export default class Payment extends Modal {
   }
 
   appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance) {
-    customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance);
+    customerPaymentList = SalesUtil.appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance);
     this.setState({customerPaymentList});
   }
 
@@ -189,7 +189,7 @@ export default class Payment extends Modal {
     
     // ADD ADDITIONAL SUB CURRENCY AMOUNT TO BASE CURRENCY VALUE
     if (!isNaN(amountToPaySubCurrency)) {
-      amountToPay = amountToPay + POSUtil.toSubCurrencyGrantTotal(amountToPaySubCurrency, this.props.subCurrency, this.props.baseCurrency);
+      amountToPay = amountToPay + SalesUtil.toSubCurrencyGrantTotal(amountToPaySubCurrency, this.props.subCurrency, this.props.baseCurrency);
     }
 
     let totalCustomerHasGiveMoney = this.totalCustomerPaymentList() + amountToPay; // previus paid + current pay of pos
@@ -269,7 +269,7 @@ export default class Payment extends Modal {
     }
 
     if (!isNaN(amountToPaySubCurrency)) {
-      amountToPay = amountToPay + POSUtil.toSubCurrencyGrantTotal(amountToPaySubCurrency, this.props.subCurrency, this.props.baseCurrency);
+      amountToPay = amountToPay + SalesUtil.toSubCurrencyGrantTotal(amountToPaySubCurrency, this.props.subCurrency, this.props.baseCurrency);
     }
 
     let totalCustomerHasGiveMoney = this.totalCustomerPaymentList() + amountToPay; 
@@ -511,13 +511,13 @@ export default class Payment extends Modal {
                         {
                           productOrder.discount > 0 ?
                             <div className="after-discount-price">
-                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder[this.props.customerFieldPrice], productOrder.discount))}
+                              {this.formatCurrency(SalesUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder[this.props.customerFieldPrice], productOrder.discount))}
                             </div>
                             :
                             ""
                         }
                         <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.props.customerFieldPrice]))}
+                          {this.formatCurrency(SalesUtil.getTotalAmount(productOrder.quantity, productOrder[this.props.customerFieldPrice]))}
                         </div>
                       </div>
                     </li>   
@@ -601,7 +601,7 @@ export default class Payment extends Modal {
                         this.state.isFocusOnInputBaseCurrency ?
                           this.formatCurrency(balance)
                           :
-                          this.Util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(balance, this.props.baseCurrency, this.props.subCurrency), this.props.subCurrency.symbol)
+                          this.Util.formatCurrency(SalesUtil.toSubCurrencyGrantTotal(balance, this.props.baseCurrency, this.props.subCurrency), this.props.subCurrency.symbol)
                       }
                     </div>
                   </div>

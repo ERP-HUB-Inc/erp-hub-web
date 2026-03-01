@@ -1,15 +1,16 @@
 export default {
   PAYMENT_TERM_TYPE: {
-    DAY:"DAY",
-    MONTH:"MONTH"
+    DAY: "DAY",
+    MONTH: "MONTH",
   },
   DISCOUNT_TYPE: {
-    PERCENTAGE: 1,
-    AMOUNT: 0,
-    EACH_ITEM: 2
+    PERCENTAGE: "PERCENTAGE",
+    AMOUNT: "USD",
+    AMOUNT_KHR: "KHR",
+    EACH_ITEM: "EACH_ITEM",
   },
   LOCAL_SCHEMA: {
-    LOCATION: "LOCATION"
+    LOCATION: "LOCATION",
   },
   PARK_RECEIPT: "PARK_RECEIPT",
   CURRENT_RECEIPT: "CURRENT_RECEIPT",
@@ -18,14 +19,14 @@ export default {
     INVOICE: 1,
     RECEIPT: 2,
     CREDIT_NOTE: 3,
-    RETURN: 4
+    RETURN: 4,
   },
   TRANSACTION_STATUS: {
     OPEN: 0,
     OVERDUE: 1,
     PAID: 3,
     CREDIT: 4,
-    CLOSED: 5
+    CLOSED: 5,
   },
   TRANSACTION_STEP: {
     PROCESS: 1,
@@ -34,38 +35,38 @@ export default {
     COMPLETED: 4,
     IN_DELIVERY: 5,
     CREDIT: 6,
-    PAID: 7
+    PAID: 7,
   },
   SALE_ORDER_STATUS: {
     DRAFT: 0,
     CONFIRMED: 1,
     CLOSED: 2,
-    VOID: 4
+    VOID: 4,
   },
   INVOICE_STATUS: {
     DRAFT: 0,
     SENT: 1,
     PARTIAL: 2,
     PAID: 3,
-    VOID: 4
+    VOID: 4,
   },
   INVOICE_TYPE: {
     NON_SCHEDULED: "NON_SCHEDULED",
-    SCHEDULED: "SCHEDULED"
+    SCHEDULED: "SCHEDULED",
   },
   INVOICE_INTERVAL: {
     WEEKLY: "EVERY_WEEK",
-    MONTHLY: "EVERY_MONTH"
+    MONTHLY: "EVERY_MONTH",
   },
   PAYMENT_METHOD_AVIALE_ON_POS: 1,
   PRODUCT_AVIALABLE_ON_SALE: 1,
   OPEN_SALE_REGISTRATION_STATUS: {
     OPEN: 1,
-    CLOSED: 0
+    CLOSED: 0,
   },
   LOCATION_NOT_FOUND: 619,
   LANGUAGE_ALREADY_EXIST: 603,
-  LITE_PLAN_NOT_ALLOW_CREAE_LOCATION:  628,
+  LITE_PLAN_NOT_ALLOW_CREAE_LOCATION: 628,
   PRO_PLAN_NOT_ALLOW_CREAE_LOCATION: 629,
   SERIAL_NUMBER_REQUIRE: 634,
   INVALID_QUANTITY_SALE_RETURN: 642,
@@ -74,33 +75,33 @@ export default {
     THERMAL: 2,
     MINI_THERMAL: 3,
     EXCLUDE_TAX: 4,
-    INCLUDE_TAX: 5
+    INCLUDE_TAX: 5,
   },
   CUSTOMER_CREDIT_STATUS: {
     DISABLE: 1,
-    ENABLE: 2
+    ENABLE: 2,
   },
   QUOTATION_STEP: {
-    DRAFT : 0,
-    PROCESS : 1, //create invoice
-    CANCEL : 2
+    DRAFT: 0,
+    PROCESS: 1, //create invoice
+    CANCEL: 2,
   },
   QUOTATION_STATUS: {
     DRAFT: 0,
     SENT: 1,
     APPROVED: 2,
-    CLOSED: 3
+    CLOSED: 3,
   },
   QUOTATION_STEP_COLOR: {
     DRAFT: "#FAAD14",
     PROCESS: "#2db7f5",
     CANCEL: "#2DB7F5",
-    COMPLETE: "#5BC726"
+    COMPLETE: "#5BC726",
   },
   PAYMENT_METHOD: {
     CODE: {
       CASH: "001",
-      CREDIT: "002"
-    }
-  }
+      CREDIT: "002",
+    },
+  },
 };

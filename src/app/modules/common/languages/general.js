@@ -65,20 +65,11 @@ export default {
 
   text_sorry: ["Sorry", "សូមអភ័យទោស"],
 
-  text_sorry_server_has_issue: [
-    "Looks like we're having some server issues",
-    "ម៉ាស៊ីនបំរើកំពុងមានបញ្ហា​ សូមសាកល្បងតាមការណែនាំដូចខាងក្រោម",
-  ],
+  text_sorry_server_has_issue: ["Looks like we're having some server issues", "ម៉ាស៊ីនបំរើកំពុងមានបញ្ហា​ សូមសាកល្បងតាមការណែនាំដូចខាងក្រោម"],
 
-  text_please_try_refresh_page: [
-    "Please try to reload page",
-    "សូមព្យាយាមទាញយកប្រព័ន្ធម្តងទៀតដោយចុចលើប៊ូតុងទាញយកម្តងទៀត",
-  ],
+  text_please_try_refresh_page: ["Please try to reload page", "សូមព្យាយាមទាញយកប្រព័ន្ធម្តងទៀតដោយចុចលើប៊ូតុងទាញយកម្តងទៀត"],
 
-  text_please_contact_us: [
-    "Please contact with customer support to solve problem",
-    "សូមទំនាក់ទំនងទៅកាន់ផ្នែកបម្រើអតិថិជនដើម្បីដោះស្រាយបញ្ហានេះ",
-  ],
+  text_please_contact_us: ["Please contact with customer support to solve problem", "សូមទំនាក់ទំនងទៅកាន់ផ្នែកបម្រើអតិថិជនដើម្បីដោះស្រាយបញ្ហានេះ"],
 
   text_reload: ["Reload", "ទាញយកម្តងទៀត"],
 
@@ -89,7 +80,7 @@ export default {
   text_delete: ["Delete", "លុប"],
 
   text_remove: ["Remove", "ដកចេញ"],
- 
+
   text_updated_at: ["Update", "កែរប្រែ"],
 
   text_option: ["Option", "ជម្រើស"],
@@ -168,41 +159,31 @@ export default {
 
   text_all_quantity: ["All Quantity", "ចំនួនទាំងអស់"],
 
-  text_no_permission: [
-    "No permission to permform this operation",
-    "គ្មានសិទ្ធិដំណើរការ",
-  ],
+  text_no_permission: ["No permission to permform this operation", "គ្មានសិទ្ធិដំណើរការ"],
 
-  text_warning_select_row_to_delete: [
-    "Please select rows to perform delete operation",
-    "សូមជ្រើសរើសទិន្នន័យ ដើម្បីលប់",
-  ],
+  text_warning_select_row_to_delete: ["Please select rows to perform delete operation", "សូមជ្រើសរើសទិន្នន័យ ដើម្បីលប់"],
 
   text_congratulation: ["Congratulation", "សូមអបអរសាទរ"],
 
   text_confirm: ["Confirm", "បានបញ្ជាក់"],
 
-  text_confirm_delete: [
-    "Are you sure delete this record?",
-    "តើអ្នកប្រាកដថាលប់ហើយឬទេ?",
-  ],
+  text_confirm_delete: ["Are you sure delete this record?", "តើអ្នកប្រាកដថាលប់ហើយឬទេ?"],
 
-  text_warning_delete_stock_io: [
-    "This action will permanently remove this stock IO record.",
-    "សកម្មភាពនេះនឹងលុបកំណត់ត្រា Stock IO នេះចោលជាអចិន្ត្រៃយ៍។",
-  ],
+  text_warning_delete_stock_io: ["This action will permanently remove this stock IO record.", "សកម្មភាពនេះនឹងលុបកំណត់ត្រា Stock IO នេះចោលជាអចិន្ត្រៃយ៍។"],
 
-  text_warning_delete_default_record: [
-    "We don't allow you to delete default record",
-    "ទិន្នន័យដើមមិនអោយអ្នកលប់ទេ",
-  ],
+  text_warning_delete_default_record: ["We don't allow you to delete default record", "ទិន្នន័យដើមមិនអោយអ្នកលប់ទេ"],
 
-  text_warning_edit_system_record: [
-    "We don't allow you to edit system record",
-    "អ្នកមិនអាចលប់ ទិន្នន័យរបស់ប្រពន្ធ័ទេ",
-  ],
+  text_warning_edit_system_record: ["We don't allow you to edit system record", "អ្នកមិនអាចលប់ ទិន្នន័យរបស់ប្រពន្ធ័ទេ"],
 
   text_discount: ["Discount", "បញ្ចុះតម្លៃ"],
+
+  text_add_discount: ["Add Discount", "បន្ថែមបញ្ចុះតម្លៃ"],
+
+  text_edit_discount: ["Edit Discount", "កែប្រែបញ្ចុះតម្លៃ"],
+
+  text_delete_discount: ["Delete Discount", "លុបបញ្ចុះតម្លៃ"],
+
+  text_apply_discount: ["Apply Discount", "អនុវត្តបញ្ចុះតម្លៃ"],
 
   text_start_date: ["Start Date", "ចាប់ពីថ្ងៃទី"],
 
@@ -238,10 +219,7 @@ export default {
 
   text_pay: ["Pay", "បង់ប្រាក់"],
 
-  text_invalid_tender_amount: [
-    "Invalid Tender Amount!",
-    "ចំនួនទឹកប្រាក់មិនត្រឹមត្រូវ",
-  ],
+  text_invalid_tender_amount: ["Invalid Tender Amount!", "ចំនួនទឹកប្រាក់មិនត្រឹមត្រូវ"],
 
   text_sold_quantity: ["Sold Quantity", "បរិមាណលក់"],
 
@@ -270,7 +248,7 @@ export default {
   text_edit: ["Edit", "កែប្រែ"],
 
   text_edit_stock: ["Edit Stock", "កែប្រែស្តុក"],
-  
+
   text_edit_shipping: ["Edit Shipping", "កែប្រែការដឺកជញ្ជូន"],
 
   text_import: ["Import", "Import"],
@@ -389,35 +367,17 @@ export default {
 
   text_name: ["Name", "ឈ្មោះ", "Name"],
 
-  text_opening_stock: [
-    "Opening Stock", 
-    "ទំនិញដើមគ្រា"
-  ],
+  text_opening_stock: ["Opening Stock", "ទំនិញដើមគ្រា"],
 
-  text_stock_in: [
-    "Stock In", 
-    "ទំនិញចូល"
-  ],
+  text_stock_in: ["Stock In", "ទំនិញចូល"],
 
-  text_stock_out: [
-    "Stock Out", 
-    "ទំនិញចេញ"
-  ],
+  text_stock_out: ["Stock Out", "ទំនិញចេញ"],
 
-  text_stock_balance: [
-    "Balance",
-    "សមតុល្យ"
-  ],
+  text_stock_balance: ["Balance", "សមតុល្យ"],
 
-  text_email: [
-    "Email", 
-    "អុីម៉ែល"
-  ],
+  text_email: ["Email", "អុីម៉ែល"],
 
-  text_phone_number: [
-    "Phone Number", 
-    "លេខទូរសព្ទ័"
-  ],
+  text_phone_number: ["Phone Number", "លេខទូរសព្ទ័"],
 
   text_geolocation: ["Geolocation", "ទីតាំងភូមិសាស្ត្រ"],
 
@@ -461,18 +421,11 @@ export default {
 
   text_print_summary: ["Print Summary", "បោះពុម្ភសង្ខេប", "Print Summary"],
 
-  text_current_user: [
-    "Current User",
-    "អ្នកប្រើប្រាស់បច្ចុប​្បន្ន"
-  ],
+  text_current_user: ["Current User", "អ្នកប្រើប្រាស់បច្ចុប​្បន្ន"],
 
   text_full_screen: ["Full Screen", "ពេញអេក្រង់"],
 
-  text_exit_full_screen: [
-    "Exit Full Screen",
-    "ដកអេក្រង់ពេញចេញ",
-    "Exit Full Screen",
-  ],
+  text_exit_full_screen: ["Exit Full Screen", "ដកអេក្រង់ពេញចេញ", "Exit Full Screen"],
 
   text_expected: ["Expected", "រំពឹង", "Expected"],
 
@@ -490,67 +443,35 @@ export default {
 
   text_open_register: ["Open Register", "បើកបញ្ចី", "Open Register"],
 
-  text_register_closed: [
-    "Register closed",
-    "បញ្ចីត្រូវបានបិទ"
-  ],
+  text_register_closed: ["Register closed", "បញ្ចីត្រូវបានបិទ"],
 
   text_open_cash: ["Open Cash", "បើកសាច់ប្រាក់"],
 
   text_close_shift: ["Close Shift", "បិទវេន"],
 
-  text_no_permission_title: [
-    "You don't have permission to view this module",
-    "អ្នកគ្មានសិទ្ធិមើលការងារនេះទេ"
-  ],
+  text_no_permission_title: ["You don't have permission to view this module", "អ្នកគ្មានសិទ្ធិមើលការងារនេះទេ"],
 
-  text_no_permission_detail: [
-    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
-    "អ្នកគ្រប់មិនអោយអ្នកប្រើប្រាស់វា សូមទាក់ទងទៅកាន់អ្នកគ្រប់គ្រងប្រពន្ធដើម្បីប្រើប្រាស់"
-  ],
+  text_no_permission_detail: ["This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.", "អ្នកគ្រប់មិនអោយអ្នកប្រើប្រាស់វា សូមទាក់ទងទៅកាន់អ្នកគ្រប់គ្រងប្រពន្ធដើម្បីប្រើប្រាស់"],
 
   error_require_name: ["Enter name", "បញ្ចូលឈ្មោះ"],
 
   error_require_quanity: ["Enter quantity", "បញ្ចូលបរិមាណ"],
 
-  error_require_description: [
-    "Enter description",
-    "បញ្ចូលពិពណ៍នា"
-  ],
+  error_require_description: ["Enter description", "បញ្ចូលពិពណ៍នា"],
 
-  error_tax_not_found: [
-    "Tax do not exist",
-    "គ្មានពន្ធនៅក្នុងនេះ"
-  ],
+  error_tax_not_found: ["Tax do not exist", "គ្មានពន្ធនៅក្នុងនេះ"],
 
-  error_brand_not_found: [
-    "Brand do not exist",
-    "គ្មានសាខានៅក្នុងនេះ"
-  ],
+  error_brand_not_found: ["Brand do not exist", "គ្មានសាខានៅក្នុងនេះ"],
 
-  error_unit_not_found: [
-    "Unit do not exist",
-    "គ្មានឯកតានៅក្នុងនេះ"
-  ],
+  error_unit_not_found: ["Unit do not exist", "គ្មានឯកតានៅក្នុងនេះ"],
 
-  error_product_type_not_found: [
-    "Product type do not exist",
-    "គ្មានប្រភេទទំនិញនៅក្នុងនេះ"
-  ],
+  error_product_type_not_found: ["Product type do not exist", "គ្មានប្រភេទទំនិញនៅក្នុងនេះ"],
 
-  text_last_week: [
-    "Last week", 
-    "សប្ដាហ៍​មុន"
-  ],
+  text_last_week: ["Last week", "សប្ដាហ៍​មុន"],
 
-  text_this_week: [
-    "This week", 
-    "ស​ប្តា​ហ៍​នេះ"],
+  text_this_week: ["This week", "ស​ប្តា​ហ៍​នេះ"],
 
-  text_before_last_month: [
-    "Before Last Month",
-    "មុនខែមុន"
-  ],
+  text_before_last_month: ["Before Last Month", "មុនខែមុន"],
 
   text_last_month: ["Last month", "ខែមុន", "Last Month"],
 
@@ -605,6 +526,6 @@ export default {
   text_telegram: ["Telegram", "Telegram"],
   text_instagram: ["Instagram", "Instagram"],
   text_youtube: ["Youtube", "Youtube"],
-  text_store_description: ["Store Descripion","ការពិពណ៌នាហាង"],
-  text_movement_log: ["Movement Log", "កំណត់ហេតុនៃការផ្លាស់ប្តូ"]
+  text_store_description: ["Store Descripion", "ការពិពណ៌នាហាង"],
+  text_movement_log: ["Movement Log", "កំណត់ហេតុនៃការផ្លាស់ប្តូ"],
 };

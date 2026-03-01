@@ -2,7 +2,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import htmlParse from "html-react-parser";
 import Util from "../../../../../common/util";
-import POSUtil from "../../../../utils";
+import SalesUtil from "../../../../utils";
 import {PaperSize} from "../../../settings/ReceiptTemplate/PaperSize";
 import Enum from "../../../../enums";
 
@@ -194,7 +194,7 @@ export default function ReceiptTemplate2(props) {
                       <tr>
                         <td style={{ backgroundColor: "white" }} />
                         <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : ""})`}:</td>
-                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(total, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : "")}</td>
+                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(SalesUtil.toSubCurrencyGrantTotal(total, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : "")}</td>
                       </tr>
                       :
                       <tr />
@@ -234,7 +234,7 @@ export default function ReceiptTemplate2(props) {
                       <tr>
                         <td style={{ backgroundColor: "white" }} />
                         <td colSpan="2" style={{ backgroundColor: "white" }}>ប្រាក់អាប់{`(${props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : ""})`}:</td>
-                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(props.changeAmount, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : "")}</td>
+                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(SalesUtil.toSubCurrencyGrantTotal(props.changeAmount, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : "")}</td>
                       </tr>
                       :
                       <tr />

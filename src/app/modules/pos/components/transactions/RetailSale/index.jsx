@@ -4,7 +4,7 @@ import { Button, Icon, Input, Row, Divider, Drawer } from "antd";
 import _ from "lodash";
 import CommonUtil from "@common/util/index";
 import ProductTypeList from "./ProductTypeList";
-import DiscountSetup from "./DiscountSetup";
+import { DiscountSetup } from "./discount.setup";
 import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
@@ -14,8 +14,6 @@ import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
 import ExchangeRateService from "../../../services/settings/ExchangeRateService";
-import ReceiptTemplateService from "../../../services/settings/ReceiptTemplateService";
-import PaymentMethodAction from "../../../action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
@@ -31,7 +29,7 @@ import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegi
 import StartUp from "../../../../common/components/StartUp";
 import history from "../../../../common/router/history";
 import Util from "../../../../inventory/utils";
-import POSUtil from "../../../utils";
+import SalesUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
 import PaymentForm from "../../../containers/transactions/SaleWalkin/Payment";
 import VaraintProduct from "../../../containers/transactions/SaleWalkin/variant.product";
@@ -40,8 +38,8 @@ import ProfileDropdown from "@components/ProfileDropdown/profile.dropdown";
 import { ItemImage } from "./item.image";
 import OrderHeader from "./order.header";
 import EmptyOrder from "./empty.order";
+import { Translate } from "@redux/index";
 import ReceiptV2 from "./receipt-v2";
-import payment from "../../../containers/transactions/SaleWalkin/Payment";
 
 export default class Retail extends Component {
   constructor(props) {
@@ -57,13 +55,13 @@ export default class Retail extends Component {
       categoryList: [
         {
           id: 0,
-          name: <this.Translate id="text_all_category" />,
-          namekm: <this.Translate id="text_all_category" />,
-          namebm: <this.Translate id="text_all_category" />,
+          name: <Translate id="text_all_category" />,
+          namekm: <Translate id="text_all_category" />,
+          namebm: <Translate id="text_all_category" />,
         },
       ],
       customerFieldPrice: "price",
-      textFullScreen: <this.Translate id="text_full_screen" />,
+      textFullScreen: <Translate id="text_full_screen" />,
       iconFullScreen: "icon-full-screen",
       productList: [],
       orderItems: [],
@@ -85,10 +83,9 @@ export default class Retail extends Component {
       exchangeRate: {
         sellRate: 0,
         buyRate: 0,
-      }
+      },
     };
 
-    this.isSetFocusOnSearchProduct = false;
     this.hasDidUpdate = false;
     this.hadNotYetReceiveProps = true;
     this.hadDidUpdateCheckDevice = false;
@@ -96,6 +93,7 @@ export default class Retail extends Component {
     this.service = TransactionService;
     this.timer = null;
     this.orderListRef = null;
+    this.discountRef = React.createRef();
     this.orderItemRefs = {};
 
     this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
@@ -111,8 +109,7 @@ export default class Retail extends Component {
     this.handleOnSaveParkReceipt = this.handleOnSaveParkReceipt.bind(this);
     this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
     this.handleOnBlurSearchProduct = this.handleOnBlurSearchProduct.bind(this);
-    this.handleOnChangOrderFieldBlur =
-      this.handleOnChangOrderFieldBlur.bind(this);
+    this.handleOnChangOrderFieldBlur = this.handleOnChangOrderFieldBlur.bind(this);
   }
 
   componentDidMount() {
@@ -124,17 +121,7 @@ export default class Retail extends Component {
 
     this.props.dispatch(ProductTypeAction.fetch(9999));
     this.props.dispatch(ProductAction.reset());
-    this.props.dispatch(
-      ProductAction.fetch(
-        15,
-        "",
-        "",
-        "",
-        JSON.stringify({}),
-        "",
-        this.Util.getLocationId(),
-      ),
-    );
+    this.props.dispatch(ProductAction.fetch(15, "", "", "", JSON.stringify({}), "", this.Util.getLocationId()));
 
     window.addEventListener("keydown", (e) => {
       const EndKey = 35,
@@ -160,7 +147,7 @@ export default class Retail extends Component {
     ExchangeRateService.getCurrentExchangeRate().then((response) => {
       const data = response.data;
       if (data) {
-        this.setState({ 
+        this.setState({
           exchangeRate: {
             sellRate: parseFloat(data.sellRate),
             buyRate: parseFloat(data.buyRate),
@@ -177,75 +164,40 @@ export default class Retail extends Component {
   componentDidUpdate() {
     if (this.props.customerAdd.added && this.props.customerAdd.response.data) {
       this.getSelectedCustomer(this.props.customerAdd.response.data);
-      this.props.dispatch(
-        CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS),
-      );
+      this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
     }
 
     if (this.props.open.added) {
       this.props.dispatch(OpenSaleRegistrationAction.last());
-      this.props.dispatch(
-        OpenSaleRegistrationAction.reset(
-          ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION,
-        ),
-      );
+      this.props.dispatch(OpenSaleRegistrationAction.reset(ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION));
     }
 
     if (this.props.productVariant.fetched) {
-      this.handleOnSelectProduct(
-        this.state.selectedProduct,
-        this.props.productVariant.list,
-        false,
-      ); // false: cause don't show popup variant product
-      this.props.dispatch(
-        ProductVariantAction.reset(
-          ProductVariantConstant.RESET_PRODUCT_VARIANT,
-        ),
-      );
+      this.handleOnSelectProduct(this.state.selectedProduct, this.props.productVariant.list, false); // false: cause don't show popup variant product
+      this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
     }
 
     if (this.props.posPay.error) {
       let errorCode = this.Util.getErrorCodeFromState(this.props.posPay.error);
-      let messageProductError = this.Util.getErrorMessageFromState(
-        this.props.posPay.error,
-      );
+      let messageProductError = this.Util.getErrorMessageFromState(this.props.posPay.error);
       messageProductError = JSON.parse(messageProductError);
       const productVariantErrorId = messageProductError.productVariantId;
-      const productErrorResult = this.state.orderItems.find(
-        (productOrder) =>
-          productOrder.productVariantId === productVariantErrorId,
-      );
+      const productErrorResult = this.state.orderItems.find((productOrder) => productOrder.productVariantId === productVariantErrorId);
 
       let message = "Something went wrong";
       if (errorCode === Enum.LOCATION_NOT_FOUND) {
-        message = this.CATranslate(
-          "error_location_not_found",
-          this.props.locale,
-        );
+        message = this.CATranslate("error_location_not_found", this.props.locale);
       } else if (errorCode === InventoryEnum.PRODUCT_NOT_FOUND) {
-        message = this.CATranslate(
-          "error_product_not_found",
-          this.props.locale,
-        );
+        message = this.CATranslate("error_product_not_found", this.props.locale);
       } else if (errorCode === InventoryEnum.PRODUCT_QTY_NOT_ENOUGHT) {
-        message = this.CATranslate(
-          "text_qty_not_enought_for_sale",
-          this.props.locale,
-        );
+        message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
         message = `${message} ${messageProductError.quantityInStock}`;
       } else if (errorCode === Enum.SERIAL_NUMBER_REQUIRE) {
-        message = this.CATranslate(
-          "error_serial_number_require",
-          this.props.locale,
-        );
+        message = this.CATranslate("error_serial_number_require", this.props.locale);
       }
 
-      this.Message.error(
-        `${productErrorResult.name}/${productErrorResult.variantName} ${message}`,
-      );
-      this.props.dispatch(
-        TransactionAction.reset(Constant.RESET_ERROR_TRANSACTION),
-      );
+      this.Message.error(`${productErrorResult.name}/${productErrorResult.variantName} ${message}`);
+      this.props.dispatch(TransactionAction.reset(Constant.RESET_ERROR_TRANSACTION));
     }
 
     if (this.props.products.fetched) {
@@ -253,20 +205,11 @@ export default class Retail extends Component {
         productList: this.state.productList.concat(this.props.products.list),
         isRequestLoadingMore: false,
       });
-      this.props.dispatch(
-        ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT),
-      );
+      this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
     }
 
-    if (
-      !this.hasDidUpdate &&
-      this.props.openSaleRegistration.fetched &&
-      this.props.open.showForm
-    ) {
-      if (
-        !this.isOpenSaleRegistrationClosed() &&
-        this.isSetFocusOnSearchProduct
-      ) {
+    if (!this.hasDidUpdate && this.props.openSaleRegistration.fetched && this.props.open.showForm) {
+      if (!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct) {
         this.isSetFocusOnSearchProduct = true;
       }
 
@@ -286,55 +229,38 @@ export default class Retail extends Component {
   }
 
   isValidOpenSaleRegistrationList() {
-    return (
-      Array.isArray(this.props.openSaleRegistration.list) &&
-      this.props.openSaleRegistration.list.length > 0
-    );
+    return Array.isArray(this.props.openSaleRegistration.list) && this.props.openSaleRegistration.list.length > 0;
   }
 
   isOpenSaleRegistrationClosed() {
     if (this.isValidOpenSaleRegistrationList()) {
-      return (
-        this.props.openSaleRegistration.list[0].status ===
-        Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED
-      );
+      return this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
     } else {
       return true; // has no record so set true to be allow to open sale
     }
   }
 
   appendProductTaxList(orderItems) {
-    this.setState({ productTaxList: POSUtil.appendProductTaxList(orderItems) });
+    this.setState({ productTaxList: SalesUtil.appendProductTaxList(orderItems) });
   }
 
   appendFreeProduct(orderProducts, freeByVariantId, freeProducts) {
-    const foundOrderProduct = orderProducts.find(
-      (value) => value.productVariantId === freeByVariantId,
-    );
+    const foundOrderProduct = orderProducts.find((value) => value.productVariantId === freeByVariantId);
     if (foundOrderProduct) {
       foundOrderProduct["freeProducts"] = freeProducts;
     }
   }
 
-  appendItemOrder(
-    orderItems,
-    item,
-    variant,
-    newPrice,
-    discount,
-    discountType,
-  ) {
+  appendItemOrder(orderItems, item, variant, newPrice, discount, discountType) {
     if (!variant) {
-      this.Message.error(
-        this.CATranslate("error_product_not_found", this.props.locale),
-      );
+      this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
       return;
     }
 
-    const tax = POSUtil.getTaxFromProduct(item);
+    const tax = SalesUtil.getTaxFromProduct(item);
     const price = isNaN(parseFloat(variant.price)) ? 0 : variant.price;
     const wholePrice = isNaN(parseFloat(variant.wholePrice)) ? 0 : variant.wholePrice;
-    const distributePrice = isNaN(parseFloat(variant.distributePrice)) ? 0: variant.distributePrice;
+    const distributePrice = isNaN(parseFloat(variant.distributePrice)) ? 0 : variant.distributePrice;
 
     orderItems.push({
       itemId: item.id,
@@ -370,11 +296,7 @@ export default class Retail extends Component {
     let discountType;
 
     try {
-      const result = await ProductService.getPromotionByProductVariantId(
-        productVariantId,
-        orderQuantity,
-        orderAmount,
-      );
+      const result = await ProductService.getPromotionByProductVariantId(productVariantId, orderQuantity, orderAmount);
 
       if (result && result.data) {
         const promotion = result.data;
@@ -416,25 +338,15 @@ export default class Retail extends Component {
   }
 
   getSummaryTotal() {
-    const summaryTotal = POSUtil.getSummaryTotalInOrder(
-      this.state.orderItems,
-      this.state.customerFieldPrice,
-    );
+    const summaryTotal = SalesUtil.getSummaryTotalInOrder(this.state.orderItems, this.state.customerFieldPrice);
     let discountAmount = 0;
     let discountTypeStr = "";
 
-    const taxAmount = POSUtil.getSummaryTax(
-      this.state.productTaxList,
-      <this.Translate id="text_no_tax" />,
-      this.CATranslate("text_taxes", this.props.locale),
-    ).taxTotal;
+    const taxAmount = SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale)).taxTotal;
 
     if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
       discountTypeStr = ` (${this.state.discountValue.value}%)`;
-      discountAmount = POSUtil.getDiscountByRate(
-        summaryTotal.subTotal + taxAmount,
-        this.state.discountValue.value,
-      ); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
+      discountAmount = SalesUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
     } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
       discountAmount = this.state.discountValue.value;
     } else {
@@ -524,9 +436,7 @@ export default class Retail extends Component {
     });
 
     localStorage.removeItem(Enum.CURRENT_RECEIPT);
-    this.props.dispatch(
-      CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET),
-    );
+    this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
     this.props.form.setFieldsValue({ searchRecord: "" }); //searchRecord: customer search field
   }
 
@@ -557,17 +467,7 @@ export default class Retail extends Component {
 
     this.setState({ productList: [] });
 
-    this.props.dispatch(
-      ProductAction.fetch(
-        10,
-        "",
-        "",
-        "",
-        filter,
-        "",
-        this.Util.getLocationId(),
-      ),
-    );
+    this.props.dispatch(ProductAction.fetch(10, "", "", "", filter, "", this.Util.getLocationId()));
   };
 
   handleCancelVariantProduct = () => {
@@ -592,38 +492,22 @@ export default class Retail extends Component {
     }
   };
 
-  handleOnSelectProduct = async (
-    product,
-    productVariant,
-    isRequestVariantForm = true,
-  ) => {
+  handleOnSelectProduct = async (product, productVariant, isRequestVariantForm = true) => {
     let freeProducts = [];
     let newPrice = null;
-    let {
-      orderItems,
-      initialOrderDiscount,
-      initialOrderDiscountType,
-      isDiscountHasAdded,
-      discountValue,
-    } = this.state;
+    let { orderItems, initialOrderDiscount, initialOrderDiscountType, isDiscountHasAdded, discountValue } = this.state;
 
     // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
     if (this.openFormSaleRegisration()) {
       return;
     }
 
-    let isProductVariant =
-      product.productOption === InventoryEnum.PRODUCT_VARIANT;
+    let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
 
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
         selectedProduct: product,
-        modalContent: (
-          <VaraintProduct
-            product={product}
-            handleCancel={this.handleCancelVariantProduct}
-          />
-        ),
+        modalContent: <VaraintProduct product={product} handleCancel={this.handleCancelVariantProduct} />,
       });
       return;
     } else if (productVariant && productVariant.length === 1) {
@@ -635,9 +519,7 @@ export default class Retail extends Component {
     // Checking for promotion
     let orderQuantity;
     let orderAmount;
-    const foundOrderProduct = orderItems.find(
-      (value) => value.variantId === productVariant.id,
-    );
+    const foundOrderProduct = orderItems.find((value) => value.variantId === productVariant.id);
 
     if (foundOrderProduct) {
       orderQuantity = foundOrderProduct.quantity + 1;
@@ -647,19 +529,12 @@ export default class Retail extends Component {
       orderAmount = orderQuantity * productVariant.price;
     }
 
-    const promotion = await this.getProductPromotion(
-      productVariant.id,
-      orderQuantity,
-      orderAmount,
-    );
+    const promotion = await this.getProductPromotion(productVariant.id, orderQuantity, orderAmount);
     if (promotion.discountType === "basic") {
       newPrice = promotion.newPrice;
       const saveAmount = productVariant.price - newPrice;
 
-      initialOrderDiscount = POSUtil.getPercentageByValue(
-        saveAmount,
-        productVariant.price,
-      );
+      initialOrderDiscount = SalesUtil.getPercentageByValue(saveAmount, productVariant.price);
       isDiscountHasAdded = true;
       discountValue = { type: Enum.DISCOUNT_TYPE.EACH_ITEM };
     } else if (promotion.discountType === "advance") {
@@ -674,38 +549,18 @@ export default class Retail extends Component {
     //##End checking promotion
 
     if (orderItems.length === 0) {
-      this.appendItemOrder(
-        orderItems,
-        product,
-        productVariant,
-        newPrice,
-        initialOrderDiscount,
-        initialOrderDiscountType,
-      );
+      this.appendItemOrder(orderItems, product, productVariant, newPrice, initialOrderDiscount, initialOrderDiscountType);
     } else {
       let isNotTheSame = true;
       orderItems.forEach((productOrder, productOrderIndex) => {
-        if (
-          productVariant &&
-          productOrder.variantId === productVariant.id &&
-          productOrder.status === this.Enum.ACTIVE
-        ) {
+        if (productVariant && productOrder.variantId === productVariant.id && productOrder.status === this.Enum.ACTIVE) {
           isNotTheSame = false;
-          orderItems[productOrderIndex]["quantity"] +=
-            this.state.initialOrderQuantity;
+          orderItems[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
           orderItems[productOrderIndex]["status"] = this.Enum.ACTIVE;
         }
       });
 
-      if (isNotTheSame)
-        this.appendItemOrder(
-          orderItems,
-          product,
-          productVariant,
-          null,
-          initialOrderDiscount,
-          initialOrderDiscountType,
-        );
+      if (isNotTheSame) this.appendItemOrder(orderItems, product, productVariant, null, initialOrderDiscount, initialOrderDiscountType);
     }
 
     this.appendProductTaxList(orderItems);
@@ -736,10 +591,7 @@ export default class Retail extends Component {
     const containerRect = container.getBoundingClientRect();
     const elementRect = element.getBoundingClientRect();
 
-    if (
-      elementRect.top < containerRect.top ||
-      elementRect.bottom > containerRect.bottom
-    ) {
+    if (elementRect.top < containerRect.top || elementRect.bottom > containerRect.bottom) {
       container.scrollTo({
         top: element.offsetTop - 70,
         behavior: "smooth",
@@ -748,14 +600,11 @@ export default class Retail extends Component {
   };
 
   removeProductFromOrderList = (productOrder) => {
-    let orderItems = this.state.orderItems.filter(
-      (item) => item.variantId !== productOrder.variantId,
-    );
+    let orderItems = this.state.orderItems.filter((item) => item.variantId !== productOrder.variantId);
 
     this.setState({
       orderItems,
-      isDiscountHasAdded:
-        orderItems.length > 0 ? this.state.isDiscountHasAdded : false,
+      isDiscountHasAdded: orderItems.length > 0 ? this.state.isDiscountHasAdded : false,
     });
 
     this.appendProductTaxList(orderItems);
@@ -789,11 +638,7 @@ export default class Retail extends Component {
     this.isSetFocusOnSearchProduct = false;
   }
 
-  handleOnChangOrderField = async (
-    event,
-    proderOrderRowIndex,
-    field = "quantity",
-  ) => {
+  handleOnChangOrderField = async (event, proderOrderRowIndex, field = "quantity") => {
     this.handleonSearchFails();
 
     const value = parseFloat(event.target.value);
@@ -812,25 +657,16 @@ export default class Retail extends Component {
         });
       } else {
         orderProducts[proderOrderRowIndex]["discount"] = 0;
-        const isDiscountHasAdded =
-          orderProducts.filter(
-            (orderItems) => parseFloat(orderItems.discount) > 0,
-          ).length > 0;
+        const isDiscountHasAdded = orderProducts.filter((orderItems) => parseFloat(orderItems.discount) > 0).length > 0;
         this.setState({
           isDiscountHasAdded,
           discountValue: {
-            type: isDiscountHasAdded
-              ? Enum.DISCOUNT_TYPE.EACH_ITEM
-              : Enum.DISCOUNT_TYPE.PERCENTAGE,
+            type: isDiscountHasAdded ? Enum.DISCOUNT_TYPE.EACH_ITEM : Enum.DISCOUNT_TYPE.PERCENTAGE,
             value: isDiscountHasAdded ? this.state.discountValue.value : 0,
           },
         });
       }
-      const price = POSUtil.getTotalAmountAfterDiscount(
-        1,
-        orderProducts[proderOrderRowIndex][this.state.customerFieldPrice],
-        orderProducts[proderOrderRowIndex]["discount"],
-      );
+      const price = SalesUtil.getTotalAmountAfterDiscount(1, orderProducts[proderOrderRowIndex][this.state.customerFieldPrice], orderProducts[proderOrderRowIndex]["discount"]);
       orderProducts[proderOrderRowIndex]["newPrice"] = price;
       this.props.form.setFieldsValue({
         [`price[${proderOrderRowIndex}]`]: price,
@@ -839,12 +675,11 @@ export default class Retail extends Component {
 
     if (field === "newPrice") {
       const newPrice = orderProducts[proderOrderRowIndex]["newPrice"];
-      let price =
-        orderProducts[proderOrderRowIndex][this.state.customerFieldPrice];
+      let price = orderProducts[proderOrderRowIndex][this.state.customerFieldPrice];
       if (newPrice < price) {
         // DISCOUNT EVENT APPEAR
         const discountAmount = price - newPrice;
-        const discount = POSUtil.getDiscountRateByAmount(price, discountAmount);
+        const discount = SalesUtil.getDiscountRateByAmount(price, discountAmount);
         orderProducts[proderOrderRowIndex]["discount"] = discount;
         this.props.form.setFieldsValue({
           [`discount[${proderOrderRowIndex}]`]: discount,
@@ -871,18 +706,10 @@ export default class Retail extends Component {
     if (field === "quantity") {
       const orderQuantity = value;
       const orderAmount = orderQuantity * orderProduct.price;
-      const promotion = await this.getProductPromotion(
-        orderProduct.productVariantId,
-        orderQuantity,
-        orderAmount,
-      );
+      const promotion = await this.getProductPromotion(orderProduct.productVariantId, orderQuantity, orderAmount);
       if (promotion.discountType === "basic") {
       } else {
-        this.appendFreeProduct(
-          orderProducts,
-          orderProduct.productVariantId,
-          promotion.freeProducts,
-        );
+        this.appendFreeProduct(orderProducts, orderProduct.productVariantId, promotion.freeProducts);
       }
     }
 
@@ -902,19 +729,10 @@ export default class Retail extends Component {
       return;
     }
 
-    if (
-      product.productOption === InventoryEnum.PRODUCT_VARIANT &&
-      product.productVariants &&
-      product.productVariants.length > 0
-    ) {
+    if (product.productOption === InventoryEnum.PRODUCT_VARIANT && product.productVariants && product.productVariants.length > 0) {
       this.setState({
         selectedProduct: product,
-        modalContent: (
-          <VaraintProduct
-            product={product}
-            handleCancel={this.handleCancelVariantProduct}
-          />
-        ),
+        modalContent: <VaraintProduct product={product} handleCancel={this.handleCancelVariantProduct} />,
       });
       return;
     } else {
@@ -922,30 +740,21 @@ export default class Retail extends Component {
     }
   };
 
-  handleOnAutoSelectProductAfterSearchResult = (
-    productList,
-    isRequestVariantForm,
-  ) => {
+  handleOnAutoSelectProductAfterSearchResult = (productList, isRequestVariantForm) => {
     if (this.openFormSaleRegisration()) {
       return;
     }
 
     if (productList.length === 1) {
-      this.handleOnSelectProduct(
-        productList[0],
-        productList[0].productVariants,
-        isRequestVariantForm,
-      );
+      this.handleOnSelectProduct(productList[0], productList[0].productVariants, isRequestVariantForm);
       this.props.form.setFieldsValue({ searchProduct: "" });
-      this.props.dispatch(
-        ProductAction.reset(ProductConstant.SEARCH_PRODUCT_RESET),
-      );
+      this.props.dispatch(ProductAction.reset(ProductConstant.SEARCH_PRODUCT_RESET));
     }
   };
 
   handleCancelMakePayment = () => {
     this.setState({ modalContent: null });
-  }
+  };
 
   handleCancelDiscountSetup = () => {
     this.setState({
@@ -977,8 +786,7 @@ export default class Retail extends Component {
       let exchangeRate = 1;
       let currency = setting.currency && setting.currency.trim();
       if (currency === "៛" || currency === "R") {
-        exchangeRate =
-          this.state.currencyExchange && this.state.currencyExchange.value;
+        exchangeRate = this.state.currencyExchange && this.state.currencyExchange.value;
       }
 
       this.setState({ paymentVisible: true });
@@ -999,9 +807,9 @@ export default class Retail extends Component {
       //       handleCancel={this.handleCancelMakePayment}
       //       handleOnResetOrder={this.handleOnResetOrder}
       //       summaryTotal={this.getSummaryTotal()}
-      //       summaryTax={POSUtil.getSummaryTax(
+      //       summaryTax={SalesUtil.getSummaryTax(
       //         this.state.productTaxList,
-      //         <this.Translate id="text_no_tax" />,
+      //         <Translate id="text_no_tax" />,
       //         this.CATranslate("text_taxes", this.props.locale),
       //       )}
       //     />
@@ -1021,7 +829,7 @@ export default class Retail extends Component {
     } else {
       // TO DO: alert message can make payment with empty list
     }
-  }
+  };
 
   handleGetDiscount(discountValue) {
     this.setState({
@@ -1031,46 +839,17 @@ export default class Retail extends Component {
 
   handleOnClickAllCategory() {
     this.setState({
-      modalContent: (
-        <ProductTypeList
-          list={this.props.productsType.list}
-          handleCancel={this.handleOnCancelAllCategory}
-          form={this.props.form}
-          handleOnSelectCategory={this.handleOnSelectCategory}
-        />
-      ),
+      modalContent: <ProductTypeList list={this.props.productsType.list} handleCancel={this.handleOnCancelAllCategory} form={this.props.form} handleOnSelectCategory={this.handleOnSelectCategory} />,
     });
   }
 
   handleOnSetupDiscount() {
-    const { summaryTotal } = this.getSummaryTotal();
-
-    this.setState({
-      modalContent: (
-        <DiscountSetup
-          handleCancel={this.handleCancelDiscountSetup}
-          form={this.props.form}
-          discountValue={this.state.discountValue.value}
-          discountType={this.state.discountValue.type}
-          summaryTotal={summaryTotal}
-          callBack={this.handleGetDiscount}
-        />
-      ),
-      isDiscountHasAdded: true,
-    });
-    this.isSetFocusOnSearchProduct = false;
+    this.discountRef.current.open();
   }
 
   handleOnOpenTaxSetting() {
     this.setState({
-      modalContent: (
-        <TaxSetting
-          handleCancel={this.handleCancelTaxSetting}
-          callBack={this.handleOnGetTaxList}
-          orderItems={this.state.productTaxList}
-          form={this.props.form}
-        />
-      ),
+      modalContent: <TaxSetting handleCancel={this.handleCancelTaxSetting} callBack={this.handleOnGetTaxList} orderItems={this.state.productTaxList} form={this.props.form} />,
     });
   }
 
@@ -1090,7 +869,7 @@ export default class Retail extends Component {
     if (element.classList.contains("full-screen")) {
       this.setState({
         iconFullScreen: "icon-full-screen",
-        textFullScreen: <this.Translate id="text_full_screen" />,
+        textFullScreen: <Translate id="text_full_screen" />,
       });
       element.classList.remove("full-screen");
     } else {
@@ -1103,7 +882,7 @@ export default class Retail extends Component {
 
       this.setState({
         iconFullScreen: "icon-exit-full-screen",
-        textFullScreen: <this.Translate id="text_exit_full_screen" />,
+        textFullScreen: <Translate id="text_exit_full_screen" />,
       });
       element.classList.add("full-screen");
     }
@@ -1119,7 +898,7 @@ export default class Retail extends Component {
     this.handleSetFullScreen();
 
     history.push("/transactions/saleregister");
-  }
+  };
 
   handleOnSaveParkReceipt() {
     this.saveReceipt(Enum.PARK_RECEIPT, this.state.orderItems);
@@ -1136,8 +915,7 @@ export default class Retail extends Component {
     const scrollWidth = 5;
     const categoryPanelHeight = 60;
     const headerHeight = 50;
-    const itemPanelHeight =
-      window.innerHeight - (headerHeight + categoryPanelHeight);
+    const itemPanelHeight = window.innerHeight - (headerHeight + categoryPanelHeight);
     const screenWidth = window.innerWidth - 420;
     let numberOfColumn = 5;
     let cuttingPaddingRightScroll = 4;
@@ -1163,20 +941,8 @@ export default class Retail extends Component {
     return countProduct > 0 ? (
       this.state.productList.map((product, index) => (
         <div className="product-box" key={index}>
-          <div
-            onClick={() =>
-              this.handleOnSelectProduct(product, product.productVariants)
-            }
-            className="product"
-          >
-            <ItemImage
-              src={
-                new CommonUtil().getImageUrl(product?.image) ||
-                product?.imageUrl
-              }
-              name={Util.getProductNameV2(product)}
-              height={imageHeight}
-            />
+          <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product">
+            <ItemImage src={new CommonUtil().getImageUrl(product?.image) || product?.imageUrl} name={Util.getProductNameV2(product)} height={imageHeight} />
             <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
               <div
                 style={{
@@ -1191,9 +957,7 @@ export default class Retail extends Component {
               </div>
             </div>
             <Divider style={{ margin: "5px 0" }} />
-            <div className="price">
-              {this.formatCurrency(Util.getProductPrice(product))}
-            </div>
+            <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>
           </div>
         </div>
       ))
@@ -1206,11 +970,7 @@ export default class Retail extends Component {
           height: "100%",
         }}
       >
-        <img
-          src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`}
-          style={{ width: 150 }}
-          alt=""
-        />
+        <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{ width: 150 }} alt="" />
       </div>
     );
   }
@@ -1218,14 +978,12 @@ export default class Retail extends Component {
   renderSaveAndPayButton = () => (
     <div className="payment-action">
       {/* <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
-        <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+        <span className="icon-save icon-padding-right"></span><Translate id="text_save" />
       </this.Button> */}
       <Button type="primary" onClick={this.handleOnMakePayment}>
         <span className="icon-checked icon-padding-right"></span>
-        <this.Translate id="text_pay" />
-        <span style={{ textTransform: "capitalize", fontSize: "12pt" }}>
-          (End)
-        </span>
+        <Translate id="text_pay" />
+        <span style={{ textTransform: "capitalize", fontSize: "12pt" }}>(End)</span>
       </Button>
     </div>
   );
@@ -1238,31 +996,21 @@ export default class Retail extends Component {
     return (
       <this.Row className="wrap-receipt-type">
         <this.Col md="12" className="receipt-type">
-          <div
-            className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`}
-            onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}
-          >
+          <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
             <span className="icon-receipt icon-padding-right"></span>
-            <this.Translate id="current_receipt_type" />
+            <Translate id="current_receipt_type" />
           </div>
           {localStorage.getItem(Enum.PARK_RECEIPT) ? (
-            <div
-              className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`}
-              onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}
-            >
+            <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
               <span className="icon-reports icon-padding-right"></span>
-              <this.Translate id="park_receipt_type" />(
-              {_.sumBy(parkReceipt["orderItems"], "quantity")} Items)
+              <Translate id="park_receipt_type" />({_.sumBy(parkReceipt["orderItems"], "quantity")} Items)
             </div>
           ) : (
             ""
           )}
-          <div
-            className="pull-left park-receipt"
-            onClick={this.handleLinkCloseShift}
-          >
+          <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
             <span className="icon-currency icon-padding-right"></span>
-            <this.Translate id="text_close_shift" />
+            <Translate id="text_close_shift" />
           </div>
         </this.Col>
       </this.Row>
@@ -1273,24 +1021,11 @@ export default class Retail extends Component {
     <div className="detail-row-2">
       <this.InputText
         name={`description[${productOrderIndex}]`}
-        label={
-          productOrder.enableDescription ? (
-            <this.Translate id="text_serial_or_imei" />
-          ) : (
-            <this.Translate id="text_notation" />
-          )
-        }
+        label={productOrder.enableDescription ? <Translate id="text_serial_or_imei" /> : <Translate id="text_notation" />}
         // data={productOrder.description}
         className="ca-input-v1"
-        handleKeyUp={(event) =>
-          this.handleOnChangOrderField(event, productOrderIndex, "description")
-        }
-        placeholder={this.CATranslate(
-          productOrder.enableDescription
-            ? "text_search_serial_no"
-            : "text_add_notation",
-          this.props.locale,
-        )}
+        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
+        placeholder={this.CATranslate(productOrder.enableDescription ? "text_search_serial_no" : "text_add_notation", this.props.locale)}
         form={this.props.form}
       />
     </div>
@@ -1301,29 +1036,18 @@ export default class Retail extends Component {
       return (
         <div className="unavailable-mobile-layout">
           <div className="unavailable-mobile">
-            <this.Translate id="text_unavailable_mobile_layout" />
+            <Translate id="text_unavailable_mobile_layout" />
             <br />
-            <this.Translate id="text_unavailable_mobile_download_app" /> <br />
-            {isAndroid ? (
-              <a href="www">Play Store</a>
-            ) : isIOS ? (
-              <a href="www">App Store</a>
-            ) : (
-              ""
-            )}
+            <Translate id="text_unavailable_mobile_download_app" /> <br />
+            {isAndroid ? <a href="www">Play Store</a> : isIOS ? <a href="www">App Store</a> : ""}
           </div>
         </div>
       );
     }
 
-    const { summaryTotal, discountAmount, taxAmount, discountTypeStr } =
-      this.getSummaryTotal();
+    const { summaryTotal, discountAmount, taxAmount, discountTypeStr } = this.getSummaryTotal();
 
-    const { taxTitle, taxTotal, countTax } = POSUtil.getSummaryTax(
-      this.state.productTaxList,
-      <this.Translate id="text_no_tax" />,
-      this.CATranslate("text_taxes", this.props.locale),
-    );
+    const { taxTitle, taxTotal, countTax } = SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale));
 
     let categoryList = this.props.productsType.list;
     if (categoryList.length > 4) {
@@ -1335,8 +1059,7 @@ export default class Retail extends Component {
     let exchangeRate = 1;
     if (currency === "៛" || currency === "R") {
       currency = "៛";
-      exchangeRate =
-        this.state.currencyExchange && this.state.currencyExchange.value;
+      exchangeRate = this.state.currencyExchange && this.state.currencyExchange.value;
     }
 
     return (
@@ -1399,7 +1122,7 @@ export default class Retail extends Component {
             {/* id="search-information" */}
             {/* <this.Col md="12" id="wrap-cashier">
                 <div>
-                  <this.Translate id="text_cashier" />:
+                  <Translate id="text_cashier" />:
                 </div>
                 <div className="current-cashier">
                   {this.Util.getCurrentUser().fullName}
@@ -1479,11 +1202,13 @@ export default class Retail extends Component {
                           <div className="quantity">{`${productOrder.quantity}x`}</div>
                           <div className="price">
                             {productOrder.discount > 0 ? (
-                              <div className="after-discount-price">{this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate, productOrder.discount), "", false)}</div>
+                              <div className="after-discount-price">
+                                {this.formatCurrency(SalesUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate, productOrder.discount), "", false)}
+                              </div>
                             ) : (
                               ""
                             )}
-                            <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>{this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate))}</div>
+                            <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>{this.formatCurrency(SalesUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate))}</div>
                           </div>
                         </div>
                         {productOrder.status === this.Enum.ACTIVE && (
@@ -1496,7 +1221,7 @@ export default class Retail extends Component {
                         <div className="detail-row-1">
                           <this.InputNumber
                             name={`quantity[${productOrderIndex}]`}
-                            label={productOrder.status === this.Enum.ACTIVE ? <this.Translate id="text_quantity" /> : <this.Translate id="text_return_quantity" />}
+                            label={productOrder.status === this.Enum.ACTIVE ? <Translate id="text_quantity" /> : <Translate id="text_return_quantity" />}
                             data={productOrder.quantity}
                             handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
                             handleOnBlur={this.handleOnChangOrderFieldBlur}
@@ -1511,8 +1236,8 @@ export default class Retail extends Component {
                           />
                           <this.InputNumber
                             name={`price[${productOrderIndex}]`}
-                            label={<this.Translate id="text_unit_price" />}
-                            data={POSUtil.getTotalAmountAfterDiscount(1, productOrder[this.state.customerFieldPrice], productOrder.discount)}
+                            label={<Translate id="text_unit_price" />}
+                            data={SalesUtil.getTotalAmountAfterDiscount(1, productOrder[this.state.customerFieldPrice], productOrder.discount)}
                             handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
                             handleOnBlur={this.handleOnChangOrderFieldBlur}
                             className="ca-input-v1"
@@ -1526,7 +1251,7 @@ export default class Retail extends Component {
                             name={`discount[${productOrderIndex}]`}
                             label={
                               <span>
-                                <this.Translate id="text_discount" /> (%)
+                                <Translate id="text_discount" /> (%)
                               </span>
                             }
                             data={productOrder.discount}
@@ -1599,7 +1324,7 @@ export default class Retail extends Component {
                   {/* {
                   !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
                     <div className="sub-total add-discount" style={{justifyContent: "flex-end"}} onClick={this.handleOnSetupDiscount}>
-                      <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span><span style={{fontSize: "10pt"}}>(F2)</span>
+                      <span className="icon-add icon-padding-right"></span> <span><Translate id="text_add"/> <Translate id="text_discount"/></span><span style={{fontSize: "10pt"}}>(F2)</span>
                     </div>
                     :
                     ""
@@ -1608,13 +1333,30 @@ export default class Retail extends Component {
                   {/* SUB TOTAL ROW */}
                   <div className="sub-total">
                     <div className="sub-total-title">
-                      <this.Translate id="text_sub_total" />
+                      <Translate id="text_sub_total" />
                     </div>
                     <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount * exchangeRate)}</div>
                   </div>
                   <div className="sub-total">
-                    <div className="sub-total-title" style={{ fontWeight: 600 }}>
-                      <this.Translate id="text_discount" />
+                    <div className="flex">
+                      <div className="sub-total-title">
+                        <Translate id="text_discount" />
+                      </div>
+                      <Button
+                        size="small"
+                        icon="plus"
+                        shape="round"
+                        type="default"
+                        style={{
+                          marginLeft: 8,
+                          fontSize: 12,
+                          height: 24,
+                          padding: "0 10px",
+                        }}
+                        onClick={this.handleOnSetupDiscount}
+                      >
+                        Add Discount
+                      </Button>
                     </div>
                     <div className="sub-total-value" style={{ color: "#e85757" }}>
                       -{this.formatCurrency(discountAmount * exchangeRate)}
@@ -1627,7 +1369,7 @@ export default class Retail extends Component {
                     <div className="sub-total">
                       <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
                         <span className={`${countTax > 0 ? "ca-link" : ""}`}>
-                          <this.Translate id="text_tax" />
+                          <Translate id="text_tax" />
                         </span>{" "}
                         {taxTitle}
                       </div>
@@ -1637,13 +1379,13 @@ export default class Retail extends Component {
                   {/*END TAX ROW */}
 
                   {/* DISCOUNT ROW */}
-                  {this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ? (
+                  {/* {this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ? (
                     <div className="sub-total">
                       <div className="ca-link sub-total-title" style={{ fontWeight: 600, position: "relative" }} onClick={this.handleOnSetupDiscount}>
                         <div className="delete remove-discount" onClick={this.handleRemoveDiscount}>
                           <span className="icon-delete"></span>
                         </div>
-                        <this.Translate id="text_discount" />
+                        <Translate id="text_discount" />
                         {discountTypeStr}
                       </div>
                       <div className="sub-total-value" style={{ position: "relative", color: "#e85757" }}>
@@ -1652,7 +1394,7 @@ export default class Retail extends Component {
                     </div>
                   ) : (
                     ""
-                  )}
+                  )} */}
                   {/*END DISCOUNT ROW */}
 
                   <div
@@ -1664,16 +1406,16 @@ export default class Retail extends Component {
                     }}
                   >
                     <div className="sub-total-title" style={{ fontSize: "16pt", fontWeight: 600 }}>
-                      <this.Translate id="text_total" />
+                      <Translate id="text_total" />
                     </div>
                     <div className="sub-total-value" style={{ fontSize: "16pt", fontWeight: 600, color: "#00897B" }}>
-                      {this.Util.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.state.exchangeRate.sellRate, "៛", 1, 0)}
+                      {this.Util.formatCurrency(SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.state.exchangeRate.sellRate, "៛", 1, 0)}
                     </div>
                   </div>
 
                   <div className="sub-total">
                     <div className="sub-total-title" style={{ visibility: "hidden" }}>
-                      <this.Translate id="text_total" />
+                      <Translate id="text_total" />
                     </div>
                     <div
                       className="sub-total-value"
@@ -1682,7 +1424,7 @@ export default class Retail extends Component {
                         fontWeight: 600,
                       }}
                     >
-                      {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), "$", 0)}
+                      {this.formatCurrency(SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), "$", 0)}
                     </div>
                   </div>
                 </div>
@@ -1707,7 +1449,18 @@ export default class Retail extends Component {
           exchangeRate={this.state.exchangeRate}
           handleOnResetOrder={this.handleOnResetOrder}
           summaryTotal={this.getSummaryTotal()}
-          summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale))}
+          summaryTax={SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale))}
+        />
+
+        <DiscountSetup
+          ref={this.discountRef}
+          summaryTotal={summaryTotal}
+          discountValue={this.state.discountValue.value}
+          discountType={this.state.discountValue.type}
+          exchangeRate={this.state.exchangeRate}
+          form={this.props.form}
+          callBack={this.handleGetDiscount}
+          handleCancel={this.handleCancelDiscountSetup}
         />
       </Row>
     );

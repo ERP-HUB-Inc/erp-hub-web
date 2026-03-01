@@ -3,7 +3,7 @@ import swal from "sweetalert";
 import List from "../List";
 import Receipt from "../RetailSale/Receipt";
 import Enum from "../../../enums";
-import POSUtil from "../../../utils";
+import SalesUtil from "../../../utils";
 import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import Constant from "../../../constants/transactions/transaction";
 import TransactionAction from "../../../action/transaction/transaction";
@@ -239,7 +239,7 @@ export default class SaleHistoryList extends List {
       productList={productOrderList}
       productTaxList={productTaxList}
       summaryTotal={this.getSummaryTotal(this.props.detail.data)}
-      summaryTax={POSUtil.getSummaryTax(productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}
+      summaryTax={SalesUtil.getSummaryTax(productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}
       changeAmount={customerPayment.changeAmount}
       taxAmount={this.getTaxAmount(this.props.detail.data)}
       discountAmount={this.props.detail.data.discount} />;
@@ -294,7 +294,7 @@ export default class SaleHistoryList extends List {
           changeAmount = payment.change;
         }
 
-        customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
+        customerPaymentList = SalesUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
       });
     }
     return {
@@ -309,7 +309,7 @@ export default class SaleHistoryList extends List {
       data.transactionEntries.forEach(transactionEntry => {
         if (transactionEntry.productVariant && transactionEntry.productVariant.product) {
           const productVariant = transactionEntry.productVariant;
-          const tax = POSUtil.getTaxFromProduct(productVariant.product);
+          const tax = SalesUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
             quantity: transactionEntry.quantity,
             // name: InventoryUtil.getProductNameV2(productVariant.product),
@@ -335,7 +335,7 @@ export default class SaleHistoryList extends List {
   }
 
   getProductTaxList(productOrderList) {
-    return POSUtil.appendProductTaxList(productOrderList);
+    return SalesUtil.appendProductTaxList(productOrderList);
   }
 
   getTaxAmount(data) {

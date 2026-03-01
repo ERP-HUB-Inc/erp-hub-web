@@ -540,7 +540,7 @@
     letter-spacing: 2px;
     padding-top: 8px;
     padding-bottom: 8px;
-    border-radius: 25px !important;
+    border-radius: 15px !important;
 }
 
 #retail-sale #wrap-payment .add-discount {
@@ -623,12 +623,14 @@
 }
 
 .wrap-order-discount .ant-modal-body {
-    padding: 15px !important
+    padding: 20px 20px !important
+}
+
+.wrap-order-discount .ant-modal-content {
+    border-radius: 12px;
 }
 
 .wrap-order-discount .order-discount .title {
-    border-bottom: 1.5px solid #ECECEC;
-    padding-bottom: 15px;
     color: #4D4F5C;
     font-weight: 600;
     font-size: 11pt
@@ -636,7 +638,6 @@
 
 .wrap-order-discount .order-discount .wrap-discount-value {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     padding-top: 15px
 }
@@ -647,57 +648,16 @@
 
 .wrap-order-discount .order-discount .wrap-discount-value .discount-type .item {
     font-size: 11.25pt;
-    padding: 12px 20px;
+    padding: 8px 15px;
     border: 1.5px solid #ECECEC;
-    cursor: pointer
 }
 
 .wrap-order-discount .order-discount .wrap-discount-value .ant-input-number-input {
-    font-size: 11.25pt;
-    text-align: right
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .ant-input-number {
-    width: 150px !important
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .discount-type .item:first-child {
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .discount-type .item:last-child {
-    border-bottom-right-radius: 3px;
-    border-top-right-radius: 3px;
-    border-left: none
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .discount-type .item.selected {
-    border: 1.5px solid #0d62af
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .discount-value {
-    position: relative
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .discount-value .amount-placeholder,
-.wrap-order-discount .order-discount .wrap-discount-value .discount-value .percentage-placeholder {
-    position: absolute;
-    top: 14px;
-    z-index: 1;
     font-size: 11.25pt
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .discount-value .amount-value-type .ant-input-number-input {
-    padding-right: 10px
 }
 
 .wrap-order-discount .order-discount .wrap-discount-value .discount-value .amount-placeholder {
     left: 10px
-}
-
-.wrap-order-discount .order-discount .wrap-discount-value .discount-value .percentage-value-type .ant-input-number-input {
-    padding-right: 22px
 }
 
 .wrap-order-discount .order-discount .wrap-discount-value .discount-value .percentage-placeholder {
@@ -716,10 +676,6 @@
 
 .wrap-order-discount .ant-modal-body .ant-modal-footer {
     padding-bottom: 0 !important
-}
-
-.wrap-order-discount button {
-   height: 45px
 }
 
 #wrap-product-box-list:hover .load-more-button {

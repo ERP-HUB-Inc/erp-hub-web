@@ -125,7 +125,7 @@ export default class Form extends Retail {
         } = this.getSummaryTotal();
 
         values["status"] = status;
-        values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+        values["total"] = SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
         values["name"] = "Quotation";
         values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
         values["discount"] = discountAmount;

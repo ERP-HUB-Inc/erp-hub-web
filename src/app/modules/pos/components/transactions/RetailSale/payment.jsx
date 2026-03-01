@@ -7,7 +7,7 @@ import "./Payment.css";
 import RetailSaleService from "@services/RetailSaleService";
 import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
-import POSUtil from "../../../utils";
+import SalesUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import ReceiptV2 from "./receipt-v2";
 import QuickCash from "./quick.cash";
@@ -198,12 +198,12 @@ export default class PaymentScreen extends Modal {
 
   getGrandTotal() {
     const { summaryTotal, discountAmount, taxAmount } = this.props.summaryTotal;
-    return POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+    return SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
   }
 
   getGrandTotalInKHR() {
     const { summaryTotal, discountAmount, taxAmount } = this.props.summaryTotal;
-    return POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.props.exchangeRate.sellRate;
+    return SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.props.exchangeRate.sellRate;
   }
 
   getChangeAmountInUSD() {
@@ -273,11 +273,11 @@ export default class PaymentScreen extends Modal {
 
   handleOnMakePayment = () => {
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        const totalTender = this.getTotalTenderUSD();
-        const { discountAmount } = this.props.summaryTotal;
-        const grandTotalUSD = this.getGrandTotal();
+      const totalTender = this.getTotalTenderUSD();
+      const { discountAmount } = this.props.summaryTotal;
+      const grandTotalUSD = this.getGrandTotal();
 
+      if (!err && this.getTotalTenderUSD() >= grandTotalUSD) {
         const saleData = {
           customerId: this.props.customer ? this.props.customer.id : null,
           saleType: "RETAIL",
@@ -459,7 +459,7 @@ export default class PaymentScreen extends Modal {
                       {productOrder.discount > 0 ? (
                         <div className="after-discount-price">
                           {this.formatCurrency(
-                            POSUtil.getTotalAmountAfterDiscount(
+                            SalesUtil.getTotalAmountAfterDiscount(
                               productOrder.quantity,
                               productOrder[this.props.customerFieldPrice] *
                                 exchangeRate,
@@ -478,7 +478,7 @@ export default class PaymentScreen extends Modal {
                         }}
                       >
                         {this.formatCurrency(
-                          POSUtil.getTotalAmount(
+                          SalesUtil.getTotalAmount(
                             productOrder.quantity,
                             productOrder[this.props.customerFieldPrice] *
                               exchangeRate,
@@ -826,9 +826,23 @@ export default class PaymentScreen extends Modal {
               </span>
             </Button>
           </Tooltip>
-          <Button size="large" onClick={this.handleOnMakePayment} type="primary" loading={this.state.submittingPayment} disabled={this.state.submittingPayment || this.getTotalTenderUSD() < grandTotalUSD}>
-            Confirm Payment
-          </Button>
+          <Tooltip title="Shortcut: Enter">
+            <Button size="large" onClick={this.handleOnMakePayment} type="primary" loading={this.state.submittingPayment} disabled={this.state.submittingPayment || this.getTotalTenderUSD() < grandTotalUSD}>
+              Confirm Payment
+              <span
+                style={{
+                  background: "#eee",
+                  borderRadius: 3,
+                  padding: "2px 5px",
+                  fontSize: 12,
+                  color: "#333",
+                  marginLeft: 5,
+                }}
+              >
+                Enter
+              </span>
+            </Button>
+          </Tooltip>
         </div>
       </Drawer>
     );

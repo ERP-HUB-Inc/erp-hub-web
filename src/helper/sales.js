@@ -1,3 +1,38 @@
+export const formatCurrency = (props = { amount, currency: "$", position: 0, precision: 2 }) => {
+  let { amount, currency, position, precision } = props;
+
+  let unsigne = "";
+
+  if (amount < 0) {
+    amount = Math.abs(amount);
+    unsigne = "-";
+  }
+
+  // ✅ KHR rounding to nearest 100
+  if (currency === "៛") {
+    amount = Math.round(amount / 100) * 100;
+  } else if (currency === "$") {
+    precision = 2; // Force 2 decimal places for USD
+  }
+
+  // ✅ Safer integer check
+  const hasFraction = !Number.isInteger(amount);
+  // Always respect precision for USD
+  let fixed = currency === "$" ? amount.toFixed(precision) : hasFraction ? amount.toFixed(precision) : amount.toFixed(0);
+
+  // Add commas
+  let result = fixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  // Position currency
+  if (position === 0) {
+    result = `${currency}${result}`;
+  } else {
+    result = `${result}${currency}`;
+  }
+
+  return `${unsigne}${result}`;
+};
+
 export const toSubCurrencyGrantTotal = (amount, subCurrency, baseCurrency) => {
   if (!subCurrency || !baseCurrency) return 0;
 
@@ -79,4 +114,4 @@ export const generateQuickCashDynamicV2 = (total) => {
   suggestions.add(bigNote);
 
   return Array.from(suggestions).sort((a, b) => a - b);
-}
+};

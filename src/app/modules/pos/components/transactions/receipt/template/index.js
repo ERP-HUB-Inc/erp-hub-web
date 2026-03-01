@@ -3,7 +3,7 @@ import { Translate } from "react-localize-redux";
 import ReceiptTemplate1 from "./template1";
 import ReceiptTemplate2 from "./template2";
 import Util from "../../../../../common/util";
-import POSUtil from "../../../../utils";
+import SalesUtil from "../../../../utils";
 import InventoryEnum from "../../../../../inventory/enums";
 
 const receiptTemplate = {
@@ -63,7 +63,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
           changeAmount = payment.change;
         }
 
-        customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
+        customerPaymentList = SalesUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
       });
     }
     return {
@@ -78,7 +78,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
       data.transactionEntries.forEach(entry => {
         if (entry.productVariant && entry.productVariant.product) {
           const productVariant = entry.productVariant;
-          const tax = POSUtil.getTaxFromProduct(productVariant.product);
+          const tax = SalesUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
             quantity: entry.quantity,
             name: productVariant.product.name,
@@ -109,7 +109,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
   }
 
   function getProductTaxList(productOrderList) {
-    return POSUtil.appendProductTaxList(productOrderList);
+    return SalesUtil.appendProductTaxList(productOrderList);
   }
 
   const {formData} = props;
@@ -133,7 +133,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
       productTaxList={productTaxList}
       customerFieldPrice="price"
       summaryTotal={getSummaryTotal(formData)}
-      summaryTax={POSUtil.getSummaryTax(productTaxList, <Translate id="text_no_tax"/>, <Translate id="text_taxes" />)}
+      summaryTax={SalesUtil.getSummaryTax(productTaxList, <Translate id="text_no_tax"/>, <Translate id="text_taxes" />)}
       changeAmount={customerPayment.changeAmount}
       taxAmount={getTaxAmount(formData)}
       discountAmount={formData.discount}

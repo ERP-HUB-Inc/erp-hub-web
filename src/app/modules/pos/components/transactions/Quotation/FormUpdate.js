@@ -7,7 +7,7 @@ import history from "../../../../../modules/common/router/history";
 import Retail from "../../../../pos/components/transactions/RetailSale";
 import QuotationAction from "../../../action/transaction/quotation";
 import CustomerAction from "../../../../crm/actions/customers/customer";
-import POSUtil from "../../../../pos/utils";
+import SalesUtil from "../../../../pos/utils";
 import Util from "../../../../inventory/utils";
 import "./index.css";
 
@@ -135,7 +135,7 @@ export default class Form extends Retail {
             } = this.getSummaryTotal();
                     
 
-            values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+            values["total"] = SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
             values["status"] = status;
             values["name"] = "Quotation";
             values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
