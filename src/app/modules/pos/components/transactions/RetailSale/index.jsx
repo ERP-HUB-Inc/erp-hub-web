@@ -1,6 +1,8 @@
 import React from "react";
 import { Button, Icon, Input, Row, Divider } from "antd";
 import { isMobile, isAndroid, isIOS } from "react-device-detect";
+import sweetalert from "sweetalert";
+import BarcodeReader from "react-barcode-reader";
 import _ from "lodash";
 import CommonUtil from "@common/util/index";
 import { DiscountSetup } from "./discount.setup";
@@ -21,6 +23,7 @@ import CategoryAction from "../../../../inventory/actions/products/productsType"
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
 import ItemService from "@services/ItemService";
+import CategoryService from "@services/CategoryService";
 import ProductVariantConstant from "../../../../inventory/constants/products/productVariant";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
@@ -561,6 +564,32 @@ export default class Retail extends Component {
     }, 0);
   };
 
+  handleOnScanBarcode = (barcode) => {
+    ItemService.getItemByBarcode(barcode, this.Util.getLocationId()).then(item => {
+      if (item && item.data) {
+        this.handleOnSelectProduct(item.data, item.data.productVariants);
+      }
+    }).catch((error) => {
+      if (error.response && error.response.status === 404) {
+        sweetalert({
+          icon: "warning",
+          title: "Item Not Found",
+          text: `Barcode ${barcode} is not registered.`,
+          buttons: false,
+          timer: 1500,
+        });
+      } else {
+        sweetalert({
+          icon: "error",
+          title: "Error",
+          text: "An error occurred while scanning the barcode. Please try again.",
+          buttons: false,
+          timer: 1500,
+        });
+      }
+    });
+  };
+
   scrollToOrderItem = (productId) => {
     const container = this.orderListRef;
     const element = this.orderItemRefs[productId];
@@ -960,6 +989,35 @@ export default class Retail extends Component {
     </div>
   );
 
+  simulateScan = (code) => {
+    const chars = code.split("");
+
+    chars.forEach((char, index) => {
+      setTimeout(() => {
+        document.dispatchEvent(
+          new KeyboardEvent("keypress", {
+            key: char,
+            keyCode: char.charCodeAt(0),
+            which: char.charCodeAt(0),
+            bubbles: true
+          })
+        );
+      }, index * 20); // faster than avgTimeByChar
+    });
+
+    // simulate Enter
+    setTimeout(() => {
+      document.dispatchEvent(
+        new KeyboardEvent("keypress", {
+          key: "Enter",
+          keyCode: 13,
+          which: 13,
+          bubbles: true
+        })
+      );
+    }, chars.length * 20);
+  }
+
   render() {
     if (isMobile) {
       return (
@@ -993,6 +1051,7 @@ export default class Retail extends Component {
     
     return (
       <Row className="main-layout main-store-account">
+        <BarcodeReader minLength={4} onError={() => console.log("Barcode Reader Error")} onScan={this.handleOnScanBarcode} preventDefault={true} avgTimeByChar={40} endChar={[13]} timeBeforeScanTest={200} />
         {/* <ReceiptV2 /> */}
         <div id="receiptLogoPreLoading" style={{ display: "none" }}>
           <img style={{ width: 100 }} src={this.Util.getProductImage(this.state.receiptTemplate ? this.state.receiptTemplate.logo : "", "general").url} alt="" />
@@ -1016,8 +1075,8 @@ export default class Retail extends Component {
             <Button type="primary" shape="round" icon="plus-circle" size={"large"} onClick={() => this.setState({ orderItems: [] })}>
               New Sale
             </Button>
-            <Button type="default" shape="circle" icon="printer" size={"large"} style={{ borderRadius: "50%" }} />
-            <Button type="default" shape="circle" icon="setting" size={"large"} style={{ borderRadius: "50%" }} />
+            <Button type="default" shape="circle" icon="printer" size={"large"} style={{ borderRadius: "50%" }} onClick={() => this.simulateScan("000476")} />
+            <Button type="default" shape="circle" icon="setting" size={"large"} style={{ borderRadius: "50%" }} onClick={() => this.simulateScan("800477")} />
             <ProfileDropdown />
           </div>
         </div>
@@ -1256,7 +1315,7 @@ export default class Retail extends Component {
                       <div className="sub-total-title">
                         <Translate id="text_discount" />
                       </div>
-                      {discountAmount > 0 ? 
+                      {discountAmount > 0 ? (
                         <Button
                           size="small"
                           shape="round"
@@ -1271,7 +1330,7 @@ export default class Retail extends Component {
                         >
                           Edit
                         </Button>
-                      : 
+                      ) : (
                         <Button
                           size="small"
                           icon="plus"
@@ -1287,7 +1346,7 @@ export default class Retail extends Component {
                         >
                           Add Discount
                         </Button>
-                      }
+                      )}
                     </div>
                     <div className="sub-total-value" style={{ color: "#e85757" }}>
                       -{this.formatCurrency(discountAmount * exchangeRate)}
@@ -1383,14 +1442,7 @@ export default class Retail extends Component {
           summaryTax={SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale))}
         />
 
-        <DiscountSetup
-          ref={this.discountRef}
-          summaryTotal={summaryTotal}
-          discountValue={this.state.discountValue.value}
-          discountType={this.state.discountValue.type}
-          exchangeRate={this.state.exchangeRate}
-          callBack={this.handleGetDiscount}
-        />
+        <DiscountSetup ref={this.discountRef} summaryTotal={summaryTotal} discountValue={this.state.discountValue.value} discountType={this.state.discountValue.type} exchangeRate={this.state.exchangeRate} callBack={this.handleGetDiscount} />
       </Row>
     );
   }
