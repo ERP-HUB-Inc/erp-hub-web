@@ -1,12 +1,12 @@
 import Constant from "../../constants/products/product";
-import ProductService from "../../services/products/ProductService";
+import ItemService from "@services/ItemService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder, filter, searchKey, locationId) => {
+  fetch: (props = {limit, offset, sortField, sortOrder, filter, search, locationId}) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT,
-        payload: ProductService.lists(limit, offset, sortField, sortOrder, filter, searchKey, locationId)
+        payload: ItemService.get(props)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT_ATTRIBUTES,
-        payload: ProductService.attributes(id)
+        payload: ItemService.attributes(id),
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT_LOG,
-        payload: ProductService.logList(id, limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: ItemService.logList(id, limit, offset, sortField, sortOrder, filter, searchKey),
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT_COST_LOG,
-        payload: ProductService.costLogList(id, limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: ItemService.costLogList(id, limit, offset, sortField, sortOrder, filter, searchKey),
       });
     };
   },
@@ -38,7 +38,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.SEARCH_PRODUCT,
-        payload: ProductService.searchForDrowDown(limit, offset, sortField, sortOrder, filter, searchKey, searchFor, isSearchingBarcode)
+        payload: ItemService.searchForDrowDown(limit, offset, sortField, sortOrder, filter, searchKey, searchFor, isSearchingBarcode),
       });
     };
   },
@@ -46,7 +46,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_PRODUCT,
-        payload: ProductService.archive(ids)
+        payload: ItemService.archive(ids),
       });
     };
   },
@@ -54,7 +54,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_VARIANT_PRODUCT,
-        payload: ProductService.archiveVariant(id)
+        payload: ItemService.archiveVariant(id)
       });
     };
   },
@@ -62,7 +62,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_PRODUCT,
-        payload: ProductService.add(data)
+        payload: ItemService.add(data)
       });
     };
   },
@@ -70,7 +70,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.CLONE_PRODUCT,
-        payload: ProductService.clone(data)
+        payload: ItemService.clone(data)
       });
     };
   },
@@ -78,7 +78,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PRODUCT,
-        payload: ProductService.update(data)
+        payload: ItemService.update(data)
       });
     };
   },
@@ -86,7 +86,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PRODUCT,
-        payload: ProductService.changeProductVariantStatus(id)
+        payload: ItemService.changeProductVariantStatus(id)
       });
     };
   },
@@ -110,7 +110,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.DETAIL_PRODUCTS,
-        payload: ProductService.detail(data.id, data.productOption)
+        payload: ItemService.detail(data.id, data.productOption)
       });
     };
   },
@@ -118,7 +118,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPLOAD_PRODUCT_IMAGE,
-        payload: ProductService.uploadFile(formData)
+        payload: ItemService.uploadFile(formData)
       });
     };
   },

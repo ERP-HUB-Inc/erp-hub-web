@@ -33,12 +33,9 @@ class ItemService extends BaseService {
       filter,
       search,
       locationId
-   }) {
-      this.setHeader();
+   }) { console.log("option", option);
       return this.GET({ 
          url: `${this.baseUrl}?${this.bindQueryParam(option)}`,  
-         data: this.data,
-         headers: this.header
       });
    }
 
