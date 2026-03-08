@@ -1,6 +1,6 @@
 import Enum from "../../common/enums";
 class Util {
-   getSummaryTotalInOrder(orderList, priceFeild = "price") {
+   getSummaryTotalInOrder(orderItems, priceFeild = "price") {
       let summaryTotal = {
          subTotal: 0,
          totalQuantity: 0,
@@ -12,22 +12,22 @@ class Util {
       let returnAmount = 0;
       let returnSubTotalAfterDiscount = 0;
 
-      if (orderList === null || !Array.isArray(orderList)) 
+      if (orderItems === null || !Array.isArray(orderItems) || orderItems.length === 0) 
          return summaryTotal;
 
-      orderList.forEach(value => {
-         const totalAmount = this.getTotalAmount(value.quantity, value[priceFeild]);
-         const subTotalAfterDiscount = this.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
-         if (value.status === Enum.ACTIVE) {
-            summaryTotal.totalQuantity += value.quantity;
-            summaryTotal.subTotal += totalAmount;
-            summaryTotal.subTotalAfterDiscount += subTotalAfterDiscount;
-            summaryTotal.discount += this.getDiscountByRate(totalAmount, value.discount);
-         } else if (value.status === Enum.TRANSACTION_ENTRY_STATUS.RETURN) {
-            returnAmount += totalAmount;
-            returnSubTotalAfterDiscount += subTotalAfterDiscount;
-            summaryTotal.discount += this.getDiscountByRate(totalAmount, value.discount);
-         }
+      orderItems.forEach((orderItem) => {
+        const totalAmount = this.getTotalAmount(orderItem.quantity, orderItem[priceFeild]);
+        const subTotalAfterDiscount = this.getTotalAmountAfterDiscount(orderItem.quantity, orderItem[priceFeild], orderItem.discount);
+        if (orderItem.status === Enum.ACTIVE) {
+          summaryTotal.totalQuantity += orderItem.quantity;
+          summaryTotal.subTotal += totalAmount;
+          summaryTotal.subTotalAfterDiscount += subTotalAfterDiscount;
+          summaryTotal.discount += this.getDiscountByRate(totalAmount, orderItem.discount);
+        } else if (orderItem.status === Enum.TRANSACTION_ENTRY_STATUS.RETURN) {
+          returnAmount += totalAmount;
+          returnSubTotalAfterDiscount += subTotalAfterDiscount;
+          summaryTotal.discount += this.getDiscountByRate(totalAmount, orderItem.discount);
+        }
       });
 
       summaryTotal.subTotal -= returnAmount;

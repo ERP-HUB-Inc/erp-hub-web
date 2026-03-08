@@ -80,16 +80,6 @@ export class DiscountSetup extends React.Component {
       discountValue: 0,
       discountAmount: 0,
     };
-    this.wrapClassName = "wrap-order-discount";
-  }
-
-  componentDidMount() {
-    // if (this.state.isNotYetHasDidMount) {
-    //   this.setState({
-    //     isNotYetHasDidMount: false,
-    //     discountType: this.props.discountType,
-    //   });
-    // }
   }
 
   open = () => {
@@ -121,25 +111,14 @@ export class DiscountSetup extends React.Component {
     }
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const discountValue = {
-        value: this.props.form.getFieldValue("discountValue"),
-        type: this.state.discountType,
-      },
-      isPercentageDiscount = this.state.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE;
-
-    if (isPercentageDiscount) {
-      if (discountValue.value > 100) discountValue.value = 100;
-    } else {
-      if (discountValue.value > this.props.summaryTotal.subTotal) discountValue.value = this.props.summaryTotal.subTotal;
-    }
-
+  handleApplyDiscount = () => {
     if (this.props.callBack) {
-      this.props.callBack(discountValue);
+      this.props.callBack({
+        type: this.state.discountType,
+        value: this.state.discountValue,
+      });
+      this.close();
     }
-
-    this.props.handleCancel();
   };
 
   handleOnSelectDiscount = (value) => {
@@ -172,22 +151,14 @@ export class DiscountSetup extends React.Component {
     } else if (this.state.discountType === Enum.DISCOUNT_TYPE.AMOUNT) {
       // For fixed discounts (KHR or USD)
       // Ensure the discount value does not exceed the subtotal
-      if (discountValue > subTotal) {
-        discountValue = subTotal;
-      }
-
       // Discount amount is the fixed value entered by the user
-      discountAmount = discountValue;
+      discountAmount = discountValue > subTotal ? subTotal : discountValue;
     } else if (this.state.discountType === Enum.DISCOUNT_TYPE.AMOUNT_KHR) {
+      const subtotalInKHR = subTotal * this.props.exchangeRate.sellRate; // Convert subtotal to KHR for comparison
       // For fixed discounts in KHR
       // Ensure the discount value does not exceed the subtotal
-      const subtotalInKHR = subTotal * this.props.exchangeRate.sellRate; // Convert subtotal to KHR for comparison
-      if (discountValue > subtotalInKHR) {
-        discountValue = subtotalInKHR;
-      }
-
       // Discount amount is the fixed value entered by the user
-      discountAmount = discountValue / this.props.exchangeRate.sellRate; // Convert discount back to USD for calculation
+      discountAmount = (discountValue > subtotalInKHR ? subtotalInKHR : discountValue) / this.props.exchangeRate.sellRate; // Convert discount back to USD for calculation
     }
 
     // Update component state with the current discount value and the calculated discount amount
@@ -237,7 +208,7 @@ export class DiscountSetup extends React.Component {
     const { subTotal } = this.props.summaryTotal;
     const { sellRate } = this.props.exchangeRate;
     return (
-      <Modal width={400} height={this.height} keyboard={true} wrapClassName={`vertical-center-modal ${this.wrapClassName}`} visible={this.state.visible} footer={null}>
+      <Modal width={400} height={this.height} keyboard={true} wrapClassName="vertical-center-modal wrap-order-discount" visible={this.state.visible} footer={null}>
         <Form autoComplete="off" onSubmit={this.handleSubmit}>
           <div className="order-discount">
             <div className="flex items-center" style={{ marginBottom: 15 }}>
@@ -281,16 +252,7 @@ export class DiscountSetup extends React.Component {
                 <div className="item">{this.getDiscountSymbol(discountType)}</div>
               </div>
               <div className="discount-value" style={{ flex: 1 }}>
-                <InputNumber
-                  size="large"
-                  isAutoFocus={true}
-                  isAutoSelect={true}
-                  precision={discountType === Enum.DISCOUNT_TYPE.AMOUNT ? 2 : 0}
-                  name="discountValue"
-                  value={this.state.discountValue}
-                  form={this.props.form}
-                  onChange={this.handleOnChangeDiscountValue}
-                />
+                <InputNumber size="large" isAutoFocus={true} isAutoSelect={true} precision={discountType === Enum.DISCOUNT_TYPE.AMOUNT ? 2 : 0} name="discountValue" value={this.state.discountValue} onChange={this.handleOnChangeDiscountValue} />
               </div>
             </div>
             <div className="arrow-right"></div>
@@ -323,7 +285,7 @@ export class DiscountSetup extends React.Component {
             <Button type="default" size="large" onClick={this.handleCancel} style={{ borderRadius: 8 }}>
               <Translate id="text_cancel" />
             </Button>
-            <Button htmlType="submit" size="large" type="primary" style={{ flex: 1, borderRadius: 8 }}>
+            <Button size="large" type="primary" style={{ flex: 1, borderRadius: 8 }} onClick={this.handleApplyDiscount}>
               <Translate id="text_apply_discount" />
             </Button>
           </div>
@@ -332,7 +294,3 @@ export class DiscountSetup extends React.Component {
     );
   }
 }
-
-DiscountSetup.defaultProps = {
-  discountValue: 0
-};

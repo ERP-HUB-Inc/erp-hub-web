@@ -40,6 +40,7 @@ import OrderHeader from "./order.header";
 import EmptyOrder from "./empty.order";
 import { Translate } from "@redux/index";
 import ReceiptV2 from "./receipt-v2";
+import { convertKHRToUSD } from "@helper/sales";
 
 export default class Retail extends Component {
   constructor(props) {
@@ -341,14 +342,18 @@ export default class Retail extends Component {
     const summaryTotal = SalesUtil.getSummaryTotalInOrder(this.state.orderItems, this.state.customerFieldPrice);
     let discountAmount = 0;
     let discountTypeStr = "";
+    const { type: discountType, value: discountValue } = this.state.discountValue;
 
     const taxAmount = SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale)).taxTotal;
 
-    if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discountTypeStr = ` (${this.state.discountValue.value}%)`;
-      discountAmount = SalesUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
-    } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
-      discountAmount = this.state.discountValue.value;
+    if (discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discountTypeStr = ` (${discountValue}%)`;
+      // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM DISCOUNT, SO WE NEED TO ADD TAX AMOUNT TO SUBTOTAL TO CALCULATE DISCOUNT AMOUNT
+      discountAmount = SalesUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, discountValue);
+    } else if (discountType === Enum.DISCOUNT_TYPE.AMOUNT) {
+      discountAmount = discountValue;
+    } else if (discountType === Enum.DISCOUNT_TYPE.AMOUNT_KHR) {
+      discountAmount = convertKHRToUSD(discountValue, this.props.exchangeRate.sellRate);
     } else {
       discountAmount = summaryTotal.discount;
     }
@@ -356,7 +361,7 @@ export default class Retail extends Component {
     return {
       summaryTotal,
       taxAmount,
-      discountAmount,
+      discountAmount: discountAmount > summaryTotal.subTotal ? summaryTotal.subTotal : discountAmount,
       discountTypeStr,
       discountType: this.state.discountValue.type,
     };
@@ -756,13 +761,6 @@ export default class Retail extends Component {
     this.setState({ modalContent: null });
   };
 
-  handleCancelDiscountSetup = () => {
-    this.setState({
-      modalContent: null,
-      isDiscountHasAdded: this.props.form.getFieldValue("discountValue") > 0,
-    });
-  };
-
   handleCancelTaxSetting() {
     this.setState({
       modalContent: null,
@@ -790,31 +788,6 @@ export default class Retail extends Component {
       }
 
       this.setState({ paymentVisible: true });
-      // this.props.dispatch(TransactionAction.showForm());
-      // this.setState({
-      //   modalContent: (
-      //     <PaymentForm
-      //       isHasSubCurrency={this.state.isHasSubCurrency}
-      //       baseCurrency={this.state.baseCurrency}
-      //       subCurrency={this.state.subCurrency}
-      //       receiptTemplate={this.state.receiptTemplate}
-      //       customer={this.state.selectedCustomer}
-      //       customerFieldPrice={this.state.customerFieldPrice}
-      //       orderItems={this.state.orderItems}
-      //       paymentMethodList={this.props.paymentMethod}
-      //       productTaxList={this.state.productTaxList}
-      //       exchangeRate={exchangeRate}
-      //       handleCancel={this.handleCancelMakePayment}
-      //       handleOnResetOrder={this.handleOnResetOrder}
-      //       summaryTotal={this.getSummaryTotal()}
-      //       summaryTax={SalesUtil.getSummaryTax(
-      //         this.state.productTaxList,
-      //         <Translate id="text_no_tax" />,
-      //         this.CATranslate("text_taxes", this.props.locale),
-      //       )}
-      //     />
-      //   ),
-      // });
 
       if (this.state.selectedReceiptType === Enum.PARK_RECEIPT) {
         // CLEAR PARK RECEIPT IN CASE USER HAS RESTORE IT AND MAKE PAYMENT
@@ -1061,7 +1034,7 @@ export default class Retail extends Component {
       currency = "៛";
       exchangeRate = this.state.currencyExchange && this.state.currencyExchange.value;
     }
-
+    
     return (
       <Row className="main-layout main-store-account">
         {/* <ReceiptV2 /> */}
@@ -1342,21 +1315,38 @@ export default class Retail extends Component {
                       <div className="sub-total-title">
                         <Translate id="text_discount" />
                       </div>
-                      <Button
-                        size="small"
-                        icon="plus"
-                        shape="round"
-                        type="default"
-                        style={{
-                          marginLeft: 8,
-                          fontSize: 12,
-                          height: 24,
-                          padding: "0 10px",
-                        }}
-                        onClick={this.handleOnSetupDiscount}
-                      >
-                        Add Discount
-                      </Button>
+                      {discountAmount > 0 ? 
+                        <Button
+                          size="small"
+                          shape="round"
+                          type="danger"
+                          style={{
+                            marginLeft: 8,
+                            fontSize: 12,
+                            height: 24,
+                            padding: "0 10px",
+                          }}
+                          onClick={this.handleOnSetupDiscount}
+                        >
+                          Edit
+                        </Button>
+                      : 
+                        <Button
+                          size="small"
+                          icon="plus"
+                          shape="round"
+                          type="default"
+                          style={{
+                            marginLeft: 8,
+                            fontSize: 12,
+                            height: 24,
+                            padding: "0 10px",
+                          }}
+                          onClick={this.handleOnSetupDiscount}
+                        >
+                          Add Discount
+                        </Button>
+                      }
                     </div>
                     <div className="sub-total-value" style={{ color: "#e85757" }}>
                       -{this.formatCurrency(discountAmount * exchangeRate)}
@@ -1458,9 +1448,7 @@ export default class Retail extends Component {
           discountValue={this.state.discountValue.value}
           discountType={this.state.discountValue.type}
           exchangeRate={this.state.exchangeRate}
-          form={this.props.form}
           callBack={this.handleGetDiscount}
-          handleCancel={this.handleCancelDiscountSetup}
         />
       </Row>
     );
