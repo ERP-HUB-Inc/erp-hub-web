@@ -22,6 +22,7 @@
     "fs": "0.0.1-security",
     "history": "^4.7.2",
     "html-react-parser": "^3.0.1",
+    "i18next": "^25.8.14",
     "jquery": "^3.4.1",
     "jsbarcode": "^3.11.0",
     "lodash": "^4.17.21",

@@ -36,6 +36,7 @@ import StockInUI from './stock-in-summary';
 import VendorDetailPage from './vendor-detail';
 import POSPaymentDrawer from './payment-screen';
 import POSMonitor from './pos-monitor';
+import Login from './login';
 
 const socket = io("http://202.79.29.108:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -477,6 +478,7 @@ export default class SiderDemo extends React.Component {
                       <Route path="/sticky-footer-page" component={StickyFooterPage} />
                       <Route path="/stock-io-form" component={StockIOForm} />
                       <Route path="/vendor-detail" component={VendorDetailPage} />
+                      <Route path="/login" component={Login} />
                       <Route path="/" component={Dashboard} />
                     </Switch>
                   </Content>

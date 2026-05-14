@@ -90,6 +90,16 @@ export class DiscountSetup extends React.Component {
     this.setState({ visible: false });
   };
 
+  reset = () => {
+    this.setState((prev) => ({
+      ...prev,
+      selectedPreset: null,
+      discountType: Enum.DISCOUNT_TYPE.PERCENTAGE,
+      discountValue: 0,
+      discountAmount: 0,
+    }));
+  }
+
   /**
    * Props:
    * - presets: array of numbers (default [5, 10, 15, 20, 25, 50])
@@ -154,11 +164,13 @@ export class DiscountSetup extends React.Component {
       // Discount amount is the fixed value entered by the user
       discountAmount = discountValue > subTotal ? subTotal : discountValue;
     } else if (this.state.discountType === Enum.DISCOUNT_TYPE.AMOUNT_KHR) {
-      const subtotalInKHR = subTotal * this.props.exchangeRate.sellRate; // Convert subtotal to KHR for comparison
+      // Convert subtotal to KHR for comparison
+      const subtotalInKHR = subTotal * this.props.exchangeRate.sellRate;
       // For fixed discounts in KHR
       // Ensure the discount value does not exceed the subtotal
       // Discount amount is the fixed value entered by the user
-      discountAmount = (discountValue > subtotalInKHR ? subtotalInKHR : discountValue) / this.props.exchangeRate.sellRate; // Convert discount back to USD for calculation
+      // Convert discount back to USD for calculation
+      discountAmount = (discountValue > subtotalInKHR ? subtotalInKHR : discountValue) / this.props.exchangeRate.sellRate;
     }
 
     // Update component state with the current discount value and the calculated discount amount

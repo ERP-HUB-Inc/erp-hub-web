@@ -42,7 +42,7 @@ import EmptyOrder from "./empty.order";
 import { Translate } from "@redux/index";
 import ReceiptV2 from "./receipt-v2";
 
-export default class Retail extends Component {
+export default class RetailSale extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -96,10 +96,7 @@ export default class Retail extends Component {
     this.orderListRef = null;
     this.discountRef = React.createRef();
     this.orderItemRefs = {};
-    this.handleOnCancelAllCategory = this.handleOnCancelAllCategory.bind(this);
-    this.handleOnResizeScreen = this.handleOnResizeScreen.bind(this);
     this.handleRemoveDiscount = this.handleRemoveDiscount.bind(this);
-    this.handleGetDiscount = this.handleGetDiscount.bind(this);
     this.handleOnResetOrder = this.handleOnResetOrder.bind(this);
     this.handleOnSaveParkReceipt = this.handleOnSaveParkReceipt.bind(this);
     this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
@@ -115,12 +112,11 @@ export default class Retail extends Component {
     this.props.dispatch(OpenSaleRegistrationAction.last());
 
     this.props.dispatch(CategoryAction.fetch(9999));
-    ItemService.get({ limit: 25, locationId: this.Util.getLocationId()})
-      .then((response) => {
-        if (response && response.data && response.data.data) {
-          this.setState({ items: response.data.data });
-        }
-      });
+    ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
+      if (response && response.data && response.data.data) {
+        this.setState({ items: response.data.data });
+      }
+    });
 
     window.addEventListener("keydown", (e) => {
       const EndKey = 35,
@@ -383,7 +379,7 @@ export default class Retail extends Component {
         }
       });
     }, 800);
-  }
+  };
 
   saveReceipt(key, orderItems = []) {
     localStorage.setItem(
@@ -445,12 +441,13 @@ export default class Retail extends Component {
     localStorage.removeItem(Enum.CURRENT_RECEIPT);
     this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
     this.props.form.setFieldsValue({ searchRecord: "" }); //searchRecord: customer search field
+    this.discountRef.current.reset();
   }
 
-  handleOnResizeScreen() {
+  handleOnResizeScreen = () => {
     // TO DO: Disable temparary on modal popup Discount and Tax On Sale POS
     // this.setState({modalContent: null});
-  }
+  };
 
   handleCancelVariantProduct = () => {
     this.setState({ modalContent: null });
@@ -565,29 +562,31 @@ export default class Retail extends Component {
   };
 
   handleOnScanBarcode = (barcode) => {
-    ItemService.getItemByBarcode(barcode, this.Util.getLocationId()).then(item => {
-      if (item && item.data) {
-        this.handleOnSelectProduct(item.data, item.data.productVariants);
-      }
-    }).catch((error) => {
-      if (error.response && error.response.status === 404) {
-        sweetalert({
-          icon: "warning",
-          title: "Item Not Found",
-          text: `Barcode ${barcode} is not registered.`,
-          buttons: false,
-          timer: 1500,
-        });
-      } else {
-        sweetalert({
-          icon: "error",
-          title: "Error",
-          text: "An error occurred while scanning the barcode. Please try again.",
-          buttons: false,
-          timer: 1500,
-        });
-      }
-    });
+    ItemService.getItemByBarcode(barcode, this.Util.getLocationId())
+      .then((item) => {
+        if (item && item.data) {
+          this.handleOnSelectProduct(item.data, item.data.productVariants);
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          sweetalert({
+            icon: "warning",
+            title: "Item Not Found",
+            text: `Barcode ${barcode} is not registered.`,
+            buttons: false,
+            timer: 1500,
+          });
+        } else {
+          sweetalert({
+            icon: "error",
+            title: "Error",
+            text: "An error occurred while scanning the barcode. Please try again.",
+            buttons: false,
+            timer: 1500,
+          });
+        }
+      });
   };
 
   scrollToOrderItem = (productId) => {
@@ -636,7 +635,7 @@ export default class Retail extends Component {
       productTaxList,
       orderItems,
     });
-  }
+  };
 
   handleOnChangOrderFieldBlur() {
     this.setState({ expandRowOrderIndex: null });
@@ -756,13 +755,13 @@ export default class Retail extends Component {
     this.setState({
       modalContent: null,
     });
-  }
+  };
 
-  handleOnCancelAllCategory() {
+  handleOnCancelAllCategory = () => {
     this.setState({
       modalContent: null,
     });
-  }
+  };
 
   handleOnMakePayment = () => {
     this.handleonSearchFails();
@@ -795,21 +794,21 @@ export default class Retail extends Component {
     }
   };
 
-  handleGetDiscount(discountValue) {
+  setDiscountValue = (discountValue) => {
     this.setState({
       discountValue,
     });
-  }
+  };
 
   handleOnSetupDiscount = () => {
     this.discountRef.current.open();
-  }
+  };
 
   handleOnOpenTaxSetting = () => {
     this.setState({
       modalContent: <TaxSetting handleCancel={this.handleCancelTaxSetting} callBack={this.handleOnGetTaxList} orderItems={this.state.productTaxList} form={this.props.form} />,
     });
-  }
+  };
 
   handleRemoveDiscount() {
     this.setState({
@@ -999,8 +998,8 @@ export default class Retail extends Component {
             key: char,
             keyCode: char.charCodeAt(0),
             which: char.charCodeAt(0),
-            bubbles: true
-          })
+            bubbles: true,
+          }),
         );
       }, index * 20); // faster than avgTimeByChar
     });
@@ -1012,11 +1011,11 @@ export default class Retail extends Component {
           key: "Enter",
           keyCode: 13,
           which: 13,
-          bubbles: true
-        })
+          bubbles: true,
+        }),
       );
     }, chars.length * 20);
-  }
+  };
 
   render() {
     if (isMobile) {
@@ -1048,7 +1047,7 @@ export default class Retail extends Component {
       currency = "៛";
       exchangeRate = this.state.currencyExchange && this.state.currencyExchange.value;
     }
-    
+
     return (
       <Row className="main-layout main-store-account">
         <BarcodeReader minLength={4} onError={() => console.log("Barcode Reader Error")} onScan={this.handleOnScanBarcode} preventDefault={true} avgTimeByChar={40} endChar={[13]} timeBeforeScanTest={200} />
@@ -1439,10 +1438,11 @@ export default class Retail extends Component {
           exchangeRate={this.state.exchangeRate}
           handleOnResetOrder={this.handleOnResetOrder}
           summaryTotal={this.getSummaryTotal()}
+          
           summaryTax={SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale))}
         />
 
-        <DiscountSetup ref={this.discountRef} summaryTotal={summaryTotal} discountValue={this.state.discountValue.value} discountType={this.state.discountValue.type} exchangeRate={this.state.exchangeRate} callBack={this.handleGetDiscount} />
+        <DiscountSetup ref={this.discountRef} summaryTotal={summaryTotal} discountValue={this.state.discountValue.value} discountType={this.state.discountValue.type} exchangeRate={this.state.exchangeRate} callBack={this.setDiscountValue} />
       </Row>
     );
   }
