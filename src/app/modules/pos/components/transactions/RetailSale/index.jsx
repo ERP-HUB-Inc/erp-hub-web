@@ -204,7 +204,7 @@ export default class RetailSale extends Component {
   }
 
   handleOnSelectCategory = (categoryId) => {
-    if (categoryId === this.state.activeCategory) {
+    if (categoryId === this.state.activeCategory || categoryId === "all") {
       this.setState({ activeCategory: null });
       ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
         if (response && response.data && response.data.data) {
@@ -1116,6 +1116,7 @@ export default class RetailSale extends Component {
               )} */}
 
             <OrderHeader totalQty={this.state.orderItems.reduce((acc, item) => acc + item.quantity, 0)} />
+
             <div className="product-order-list" ref={(el) => (this.orderListRef = el)}>
               {this.state.orderItems.length === 0 && <EmptyOrder />}
               {this.state.orderItems.map((productOrder, productOrderIndex) => {
@@ -1393,7 +1394,9 @@ export default class RetailSale extends Component {
             </div>
           </div>
         </div>
+
         {this.state.modalContent}
+
         <PaymentForm
           handleCancel={() => this.setState({ paymentVisible: false })}
           paymentVisible={this.state.paymentVisible}
@@ -1409,11 +1412,17 @@ export default class RetailSale extends Component {
           exchangeRate={this.state.exchangeRate}
           handleOnResetOrder={this.handleOnResetOrder}
           summaryTotal={this.getSummaryTotal()}
-          
           summaryTax={SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale))}
         />
 
-        <DiscountSetup ref={this.discountRef} summaryTotal={summaryTotal} discountValue={this.state.discountValue.value} discountType={this.state.discountValue.type} exchangeRate={this.state.exchangeRate} callBack={this.setDiscountValue} />
+        <DiscountSetup 
+          ref={this.discountRef} 
+          summaryTotal={summaryTotal} 
+          discountValue={this.state.discountValue.value} 
+          discountType={this.state.discountValue.type} 
+          exchangeRate={this.state.exchangeRate} 
+          callBack={this.setDiscountValue} 
+        />
       </Row>
     );
   }

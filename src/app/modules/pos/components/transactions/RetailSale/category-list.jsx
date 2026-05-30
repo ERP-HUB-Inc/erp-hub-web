@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Spin } from 'antd';
+import {
+  ShoppingBag, Utensils, Smartphone, Shirt, Coffee,
+  Apple, Pizza, Cake, Wine, Beef, Salad, IceCream,
+  Sandwich, Package, Tag, Grid2X2, Star, Gem, Laptop,
+  Watch, Headphones, Camera, BookOpen, Home, Dumbbell,
+  Baby, Flower2, Car, Music, Gamepad2, Pill, Scissors,
+} from 'lucide-react';
 import styled from 'styled-components';
 import CategoryService from '@services/CategoryService';
 
@@ -141,6 +148,58 @@ const LoadMore = styled.div`
   flex-shrink: 0;
 `;
 
+const CATEGORY_ICON_MAP = {
+  food: Utensils,
+  drink: Wine,
+  drinks: Wine,
+  coffee: Coffee,
+  pizza: Pizza,
+  burger: Beef,
+  beef: Beef,
+  cake: Cake,
+  dessert: IceCream,
+  snack: Sandwich,
+  snacks: Sandwich,
+  salad: Salad,
+  fruit: Apple,
+  fruits: Apple,
+  beverage: Wine,
+  beverages: Wine,
+  meal: Utensils,
+  meals: Utensils,
+  phone: Smartphone,
+  phones: Smartphone,
+  laptop: Laptop,
+  laptops: Laptop,
+  electronics: Headphones,
+  camera: Camera,
+  watch: Watch,
+  headphone: Headphones,
+  shirt: Shirt,
+  clothes: Shirt,
+  clothing: Shirt,
+  fashion: Shirt,
+  bag: ShoppingBag,
+  book: BookOpen,
+  books: BookOpen,
+  home: Home,
+  sport: Dumbbell,
+  sports: Dumbbell,
+  gym: Dumbbell,
+  baby: Baby,
+  flower: Flower2,
+  flowers: Flower2,
+  car: Car,
+  music: Music,
+  game: Gamepad2,
+  games: Gamepad2,
+  health: Pill,
+  beauty: Scissors,
+  gem: Gem,
+  jewelry: Gem,
+  all: Grid2X2,
+};
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 /**
@@ -227,7 +286,18 @@ const CategoryList = ({
                loadingRef.current = false;
                setLoadingMore(false);
           });
-     }, [fetchCategories]); // stable — fetchCategories is memoized
+     }, [fetchCategories]);
+
+     /**
+      * Returns a lucide icon component for a matched category name,
+      * or null if no match — caller should fall back to initials text.
+      */
+     const getCatIcon = (name = '') => {
+          const key = name.toLowerCase().trim();
+          if (CATEGORY_ICON_MAP[key]) return CATEGORY_ICON_MAP[key];
+          const matched = Object.keys(CATEGORY_ICON_MAP).find((k) => key.includes(k));
+          return matched ? CATEGORY_ICON_MAP[matched] : null; // null = no match → use initials
+     };
 
      useEffect(() => {
           if (loading) return;          // skeleton phase — skip
@@ -261,6 +331,7 @@ const CategoryList = ({
                {categories.map((cat) => {
                const isActive  = activeId === cat.id;
                const hasImage  = !!cat.image;
+               const CatIcon   = getCatIcon(cat.name); // null if no match
 
                return (
                     <Tab
@@ -272,7 +343,12 @@ const CategoryList = ({
                               $color={hasImage ? 'transparent' : getCatColor(cat.id)}
                               $hasImage={hasImage}
                          >
-                         {hasImage ? <img src={cat.image} alt={cat.name} /> : getCatInitials(cat.name)}
+                              {hasImage
+                                   ? <img src={cat.image} alt={cat.name} />
+                                   : CatIcon
+                                        ? <CatIcon size={20} color="#fff" strokeWidth={2} />
+                                        : getCatInitials(cat.name)   // ← fallback to initials
+                              }
                          </TabIcon>
                          <TabText>
                               <TabName $active={isActive}>{cat.name}</TabName>
