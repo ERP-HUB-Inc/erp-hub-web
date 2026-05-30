@@ -6,7 +6,7 @@ import BarcodeReader from "react-barcode-reader";
 import _ from "lodash";
 import CommonUtil from "@common/util/index";
 import { DiscountSetup } from "./discount.setup";
-import TaxSetting from "./TaxSetting";
+import TaxSetting from "./tax.setting";
 import Enum from "@enums/sale-enum";
 import InventoryEnum from "@enums/inventory-enum";
 import HREnum from "@enums/hr-enum";
@@ -23,7 +23,6 @@ import CategoryAction from "../../../../inventory/actions/products/productsType"
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
 import ItemService from "@services/ItemService";
-import CategoryService from "@services/CategoryService";
 import ProductVariantConstant from "../../../../inventory/constants/products/productVariant";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
@@ -41,11 +40,13 @@ import OrderHeader from "./order.header";
 import EmptyOrder from "./empty.order";
 import { Translate } from "@redux/index";
 import ReceiptV2 from "./receipt-v2";
+import CategoryList from "./category-list";
 
 export default class RetailSale extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      activeCategory: "phones",
       isOutOfStock: true,
       paymentVisible: false,
       modalContent: null,
@@ -53,14 +54,7 @@ export default class RetailSale extends Component {
       selectedCustomer: null,
       expandOrderItemRow: [],
       productTaxList: [],
-      categoryList: [
-        {
-          id: 0,
-          name: <Translate id="text_all_category" />,
-          namekm: <Translate id="text_all_category" />,
-          namebm: <Translate id="text_all_category" />,
-        },
-      ],
+      categories: [],
       customerFieldPrice: "price",
       textFullScreen: <Translate id="text_full_screen" />,
       iconFullScreen: "icon-full-screen",
@@ -96,12 +90,6 @@ export default class RetailSale extends Component {
     this.orderListRef = null;
     this.discountRef = React.createRef();
     this.orderItemRefs = {};
-    this.handleRemoveDiscount = this.handleRemoveDiscount.bind(this);
-    this.handleOnResetOrder = this.handleOnResetOrder.bind(this);
-    this.handleOnSaveParkReceipt = this.handleOnSaveParkReceipt.bind(this);
-    this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
-    this.handleOnBlurSearchProduct = this.handleOnBlurSearchProduct.bind(this);
-    this.handleOnChangOrderFieldBlur = this.handleOnChangOrderFieldBlur.bind(this);
   }
 
   componentDidMount() {
@@ -111,7 +99,7 @@ export default class RetailSale extends Component {
     this.props.dispatch(OpenSaleRegistrationAction.showForm());
     this.props.dispatch(OpenSaleRegistrationAction.last());
 
-    this.props.dispatch(CategoryAction.fetch(9999));
+    this.props.dispatch(CategoryAction.fetch(15));
     ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
       if (response && response.data && response.data.data) {
         this.setState({ items: response.data.data });
@@ -213,6 +201,24 @@ export default class RetailSale extends Component {
   componentWillUnmount() {
     this.hadDidUpdateCheckDevice = false;
     window.removeEventListener("keydown", null);
+  }
+
+  handleOnSelectCategory = (categoryId) => {
+    if (categoryId === this.state.activeCategory) {
+      this.setState({ activeCategory: null });
+      ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
+        if (response && response.data && response.data.data) {
+          this.setState({ items: response.data.data });
+        }
+      });
+    } else {
+      this.setState({ activeCategory: categoryId });
+      ItemService.get({ limit: 25, locationId: this.Util.getLocationId(), categoryId }).then((response) => {
+          if (response && response.data && response.data.data) {
+            this.setState({ items: response.data.data });
+          }
+      });
+    }
   }
 
   isValidOpenSaleRegistrationList() {
@@ -419,11 +425,11 @@ export default class RetailSale extends Component {
     return false;
   }
 
-  handleOnBlurSearchProduct() {
+  handleOnBlurSearchProduct = () => {
     this.isSetFocusOnSearchProduct = false;
   }
 
-  handleOnResetOrder() {
+  handleOnResetOrder = () => {
     this.setState({
       selectedReceiptType: Enum.CURRENT_RECEIPT,
       expandOrderItemRow: [],
@@ -623,21 +629,7 @@ export default class RetailSale extends Component {
     this.removeProductFromOrderList(productOrder);
   };
 
-  handleOnGetTaxList = (productTaxList, taxRate) => {
-    const orderItems = this.state.orderItems;
-    orderItems.forEach((product, productIndex) => {
-      if (orderItems[productIndex]["tax"] * 100 === taxRate) {
-        //ex: taxRate=0.2
-        orderItems[productIndex]["tax"] = 0;
-      }
-    });
-    this.setState({
-      productTaxList,
-      orderItems,
-    });
-  };
-
-  handleOnChangOrderFieldBlur() {
+  handleOnChangOrderFieldBlur = () => {
     this.setState({ expandRowOrderIndex: null });
   }
 
@@ -804,13 +796,7 @@ export default class RetailSale extends Component {
     this.discountRef.current.open();
   };
 
-  handleOnOpenTaxSetting = () => {
-    this.setState({
-      modalContent: <TaxSetting handleCancel={this.handleCancelTaxSetting} callBack={this.handleOnGetTaxList} orderItems={this.state.productTaxList} form={this.props.form} />,
-    });
-  };
-
-  handleRemoveDiscount() {
+  handleRemoveDiscount = () => {
     this.setState({
       isDiscountHasAdded: false,
       discountValue: {
@@ -857,12 +843,12 @@ export default class RetailSale extends Component {
     history.push("/transactions/saleregister");
   };
 
-  handleOnSaveParkReceipt() {
+  handleOnSaveParkReceipt = () => {
     this.saveReceipt(Enum.PARK_RECEIPT, this.state.orderItems);
     this.handleOnResetOrder();
   }
 
-  handleOnRestoreReceipt(key) {
+  handleOnRestoreReceipt = (key) => {
     this.restoreReceipt(key);
     this.setState({ selectedReceiptType: key });
   }
@@ -1035,11 +1021,6 @@ export default class RetailSale extends Component {
 
     const { taxTitle, taxTotal, countTax } = SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale));
 
-    let categoryList = this.props.productsType.list;
-    if (categoryList.length > 4) {
-      categoryList = this.state.categoryList.concat(categoryList);
-    }
-
     const setting = this.Util.getSetting();
     let currency = setting.currency && setting.currency.trim();
     let exchangeRate = 1;
@@ -1101,6 +1082,10 @@ export default class RetailSale extends Component {
                 )
             }
           </this.Row> */}
+            <CategoryList
+              activeId={this.state.activeCategory}
+              onChange={(categoryId) => this.handleOnSelectCategory(categoryId)}
+            />
             <div className="wrap-product-box-list" id="wrap-product-box-list">
               {this.props.products.fetching && !this.state.isRequestLoadingMore ? <StartUp /> : this.renderItemList()}
             </div>
@@ -1352,20 +1337,6 @@ export default class RetailSale extends Component {
                     </div>
                   </div>
                   {/* END SUB TOTAL ROW */}
-
-                  {/* TAX ROW */}
-                  {taxTotal > 0 && (
-                    <div className="sub-total">
-                      <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
-                        <span className={`${countTax > 0 ? "ca-link" : ""}`}>
-                          <Translate id="text_tax" />
-                        </span>{" "}
-                        {taxTitle}
-                      </div>
-                      <div className="sub-total-value">{this.formatCurrency(taxTotal * exchangeRate)}</div>
-                    </div>
-                  )}
-                  {/*END TAX ROW */}
 
                   {/* DISCOUNT ROW */}
                   {/* {this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ? (

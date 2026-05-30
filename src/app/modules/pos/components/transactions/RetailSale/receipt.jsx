@@ -7,8 +7,8 @@ import ReceiptExcludeTax from "./ReceiptA4V3/ReceiptExcludeTax";
 import ReceiptIncludeTax from "./ReceiptA4V3/ReceiptIncludeTax";
 import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
 import Component from "../../../../common/components/Component";
-import Enum from "../../../../pos/enums";
-import Util from "../../../../pos/utils";
+import Enum from "../../../enums";
+import Util from "../../../utils";
 import "./Receipt.css";
 
 export default class Receipt extends Component {

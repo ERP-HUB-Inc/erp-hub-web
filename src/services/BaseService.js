@@ -39,6 +39,7 @@ export default class BaseService extends Service {
       if (option.filter) queryParams.push(`filter=${option.filter}`);
       if (option.search) queryParams.push(`search=${option.search}`);
       if (option.locationId) queryParams.push(`locationId=${option.locationId}`);
+      if (option.categoryId) queryParams.push(`categoryId=${option.categoryId}`);
       if (option.startDate) queryParams.push(`startDate=${option.startDate}`);
       if (option.endDate) queryParams.push(`endDate=${option.endDate}`);
       if (option.type) queryParams.push(`type=${option.type}`);

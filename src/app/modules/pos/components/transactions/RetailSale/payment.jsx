@@ -1,9 +1,18 @@
 import React from "react";
 import _ from "lodash";
 import sweetalert from "sweetalert";
-import { Button, Checkbox, Col, Drawer, Form, InputNumber, Row, Tooltip } from "antd";
+import { 
+  Button, 
+  Checkbox, 
+  Col, 
+  Drawer, 
+  Form, 
+  InputNumber, 
+  Row, 
+  Tooltip
+} from "antd";
 import Receipt from "./Receipt";
-import "./Payment.css";
+import "./payment.css";
 import RetailSaleService from "@services/RetailSaleService";
 import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
