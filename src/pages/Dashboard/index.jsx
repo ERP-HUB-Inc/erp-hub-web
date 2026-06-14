@@ -13,8 +13,8 @@ import {
 import { Translate } from "react-localize-redux";
 import moment from "moment";
 import { Chart, registerables } from "chart.js";
+import { Line } from "react-chartjs-2";
 import * as _ from "lodash";
-import {Line} from "react-chartjs-2";
 import Util from "@common/util/index";
 import { SelectPeriodOption } from "@components/stateless/select-period-option";
 import InventoryService from "@services/report.inventory";
@@ -69,10 +69,10 @@ const DashboardPage = () => {
   const [loading, setLoading] = React.useState(false);
   const [isHasPermission, setIsHasPermission] = React.useState(true);
 
-  function onChange(value) {
+  const onChange = (value) => {
     setOption(value);
     DashboardService.getTodayTotal(value).then((response) => {
-      if (response.data && response.data) { console.log("Hello World:", response.data);
+      if (response.data && response.data) {
         setDashboardSummaries(response.data);
       }
     });
@@ -106,34 +106,30 @@ const DashboardPage = () => {
   };
 
   React.useEffect(() => {
-    if (isHasPermission) {
-      DashboardService.getList(option)
-      .then(response => {
-        if (response.data && response.data.data) {
-          setDashboardSummaries(response.data.data);
-        }
-      });
+    DashboardService.getTodayTotal(option)
+    .then(response => {
+      if (response.data) {
+        setDashboardSummaries(response.data);
+      }
+    });
 
-      fetchPopularProducts(topSellingSize);
+    fetchPopularProducts(topSellingSize);
 
-      InventoryService.getPopularCategories(7)
-      .then(response => {
-        if (response.data) {
-          setPopularCategories(response.data);
-        }
-      })
-      .finally(() => {
-        setLoadingPopular(false);
-      });
-      
-      DashboardService.getOverallSales(moment().subtract(30, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
-      .then(response => {
-        setOverallSales(response.data);
-      });
-    }
-
-    //eslint-disable-next-line
-  }, [isHasPermission]);
+    InventoryService.getPopularCategories(7)
+    .then(response => {
+      if (response.data) {
+        setPopularCategories(response.data);
+      }
+    })
+    .finally(() => {
+      setLoadingPopular(false);
+    });
+    
+    DashboardService.getOverallSales(moment().subtract(30, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
+    .then(response => {
+      setOverallSales(response.data);
+    });
+  }, []);
 
 
   let maxAxis = overallSales.currentPeriodSales.length > 0 ? Math.max(parseInt(_.maxBy(overallSales.currentPeriodSales)), 200) : 500;
@@ -214,19 +210,13 @@ const DashboardPage = () => {
         },
     ],
   };
-  
-  let revenue = getDashboardValue(0, "value");
-  revenue = revenue ? revenue : 0;
 
-  let expense = getDashboardValue(3, "value");
-  expense = expense ? expense : 0;
+  let revenue = getDashboardValue(0, "value") || 0;
+  let expense = getDashboardValue(4, "value") || 0;
+  const revenueRisePercentage = getDashboardValue(0, "diffRevenueFromLLastAsPercentage") || 0;
+  let discount = getDashboardValue(2, "value") || 0;
 
-  const revenueRisePercentage = getDashboardValue(0, "diffRevenueFromLAstAsPercentag");
-
-  let discount = getDashboardValue(1, "value");
-  discount = discount ? discount : 0;
-
-  const diffSaleAsPercentage = getDashboardValue(0, "diffSaleFromLastAsPercentag");
+  const diffSaleAsPercentage = getDashboardValue(0, "diffSaleFromLastAsPercentage") || 0;
   const mostPopularCategory = _.maxBy(popularCategories, value => value.total);
   const totalSaleOfPopularCategory = mostPopularCategory ? mostPopularCategory.total : 0;
 

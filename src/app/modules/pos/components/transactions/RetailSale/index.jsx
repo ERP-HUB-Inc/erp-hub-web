@@ -384,7 +384,7 @@ export default class RetailSale extends Component {
           this.setState({ items: response.data.data });
         }
       });
-    }, 800);
+    }, 1000);
   };
 
   saveReceipt(key, orderItems = []) {
@@ -964,11 +964,11 @@ export default class RetailSale extends Component {
     <div className="detail-row-2">
       <this.InputText
         name={`description[${productOrderIndex}]`}
-        label={productOrder.enableDescription ? <Translate id="text_serial_or_imei" /> : <Translate id="text_notation" />}
+        label={productOrder.enableDescription ? <Translate id="text_serial_or_imei" /> : "Notes"}
         // data={productOrder.description}
         className="ca-input-v1"
         handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
-        placeholder={this.CATranslate(productOrder.enableDescription ? "text_search_serial_no" : "text_add_notation", this.props.locale)}
+        placeholder="Add notes for this item"
         form={this.props.form}
       />
     </div>
@@ -1043,7 +1043,7 @@ export default class RetailSale extends Component {
                 this.searchItemInput = input;
               }}
               size="large"
-              placeholder={"Scan barcode or search item…"}
+              placeholder={"Search item name / SKU / Barcode"}
               onChange={this.onSearch}
               prefix={<Icon type="search" />}
               style={{ width: 350, marginBottom: 0 }}

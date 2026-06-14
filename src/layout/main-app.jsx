@@ -114,7 +114,7 @@ export default class SiderDemo extends React.Component {
     });
     
     const Dashboard = Loadable({
-      loader: () => import("../pages/Dashboard"),
+      loader: () => import("../pages/Dashboard/ERPSalesDashboard"),
       loading: () => <StartUp />,
     });
 
@@ -229,7 +229,7 @@ export default class SiderDemo extends React.Component {
     const isPOSPage = window.location.pathname === "/pos";
     const styledContent = {
       margin: '0px 0px',
-      marginTop: 52,
+      // marginTop: 52,
       padding: 0,
       height: '100vh'
     }
@@ -399,13 +399,14 @@ export default class SiderDemo extends React.Component {
                         alignItems: "center",
                         justifyContent: "space-between",
                         paddingRight: "24px",
+                        display: "none"
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      {/* <div style={{ display: "flex", alignItems: "center" }}>
                         <Icon className="trigger" type={this.state.collapsed ? "menu-unfold" : "menu-fold"} onClick={this.toggle} />
-                      </div>
+                      </div> */}
 
-                      <Dropdown
+                      {/* <Dropdown
                         overlay={
                           <Menu>
                             <Menu.Item>
@@ -426,7 +427,7 @@ export default class SiderDemo extends React.Component {
                         trigger={["hover"]}
                       >
                         <Link to="#">Marco JR</Link>
-                      </Dropdown>
+                      </Dropdown> */}
                     </Header>
                   )}
 
