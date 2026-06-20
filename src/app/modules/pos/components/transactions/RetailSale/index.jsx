@@ -41,6 +41,8 @@ import EmptyOrder from "./empty.order";
 import { Translate } from "@redux/index";
 import ReceiptV2 from "./receipt-v2";
 import CategoryList from "./category-list";
+import { StockBadge } from "@components/stateless/stock-badge";
+import { getLocationId } from "@helper/user";
 
 export default class RetailSale extends Component {
   constructor(props) {
@@ -459,6 +461,24 @@ export default class RetailSale extends Component {
     this.setState({ modalContent: null });
   };
 
+  getProductStock(product) {
+    return Number(Util.countProductQTYCurrentLocation(product, getLocationId())) || 0;
+  }
+
+  getProductVariantStock(productVariant) {
+    if (!productVariant || !Array.isArray(productVariant.productLocations)) {
+      return 0;
+    }
+
+    return productVariant.productLocations.reduce((total, productLocation) => {
+      return productLocation.locationId === getLocationId() ? total + (Number(productLocation.quantity) || 0) : total;
+    }, 0);
+  }
+
+  handleOutOfStockProduct(product) {
+    this.Message.error(`${Util.getProductNameV2(product)} ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+  }
+
   handleExpandOrderItem = (expandOrderItem, productOrderIndex, status) => {
     const expandOrderItemRow = `${expandOrderItem.variantId}-${status}`;
 
@@ -482,6 +502,11 @@ export default class RetailSale extends Component {
     let newPrice = null;
     let { orderItems, initialOrderDiscount, initialOrderDiscountType, isDiscountHasAdded, discountValue } = this.state;
 
+    if (this.getProductStock(product) <= 0) {
+      this.handleOutOfStockProduct(product);
+      return;
+    }
+
     // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
     if (this.openFormSaleRegisration()) {
       return;
@@ -501,6 +526,12 @@ export default class RetailSale extends Component {
       this.setState({ selectedProduct: product });
     }
 
+    const stockInCurrentLocation = this.getProductVariantStock(productVariant);
+    if (stockInCurrentLocation <= 0) {
+      this.handleOutOfStockProduct(product);
+      return;
+    }
+
     // Checking for promotion
     let orderQuantity;
     let orderAmount;
@@ -512,6 +543,12 @@ export default class RetailSale extends Component {
     } else {
       orderQuantity = 1;
       orderAmount = orderQuantity * productVariant.price;
+    }
+
+    if (orderQuantity > stockInCurrentLocation) {
+      const message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
+      this.Message.error(`${Util.getProductNameV2(product)} ${message} ${stockInCurrentLocation}`);
+      return;
     }
 
     const promotion = await this.getProductPromotion(productVariant.id, orderQuantity, orderAmount);
@@ -882,28 +919,34 @@ export default class RetailSale extends Component {
     this.productWidth = productWidth;
 
     return countProduct > 0 ? (
-      this.state.items.map((product, index) => (
-        <div className="product-box" key={index}>
-          <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product">
-            <ItemImage src={new CommonUtil().getImageUrl(product?.image) || product?.imageUrl} name={Util.getProductNameV2(product)} height={imageHeight} />
-            <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
-              <div
-                style={{
-                  maxHeight: 26,
-                  overflow: "hidden",
-                  wordBreak: "break-all",
-                  textAlign: "left",
-                  paddingLeft: 10,
-                }}
-              >
-                <div className="name">{Util.getProductNameV2(product)}</div>
+      this.state.items.map((product, index) => {
+        const productStock = this.getProductStock(product);
+        const isOutOfStock = productStock <= 0;
+
+        return (
+          <div className="product-box" key={index}>
+            <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className={`product ${isOutOfStock ? "disabled" : ""}`}>
+              <StockBadge status={isOutOfStock ? "out" : productStock < 5 ? "low" : "in"} count={productStock} />
+              <ItemImage src={new CommonUtil().getImageUrl(product?.image) || product?.imageUrl} name={Util.getProductNameV2(product)} height={imageHeight} />
+              <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+                <div
+                  style={{
+                    maxHeight: 26,
+                    overflow: "hidden",
+                    wordBreak: "break-all",
+                    textAlign: "left",
+                    paddingLeft: 10,
+                  }}
+                >
+                  <div className="name">{Util.getProductNameV2(product)}</div>
+                </div>
               </div>
+              <Divider style={{ margin: "5px 0" }} />
+              <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>
             </div>
-            <Divider style={{ margin: "5px 0" }} />
-            <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>
           </div>
-        </div>
-      ))
+        );
+      })
     ) : (
       <div
         style={{

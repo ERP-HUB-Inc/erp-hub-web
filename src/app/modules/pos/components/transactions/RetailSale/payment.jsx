@@ -318,6 +318,16 @@ export default class PaymentScreen extends Modal {
           })
           .catch((error) => {
             console.error("Error creating sale:", error);
+            sweetalert({
+              icon: "error",
+              title: "Payment Failed!",
+              text: "There was an error processing the payment.",
+              buttons: false,
+              timer: 1500,
+            }).then(() => {
+              // this.props.handleOnResetOrder();
+              // this.props.handleCancel();
+            });
           })
           .finally(() => {
             this.setState({ submittingPayment: false });

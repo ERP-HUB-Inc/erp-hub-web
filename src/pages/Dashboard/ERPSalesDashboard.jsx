@@ -314,7 +314,7 @@ export default function ERPSalesDashboard() {
   const getDashboardValue = (index, key) => {
     return dashboardSummaries.length > 0 ? dashboardSummaries[index][key] : 0;
   };
-
+  console.log("dashboardSummaries", dashboardSummaries);
   const grossSales = getDashboardValue(0, "value") || 0;
   const revenue = getDashboardValue(0, "value") || 0;
   const totalItemCost = getDashboardValue(1, "value") || 0;

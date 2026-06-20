@@ -38,11 +38,11 @@ import POSPaymentDrawer from './payment-screen';
 import POSMonitor from './pos-monitor';
 import Login from './login';
 
-const socket = io("http://202.79.29.108:8100", {
+const socket = io("http://127.0.0.1:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
   transports: ["websocket"], // ensures faster connection
   reconnectionAttempts: 5,   // optional: auto-retry limit
-  reconnectionDelay: 1000,   // optional: delay between retries
+  reconnectionDelay: 5000,   // optional: delay between retries
 });
 
 const { Header, Content, Sider } = Layout;
