@@ -59,7 +59,7 @@ const FONT = "'Plus Jakarta Sans', 'Nunito', 'Segoe UI', sans-serif";
 // MOCK DATA
 // ─────────────────────────────────────────────
 const revenueData = [
-  { month: "Jan សួស្តី", revenue: 52400, costs: 31000, profit: 21400 },
+  { month: "Jan", revenue: 52400, costs: 31000, profit: 21400 },
   { month: "Feb", revenue: 57200, costs: 22000, profit: 35200 },
   { month: "Mar", revenue: 65800, costs: 36000, profit: 29800 },
   { month: "Apr", revenue: 63100, costs: 32000, profit: 31100 },
@@ -88,17 +88,6 @@ const categoryData = [
   { name: "Others",       value: 8,  amount: 1834, color: "#CBD5E1" },
 ];
 
-const transactions = [
-  { id: "#TXN-00481", customer: "Sophea Morn",   product: "MacBook Air M2",      category: "Electronics", amount: 1299, status: "completed", time: "2 min ago",  avatar: "SM" },
-  { id: "#TXN-00480", customer: "Dara Pich",     product: "Nike Air Force 1",    category: "Apparel",     amount: 120,  status: "completed", time: "18 min ago", avatar: "DP" },
-  { id: "#TXN-00479", customer: "Lin Vannak",    product: "Sony WH-1000XM5",     category: "Electronics", amount: 348,  status: "pending",   time: "34 min ago", avatar: "LV" },
-  { id: "#TXN-00478", customer: "Chenda Kim",    product: "IKEA Desk Lamp",      category: "Home & Living",amount: 45,   status: "completed", time: "1 hr ago",   avatar: "CK" },
-  { id: "#TXN-00477", customer: "Ratanak Heng",  product: "Organic Rice 10kg",   category: "Groceries",   amount: 28,   status: "refunded",  time: "2 hr ago",   avatar: "RH" },
-  { id: "#TXN-00476", customer: "Bopha Srey",    product: "iPad Pro 11\"",       category: "Electronics", amount: 999,  status: "completed", time: "3 hr ago",   avatar: "BS" },
-  { id: "#TXN-00475", customer: "Vibol Chan",    product: "Adidas Ultraboost",   category: "Apparel",     amount: 180,  status: "pending",   time: "4 hr ago",   avatar: "VC" },
-  { id: "#TXN-00474", customer: "Sreymom Keo",   product: "Coffee Machine",      category: "Home & Living",amount: 220,  status: "completed", time: "5 hr ago",   avatar: "SK" },
-];
-
 const navItems = [
   { icon: "⊞", label: "Dashboard",    active: true  },
   { icon: "📦", label: "Products",     active: false },
@@ -115,17 +104,26 @@ const navItems = [
 const usd = (n) => "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 0 });
 const fmtK = (n) => n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`;
 
-const statusConfig = {
-  completed: { color: T.teal,  bg: T.tealLight,  label: "Completed" },
-  pending:   { color: T.amber, bg: T.amberLight, label: "Pending"   },
-  refunded:  { color: T.red,   bg: T.redLight,   label: "Refunded"  },
-};
-
-const avatarColors = [
-  ["#EAE4FF","#6C47FF"], ["#DFFAF5","#009E84"], ["#FFF8EC","#CC8800"],
-  ["#FFE4EC","#CC2244"], ["#E0F2FE","#0369A1"],
+const dashboardRangeOptions = [
+  { label: "Today", value: "today", compareLabel: "vs yesterday" },
+  { label: "Yesterday", value: "yesterday", compareLabel: "vs previous day" },
+  { label: "This Week", value: "this-week", compareLabel: "vs last week" },
+  { label: "Last Week", value: "last-week", compareLabel: "vs previous week" },
+  { label: "This Month", value: "this-month", compareLabel: "vs last month" },
+  { label: "Current Month", value: "current-month", compareLabel: "vs last month" },
+  { label: "Last Month", value: "last-month", compareLabel: "vs previous month" },
+  { label: "Last 7 Days", value: "last-7-day", compareLabel: "vs previous 7 days" },
+  { label: "Last 30 Days", value: "last-30-days", compareLabel: "vs previous 30 days" },
+  { label: "Previous Quarter", value: "previous-quarter", compareLabel: "vs previous quarter" },
+  { label: "This Year", value: "this-year", compareLabel: "vs last year" },
+  { label: "Previous Year", value: "previous-year", compareLabel: "vs previous year" },
+  { label: "Last 12 Months", value: "last-12-months", compareLabel: "vs previous 12 months" },
+  { label: "Last 3 Months", value: "last-3-months", compareLabel: "vs previous 3 months" },
 ];
-const getAvatarColor = (i) => avatarColors[i % avatarColors.length];
+
+const getDashboardRangeMeta = (range) => {
+  return dashboardRangeOptions.find((option) => option.value === range) || dashboardRangeOptions[0];
+};
 
 // ─────────────────────────────────────────────
 // ANIMATED COUNTER
@@ -298,23 +296,45 @@ function Sidebar() {
 // MAIN DASHBOARD
 // ─────────────────────────────────────────────
 export default function ERPSalesDashboard() {
-  const [option, setOption] = React.useState("today");
-  const [dateRange, setDateRange] = useState("This Year");
+  const [dateRange, setDateRange] = useState("today");
   const [dashboardSummaries, setDashboardSummaries] = React.useState([]);
+  const [revenueOverview, setRevenueOverview] = React.useState([]);
+  const [weeklyOverview, setWeeklyOverview] = React.useState([]);
 
   React.useEffect(() => {
-    DashboardService.getTodayTotal(option)
-        .then(response => {
-          if (response.data) {
-            setDashboardSummaries(response.data);
-          }
-        });
-  }, []);
+    Promise.all([
+      DashboardService.getTodayTotal(dateRange)
+    ]).then(([summaryResponse]) => {
+      const summaryData = summaryResponse?.data?.data ?? summaryResponse?.data ?? [];
+
+      if (summaryData) {
+        setDashboardSummaries(summaryData);
+      }
+    });
+
+    DashboardService.getRevenueOverview(dateRange).then((overviewResponse) => {
+      const overviewData = overviewResponse?.data ?? overviewResponse?.data ?? [];
+      if (overviewData) {
+        setRevenueOverview(overviewData);
+      } else {
+        setRevenueOverview([]);
+      }
+    });
+
+    DashboardService.getWeeklyTrend(dateRange).then((overviewResponse) => {
+      const overviewData = overviewResponse?.data ?? overviewResponse?.data ?? [];
+      if (overviewData) {
+        setWeeklyOverview(overviewData);
+      } else {
+        setWeeklyOverview([]);
+      }
+    });
+  }, [dateRange]);
 
   const getDashboardValue = (index, key) => {
-    return dashboardSummaries.length > 0 ? dashboardSummaries[index][key] : 0;
+    return dashboardSummaries[index]?.[key] ?? 0;
   };
-  console.log("dashboardSummaries", dashboardSummaries);
+  
   const grossSales = getDashboardValue(0, "value") || 0;
   const revenue = getDashboardValue(0, "value") || 0;
   const totalItemCost = getDashboardValue(1, "value") || 0;
@@ -324,9 +344,21 @@ export default function ERPSalesDashboard() {
   const totalSales = getDashboardValue(4, "value") || 0;
   const totalSalesGrowth = getDashboardValue(4, "growthPercentage") || 0;
   const expense = getDashboardValue(5, "value") || 0;
-  const revenueRisePercentage = getDashboardValue(0, "diffRevenueFromLLastAsPercentage") || 0;
+  const revenueRisePercentage =
+    getDashboardValue(0, "diffRevenueFromLastAsPercentage") ||
+    getDashboardValue(0, "diffRevenueFromLLastAsPercentage") ||
+    0;
+  const averageOrderValue = getDashboardValue(2, "value") || 0;
+  const averageOrderDelta = getDashboardValue(2, "delta") || 0;
 
   const diffSaleAsPercentage = getDashboardValue(0, "diffSaleFromLastAsPercentage") || 0;
+  const dashboardRangeMeta = getDashboardRangeMeta(dateRange);
+  const selectedPeriodLabel = dashboardRangeMeta.label;
+  const periodLabel = dashboardRangeMeta.compareLabel;
+  const areaChartData = revenueOverview;
+  const barChartData = weeklyOverview;
+  const areaXAxisKey = areaChartData[0]?.month !== undefined ? "month" : "label";
+  const barXAxisKey = barChartData[0]?.day !== undefined ? "day" : "label";
 
   return (
     <div style={s.root}>
@@ -352,30 +384,26 @@ export default function ERPSalesDashboard() {
         <div style={s.topbar}>
           <div>
             <div style={s.pageTitle}>Sales Dashboard</div>
-            <div style={s.pageSub}>Monday, 30 May 2026 · Real-time data</div>
+            <div style={s.pageSub}>{selectedPeriodLabel} · Real-time data</div>
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <div style={s.searchBox}>
-              <span style={{ color: T.muted }}>🔍</span>
-              <input placeholder="Search transactions..." style={s.searchInput} />
-            </div>
-            <Select value={dateRange} onChange={value => setDateRange(value)} style={{ width: 120 }}>
-              <Select.Option value="Today">Today</Select.Option>
-              <Select.Option value="This Week">This Week</Select.Option>
-              <Select.Option value="This Month">This Month</Select.Option>
-              <Select.Option value="This Year">This Year</Select.Option>
-            </Select>
-            <button style={s.exportBtnPrimary}>↓ Export</button>
-            <div style={s.notifBell}>🔔<span style={s.notifDot} /></div>
+            <SelectPeriodOption
+              value={dateRange}
+              onChange={setDateRange}
+              style={{ width: 160 }}
+              options={dashboardRangeOptions}
+            />
+            {/* <button style={s.exportBtnPrimary}>↓ Export</button> */}
+            {/* <div style={s.notifBell}>🔔<span style={s.notifDot} /></div> */}
           </div>
         </div>
 
         {/* KPI Cards */}
         <div style={s.statsGrid}>
-          <StatCard label="Gross Sales" value={grossSales} prefix="$" delta="26% vs last year" up={true}  sublabel="vs last year" sparkData={revenueData} sparkColor={T.purple} delay={0}   />
-          <StatCard label="Gross Profit" value={grossProfit} prefix="$" delta={`${grossProfitGrowth}%`} up={grossProfitGrowth > 0}  sublabel="vs last year" sparkData={revenueData} sparkColor={T.teal}   delay={80}  />
-          <StatCard label="Total Orders" value={totalSales}  prefix=""  delta={`${totalSalesGrowth}%`} up={totalSalesGrowth > 0}  sublabel="new orders"   sparkData={weeklyTrend} sparkColor={T.purple} delay={160} />
-          <StatCard label="Avg Order Value" value={8283} prefix="$" delta="2.4%" up={false} sublabel="this period"  sparkData={weeklyTrend} sparkColor={T.red}    delay={240} />
+          <StatCard label="Gross Sales" value={grossSales} prefix="$" delta={`${revenueRisePercentage}%`} up={revenueRisePercentage > 0} sublabel={periodLabel} sparkData={revenueData} sparkColor={T.purple} delay={0}   />
+          <StatCard label="Gross Profit" value={grossProfit} prefix="$" delta={`${grossProfitGrowth}%`} up={grossProfitGrowth > 0} sublabel={periodLabel} sparkData={revenueData} sparkColor={T.teal}   delay={80}  />
+          <StatCard label="Total Orders" value={totalSales}  prefix=""  delta={`${totalSalesGrowth}%`} up={totalSalesGrowth > 0} sublabel={periodLabel}   sparkData={weeklyTrend} sparkColor={T.purple} delay={160} />
+          <StatCard label="Avg Order Value" value={averageOrderValue} prefix="$" delta={`${averageOrderDelta}%`} up={averageOrderDelta > 0} sublabel={periodLabel} sparkData={weeklyTrend} sparkColor={T.red} delay={240} />
         </div>
 
         {/* Charts Row 1: Area + Weekly Bar */}
@@ -392,7 +420,7 @@ export default function ERPSalesDashboard() {
               </div>
             </div>
             <ResponsiveContainer width="100%" height={230}>
-              <AreaChart data={revenueData} margin={{ top: 8, right: 4, left: -10, bottom: 0 }}>
+              <AreaChart data={areaChartData} margin={{ top: 8, right: 4, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="gPurple" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%"  stopColor={T.purple} stopOpacity={0.18} />
@@ -408,7 +436,7 @@ export default function ERPSalesDashboard() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={T.border} vertical={false} />
-                <XAxis dataKey="month" tick={{ fill: T.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey={areaXAxisKey} tick={{ fill: T.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tickFormatter={fmtK} tick={{ fill: T.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltip />} />
                 <Area type="monotone" dataKey="revenue" name="Revenue" stroke={T.purple} strokeWidth={2.5} fill="url(#gPurple)" dot={false} activeDot={{ r: 5, fill: T.purple }} />
@@ -424,13 +452,13 @@ export default function ERPSalesDashboard() {
               <span style={{ fontSize: 12, color: T.teal, fontWeight: 700 }}>This Week</span>
             </div>
             <ResponsiveContainer width="100%" height={230}>
-              <BarChart data={weeklyTrend} margin={{ top: 8, right: 4, left: -16, bottom: 0 }} barSize={22}>
+              <BarChart data={barChartData} margin={{ top: 8, right: 4, left: -16, bottom: 0 }} barSize={22}>
                 <CartesianGrid strokeDasharray="3 3" stroke={T.border} vertical={false} />
-                <XAxis dataKey="day" tick={{ fill: T.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
+                <XAxis dataKey={barXAxisKey} tick={{ fill: T.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tickFormatter={fmtK} tick={{ fill: T.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltip />} cursor={{ fill: T.purpleFade, radius: 4 }} />
                 <Bar dataKey="sales" name="Sales" radius={[6, 6, 0, 0]}>
-                  {weeklyTrend.map((_, i) => (
+                  {barChartData.map((_, i) => (
                     <Cell key={i} fill={i === 3 ? T.purple : T.purpleLight} />
                   ))}
                 </Bar>
@@ -571,24 +599,6 @@ const s = {
     color: T.muted,
     marginTop: 3,
   },
-  searchBox: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    background: T.card,
-    border: `1px solid ${T.border}`,
-    borderRadius: 10,
-    padding: "7px 14px",
-  },
-  searchInput: {
-    border: "none",
-    outline: "none",
-    fontSize: 13,
-    color: T.text,
-    background: "transparent",
-    width: 180,
-    fontFamily: FONT,
-  },
   select: {
     border: `1px solid ${T.border}`,
     borderRadius: 10,
@@ -604,7 +614,6 @@ const s = {
     background: T.purple,
     color: T.white,
     border: "none",
-    borderRadius: 10,
     padding: "8px 18px",
     fontSize: 13,
     fontWeight: 700,

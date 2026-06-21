@@ -5,8 +5,26 @@ import moment from "moment";
 
 const { RangePicker } = DatePicker;
 
+const defaultOptions = [
+  { label: <Translate id="text_today" />, value: "today" },
+  { label: "Yesterday", value: "yesterday" },
+  { label: <Translate id="text_this_week" />, value: "this-week" },
+  { label: <Translate id="text_last_week" />, value: "last-week" },
+  { label: <Translate id="text_this_month" />, value: "this-month" },
+  { label: "Current month", value: "current-month" },
+  { label: <Translate id="text_last_month" />, value: "last-month" },
+  { label: "Last 7 days", value: "last-7-day" },
+  { label: <Translate id="text_last_30_days" />, value: "last-30-days" },
+  { label: <Translate id="text_previous_quarter" />, value: "previous-quarter" },
+  { label: <Translate id="text_this_year" />, value: "this-year" },
+  { label: <Translate id="text_previous_year" />, value: "previous-year" },
+  { label: <Translate id="text_last_12_months" />, value: "last-12-months" },
+  { label: <Translate id="text_last_3_months" />, value: "last-3-months" },
+];
+
 export function SelectPeriodOption(props) {
   const [showRangePicker, setShowRangePicker] = React.useState(false);
+  const options = props.options || defaultOptions;
 
   const onSelectOption = (value) => {
     if (value === "modify") {
@@ -28,14 +46,11 @@ export function SelectPeriodOption(props) {
       onSelect={onSelectOption}
       placeholder={props.placeholder}
     >
-      <Select.Option key="today" value="today"><Translate id="text_today" /></Select.Option>
-      <Select.Option key="this-week" value="this-week"><Translate id="text_this_week" /></Select.Option>
-      <Select.Option key="this-month" value="current-month"><Translate id="text_this_month" /></Select.Option>
-      <Select.Option key="l-30-days" value="last-30-days"><Translate id="text_last_30_days" /></Select.Option>
-      <Select.Option key="l-3-month" value="last-3-months"><Translate id="text_last_3_months" /></Select.Option>
-      <Select.Option key="pre-quater" value="previous-quater"><Translate id="text_previous_quarter" /></Select.Option>
-      <Select.Option key="l-12-month" value="last-12-months"><Translate id="text_last_12_months" /></Select.Option>
-      <Select.Option key="pre-year" value="previous-year"><Translate id="text_previous_year" /></Select.Option>
+      {options.map((option) => (
+        <Select.Option key={option.value} value={option.value}>
+          {option.label}
+        </Select.Option>
+      ))}
       {
         props.showSelectCustomDate ? <Select.Option key="custom" value="modify"><Translate id="text_custom" /></Select.Option> : null
       }

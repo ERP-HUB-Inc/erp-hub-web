@@ -40,7 +40,7 @@ import Login from './login';
 
 const socket = io("http://127.0.0.1:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
-  transports: ["websocket"], // ensures faster connection
+   // ensures faster connection
   reconnectionAttempts: 5,   // optional: auto-retry limit
   reconnectionDelay: 5000,   // optional: delay between retries
 });
@@ -58,20 +58,6 @@ export default class SiderDemo extends React.Component {
       ReactGA.initialize("G-1MQDE7W3RC");
       // Send pageview with a custom path
       ReactGA.send({ hitType: "pageview", page: "/landingpage", title: "Landing Page" });
-
-      // socket.on("training-progress", (data) => {
-      //   this.setState(prev => ({
-      //     ...prev.state,
-      //     alertData: {
-      //       type: "announcement",
-      //       title: `Training ${data.modelName} ${data.status}`,
-      //       message: `Dataset: ${data.dataset}, Accuracy: ${data.accuracy}%, Loss: ${data.loss}`,
-      //       link: "/training/results",
-      //       linkText: "View Results",
-      //     },
-      //   }));
-      // });
-
 
       // Handle connection
       socket.on("connect", () => {
