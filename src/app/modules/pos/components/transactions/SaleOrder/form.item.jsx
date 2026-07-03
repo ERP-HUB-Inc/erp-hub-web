@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import sweetalert from "sweetalert";
 import moment from "moment";
 import _ from "lodash";
-import SaleOrderNo from "./SaleOrderNumber";
+import SaleOrderNo from "./saleorder.number";
 import history from "../../../../common/router/history";
 import { 
   DatePickers, 

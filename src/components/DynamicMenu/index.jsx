@@ -92,7 +92,7 @@ const DynamicMenu = ({ lang = "en", businessType = "sme", businessSize = "medium
             </span>
           }
         >
-          <Menu.Item key="21"><Link to="/sales-orders">Orders</Link></Menu.Item>
+          <Menu.Item key="21"><Link to="/sales">Orders</Link></Menu.Item>
           <Menu.Item key="22"><Link to="/quotes">Quotes</Link></Menu.Item>
           <Menu.Item key="23"><Link to="/invoices">Invoices</Link></Menu.Item>
           <Menu.Item key="24"><Link to="/customers">Customers</Link></Menu.Item>

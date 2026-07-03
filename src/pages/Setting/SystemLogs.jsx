@@ -1,216 +1,339 @@
-import React, { useState } from 'react';
-import { Table, Button, Tag, Input, Select, DatePicker, Card, Row, Col, Statistic, Icon, Dropdown, Menu } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import moment from 'moment';
+import {
+  Table,
+  Button,
+  Tag,
+  Input,
+  Select,
+  DatePicker,
+  Card,
+  Row,
+  Col,
+  Statistic,
+  Icon,
+  Dropdown,
+  Menu,
+  message,
+  Modal,
+} from 'antd';
 
 const { Search } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
+const DEFAULT_LEVELS = ['info', 'error', 'warning'];
+
 const SystemLogs = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [filterType, setFilterType] = useState('all');
-  const [filterUser, setFilterUser] = useState('all');
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [selectedLevels, setSelectedLevels] = useState(DEFAULT_LEVELS);
+  const [dateRange, setDateRange] = useState([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+    total: 0,
+  });
 
-  // Sample log data
-  const logsData = [
-    {
-      key: '1',
-      timestamp: '2025-09-27 14:30:25',
-      level: 'INFO',
-      action: 'User Login',
-      user: 'sophanna.mn@company.com',
-      module: 'Authentication',
-      description: 'User logged in successfully from IP 192.168.1.100',
-      details: 'Location: Phnom Penh, Cambodia | Browser: Chrome 118',
-      ip: '192.168.1.100'
-    },
-    {
-      key: '2',
-      timestamp: '2025-09-27 14:25:18',
-      level: 'WARNING',
-      action: 'Failed Payment',
-      user: 'system@company.com',
-      module: 'Payment Gateway',
-      description: 'ABA PayWay payment failed for Order #ORD-2025-001',
-      details: 'Error: Insufficient funds | Amount: $150.00',
-      ip: '10.0.0.1'
-    },
-    {
-      key: '3',
-      timestamp: '2025-09-27 14:20:45',
-      level: 'SUCCESS',
-      action: 'Inventory Update',
-      user: 'john.smith@company.com',
-      module: 'Inventory',
-      description: 'Stock level updated for Product SKU: LAPTOP-001',
-      details: 'Previous: 25 | New: 23 | Location: Warehouse A',
-      ip: '192.168.1.105'
-    },
-    {
-      key: '4',
-      timestamp: '2025-09-27 14:15:32',
-      level: 'ERROR',
-      action: 'Database Error',
-      user: 'system@company.com',
-      module: 'Database',
-      description: 'Connection timeout to backup database server',
-      details: 'Server: db-backup-01 | Timeout: 30s | Retries: 3',
-      ip: '10.0.0.1'
-    },
-    {
-      key: '5',
-      timestamp: '2025-09-27 14:10:12',
-      level: 'INFO',
-      action: 'Order Created',
-      user: 'sarah.wilson@company.com',
-      module: 'Sales',
-      description: 'New order created: ORD-2025-002',
-      details: 'Customer: John Doe | Amount: $89.50 | Items: 3',
-      ip: '192.168.1.110'
-    },
-    {
-      key: '6',
-      timestamp: '2025-09-27 14:05:55',
-      level: 'INFO',
-      action: 'Report Generated',
-      user: 'admin@company.com',
-      module: 'Reports',
-      description: 'Monthly sales report generated successfully',
-      details: 'Report: sales_2025_09.pdf | Size: 2.3MB | Recipients: 5',
-      ip: '192.168.1.101'
-    },
-    {
-      key: '7',
-      timestamp: '2025-09-27 14:00:33',
-      level: 'WARNING',
-      action: 'Integration Sync',
-      user: 'system@company.com',
-      module: 'Integration',
-      description: 'Shopee inventory sync partially failed',
-      details: 'Success: 245 items | Failed: 12 items | Next retry: 15:00',
-      ip: '10.0.0.1'
-    }
-  ];
+  const apiBaseUrl = useMemo(() => {
+    const host = process.env.REACT_APP_API_HOST || 'http://localhost';
+    const port = process.env.REACT_APP_API_PORT || '3080';
+    return `${host}:${port}`;
+  }, []);
 
   const getLevelColor = (level) => {
-    switch (level) {
-      case 'ERROR': return '#f5222d';
-      case 'WARNING': return '#faad14';
-      case 'SUCCESS': return '#52c41a';
-      case 'INFO': return '#1890ff';
-      default: return '#d9d9d9';
+    switch (String(level || '').toUpperCase()) {
+      case 'ERROR':
+        return '#f5222d';
+      case 'WARNING':
+        return '#faad14';
+      case 'INFO':
+        return '#1890ff';
+      default:
+        return '#d9d9d9';
     }
   };
 
-  const getLevelIcon = (level) => {
-    switch (level) {
-      case 'ERROR': return 'close-circle';
-      case 'WARNING': return 'exclamation-circle';
-      case 'SUCCESS': return 'check-circle';
-      case 'INFO': return 'info-circle';
-      default: return 'question-circle';
+  const normalizeLogRow = (item) => ({
+    ...item,
+    key: `${item.fileName || 'log'}-${item.lineNumber || 0}-${item.timestampMs || item.timestamp || item.date || 'row'}`,
+  });
+
+  const buildQueryParams = (page = pagination.current, pageSize = pagination.pageSize, nextSearchText = searchText, nextLevels = selectedLevels, nextDateRange = dateRange) => {
+    const params = new URLSearchParams();
+    const trimmedSearch = String(nextSearchText || '').trim();
+    const safeDateRange = Array.isArray(nextDateRange) ? nextDateRange : [];
+
+    if (trimmedSearch) {
+      params.set('search', trimmedSearch);
+    }
+
+    if (Array.isArray(nextLevels) && nextLevels.length > 0) {
+      params.set('levels', nextLevels.join(','));
+    }
+
+    if (safeDateRange[0]) {
+      params.set('dateFrom', safeDateRange[0].format('YYYY-MM-DD'));
+    }
+
+    if (safeDateRange[1]) {
+      params.set('dateTo', safeDateRange[1].format('YYYY-MM-DD'));
+    }
+
+    params.set('limit', String(pageSize));
+    params.set('offset', String((page - 1) * pageSize));
+
+    return params;
+  };
+
+  const fetchLogs = async (options = {}) => {
+    const nextPage = options.page || pagination.current;
+    const nextPageSize = options.pageSize || pagination.pageSize;
+    const nextSearchText = Object.prototype.hasOwnProperty.call(options, 'searchText')
+      ? options.searchText
+      : searchText;
+    const nextLevels = Object.prototype.hasOwnProperty.call(options, 'selectedLevels')
+      ? options.selectedLevels
+      : selectedLevels;
+    const nextDateRange = Object.prototype.hasOwnProperty.call(options, 'dateRange')
+      ? options.dateRange
+      : dateRange;
+
+    const params = buildQueryParams(nextPage, nextPageSize, nextSearchText, nextLevels, nextDateRange);
+
+    setLoading(true);
+    try {
+      const response = await axios.get(`${apiBaseUrl}/api/logs/v1/search?${params.toString()}`);
+      const responseData = response?.data || {};
+      const nextLogs = Array.isArray(responseData.data) ? responseData.data.map(normalizeLogRow) : [];
+      const nextPagination = responseData.pagination || {};
+
+      setLogs(nextLogs);
+      setPagination({
+        current: nextPagination.current || nextPage,
+        pageSize: nextPagination.limit || nextPageSize,
+        total: nextPagination.total || 0,
+      });
+      setSelectedRowKeys([]);
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.message ||
+        'Failed to load system logs';
+      message.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Table columns
+  useEffect(() => {
+    fetchLogs({ page: 1 });
+  }, []);
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+    fetchLogs({ page: 1, searchText: value });
+  };
+
+  const handleLevelsChange = (values) => {
+    const nextLevels = values && values.length > 0 ? values : [];
+    setSelectedLevels(nextLevels);
+    fetchLogs({ page: 1, selectedLevels: nextLevels });
+  };
+
+  const handleDateRangeChange = (values) => {
+    setDateRange(values || []);
+    fetchLogs({ page: 1, dateRange: values || [] });
+  };
+
+  const handleTableChange = (nextPagination) => {
+    fetchLogs({
+      page: nextPagination.current,
+      pageSize: nextPagination.pageSize,
+    });
+  };
+
+  const copyText = async (text) => {
+    if (!text) {
+      message.warning('Nothing to copy');
+      return;
+    }
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', 'readonly');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      message.success('Copied to clipboard');
+    } catch (error) {
+      message.error('Failed to copy log');
+    }
+  };
+
+  const exportLog = (record) => {
+    const content = JSON.stringify(record, null, 2);
+    const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${record.fileName || 'log'}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleRowAction = (action, record) => {
+    switch (action) {
+      case 'view':
+        Modal.info({
+          title: `${record.level || 'LOG'} - ${record.timestamp || ''}`,
+          width: 900,
+          content: (
+            <div style={{ wordBreak: 'break-word' }}>
+              <div style={{ marginBottom: 12 }}>
+                <strong>File:</strong> {record.fileName || '-'}
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <strong>Line:</strong> {record.lineNumber || '-'}
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <strong>Message:</strong>
+                <pre style={{ whiteSpace: 'pre-wrap', marginTop: 8 }}>{record.message || '-'}</pre>
+              </div>
+              <div>
+                <strong>Raw:</strong>
+                <pre style={{ whiteSpace: 'pre-wrap', marginTop: 8 }}>{record.raw || '-'}</pre>
+              </div>
+            </div>
+          ),
+        });
+        break;
+      case 'copy':
+        copyText(record.raw || record.message || '');
+        break;
+      case 'export':
+        exportLog(record);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleExportSelected = () => {
+    const selectedLogs = logs.filter((item) => selectedRowKeys.includes(item.key));
+
+    if (selectedLogs.length === 0) {
+      message.warning('Select at least one log first');
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(selectedLogs, null, 2)], {
+      type: 'application/json;charset=utf-8',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `system-logs-${moment().format('YYYY-MM-DD-HH-mm-ss')}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleCopySelected = () => {
+    const selectedLogs = logs.filter((item) => selectedRowKeys.includes(item.key));
+    const content = selectedLogs.map((item) => item.raw || item.message || '').filter(Boolean).join('\n\n');
+    copyText(content);
+  };
+
   const columns = [
     {
       title: 'Timestamp',
       dataIndex: 'timestamp',
       key: 'timestamp',
-      width: 160,
-      sorter: true,
-      render: (timestamp) => (
+      width: 180,
+      render: (timestamp, record) => (
         <div style={{ fontSize: '13px', color: '#595959' }}>
-          {timestamp}
+          <div>{timestamp || '-'}</div>
+          <div style={{ color: '#8c8c8c', fontSize: 12 }}>
+            {record.date || '-'}
+          </div>
         </div>
-      )
+      ),
     },
     {
       title: 'Level',
       dataIndex: 'level',
       key: 'level',
-      width: 100,
-      filters: [
-        { text: 'ERROR', value: 'ERROR' },
-        { text: 'WARNING', value: 'WARNING' },
-        { text: 'SUCCESS', value: 'SUCCESS' },
-        { text: 'INFO', value: 'INFO' }
-      ],
+      width: 110,
       render: (level) => (
-        <Tag 
+        <Tag
           color={getLevelColor(level)}
-          icon={<Icon type={getLevelIcon(level)} />}
           style={{ fontSize: '11px', fontWeight: 500 }}
         >
-          {level}
+          {String(level || '-').toUpperCase()}
         </Tag>
-      )
+      ),
     },
     {
-      title: 'Action',
-      dataIndex: 'action',
-      key: 'action',
-      width: 150,
-      render: (action) => (
-        <span style={{ fontSize: '14px', fontWeight: 500, color: '#262626' }}>
-          {action}
-        </span>
-      )
-    },
-    {
-      title: 'User',
-      dataIndex: 'user',
-      key: 'user',
+      title: 'File',
+      dataIndex: 'fileName',
+      key: 'fileName',
       width: 180,
-      render: (user) => (
-        <span style={{ fontSize: '13px', color: '#595959' }}>
-          {user}
+      render: (fileName) => (
+        <span style={{ fontSize: '13px', color: '#262626' }}>
+          {fileName || '-'}
         </span>
-      )
+      ),
     },
     {
-      title: 'Module',
-      dataIndex: 'module',
-      key: 'module',
-      width: 120,
-      filters: [
-        { text: 'Authentication', value: 'Authentication' },
-        { text: 'Payment Gateway', value: 'Payment Gateway' },
-        { text: 'Inventory', value: 'Inventory' },
-        { text: 'Sales', value: 'Sales' },
-        { text: 'Database', value: 'Database' },
-        { text: 'Reports', value: 'Reports' },
-        { text: 'Integration', value: 'Integration' }
-      ],
-      render: (module) => (
-        <Tag style={{ fontSize: '11px', backgroundColor: '#f0f2f5', color: '#595959', border: 'none' }}>
-          {module}
-        </Tag>
-      )
+      title: 'Line',
+      dataIndex: 'lineNumber',
+      key: 'lineNumber',
+      width: 90,
+      render: (lineNumber) => (
+        <span style={{ fontSize: '13px', color: '#595959' }}>
+          {lineNumber ?? '-'}
+        </span>
+      ),
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      render: (description, record) => (
+      title: 'Message',
+      dataIndex: 'message',
+      key: 'message',
+      render: (messageText, record) => (
         <div>
           <div style={{ fontSize: '14px', color: '#262626', marginBottom: '4px' }}>
-            {description}
+            {messageText || '-'}
           </div>
-          <div style={{ fontSize: '12px', color: '#8c8c8c' }}>
-            {record.details}
+          <div style={{ fontSize: '12px', color: '#8c8c8c', wordBreak: 'break-word' }}>
+            {record.raw || '-'}
           </div>
         </div>
-      )
+      ),
     },
     {
       title: '',
       key: 'action',
-      width: 50,
+      width: 60,
       render: (_, record) => (
-        <Dropdown 
+        <Dropdown
           overlay={
-            <Menu>
+            <Menu onClick={({ key }) => handleRowAction(key, record)}>
               <Menu.Item key="view">
                 <Icon type="eye" /> View Details
               </Menu.Item>
@@ -221,138 +344,149 @@ const SystemLogs = () => {
                 <Icon type="download" /> Export
               </Menu.Item>
             </Menu>
-          } 
+          }
           trigger={['click']}
         >
           <Button type="link" icon="more" style={{ color: '#8c8c8c' }} />
         </Dropdown>
-      )
-    }
+      ),
+    },
   ];
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: (selectedRowKeys) => {
-      setSelectedRowKeys(selectedRowKeys);
+    onChange: (nextSelectedRowKeys) => {
+      setSelectedRowKeys(nextSelectedRowKeys);
     },
   };
 
+  const logStats = useMemo(() => {
+    const total = pagination.total || 0;
+    const infoCount = logs.filter((item) => String(item.level || '').toUpperCase() === 'INFO').length;
+    const warningCount = logs.filter((item) => String(item.level || '').toUpperCase() === 'WARNING').length;
+    const errorCount = logs.filter((item) => String(item.level || '').toUpperCase() === 'ERROR').length;
+
+    return {
+      total,
+      infoCount,
+      warningCount,
+      errorCount,
+    };
+  }, [logs, pagination.total]);
+
   return (
-    <div style={{ 
-      padding: '32px 40px',
-      backgroundColor: '#fafafa',
-      minHeight: '100vh'
-    }}>
-      {/* Header */}
+    <div
+      style={{
+        padding: '32px 40px',
+        backgroundColor: '#fafafa',
+        minHeight: '100vh',
+      }}
+    >
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-          <h1 style={{ 
-            fontSize: '28px', 
-            fontWeight: 500, 
-            margin: 0,
-            color: '#262626'
-          }}>
-            System Activity Logs
-          </h1>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <Button icon="download">Export</Button>
-            <Button icon="sync">Refresh</Button>
-            <Button type="primary" icon="setting">Settings</Button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: 16, flexWrap: 'wrap' }}>
+          <div>
+            <h1
+              style={{
+                fontSize: '28px',
+                fontWeight: 500,
+                margin: 0,
+                color: '#262626',
+              }}
+            >
+              System Activity Logs
+            </h1>
+            <p style={{ color: '#8c8c8c', margin: '8px 0 0' }}>
+              Search system logs by keyword, level, and date range
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <Button icon="download" onClick={handleExportSelected} disabled={selectedRowKeys.length === 0}>
+              Export Selected
+            </Button>
+            <Button icon="copy" onClick={handleCopySelected} disabled={selectedRowKeys.length === 0}>
+              Copy Selected
+            </Button>
+            <Button type="primary" icon="sync" onClick={() => fetchLogs({ page: pagination.current })} loading={loading}>
+              Refresh
+            </Button>
           </div>
         </div>
-        <p style={{ color: '#8c8c8c', margin: 0 }}>
-          Monitor system activities, user actions, and audit trails for compliance and troubleshooting
-        </p>
       </div>
 
-      {/* Statistics Cards */}
       <Row gutter={16} style={{ marginBottom: '24px' }}>
-        <Col span={6}>
+        <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="Total Logs Today"
-              value={1247}
+              title="Total Results"
+              value={logStats.total}
               prefix={<Icon type="file-text" style={{ color: '#1890ff' }} />}
               valueStyle={{ color: '#1890ff' }}
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="Errors"
-              value={23}
-              prefix={<Icon type="close-circle" style={{ color: '#f5222d' }} />}
-              valueStyle={{ color: '#f5222d' }}
+              title="Info"
+              value={logStats.infoCount}
+              prefix={<Icon type="info-circle" style={{ color: '#1890ff' }} />}
+              valueStyle={{ color: '#1890ff' }}
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
               title="Warnings"
-              value={67}
+              value={logStats.warningCount}
               prefix={<Icon type="exclamation-circle" style={{ color: '#faad14' }} />}
               valueStyle={{ color: '#faad14' }}
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="Active Users"
-              value={45}
-              prefix={<Icon type="user" style={{ color: '#52c41a' }} />}
-              valueStyle={{ color: '#52c41a' }}
+              title="Errors"
+              value={logStats.errorCount}
+              prefix={<Icon type="close-circle" style={{ color: '#f5222d' }} />}
+              valueStyle={{ color: '#f5222d' }}
             />
           </Card>
         </Col>
       </Row>
 
-      {/* Filters */}
       <Card style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
           <div>
             <span style={{ display: 'block', marginBottom: '4px', fontSize: '13px', color: '#595959' }}>
               Search
             </span>
             <Search
               placeholder="Search logs..."
-              style={{ width: 200 }}
+              style={{ width: 240 }}
               allowClear
+              value={searchText}
+              onSearch={handleSearch}
+              onChange={(event) => setSearchText(event.target.value)}
             />
           </div>
-          
+
           <div>
             <span style={{ display: 'block', marginBottom: '4px', fontSize: '13px', color: '#595959' }}>
               Log Level
             </span>
             <Select
-              value={filterType}
-              onChange={setFilterType}
-              style={{ width: 120 }}
+              mode="multiple"
+              value={selectedLevels}
+              onChange={handleLevelsChange}
+              style={{ width: 220 }}
+              placeholder="Select levels"
+              maxTagCount={3}
             >
-              <Option value="all">All Levels</Option>
-              <Option value="ERROR">Error</Option>
-              <Option value="WARNING">Warning</Option>
-              <Option value="SUCCESS">Success</Option>
-              <Option value="INFO">Info</Option>
-            </Select>
-          </div>
-
-          <div>
-            <span style={{ display: 'block', marginBottom: '4px', fontSize: '13px', color: '#595959' }}>
-              User
-            </span>
-            <Select
-              value={filterUser}
-              onChange={setFilterUser}
-              style={{ width: 160 }}
-            >
-              <Option value="all">All Users</Option>
-              <Option value="system">System</Option>
-              <Option value="admin">Administrators</Option>
-              <Option value="regular">Regular Users</Option>
+              <Option value="info">Info</Option>
+              <Option value="warning">Warning</Option>
+              <Option value="error">Error</Option>
             </Select>
           </div>
 
@@ -360,60 +494,76 @@ const SystemLogs = () => {
             <span style={{ display: 'block', marginBottom: '4px', fontSize: '13px', color: '#595959' }}>
               Date Range
             </span>
-            <RangePicker style={{ width: 240 }} />
+            <RangePicker
+              style={{ width: 260 }}
+              value={dateRange}
+              onChange={handleDateRangeChange}
+              allowClear
+            />
           </div>
 
-          <div style={{ alignSelf: 'flex-end' }}>
-            <Button type="primary" ghost>Apply Filters</Button>
+          <div>
+            <Button type="primary" ghost onClick={() => fetchLogs({ page: 1 })} loading={loading}>
+              Apply Filters
+            </Button>
           </div>
         </div>
       </Card>
 
-      {/* Action Bar */}
       {selectedRowKeys.length > 0 && (
-        <div style={{ 
-          marginBottom: '16px', 
-          padding: '12px 16px', 
-          backgroundColor: '#e6f7ff', 
-          borderRadius: '6px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
+        <div
+          style={{
+            marginBottom: '16px',
+            padding: '12px 16px',
+            backgroundColor: '#e6f7ff',
+            borderRadius: '6px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 12,
+            flexWrap: 'wrap',
+          }}
+        >
           <span style={{ color: '#1890ff' }}>
             {selectedRowKeys.length} log(s) selected
           </span>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <Button size="small" icon="download">Export Selected</Button>
-            <Button size="small" icon="delete" type="danger" ghost>Archive</Button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <Button size="small" icon="download" onClick={handleExportSelected}>
+              Export Selected
+            </Button>
+            <Button size="small" icon="copy" onClick={handleCopySelected}>
+              Copy Selected
+            </Button>
           </div>
         </div>
       )}
 
-      {/* Logs Table */}
       <Card>
         <Table
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={logsData}
+          dataSource={logs}
+          loading={loading}
           pagination={{
-            pageSize: 20,
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} logs`,
-            pageSizeOptions: ['10', '20', '50', '100']
+            pageSizeOptions: ['10', '20', '50', '100'],
           }}
+          onChange={handleTableChange}
           size="middle"
-          scroll={{ x: 1200 }}
+          scroll={{ x: 1150 }}
           rowClassName={(record) => {
-            if (record.level === 'ERROR') return 'log-row-error';
-            if (record.level === 'WARNING') return 'log-row-warning';
+            if (String(record.level || '').toUpperCase() === 'ERROR') return 'log-row-error';
+            if (String(record.level || '').toUpperCase() === 'WARNING') return 'log-row-warning';
             return '';
           }}
         />
       </Card>
 
-      {/* Custom CSS */}
       <style jsx>{`
         .log-row-error {
           background-color: #fff2f0 !important;

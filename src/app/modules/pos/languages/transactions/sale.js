@@ -462,7 +462,7 @@ export default {
 ],
 
 "text_sale_order_no": [
-	"Sales Order No",
+	"SO. No",
 	"លេខ​​បញ្ជា​រ​ទិញ"
 ],
 

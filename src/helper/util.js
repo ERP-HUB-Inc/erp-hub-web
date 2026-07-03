@@ -292,60 +292,69 @@ export default class Util {
   }
 
   formatPercentage(n, position = 0) {
-    let percentage = "%";
+    try {
+        let percentage = "%";
+        let unsigne = "";
+        if (n < 0) {
+          n = Math.abs(n);
+          unsigne = "-";
+        }
+        // 0: BEFORE, 1: AFTER
+        let result = parseFloat(n)
+          .toFixed(2)
+          .replace(/./g, function (c, i, a) {
+            return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+          });
 
-    let unsigne = "";
-    if (n < 0) {
-      n = Math.abs(n);
-      unsigne = "-";
+        result = isNaN(result) ? 0 : result;
+
+        if (position === 0) {
+          result = `${percentage}${result}`;
+        } else {
+          result = `${result}${percentage}`;
+        }
+
+        return `${unsigne}${result}`;
+    } catch (error) {
+      console.error("Error formatting percentage:", error);
+      return "0%";
     }
-    // 0: BEFORE, 1: AFTER
-    let result = parseFloat(n)
-      .toFixed(2)
-      .replace(/./g, function (c, i, a) {
-        return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
-      });
-
-    result = isNaN(result) ? 0 : result;
-
-    if (position === 0) {
-      result = `${percentage}${result}`;
-    } else {
-      result = `${result}${percentage}`;
-    }
-
-    return `${unsigne}${result}`;
   }
 
   formatCurrency(n, currency = "$", position = 0, precision = 2) {
-    let unsigne = ""
-    if (n < 0) {
-      n = Math.abs(n)
-      unsigne = "-"
+    try {
+      let unsigne = ""
+      if (n < 0) {
+        n = Math.abs(n)
+        unsigne = "-"
+      }
+
+      // ✅ KHR rounding to nearest 100
+      if (currency === "៛") {
+        n = Math.round(n / 100) * 100;
+      }
+
+      // Determine if n has a fractional part
+      const hasFraction = n % 1 !== 0
+
+      // Use precision only if there is a fractional part
+      let fixed = hasFraction ? n.toFixed(precision) : n.toFixed(0)
+
+      // Add commas
+      let result = fixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+      // Position currency
+      if (position === 0) {
+        result = `${currency}${result}`
+      } else {
+        result = `${result}${currency}`
+      }
+
+      return `${unsigne}${result}`
+    } catch (error) {
+      console.error("Error formatting currency:", error);
+      return "0";
     }
-
-    // ✅ KHR rounding to nearest 100
-    if (currency === "៛") {
-      n = Math.round(n / 100) * 100;
-    }
-
-    // Determine if n has a fractional part
-    const hasFraction = n % 1 !== 0
-
-    // Use precision only if there is a fractional part
-    let fixed = hasFraction ? n.toFixed(precision) : n.toFixed(0)
-
-    // Add commas
-    let result = fixed.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-
-    // Position currency
-    if (position === 0) {
-      result = `${currency}${result}`
-    } else {
-      result = `${result}${currency}`
-    }
-
-    return `${unsigne}${result}`
   }
 
   toValidKHMoney(money) {

@@ -339,15 +339,12 @@ export default function ERPSalesDashboard() {
   const revenue = getDashboardValue(0, "value") || 0;
   const totalItemCost = getDashboardValue(1, "value") || 0;
   const salesDiscount = getDashboardValue(2, "value") || 0;
-  const grossProfit = getDashboardValue(3, "value") || 0;
-  const grossProfitGrowth = getDashboardValue(3, "growthPercentage") || 0;
-  const totalSales = getDashboardValue(4, "value") || 0;
-  const totalSalesGrowth = getDashboardValue(4, "growthPercentage") || 0;
-  const expense = getDashboardValue(5, "value") || 0;
-  const revenueRisePercentage =
-    getDashboardValue(0, "diffRevenueFromLastAsPercentage") ||
-    getDashboardValue(0, "diffRevenueFromLLastAsPercentage") ||
-    0;
+  const grossProfit = getDashboardValue(4, "value") || 0;
+  const grossProfitGrowth = getDashboardValue(4, "growthPercentage") || 0;
+  const totalSales = getDashboardValue(5, "value") || 0;
+  const totalSalesGrowth = getDashboardValue(5, "growthPercentage") || 0;
+  const expense = getDashboardValue(6, "value") || 0;
+  const revenueRisePercentage = getDashboardValue(0, "diffRevenueFromLastAsPercentage") || getDashboardValue(0, "diffRevenueFromLLastAsPercentage") || 0;
   const averageOrderValue = getDashboardValue(2, "value") || 0;
   const averageOrderDelta = getDashboardValue(2, "delta") || 0;
 
@@ -468,12 +465,12 @@ export default function ERPSalesDashboard() {
         </div>
 
         {/* Charts Row 2: Category + Goal Cards */}
-        <div style={s.chartsRow}>
+        {/* <div style={s.chartsRow}> */}
+        <div style={{ display: "none"}}>
           <div style={{ flex: 1.4 }}>
             <CategorySection />
           </div>
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 14 }}>
-            {/* Monthly Goal Card */}
             <div style={s.card}>
               <div style={s.sectionHeader}>
                 <span style={s.sectionTitle}>Monthly Goal</span>
@@ -491,8 +488,6 @@ export default function ERPSalesDashboard() {
                 <span style={{ fontSize: 12, color: T.muted }}>$27,500 remaining</span>
               </div>
             </div>
-
-            
           </div>
         </div>
 

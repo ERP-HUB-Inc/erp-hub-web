@@ -23,8 +23,8 @@ import {
 import ReactToPrint, { PrintContextConsumer } from "react-to-print";
 import EditShipping from "./EditShipping";
 import CAInvoice from "./CAInvoice";
-import PackingSlip from "../SaleOrder/Invoice/PackingSlip";
-import DeliveryNote from "../SaleOrder/Invoice/DeliveryNote";
+import PackingSlip from "../SaleOrder/Invoice/packing-slip";
+import DeliveryNote from "../SaleOrder/Invoice/delivery-note";
 import Enum from "../../../enums";
 import SalesUtil from "../../../utils";
 import TransactionService from "../../../services/transactions/TransactionService";

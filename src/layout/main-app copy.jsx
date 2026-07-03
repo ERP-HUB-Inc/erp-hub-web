@@ -264,7 +264,7 @@ export default class SiderDemo extends React.Component {
                         </span>
                       }
                     >
-                      <Menu.Item key="21"><Link to="/sales-orders">Orders</Link></Menu.Item>
+                      <Menu.Item key="21"><Link to="/sales">Orders</Link></Menu.Item>
                       <Menu.Item key="22"><Link to="/quotes">Quotes</Link></Menu.Item>
                       <Menu.Item key="23"><Link to="/invoices">Invoices</Link></Menu.Item>
                       <Menu.Item key="24"><Link to="/customers">Customers</Link></Menu.Item>
@@ -412,7 +412,7 @@ export default class SiderDemo extends React.Component {
                 >
                   <Switch>
                     <Route path="/pos" component={POS} />
-                    <Route path="/sales-orders" component={SalesOrder} />
+                    <Route path="/sales" component={SalesOrder} />
                     <Route path="/quotes" component={Quotes} />
                     
                     <Route path="/invoices/view/:id" component={InvoiceDetail} />

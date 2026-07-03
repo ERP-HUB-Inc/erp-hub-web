@@ -26,8 +26,8 @@ import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import SaleOrderInvoice from "./Invoice";
 import CAInvoice from "../Invoice/CAInvoice";
-import PackingSlipTem from "./Invoice/PackingSlip";
-import DeliveryNote from "./Invoice/DeliveryNote";
+import PackingSlipTem from "./Invoice/packing-slip";
+import DeliveryNote from "./Invoice/delivery-note";
 
 const DescriptionItem = ({ title, content }) => (
   <div

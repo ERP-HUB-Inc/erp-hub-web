@@ -519,39 +519,6 @@ export default class PurchaseOrderPage extends Datatable {
     };
   }
 
-  renderPagination(pagination) {
-    pagination = {
-      total: pagination.total,
-      pageSize: pagination.limit,
-      current: this.state.current,
-      pageSizeOptions: this.pageSizeOptions,
-    };
-
-    const showTotal = (total) => {
-      return `${this.CATranslate(
-        "text_total",
-        this.props.locale
-      )} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
-    };
-
-    return pagination.total > 0 ? (
-      <div className="float-right">
-        <Pagination
-          size="small"
-          showTotal={showTotal}
-          showSizeChanger
-          defaultCurrent={this.state.current}
-          defaultPageSize={this.pageSize}
-          onShowSizeChange={this.onShowSizeChange}
-          onChange={this.onChangePagination}
-          {...pagination}
-        />
-      </div>
-    ) : (
-      ""
-    );
-  }
-
   render() {
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
