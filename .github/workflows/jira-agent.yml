@@ -1,0 +1,19 @@
+name: Jira Agent Task Handler
+
+on:
+  repository_dispatch:
+    types: [jira-task-assigned]
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run GitHub AI Agent
+        run: |
+          echo "Processing Jira Issue: ${{ github.event.client_payload.issue_key }}"
+          echo "Task Summary: ${{ github.event.client_payload.summary }}"
+          # Call your specific agent CLI tool or custom scripts here
+          # Example: npm run my-agent -- --issue="${{ github.event.client_payload.issue_key }}"
