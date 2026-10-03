@@ -15,13 +15,16 @@ import {
   Form,
   Pagination,
   message,
+  Modal,
   Row,
   Col,
   Card,
   Statistic,
   Input,
   Table,
-  Tabs
+  Tabs,
+  DatePicker,
+  Select
 } from "antd";
 import SalesOrderPrint from "./Invoice/sales-order-print";
 import PackingSlip from "./Invoice/packing-slip";
@@ -35,6 +38,34 @@ import { MonetaryValue } from "@components/index";
 import { QuantityValue } from "@components/stateless/quantity.value";
 
 const { TabPane } = Tabs;
+const { RangePicker } = DatePicker;
+const MAX_DATE_RANGE_DAYS = 365;
+const DATE_FILTERS = {
+  today: {
+    label: "Today",
+    getRange: () => [moment(), moment()]
+  },
+  last7Days: {
+    label: "Last 7 days",
+    getRange: () => [moment().subtract(6, "days"), moment()]
+  },
+  thisMonth: {
+    label: "This month",
+    getRange: () => [moment().startOf("month"), moment()]
+  },
+  last30Days: {
+    label: "Last 30 days",
+    getRange: () => [moment().subtract(29, "days"), moment()]
+  },
+  last365Days: {
+    label: "Last 365 days",
+    getRange: () => [moment().subtract(365, "days"), moment()]
+  },
+  custom: {
+    label: "Custom range"
+  }
+};
+const DEFAULT_DATE_FILTER = "last365Days";
 
 export default class SaleOrderPage extends Component {
   constructor(props) {
@@ -275,7 +306,8 @@ export default class SaleOrderPage extends Component {
       loadingButton: false,
       isShowFilter: true,
       isHasAccessPermission: null,
-      visibleColumns: this.defaultVisibleColumns
+      visibleColumns: this.defaultVisibleColumns,
+      dateFilter: DEFAULT_DATE_FILTER
     };
     this.title = <Translate id="text_orders"/>;
     this.pageSize = 25;
@@ -321,7 +353,9 @@ export default class SaleOrderPage extends Component {
       initialActiveTab = params.get("workflow");
     }
 
+    this.ensureDefaultDateRange(params);
     nextState.activeTab = initialActiveTab;
+    nextState.dateFilter = this.getDateFilterKeyFromParams(params);
     this.setState(nextState);
 
     Object.keys(this.SALE_ORDER_STATUS_STR).forEach((prop) => {
@@ -454,6 +488,90 @@ export default class SaleOrderPage extends Component {
     return this.allColumns.filter(column => visibleColumns.includes(column.key));
   }
 
+  ensureDefaultDateRange = (params) => {
+    if (!params.get("start") || !params.get("end")) {
+      const defaultRange = DATE_FILTERS[DEFAULT_DATE_FILTER].getRange();
+      params.set("start", this.formatDateParam(defaultRange[0]));
+      params.set("end", this.formatDateParam(defaultRange[1]));
+      this.Util.pushParamsToURL(this.pathname, params.toString());
+    }
+  }
+
+  formatDateParam = (date) => moment(date).format("YYYY-MM-DD")
+
+  getRangeFromParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.get("start") || !params.get("end")) {
+      return DATE_FILTERS[DEFAULT_DATE_FILTER].getRange();
+    }
+
+    return [
+      moment(params.get("start")),
+      moment(params.get("end"))
+    ];
+  }
+
+  getDateFilterKeyFromParams = (params = new URLSearchParams(window.location.search)) => {
+    if (!params.get("start") || !params.get("end")) {
+      return DEFAULT_DATE_FILTER;
+    }
+
+    const start = params.get("start");
+    const end = params.get("end");
+    const matchedFilter = Object.keys(DATE_FILTERS).find((key) => {
+      if (!DATE_FILTERS[key].getRange) {
+        return false;
+      }
+
+      const range = DATE_FILTERS[key].getRange();
+      return this.formatDateParam(range[0]) === start && this.formatDateParam(range[1]) === end;
+    });
+
+    return matchedFilter || "custom";
+  }
+
+  getRangeDayCount = (dates) => {
+    if (!dates || dates.length < 2) {
+      return 0;
+    }
+
+    return moment(dates[1]).startOf("day").diff(moment(dates[0]).startOf("day"), "days");
+  }
+
+  getShowingDateLabel = () => {
+    const range = this.getRangeFromParams();
+    return `Showing sales orders from ${range[0].format("MMM D, YYYY")} to ${range[1].format("MMM D, YYYY")}.`;
+  }
+
+  applyDateRange = (dates, dateFilter = "custom", confirmWideRange = true) => {
+    if (!dates || dates.length < 2) {
+      message.warning("Please select a date range. Sales orders default to the last 365 days.");
+      return;
+    }
+
+    const dayCount = this.getRangeDayCount(dates);
+
+    if (dayCount > MAX_DATE_RANGE_DAYS && confirmWideRange) {
+      Modal.confirm({
+        title: "Search more than 365 days?",
+        content: "Large date ranges can be slow. Continue only if you intentionally need older sales orders.",
+        okText: "Search anyway",
+        cancelText: "Keep current range",
+        onOk: () => this.applyDateRange(dates, dateFilter, false)
+      });
+      return;
+    }
+
+    const params = new URLSearchParams(document.location.search);
+    params.set("start", this.formatDateParam(dates[0]));
+    params.set("end", this.formatDateParam(dates[1]));
+    params.delete("offset");
+
+    this.setState({dateFilter, current: 1});
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
   fetchList(withPagination= false, activeTab = this.state.activeTab) {
     let searchKey = "";
     let filter = {};
@@ -476,9 +594,8 @@ export default class SaleOrderPage extends Component {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
     }
 
-    if (params.get("start")) {
-      ranges = JSON.stringify({column: "registerDate", value: [params.get("start"), params.get("end")]});
-    }
+    this.ensureDefaultDateRange(params);
+    ranges = JSON.stringify({column: "createdAt", value: [params.get("start"), params.get("end")]});
 
     filter = {
       ...filter,
@@ -500,7 +617,7 @@ export default class SaleOrderPage extends Component {
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
     this.setState({loading: true});
-    SaleOrderService.get({limit, offset, filter: JSON.stringify(filter), searchKey, ranges})
+    SaleOrderService.get({limit, offset, filter: JSON.stringify(filter), searchKey, rangFilter: ranges})
     .then((response) => {
         if (response.data && response.data.data) {
           this.setState({
@@ -676,16 +793,16 @@ export default class SaleOrderPage extends Component {
   }
 
   handleChangeDate = (dates) => {
-    const params = new URLSearchParams(document.location.search);
-    if (dates.length) {
-      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
-      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
-    } else {
-      params.delete("start");
-      params.delete("end");
+    this.applyDateRange(dates, "custom");
+  }
+
+  handleDateFilterChange = (dateFilter) => {
+    if (dateFilter === "custom") {
+      this.setState({dateFilter});
+      return;
     }
-    this.Util.pushParamsToURL(this.pathname,  params.toString());
-    this.fetchList();
+
+    this.applyDateRange(DATE_FILTERS[dateFilter].getRange(), dateFilter);
   }
 
   handleChangeStatus = (status) => {
@@ -766,22 +883,41 @@ export default class SaleOrderPage extends Component {
 
   renderSaleOrderTable = () => {
     const params = new URLSearchParams(window.location.search);
+    const selectedDateRange = this.getRangeFromParams();
 
     return (
       <React.Fragment>
-        <Row style={{ marginBottom: 10 }}>
-          <Col span={18}>
-            <Input
-                name="search"
-                placeholder="Search SO number, customer name, or phone"
-                prefix={<Icon type="search" />}
-                defaultValue={params.get("search") ? params.get("search") : ""}
-                style={{height: 32, width: 350, marginRight: 10}}
-                allowClear={true}
-                onChange={this.handleSearch}
-            />
+        <Row style={{ marginBottom: 10 }} gutter={8}>
+          <Col span={16}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              <Input
+                  name="search"
+                  placeholder="Search SO number, customer name, or phone"
+                  prefix={<Icon type="search" />}
+                  defaultValue={params.get("search") ? params.get("search") : ""}
+                  style={{height: 32, width: 350, maxWidth: "100%"}}
+                  allowClear={true}
+                  onChange={this.handleSearch}
+              />
+              <Select
+                value={this.state.dateFilter}
+                onChange={this.handleDateFilterChange}
+                style={{ width: 160 }}
+              >
+                {Object.keys(DATE_FILTERS).map((key) => (
+                  <Select.Option key={key} value={key}>{DATE_FILTERS[key].label}</Select.Option>
+                ))}
+              </Select>
+              <RangePicker
+                value={selectedDateRange}
+                allowClear={false}
+                onChange={this.handleChangeDate}
+                format="MMM D, YYYY"
+                style={{ width: 300, maxWidth: "100%" }}
+              />
+            </div>
           </Col>
-          <Col span={6} style={{ textAlign: "right" }}>
+          <Col span={8} style={{ textAlign: "right" }}>
             <Button style={{ marginRight: 10 }} onClick={this.handleRefresh} loading={this.state.loadingButton}>
               <Icon type="reload" />
               <span style={{ marginLeft: 6 }}>Reload</span>
@@ -789,6 +925,9 @@ export default class SaleOrderPage extends Component {
             {this.renderColumnSettings()}
           </Col>
         </Row>
+        <div style={{ color: "#6b7280", fontSize: 12, marginBottom: 10 }}>
+          {this.getShowingDateLabel()}
+        </div>
         <Table
             bordered
             pagination={{
