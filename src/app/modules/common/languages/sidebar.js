@@ -105,7 +105,7 @@ export default {
   ],
 
   "text_product_report": [
-    "Product Report",
+    "Item Report",
     "របាយការណ៍ទំនិញ"
   ],
 

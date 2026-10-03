@@ -52,6 +52,31 @@ export default function SaleReportDashboard() {
                                 <Card
                                     title={
                                         <div>
+                                            <Icon type="dashboard" style={{ fontSize: 20 }} />
+                                            <span style={{ marginLeft: 15 }}>Sales Report</span>
+                                        </div>
+                                    }
+                                    bordered={false}>
+                                    <div className="content">
+                                        <ul style={{ listStyle: "none", paddingLeft: 0 }}>
+                                            <li>- view sales summary and trends</li>
+                                            <li>- filter by date and location</li>
+                                            <li>- review product sales performance</li>
+                                            <li>- include sales intelligence</li>
+                                            <li>- supports product sorting and paging</li>
+                                        </ul>
+                                    </div>
+                                    <div className="footer">
+                                        <Link to="/reports/sales-report" className="ant-btn">
+                                            <Translate id="text_view" />
+                                        </Link>
+                                    </div>
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card
+                                    title={
+                                        <div>
                                             <Icon type="line-chart" style={{ fontSize: 20 }} />
                                             <span style={{ marginLeft: 15 }}><Translate id="text_sale_summary" /></span>
                                         </div>

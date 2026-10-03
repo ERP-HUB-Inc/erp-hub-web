@@ -266,7 +266,7 @@ export default class StockIOPage extends Datatable {
     ].concat(this.renderActionColumn());
     this.fetchingProp = "purchaseOrder";
 
-    this.title = "Stock In/Out";
+    this.title = "Stock Movement";
     this.fetchingProp = "list";
     this.pathname = "/inventories/stock-io";
     this.pathCreate = "/inventories/create";
@@ -619,11 +619,11 @@ export default class StockIOPage extends Datatable {
         <div className="content-list">
           <div className="table-wrapper">
             <PageHeader
-              title="Stock In/Out"
+              title="Stock Movement"
               subtitle="Track and manage your stock movements"
               breadcrumbs={[
                 { text: "Dashboard", href: "/dashboard" },
-                { text: "Stock In/Out" },
+                { text: "Stock Movement" },
               ]}
               actions={[
                 {

@@ -16,6 +16,14 @@ class ProductService extends BaseService {
     });
   }
 
+  getInventoryStockReport(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/products?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
   exportProducts(option) {
     this.setHeader();
     return this.GET({ 

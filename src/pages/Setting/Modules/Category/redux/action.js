@@ -2,11 +2,11 @@ import Constant from "./constant";
 import CategoryService from "@services/CategoryService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, search) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_CATEGORY,
-        payload: CategoryService.get(limit, offset, sortField, sortOrder)
+        payload: CategoryService.get({ limit, offset, sortField, sortOrder, filter, search })
       });
     };
   },
@@ -59,4 +59,3 @@ export default {
     };
   }
 };
-

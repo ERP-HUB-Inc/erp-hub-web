@@ -17,6 +17,62 @@ class PurchaseService extends BaseService {
     });
   }
 
+  getPurchaseSummary(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/purchases/summary?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getPurchaseTrend(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/purchases/trend?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getPurchaseProducts(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/purchases/products?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getPurchaseSuppliers(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/purchases/suppliers?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getPurchasePriceIncrease(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/purchases/intelligence/price-increase?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getPurchaseOverstock(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/purchases/intelligence/overstock?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getPurchaseVsSales(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/purchases/intelligence/purchase-vs-sales?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
   getReportSummaryByProduct(option) {
     this.setHeader();
     return this.GET({ 

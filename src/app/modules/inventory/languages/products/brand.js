@@ -5,7 +5,7 @@ export default {
   ],
 
   "text_all_brand": [
-    "All Brand",
+    "All brands",
     "គ្រប់ម៉ាកផលិតផល"
   ]
 };

@@ -861,7 +861,7 @@ export default class SaleOrderPage extends Component {
           <div className="content-list">
             <div className="table-wrapper">
               <PageHeader
-                title={`Sales Order (${this.state?.pagination?.total || 0})`}
+                title={`All Sales (${this.state?.pagination?.total || 0})`}
                 subtitle="See and manage your orders"
                 breadcrumbs={[
                   { text: "Dashboard", href: "/dashboard" },

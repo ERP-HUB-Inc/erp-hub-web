@@ -1,0 +1,43 @@
+.wrap-report-btn-search {
+    margin-top: 28px;
+}
+
+
+.main-table-sale-report tr:nth-child(odd) {
+    background-color: white
+}
+
+.main-table-sale-report tr:nth-child(even) {
+    background-color: #faf9f9
+}
+
+.main-table-sale-report table tr th {
+    border: none
+}
+
+.main-table-sale-report tr.ant-table-row td.sale-report td {   
+    background-color: red !important;
+}
+
+.main-table-sale-report .ant-table-content {
+    border-top: none ;
+}
+
+
+.main-table-sale-report .ant-table-tbody > tr.ant-table-row.class-index   { 
+    background-color: #EAEAEA;
+}
+
+#sale-report-center .ant-card-head-title {
+    font-weight: bold;
+}
+
+#sale-report-center .footer {
+    display: flex;
+    justify-content: flex-end
+}
+
+#sale-report-center .footer .ant-btn {
+    min-width: 100px
+}
+

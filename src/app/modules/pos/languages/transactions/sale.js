@@ -461,6 +461,11 @@ export default {
 	"វិក័យបត្រនេះបានទូទាត់រួច!"
 ],
 
+"text_sale_order": [
+	"Sales Order",
+	"លេខ​​បញ្ជា​រ​ទិញ"
+],
+
 "text_sale_order_no": [
 	"SO. No",
 	"លេខ​​បញ្ជា​រ​ទិញ"

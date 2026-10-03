@@ -58,6 +58,9 @@ const tabs = {
   DELIVERY_NOTE: 4
 };
 
+const EMPTY_VALUE = "-";
+const WALK_IN_CUSTOMER_ID = "WALK_IN";
+
 class SaleOrderDetail extends React.PureComponent{
   state = {
     loading: false,
@@ -70,7 +73,12 @@ class SaleOrderDetail extends React.PureComponent{
     [Enum.SALE_ORDER_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
     [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: stringTranslate("text_confirm", this.props.locale), color: "#1890ff" },
     [Enum.SALE_ORDER_STATUS.CLOSED]: { title: stringTranslate("text_closed", this.props.locale), color: "#f50"},
-    [Enum.SALE_ORDER_STATUS.VOID]: {title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"}
+    [Enum.SALE_ORDER_STATUS.VOID]: {title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"},
+    DRAFT: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
+    CONFIRMED: { title: stringTranslate("text_confirm", this.props.locale), color: "#1890ff" },
+    CLOSED: { title: stringTranslate("text_closed", this.props.locale), color: "#f50"},
+    COMPLETED: { title: stringTranslate("text_completed", this.props.locale), color: "#52c41a"},
+    VOID: {title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"}
   };
   util = new Util();
 
@@ -88,8 +96,12 @@ class SaleOrderDetail extends React.PureComponent{
     .then(() => {
       message.success("Make confirm success");
       this.setState(preState => {
-        preState.formData.status = Enum.SALE_ORDER_STATUS.CONFIRMED;
-        return preState;
+        return {
+          formData: {
+            ...preState.formData,
+            status: Enum.SALE_ORDER_STATUS.CONFIRMED
+          }
+        };
       });
     })
     .catch(() => message.error("Error!....."));
@@ -143,8 +155,50 @@ class SaleOrderDetail extends React.PureComponent{
     }
   }
 
+  getStatus = (status) => {
+    return this.SALE_ORDER_STATUS_STR[status] || {
+      title: status || EMPTY_VALUE,
+      color: "#bfbfbf"
+    };
+  }
+
+  isClosedStatus = (status) => {
+    return status === Enum.SALE_ORDER_STATUS.CLOSED || status === "CLOSED" || status === "COMPLETED";
+  }
+
+  getCustomerName = (formData) => {
+    if (formData.customerId === WALK_IN_CUSTOMER_ID) return stringTranslate("text_walkin", this.props.locale) || "Walk In";
+
+    const fullName = [formData.firstName, formData.lastName].filter(Boolean).join(" ");
+    return fullName || EMPTY_VALUE;
+  }
+
+  getCustomerLink = (formData, content) => {
+    if (formData.customerId === WALK_IN_CUSTOMER_ID || !formData.customerId || content === EMPTY_VALUE) return content;
+
+    return <Link to={`/customer-profile/${formData.customerId}`}>{content}</Link>;
+  }
+
+  getSaleType = (type) => {
+    const saleType = {
+      RETAIL: "Retail",
+      WHOLE_SALE: "Wholesale"
+    };
+
+    return saleType[type] || type || EMPTY_VALUE;
+  }
+
+  formatDate = (value) => {
+    if (!value || !moment(value).isValid()) return EMPTY_VALUE;
+
+    return moment(value).format("dddd DD, YYYY");
+  }
+
   render() {
     const {formData} = this.state;
+    const status = this.getStatus(formData.status);
+    const company = formData.company || EMPTY_VALUE;
+    const customerName = this.getCustomerName(formData);
 
     return (
       <div style={{marginBottom: 25}}>
@@ -162,7 +216,10 @@ class SaleOrderDetail extends React.PureComponent{
               {formData.number}
               {
                 Object.keys(formData).length ?
-                  <Badge count={this.SALE_ORDER_STATUS_STR[formData.status].title} style={{ backgroundColor: this.SALE_ORDER_STATUS_STR[formData.status].color}} />
+                  <Badge
+                    count={status.title}
+                    style={{ backgroundColor: status.color }}
+                  />
                 : null
               }
             </div>
@@ -184,7 +241,7 @@ class SaleOrderDetail extends React.PureComponent{
                   </Link>
                 </Menu.Item>
                 <Divider style={{marginTop: 4, marginBottom: 4}} />
-                <Menu.Item key={1} onClick={() => this.handleMakeAsConfirm(formData.id)} disabled={formData.status === Enum.SALE_ORDER_STATUS.CLOSED ? true : false}>
+                <Menu.Item key={1} onClick={() => this.handleMakeAsConfirm(formData.id)} disabled={this.isClosedStatus(formData.status)}>
                   <Icon type="check" style={{marginRight: 10}} /> <Translate id="text_mark_as_confirm" />
                 </Menu.Item>
                 <Divider style={{marginTop: 4, marginBottom: 4}} />
@@ -196,7 +253,7 @@ class SaleOrderDetail extends React.PureComponent{
                   <Icon type="file-protect" style={{marginRight: 10}} />
                   <Translate id="text_packing_slip" />
                 </Menu.Item>
-                <Menu.Item key={6} onClick={() => window.print()} title="Ctrl + P">
+                <Menu.Item key={9} onClick={() => window.print()} title="Ctrl + P">
                   <Icon type="file-text" style={{marginRight: 10}} />
                   <Translate id="text_delivery_note" />
                 </Menu.Item>
@@ -228,31 +285,36 @@ class SaleOrderDetail extends React.PureComponent{
                 <h5 style={{marginBottom: 30, lineHeight: 1.4}}><Translate id="text_sale_order_no" />: {formData.number}</h5>
                 <Row>
                   <Col span={8}>
-                    <DescriptionItem title={<Translate id="text_compnay" />} content={<Link to={`/customer-profile/${formData.customerId}`}>{formData.company}</Link>} />
+                    <DescriptionItem title={<Translate id="text_compnay" />} content={formData.client?.businessName} />
                   </Col>
                   <Col span={8}>
-                    <DescriptionItem title={<Translate id="text_customer_name" />} content={<Link to={`/customer-profile/${formData.customerId}`}>{formData.firstName} {formData.lastName}</Link>} />
+                    <DescriptionItem title={<Translate id="text_customer_name" />} content={this.getCustomerLink(formData, customerName)} />
                   </Col>
                   <Col span={8}>
-                    <DescriptionItem title={<Translate id="text_phone_number" />} content={formData.phoneNumber} />
+                    <DescriptionItem title={<Translate id="text_phone_number" />} content={formData.phoneNumber || EMPTY_VALUE} />
                   </Col>
                 </Row>
                 <Row>
                   <Col span={8}>
-                    <DescriptionItem title="លេខអត្តសញ្ញាណកម្ម អតប (VATTIN)" content={formData.VATNo} />
+                    <DescriptionItem title="លេខអត្តសញ្ញាណកម្ម អតប (VATTIN)" content={formData.VATNo || EMPTY_VALUE} />
                   </Col>
                   <Col span={8}>
-                    <DescriptionItem title={<Translate id="text_date" />} content={moment().format("dddd MM, YYYY")} />
+                    <DescriptionItem title={<Translate id="text_date" />} content={this.formatDate(formData.registerDate)} />
                   </Col>
                   <Col span={8}>
-                    <DescriptionItem title={<Translate id="text_valid_till" />} content={moment(formData.validDate).format("dddd MM, YYYY")} />
+                    <DescriptionItem title={<Translate id="text_valid_till" />} content={this.formatDate(formData.validDate)} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    <DescriptionItem title={<Translate id="text_type" />} content={this.getSaleType(formData.type)} />
                   </Col>
                 </Row>
                 <Row>
                   <Col span={24}>
                     <DescriptionItem
                       title={<Translate id="text_address" />}
-                      content={formData.address}
+                      content={formData.address || EMPTY_VALUE}
                     />
                   </Col>
                 </Row>
@@ -298,8 +360,8 @@ class SaleOrderDetail extends React.PureComponent{
             <Result  
               status={404}
               title="404"
-              subTitle="Invoice found"
-              extra={<Button type="info"><Translate id="text_back" /></Button>}
+              subTitle="Sale order not found"
+              extra={<Button type="info" onClick={() => history.goBack()}><Translate id="text_back" /></Button>}
             />
         }
       </div>

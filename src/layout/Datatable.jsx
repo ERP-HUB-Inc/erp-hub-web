@@ -843,7 +843,7 @@ export default class Datatable extends Component {
                   });
                 }
               }} style={{ marginLeft: 10 }}>
-                New Vendor
+                <this.Translate id="text_add_new" />
               </Button>
             </Col>
             <Col md={24}>
@@ -889,4 +889,3 @@ export default class Datatable extends Component {
     );
   }
 }
-

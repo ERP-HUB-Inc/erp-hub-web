@@ -136,12 +136,5 @@ a:hover {
   vertical-align: 0 !important;
 }
 
-.ant-btn,
-.ant-input,
-.ant-input-number,
-.ant-select-selection {
-  border-radius: 0;
-}
-
 
 

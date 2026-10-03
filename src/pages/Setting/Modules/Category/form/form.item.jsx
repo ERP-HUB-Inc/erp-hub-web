@@ -8,7 +8,7 @@ export default class FormItem extends BaseModal {
   }
 
   componentDidMount() {
-    CategoryService.get(50)
+    CategoryService.get({ limit: 50 })
     .then(response => {
       this.setState({parents: response.data.data});      
     });

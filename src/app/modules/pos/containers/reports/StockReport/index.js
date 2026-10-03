@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "antd";
 import { connect } from "react-redux";
-import List from "../../../components/reports/Product/index";
+import List from "../../../components/reports/StockReport";
 
 class Product extends React.Component {
   render() {

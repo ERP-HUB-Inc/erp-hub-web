@@ -707,7 +707,7 @@ export default class FormItem extends BaseModal {
       },
       {
         name: "Inactive",
-        value: 3
+        value: 0
       }
     ];
     this.timer = null;
@@ -1103,11 +1103,7 @@ export default class FormItem extends BaseModal {
               }
               dataSource={this.statuses}
               value={formData.status}
-              defaultValue={
-                formData.status !== ""
-                  ? formData.status
-                  : this.statuses[0].status
-              }
+              defaultValue={formData.status !== "" ? formData.status : this.statuses[0].status}
               form={form}
             />
           </CustomCollapse>

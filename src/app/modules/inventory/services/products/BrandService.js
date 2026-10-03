@@ -4,7 +4,7 @@ class BrandService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/brand";
+    this.module = "brands";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
     this.initializeRoute();
   }

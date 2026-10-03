@@ -1,5 +1,7 @@
 import BaseService from "../BaseService";
 
+const SALES_REPORT_TIMEOUT = 300000;
+
 class SaleService extends BaseService {
 
   constructor() {
@@ -14,6 +16,42 @@ class SaleService extends BaseService {
     return this.GET({ 
       url: `${this.baseUrl}/summaries?locationId=${locationId}&startDate=${startDate}&endDate=${endDate}&filterGroup=${filterGroup}`,
       headers: this.header
+    });
+  }
+
+  getSalesSummary(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/sales/summary?${this.bindQueryParam(option)}`,
+      headers: this.header,
+      timeout: SALES_REPORT_TIMEOUT
+    });
+  }
+
+  getSalesTrend(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/sales/trend?${this.bindQueryParam(option)}`,
+      headers: this.header,
+      timeout: SALES_REPORT_TIMEOUT
+    });
+  }
+
+  getSalesProducts(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/sales/products?${this.bindQueryParam(option)}`,
+      headers: this.header,
+      timeout: SALES_REPORT_TIMEOUT
+    });
+  }
+
+  getSalesPerformance(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/sales/intelligence/sales-performance?${this.bindQueryParam(option)}`,
+      headers: this.header,
+      timeout: SALES_REPORT_TIMEOUT
     });
   }
 

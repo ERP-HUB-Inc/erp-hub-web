@@ -70,7 +70,7 @@ const PurchaseOrderForm = (props) => {
                 },
               ],
               initialValue: itemId,
-            })(<SelectItem items={items} defaultValue={itemId} />)}
+            })(<SelectItem items={items.concat([{id: itemId, name: record.itemName, productVariants: [record.variant]}])} defaultValue={itemId} />)}
           </Form.Item>
         </div>
       ),
@@ -271,6 +271,7 @@ const PurchaseOrderForm = (props) => {
           itemName: entry.itemName,
           variantId: entry.variantId,
           variantName: entry.variantName,
+          variant: entry.variant,
           sku: entry.sku,
           unitId: entry.unitId,
           unitName: entry.unitName,
@@ -470,7 +471,7 @@ const PurchaseOrderForm = (props) => {
           resolve(values);
         });
       });
-      
+
       setSubmitting(true);
 
       const payload = {

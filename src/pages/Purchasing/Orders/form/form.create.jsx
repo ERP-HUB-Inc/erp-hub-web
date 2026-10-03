@@ -118,9 +118,10 @@ const PurchaseOrderForm = (props) => {
         const updated = { ...stockIOItem, [field]: value };
         if (field === 'itemId' && value) {
           const selectedItem = items.find(i => i.id === value);
-          if (selectedItem) {
+          if (selectedItem) { console.log("selectedItem:", selectedItem)
             updated.itemName = selectedItem.name;
             updated.sku = Util.getItemSku(selectedItem);
+            updated.cost = selectedItem.purchasePrice;
             updated.unitId = selectedItem.stockUnitId;
             updated.currentStock = selectedItem.currentStock;
             updated.avgQuantity = selectedItem.avgQuantity;
@@ -171,6 +172,7 @@ const PurchaseOrderForm = (props) => {
             })(
               <SelectItem
                 items={items}
+                callback={items => setItems(items)}
                 onChange={(val) => updateRow(record.key, "itemId", val)}
               />,
             )}
@@ -215,7 +217,7 @@ const PurchaseOrderForm = (props) => {
       ),
     },
     {
-      title: "Price",
+      title: "Unit Price",
       dataIndex: "cost",
       width: 120,
       render: (value, record, index) => (
@@ -419,6 +421,7 @@ const PurchaseOrderForm = (props) => {
           resolve(values);
         });
       });
+
       setSubmitting(true);
 
       const payload = {
@@ -432,6 +435,7 @@ const PurchaseOrderForm = (props) => {
         entries: value.item
           .map((itemId, index) => {
             const item = items.find((item) => item.id === itemId);
+            
             return {
               itemId: itemId,
               itemName: item?.name || "",

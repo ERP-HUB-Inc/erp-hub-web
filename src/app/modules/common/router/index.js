@@ -38,9 +38,11 @@ import ReportSaleByCategory from "../../pos/components/reports/Sale/ReportSaleBy
 import ReportSaleByCashier from "../../pos/components/reports/Sale/ReportSaleByCashier";
 import ReportSaleByCustomer from "../../pos/components/reports/Sale/ReportSaleByCustomer";
 import ReportSaleByLocation from "../../pos/components/reports/Sale/ReportSaleByLocation";
+import SalesReport from "../../pos/components/reports/Sale/SalesReport";
 import ReportPurchaseSummary from "../../pos/components/reports/Purchase/ReportPurchaseSummary";
 import ReportPurchaseByProduct from "../../pos/components/reports/Purchase/ReportPurchaseByProduct";
 import ReportPurchaseBySupplier from "../../pos/components/reports/Purchase/ReportPurchaseBySupplier";
+import PurchaseReport from "../../pos/components/reports/Purchase/PurchaseReport";
 import ReportConsignmentSummary from "../../pos/components/reports/Stock/Consignment/ReportConsignmentSummary";
 import ReportConsignmentByProduct from "../../pos/components/reports/Stock/Consignment/ReportConsignmentByProduct";
 import POS from "../../pos/containers/transactions/SaleWalkin";
@@ -128,6 +130,7 @@ class Router extends Component {
             <Route path="/employees/create" component={EmployeeCreate} />
             <Route path="/employees/update/:id" component={EmployeeUpdate} />
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
+            <Route path="/reports/sales-report" component={SalesReport} />
             <Route path="/reports/expense/pdf-preview" component={PrintPDF} />
             <Route path="/reports/sold_products/pdf-preview" component={ExportPDFSaleByProduct} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
@@ -138,6 +141,7 @@ class Router extends Component {
             <Route path="/reports/sold_customers" component={ReportSaleByCustomer} />
             <Route path="/reports/sold_locations" component={ReportSaleByLocation} />
             <Route path="/reports/purchase_summaries/pdf-preview" component={ExportPDFPurchaseSummary} />
+            <Route path="/reports/purchase-report" component={PurchaseReport} />
             <Route path="/reports/purchase_summaries" component={ReportPurchaseSummary} />
             <Route path="/reports/purchased_products/pdf-preview" component={ExportPDFPurchaseByProduct} />
             <Route path="/reports/purchased_products" component={ReportPurchaseByProduct} />
@@ -176,5 +180,4 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(Router);
-
 

@@ -7,7 +7,7 @@ import OrdersDashboard from '@settings/OrderDashboard';
 import SettingsPage from '@settings/SettingPage';
 import SystemLogs from '@settings/SystemLogs';
 import TabletView from '@settings/TableView';
-import { Avatar, Badge, Divider, Dropdown, Icon, Layout, List, Menu } from "antd";
+import { Avatar, Badge, Icon, Layout, List, Menu } from "antd";
 import React from 'react';
 import ReactGA from "react-ga4";
 import Loadable from "react-loadable";
@@ -109,6 +109,11 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
+    const SalesOrderDetail = Loadable({
+      loader: () => import("../app/modules/pos/components/transactions/SaleOrder/detail"),
+      loading: () => <StartUp />,
+    });
+
     const Invoice = Loadable({
       loader: () => import("../app/modules/pos/containers/transactions/Invoice"),
       loading: () => <StartUp />,
@@ -194,8 +199,16 @@ export default class SiderDemo extends React.Component {
       loader: () => import("../pages/Report/index"),
       loading: () => <StartUp />,
     });
-    const SaleReportReceipt = Loadable({
-      loader: () => import("../pages/Report/ReportSaleReceipt"),
+    const SaleReport = Loadable({
+      loader: () => import("../app/modules/pos/components/reports/Sale/SalesReport"),
+      loading: () => <StartUp />,
+    });
+    const ReportStock = Loadable({
+      loader: () => import("../app/modules/pos/containers/reports/StockReport"),
+      loading: () => <StartUp />,
+    });
+    const ReportProduct = Loadable({
+      loader: () => import("../app/modules/pos/containers/reports/Product"),
       loading: () => <StartUp />,
     });
 
@@ -303,7 +316,10 @@ export default class SiderDemo extends React.Component {
                           <Link to="/inventories/items">Items</Link>
                         </Menu.Item>
                         <Menu.Item key="42">
-                          <Link to="/inventories/stock-io">Stock In/Out</Link>
+                          <Link to="/inventories/stock-io">Stock Movement</Link>
+                        </Menu.Item>
+                        <Menu.Item key="43">
+                          <Link to="/inventories/items">Pricing Management</Link>
                         </Menu.Item>
                         {/* 
                           Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
@@ -344,7 +360,7 @@ export default class SiderDemo extends React.Component {
                         }
                       >
                         <Menu.Item key="61">
-                          <Link to="/reports/sales-report-center">Sales Report</Link>
+                          <Link to="/reports/sales-report">Sales Report</Link>
                         </Menu.Item>
                         <Menu.Item key="62">
                           <Link to="/reports/purchase">Purchase Report</Link>
@@ -353,7 +369,7 @@ export default class SiderDemo extends React.Component {
                           <Link to="/reports/stock">Stock Report</Link>
                         </Menu.Item>
                         <Menu.Item key="64">
-                          <Link to="/reports/product">Product Report</Link>
+                          <Link to="/reports/items">Item Report</Link>
                         </Menu.Item>
                         <Menu.Item key="65">
                           <Link to="/reports/financial">Financial Reports</Link>
@@ -421,6 +437,7 @@ export default class SiderDemo extends React.Component {
                     <Switch>
                       <Route path="/pos" component={POS} />
                       <Route path="/sales" component={SalesOrder} />
+                      <Route path="/transactions/sale-order/detail/:id" component={SalesOrderDetail} />
                       <Route path="/quotes" component={Quotes} />
                       <Route path="/invoices/view/:id" component={InvoiceDetail} />
                       <Route path="/invoices/create" component={NewInoice} />
@@ -448,11 +465,15 @@ export default class SiderDemo extends React.Component {
                       <Route path="/inventories/transfers" component={Vendor} />
                       <Route path="/inventories/adjustments" component={Vendor} />
                       <Route path="/reports/sales-report-center" component={SaleReportCenter} />
-                      <Route path="/reports/sales-report-receipt" component={SaleReportReceipt} />
+                      <Route path="/reports/sales-report" component={SaleReport} />
                       <Route path="/settings" component={SettingsPage} />
                       <Route path="/categories" component={Category} />
                       <Route path="/brands" component={Brand} />
                       <Route path="/setting-logs" component={SystemLogs} />
+
+                      {/* Report */}
+                      <Route path="/reports/items" component={ReportProduct} />
+                      <Route path="/reports/stock" component={ReportStock} />
                       {/* <Route path="/receipt" component={POSPaymentDrawer} /> */}
                       <Route path="/receipt" component={Receipt} />
                       <Route path="/SalesDashboard" component={SalesDashboard} />

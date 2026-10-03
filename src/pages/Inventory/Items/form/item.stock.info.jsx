@@ -43,23 +43,26 @@ const OptionZero = ({data,id}) => {
         setLoading(true);
         ProductService.getDetailStock(id)
         .then(response => {
-        if (response.data) {
-          if(response.data.data.length > 0) setDetailStock( response.data.data[0]["productLocations"]);
-        }
+          if (response.data) {
+            if(response.data.data.length > 0) {
+              setStockOnHead(response.data.data[0].quantity)
+              setDetailStock(response.data.data[0]["productLocations"]);
+            }
+          }
         })
         .finally(() => setLoading(false));
 
-        if(productLocations) {
-            const foundQty = productLocations.find((value) => value.locationId === locationId); 
-            const allQty = productLocations.reduce((preValue, currentValue) => preValue + currentValue.quantity,0);
-            if(foundQty) {
-                setStockOnHead(foundQty.quantity);
-                setOtherStock(allQty - foundQty.quantity);
-            }else{
-                setStockOnHead(0);
-                setOtherStock(0);
-            }
-        } 
+        // if(productLocations) {
+        //     const foundQty = productLocations.find((value) => value.locationId === locationId); 
+        //     const allQty = productLocations.reduce((preValue, currentValue) => preValue + currentValue.quantity,0);
+        //     if(foundQty) {
+        //         setStockOnHead(foundQty.quantity);
+        //         setOtherStock(allQty - foundQty.quantity);
+        //     }else{
+        //         setStockOnHead(0);
+        //         setOtherStock(0);
+        //     }
+        // } 
     // eslint-disable-next-line
     },[]);
 
@@ -72,7 +75,7 @@ const OptionZero = ({data,id}) => {
                     <DescriptionItem title="នៅឃ្លាំងផ្សេង" content={otherStock} />
                 </Col>
                 <Col span={8}>
-                    <DescriptionItem title="ឯកតា" content={data.unit ? data.unit.name : ""} />
+                    <DescriptionItem title="ឯកតា" content={data.stockUnit ? data.stockUnit.name : ""} />
                 </Col>
             </Row>
             <Row>

@@ -26,9 +26,12 @@ export function SelectItem(props) {
                setLoading(true);
                ItemService.get({ limit, search })
                .then((response) => {
-                    if (response && response.data) {
+                  if (response && response.data) {
                     setItems(response.data.data);
+                    if (props.callback) {
+                      props.callback(response.data.data);
                     }
+                  }
                })
                .finally(() => {
                     setLoading(false);

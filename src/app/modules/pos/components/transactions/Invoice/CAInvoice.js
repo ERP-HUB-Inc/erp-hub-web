@@ -36,6 +36,7 @@ const CAInvoice = React.forwardRef((props, ref) => {
 
   let template = isNaN(parseInt(formData.template)) ? formData.template : parseInt(formData.template);
 
+
   switch (template) {
     case Enum.PAPER_SIZE.INCLUDE_TAX:
       return <InvoiceWrapper paperSize={props.paperSize} passedRef={ref} style={style}>

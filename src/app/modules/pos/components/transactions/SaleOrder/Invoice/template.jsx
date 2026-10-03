@@ -1,19 +1,34 @@
 import React from "react";
 import Util from "../../../../../common/util";
 
+const EMPTY_VALUE = "-";
+const WALK_IN_CUSTOMER_ID = "WALK_IN";
+
+function toNumber(value) {
+  const number = Number(value);
+  return Number.isNaN(number) ? 0 : number;
+}
+
+function getBillTo(formData) {
+  if (formData.customerId === WALK_IN_CUSTOMER_ID) return "Walk In";
+  if (formData.company) return formData.company;
+
+  return [formData.firstName, formData.lastName].filter(Boolean).join(" ") || EMPTY_VALUE;
+}
+
 export default function Template(props) {
   const util = new Util();
 
   const {formData, setting} = props;
 
-  let discount = Number(formData.discount);
-  let deposit = Number(formData.deposit);
+  const total = toNumber(formData.total);
+  const totalExcludeTax = formData.totalExcludeTax ? toNumber(formData.totalExcludeTax) : total;
+  const transactionEntries = Array.isArray(formData.transactionEntries) ? formData.transactionEntries : [];
+  let discount = toNumber(formData.discount);
+  let deposit = toNumber(formData.deposit);
 
-  if (!formData.totalExcludeTax) 
-    formData.totalExcludeTax = formData.total;
-
-  let tax = formData.total - formData.totalExcludeTax;
-  let grandTotal = formData.total - discount;
+  let tax = total - totalExcludeTax;
+  let grandTotal = total - discount;
   grandTotal  = grandTotal - deposit;
 
   return (
@@ -22,7 +37,7 @@ export default function Template(props) {
         <tbody>
           <tr style={{background: "none"}}>
             <td>
-              <h4>{setting.businessName}</h4>
+              <h4>{formData?.client?.businessName}</h4>
               <div style={{width: 460, lineHeight: "28px"}} dangerouslySetInnerHTML={{__html: setting.address}} />
             </td>
             <td style={{textAlign: "right"}}>
@@ -32,7 +47,7 @@ export default function Template(props) {
           </tr>
           <tr>
             <td style={{paddingTop: 40}}>
-              Bill To <div>{formData.company ? formData.company : `${formData.firstName} ${formData.lastName}`}</div>
+              Bill To <div>{getBillTo(formData)}</div>
             </td>
             <td style={{display: "flex", justifyContent: "flex-end", paddingTop: 40}}>
               <div style={{display: "flex", justifyContent: "space-between", width: 200}}>
@@ -55,24 +70,29 @@ export default function Template(props) {
                 </thead>
                 <tbody>
                   {
-                    formData.transactionEntries.map((entry, index) =>
-                      <tr key={index} style={{background: "none", verticalAlign: "top"}}>
-                        <td style={{textAlign: "center", padding: 4}}>{index + 1}</td>
-                        <td style={{padding: 4}}>
-                          <pre style={{fontSize: "11pt", fontFamily: "enfont,khfont", whiteSpace: "pre-wrap", border: "none", marginBottom: 0}}>
-                            {entry.description}
-                          </pre>
-                        </td>
-                        <td style={{padding: 4, textAlign: "right"}}>{entry.quantity}</td>
-                        <td style={{textAlign: "right", padding: 4}}>{util.formatCurrency(entry.price, "")}</td>
-                        <td style={{textAlign: "right", padding: 4, paddingRight: 9}}>{util.formatCurrency(entry.quantity * util.floor(entry.price), "")}</td>
-                      </tr>
-                    )
+                    transactionEntries.map((entry, index) => {
+                      const quantity = toNumber(entry.quantity);
+                      const price = toNumber(entry.price);
+
+                      return (
+                        <tr key={entry.id || index} style={{background: "none", verticalAlign: "top"}}>
+                          <td style={{textAlign: "center", padding: 4}}>{index + 1}</td>
+                          <td style={{padding: 4}}>
+                            <pre style={{fontSize: "11pt", fontFamily: "enfont,khfont", whiteSpace: "pre-wrap", border: "none", marginBottom: 0}}>
+                              {entry.itemName || EMPTY_VALUE}
+                            </pre>
+                          </td>
+                          <td style={{padding: 4, textAlign: "right"}}>{quantity}</td>
+                          <td style={{textAlign: "right", padding: 4}}>{util.formatCurrency(price, "")}</td>
+                          <td style={{textAlign: "right", padding: 4, paddingRight: 9}}>{util.formatCurrency(quantity * util.floor(price), "")}</td>
+                        </tr>
+                      );
+                    })
                   }
                   <tr style={{background: "none", height: 34}}>
                     <td colSpan={2}></td>
                     <td colSpan={2} style={{textAlign: "right", paddingRight: 40}}>Subtotal</td>
-                    <td style={{textAlign: "right", paddingRight: 10}}>{util.formatCurrency(formData.totalExcludeTax)}</td>
+                    <td style={{textAlign: "right", paddingRight: 10}}>{util.formatCurrency(totalExcludeTax)}</td>
                   </tr>
                   {
                     discount ? 
@@ -88,7 +108,7 @@ export default function Template(props) {
                       <tr style={{background: "none", height: 34}}>
                         <td colSpan={2}></td>
                         <td colSpan={2} style={{textAlign: "right", paddingRight: 40}}>
-                          VAT({Math.round(util.getTaxRate(formData.totalExcludeTax - discount, tax))}%)
+                          VAT({Math.round(util.getTaxRate(totalExcludeTax - discount, tax))}%)
                         </td>
                         <td style={{textAlign: "right", paddingRight: 10}}>{util.formatCurrency(tax)}</td>
                       </tr>

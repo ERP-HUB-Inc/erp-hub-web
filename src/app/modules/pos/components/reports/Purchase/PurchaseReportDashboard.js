@@ -52,6 +52,29 @@ function PurchaseReportDashboard() {
                                 <Card
                                     title={
                                         <div>
+                                            <Icon type="dashboard" style={{fontSize: 20}} />
+                                            <span style={{marginLeft: 15}}>Purchase Report</span>
+                                        </div>
+                                    }
+                                    bordered={false}>
+                                    <div className="content">
+                                        <ul style={{listStyle: "none", paddingLeft: 0}}>
+                                            <li>- view purchase summary and trends</li>
+                                            <li>- filter by date, supplier and location</li>
+                                            <li>- review purchased products</li>
+                                            <li>- compare purchase with sales</li>
+                                            <li>- include price increase and overstock risk</li>
+                                        </ul>
+                                    </div>
+                                    <div className="footer">
+                                        <Link to="/reports/purchase-report" className="ant-btn">View</Link>
+                                    </div>
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card
+                                    title={
+                                        <div>
                                             <Icon type="line-chart" style={{fontSize: 20}} />
                                             <span style={{marginLeft: 15}}>Summary</span>
                                         </div>
