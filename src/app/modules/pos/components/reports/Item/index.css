@@ -251,6 +251,29 @@
     width: 220px;
 }
 
+#sales-report .sales-report-refresh-filter {
+    width: 150px;
+}
+
+#sales-report .sales-report-refresh-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    border-color: #ded9ee;
+    border-radius: 10px;
+    color: #17152b;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+#sales-report .sales-report-refresh-button:hover,
+#sales-report .sales-report-refresh-button:focus {
+    border-color: #6c4cff;
+    color: #6c4cff;
+}
+
 #sales-report .sales-report-filter-bar .ant-calendar-picker-input,
 #sales-report .sales-report-filter-bar .ant-select-selection,
 #sales-report .sales-report-filter-bar .ant-input,
@@ -563,6 +586,20 @@
     margin-top: 16px;
 }
 
+#sales-report .sales-performance-comparison-row {
+    display: flex;
+}
+
+#sales-report .sales-performance-comparison-col {
+    display: flex;
+    margin-bottom: 16px;
+}
+
+#sales-report .sales-performance-comparison-col > .sales-performance-card {
+    width: 100%;
+    margin-bottom: 0;
+}
+
 #sales-report .sales-performance-copy {
     margin: 12px 0 0;
     color: #5f5b7a;
@@ -658,6 +695,145 @@
     margin-bottom: 8px;
 }
 
+#sales-report .sales-business-insight-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#sales-report .sales-business-insight-title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ded7ff;
+    border-radius: 10px;
+    color: #6c4cff;
+    background: #f1eeff;
+}
+
+#sales-report .sales-business-insight-expense-card {
+    margin-top: 16px;
+}
+
+#sales-report .sales-business-insight-panel-header,
+#sales-report .sales-business-insight-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+#sales-report .sales-business-insight-panel-header span,
+#sales-report .sales-business-insight-status span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+#sales-report .sales-business-insight-panel-header span {
+    color: #17152b;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#sales-report .sales-business-insight-panel-header strong {
+    color: #17152b;
+    font-size: 18px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+#sales-report .sales-business-insight-bars {
+    margin-top: 14px;
+}
+
+#sales-report .sales-business-insight-bar-row + .sales-business-insight-bar-row {
+    margin-top: 12px;
+}
+
+#sales-report .sales-business-insight-bar-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+#sales-report .sales-business-insight-bar-label span {
+    color: #8885a7;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#sales-report .sales-business-insight-bar-label strong {
+    color: #17152b;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#sales-report .sales-business-insight-bar-track {
+    position: relative;
+    overflow: hidden;
+    height: 10px;
+    border-radius: 999px;
+    background: #ebe7f5;
+}
+
+#sales-report .sales-business-insight-bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+}
+
+#sales-report .sales-business-insight-bar-fill.is-profit {
+    background: #00a890;
+}
+
+#sales-report .sales-business-insight-bar-fill.is-expense {
+    background: #f5a623;
+}
+
+#sales-report .sales-business-insight-status {
+    min-height: 24px;
+    margin-top: 8px;
+    color: #5f5b7a;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#sales-report .sales-business-insight-status strong {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#sales-report .sales-business-insight-status.is-warning strong,
+#sales-report .sales-business-insight-status.is-warning svg {
+    color: #b7791f;
+}
+
+#sales-report .sales-business-insight-status.is-success strong,
+#sales-report .sales-business-insight-status.is-success svg {
+    color: #008f7a;
+}
+
+#sales-report .sales-business-insight-status.is-neutral strong {
+    color: #8885a7;
+}
+
+#sales-report .sales-business-insight-note {
+    margin: 16px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid #f0edf7;
+    color: #5f5b7a;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
 #sales-report .sales-performance-details {
     margin-top: 2px;
 }
@@ -695,7 +871,8 @@
 
     #sales-report .sales-report-filter-bar .ant-calendar-picker,
     #sales-report .sales-report-filter-bar .ant-select,
-    #sales-report .sales-report-filter-bar .ant-input-search {
+    #sales-report .sales-report-filter-bar .ant-input-search,
+    #sales-report .sales-report-refresh-button {
         width: 100% !important;
     }
 

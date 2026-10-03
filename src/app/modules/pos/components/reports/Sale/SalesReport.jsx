@@ -20,10 +20,14 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  CircleAlert,
+  CircleCheck,
   CircleDollarSign,
   DollarSign,
+  Lightbulb,
   Package,
   Percent,
+  RefreshCw,
   Target,
   TrendingUp,
   Wallet
@@ -111,6 +115,7 @@ export default function SalesReport() {
   const [productsTotal, setProductsTotal] = React.useState(0);
   const [performance, setPerformance] = React.useState({});
   const [isPerformanceDetailsVisible, setIsPerformanceDetailsVisible] = React.useState(false);
+  const [autoRefreshInterval, setAutoRefreshInterval] = React.useState(0);
   const timerRef = useRef(null);
 
   const cleanParams = values => Object.keys(values).reduce((result, key) => {
@@ -184,6 +189,14 @@ export default function SalesReport() {
     // eslint-disable-next-line
   }, []);
 
+  React.useEffect(() => {
+    if (isHasAccessPermission !== true || !autoRefreshInterval) return undefined;
+
+    const intervalId = setInterval(() => fetchReport(filters), autoRefreshInterval);
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line
+  }, [autoRefreshInterval, filters, isHasAccessPermission]);
+
   const statistics = [
     { title: "Revenue", value: getMoney(summary.totalRevenue || summary.salesRevenue || summary.revenue), icon: "dollar", iconClassName: "is-blue" },
     { title: "Net Sales", value: getMoney(summary.netSales || summary.totalNetSale), icon: "rise", iconClassName: "is-green", valueStyle: { color: "#3f8600" } },
@@ -198,7 +211,7 @@ export default function SalesReport() {
     { title: "Variant", dataIndex: "variantName", key: "variantName", width: 140, render: getEmpty },
     { title: "Qty Sold", dataIndex: "quantitySold", key: "quantitySold", width: 110, align: "right", render: value => getQuantity(value) },
     { title: "Revenue", dataIndex: "salesRevenue", key: "salesRevenue", width: 140, align: "right", sorter: true, render: value => getMoney(value) },
-    { title: "Product Cost", dataIndex: "salesCost", key: "salesCost", width: 140, align: "right", render: value => getMoney(value) },
+    { title: "Item Cos", dataIndex: "salesCost", key: "salesCost", width: 140, align: "right", render: value => getMoney(value) },
     { title: "Gross Profit", dataIndex: "grossProfit", key: "grossProfit", width: 140, align: "right", render: value => getMoney(value) },
     { title: "Profit Margin", dataIndex: "grossMargin", key: "grossMargin", width: 130, align: "right", render: value => value === null || value === undefined ? "-" : getPercent(value) },
     { title: "Transactions", dataIndex: "transactionCount", key: "transactionCount", width: 125, align: "right", render: value => getQuantity(value) }
@@ -207,7 +220,7 @@ export default function SalesReport() {
   const trendColumns = [
     { title: "Period", dataIndex: "period", key: "period", width: 140, render: value => getEmpty(value) },
     { title: "Sales Revenue", dataIndex: "salesRevenue", key: "salesRevenue", align: "right", render: value => getMoney(value) },
-    { title: "Product Cost", dataIndex: "salesCost", key: "salesCost", align: "right", render: value => getMoney(value) },
+    { title: "Item Cost", dataIndex: "salesCost", key: "salesCost", align: "right", render: value => getMoney(value) },
     { title: "Gross Profit", dataIndex: "grossProfit", key: "grossProfit", align: "right", render: value => getMoney(value) },
     { title: "Profit Margin", dataIndex: "grossMargin", key: "grossMargin", align: "right", render: value => value === null || value === undefined ? "-" : getPercent(value) },
     { title: "Transactions", dataIndex: "transactionCount", key: "transactionCount", align: "right", render: value => getQuantity(value) },
@@ -233,6 +246,26 @@ export default function SalesReport() {
   const canShowExpenseCoverage = performanceExpense.coveragePercent !== null && performanceExpense.coveragePercent !== undefined;
   const isEstimatedProfitNegative = getNumber(estimatedProfit) < 0;
   const progressPercent = getSafePercent(achievementPercent);
+  const expenseCoveragePercent = hasBusinessExpenses ? (getNumber(grossProfit) / getNumber(expenseAmount)) * 100 : null;
+  const expenseGapAmount = getNumber(grossProfit) - getNumber(expenseAmount);
+  const isExpenseCovered = hasBusinessExpenses && expenseGapAmount >= 0;
+  const expenseComparisonMax = Math.max(getNumber(grossProfit), getNumber(expenseAmount), 1);
+  const grossProfitBarPercent = Math.max(0, Math.min((getNumber(grossProfit) / expenseComparisonMax) * 100, 100));
+  const expenseBarPercent = Math.max(0, Math.min((getNumber(expenseAmount) / expenseComparisonMax) * 100, 100));
+  const expenseInsightStatusLabel = !hasBusinessExpenses
+    ? "No expenses recorded"
+    : isExpenseCovered
+      ? "Expenses fully covered"
+      : `${getMoney(Math.abs(expenseGapAmount))} shortfall`;
+  const expenseInsightStatusClassName = !hasBusinessExpenses
+    ? "is-neutral"
+    : isExpenseCovered
+      ? "is-success"
+      : "is-warning";
+  const ExpenseInsightIcon = isExpenseCovered ? CircleCheck : CircleAlert;
+  const businessInsightText = hasBusinessExpenses
+    ? `Gross profit currently covers ${getPercentOrEmpty(expenseCoveragePercent)} of business expenses.`
+    : "No business expenses were recorded for this period.";
   const periodTitle = performancePeriod.fromDate ? moment(performancePeriod.fromDate).format("MMMM YYYY") : "Business Performance";
   const periodDescription = performancePeriod.fromDate && performancePeriod.toDate
     ? `${moment(performancePeriod.fromDate).format("MMM D")} - ${moment(performancePeriod.toDate).format("MMM D, YYYY")}`
@@ -264,8 +297,8 @@ export default function SalesReport() {
     {
       title: "Gross Profit",
       value: getMoneyOrEmpty(grossProfit),
-      helper: "Profit after product cost",
-      footer: "Product cost already removed",
+      helper: "Profit after item cost",
+      footer: "Item cost already removed",
       icon: TrendingUp,
       variant: "is-profit"
     },
@@ -294,23 +327,11 @@ export default function SalesReport() {
   ];
   const breakdownRows = [
     { label: "Sales", value: getMoneyOrEmpty(actualRevenue), icon: DollarSign, variant: "is-sales" },
-    { label: "Product Cost", value: getNegativeMoneyOrEmpty(salesCost), icon: Package, variant: "is-cost" },
+    { label: "Item Cost", value: getNegativeMoneyOrEmpty(salesCost), icon: Package, variant: "is-cost" },
     { label: "Gross Profit", value: getMoneyOrEmpty(grossProfit), icon: TrendingUp, variant: "is-profit" },
     { label: "Business Expenses", value: getNegativeMoneyOrEmpty(expenseAmount), icon: Wallet, variant: "is-expense" },
     { label: "Estimated Profit", value: getMoneyOrEmpty(estimatedProfit), icon: CircleDollarSign, variant: isEstimatedProfitNegative ? "is-loss" : "is-profit", highlight: true }
   ];
-  const businessSummary = [
-    hasSalesTarget
-      ? `Your business generated ${getMoneyOrEmpty(actualRevenue)} in sales this month, reaching ${getPercentOrEmpty(achievementPercent)} of your ${getMoneyOrEmpty(targetRevenue)} sales target.`
-      : `Your business generated ${getMoneyOrEmpty(actualRevenue)} in sales this month.`,
-    hasSalesTarget && remainingRevenue > 0 ? `You still need ${getMoneyOrEmpty(remainingRevenue)} in sales to reach your target.` : "",
-    hasSalesTarget && remainingRevenue <= 0 ? "You have reached your sales target for this period." : "",
-    `Your current gross profit is ${getMoneyOrEmpty(grossProfit)} with a ${getPercentOrEmpty(grossMargin)} profit margin.`,
-    hasBusinessExpenses
-      ? `After ${getMoneyOrEmpty(expenseAmount)} in business expenses, your estimated profit is ${getMoneyOrEmpty(estimatedProfit)}.`
-      : "No business expenses recorded for this period."
-  ].filter(Boolean);
-
   const performanceRows = [
     { group: "Period", metric: "Period", value: performancePeriod.fromDate && performancePeriod.toDate ? `${getDate(performancePeriod.fromDate)} - ${getDate(performancePeriod.toDate)}` : "-" },
     { group: "Period", metric: "Target Type", value: getStatus(performancePeriod.targetType) },
@@ -318,7 +339,7 @@ export default function SalesReport() {
     { group: "Target", metric: "Sales This Month", value: getMoneyOrEmpty(actualRevenue) },
     { group: "Target", metric: "Target Progress", value: getPercentOrEmpty(achievementPercent) },
     { group: "Target", metric: "Sales Still Needed", value: getMoneyOrEmpty(remainingRevenue) },
-    { group: "Profitability", metric: "Product Cost", value: getMoneyOrEmpty(salesCost) },
+    { group: "Profitability", metric: "Item Cost", value: getMoneyOrEmpty(salesCost) },
     { group: "Profitability", metric: "Gross Profit", value: getMoneyOrEmpty(grossProfit) },
     { group: "Profitability", metric: "Profit Margin", value: getPercentOrEmpty(grossMargin) },
     { group: "Operating Expense", metric: "Business Expenses", value: getMoneyOrEmpty(expenseAmount) },
@@ -350,6 +371,21 @@ export default function SalesReport() {
     </Select>
   );
 
+  const renderRefreshControls = () => (
+    <>
+      <Button className="sales-report-refresh-button" onClick={() => fetchReport(filters)} loading={loading}>
+        {!loading && <RefreshCw size={14} />}
+        Refresh
+      </Button>
+      <Select className="sales-report-refresh-filter" value={autoRefreshInterval} onChange={setAutoRefreshInterval}>
+        <Option value={0}>Auto refresh off</Option>
+        <Option value={5000}>Every 5s</Option>
+        <Option value={15000}>Every 15s</Option>
+        <Option value={30000}>Every 30s</Option>
+      </Select>
+    </>
+  );
+
   const renderTrendToolbar = () => (
     <div className="sales-report-filter-bar sales-report-tab-toolbar">
       {renderDateRangeFilter()}
@@ -357,6 +393,7 @@ export default function SalesReport() {
       <Select className="sales-report-small-filter" value={filters.groupBy} onChange={value => applyFilters({ groupBy: value })}>
         {["DAY", "WEEK", "MONTH"].map(value => <Option key={value} value={value}>{value}</Option>)}
       </Select>
+      {renderRefreshControls()}
     </div>
   );
 
@@ -376,6 +413,7 @@ export default function SalesReport() {
           timerRef.current = setTimeout(() => applyFilters({ keyword, offset: 0 }), 500);
         }}
       />
+      {renderRefreshControls()}
     </div>
   );
 
@@ -386,6 +424,7 @@ export default function SalesReport() {
       <Select className="sales-report-target-filter" value={filters.targetType} onChange={value => applyFilters({ targetType: value })}>
         {["DAILY", "WEEKLY", "MONTHLY"].map(value => <Option key={value} value={value}>{value}</Option>)}
       </Select>
+      {renderRefreshControls()}
     </div>
   );
 
@@ -468,8 +507,8 @@ export default function SalesReport() {
               })}
             </Row>
 
-            <Row gutter={16}>
-              <Col xs={24} lg={12}>
+            <Row gutter={16} type="flex" className="sales-performance-comparison-row">
+              <Col xs={24} lg={12} className="sales-performance-comparison-col">
                 <div className="sales-performance-card sales-performance-goal-card">
                   <div className="sales-performance-section-header">
                     <div>
@@ -499,7 +538,7 @@ export default function SalesReport() {
                   )}
                 </div>
               </Col>
-              <Col xs={24} lg={12}>
+              <Col xs={24} lg={12} className="sales-performance-comparison-col">
                 <div className="sales-performance-card">
                   <div className="sales-performance-section-header">
                     <div>
@@ -530,12 +569,53 @@ export default function SalesReport() {
 
             <div className="sales-performance-card sales-performance-summary-card">
               <div className="sales-performance-section-header">
-                <div>
-                  <p>Business Summary</p>
-                  <h4>Quick Insight</h4>
+                <div className="sales-business-insight-title">
+                  <span className="sales-business-insight-title-icon">
+                    <Lightbulb size={16} />
+                  </span>
+                  <div>
+                    <p>Business Summary</p>
+                    <h4>Business Insight</h4>
+                  </div>
                 </div>
               </div>
-              {businessSummary.map(text => <p className="sales-performance-copy" key={text}>{text}</p>)}
+              <div className="sales-business-insight-expense-card">
+                <div className="sales-business-insight-panel-header">
+                  <span>
+                    <TrendingUp size={15} />
+                    Gross Profit vs Business Expenses
+                  </span>
+                  <strong>{hasBusinessExpenses ? getPercentOrEmpty(expenseCoveragePercent) : "-"}</strong>
+                </div>
+                <div className={`sales-business-insight-status ${expenseInsightStatusClassName}`}>
+                  <span>
+                    <ExpenseInsightIcon size={14} />
+                    {expenseInsightStatusLabel}
+                  </span>
+                  {isExpenseCovered && <strong>{getMoney(expenseGapAmount)} surplus</strong>}
+                </div>
+                <div className="sales-business-insight-bars">
+                  <div className="sales-business-insight-bar-row">
+                    <div className="sales-business-insight-bar-label">
+                      <span>Gross Profit</span>
+                      <strong>{getMoneyOrEmpty(grossProfit)}</strong>
+                    </div>
+                    <div className="sales-business-insight-bar-track">
+                      <span className="sales-business-insight-bar-fill is-profit" style={{ width: `${grossProfitBarPercent}%` }} />
+                    </div>
+                  </div>
+                  <div className="sales-business-insight-bar-row">
+                    <div className="sales-business-insight-bar-label">
+                      <span>Business Expenses</span>
+                      <strong>{getMoneyOrEmpty(expenseAmount)}</strong>
+                    </div>
+                    <div className="sales-business-insight-bar-track">
+                      <span className="sales-business-insight-bar-fill is-expense" style={{ width: `${expenseBarPercent}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p className="sales-business-insight-note">{businessInsightText}</p>
             </div>
 
             <div className="sales-performance-details">
