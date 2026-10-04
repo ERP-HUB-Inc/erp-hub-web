@@ -1,12 +1,9 @@
-import BaseService from "../BaseService";
+import BaseService from "./BaseService";
 
 class CustomerService extends BaseService {
-
   constructor() {
     super();
-    this.module = "customer";
-    this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
-    this.initializeRoute();
+    this.baseUrl = `${this.baseUrl}/customers`;
   }
 
   getCredit(customerId) {

@@ -27,7 +27,7 @@ import {
   InputText,
   Select
 } from "../../../common/elements/ant-ui";
-import CustomerService from "../../../crm/services/customers/CustomerService";
+import CustomerService from "../../../../../services/CustomerService";
 import InstallmentService from "../../services/InstallmentService";
 import SerialService from "../../../pos/services/transactions/SerialService";
 import PrivilegeService from "../../../pos/services/settings/PrivilegeService";

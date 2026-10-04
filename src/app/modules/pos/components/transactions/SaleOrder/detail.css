@@ -13,7 +13,8 @@
 }
 
 .so-back-button,
-.so-more-button {
+.so-history-button,
+.so-settings-button {
   align-items: center;
   background: #fff;
   border: 1px solid #e2e8f0;
@@ -554,6 +555,29 @@
   gap: 8px;
 }
 
+.so-social-links-section {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
+.so-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.so-social-links a {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+}
+
 .so-customer-map-section {
   border-top: 1px solid #e2e8f0;
   margin-top: 14px;
@@ -708,15 +732,31 @@
   overflow-wrap: anywhere;
 }
 
+.so-action-menu .ant-dropdown-menu-item {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+
 .so-action-menu svg {
-  margin-right: 8px;
-  vertical-align: -2px;
+  flex: 0 0 auto;
 }
 
 .so-action-menu a {
   align-items: center;
   color: inherit;
   display: flex;
+  gap: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.so-action-menu a:hover,
+.so-action-menu a:focus {
+  color: inherit;
+  text-decoration: none;
 }
 
 .so-danger-menu-item {

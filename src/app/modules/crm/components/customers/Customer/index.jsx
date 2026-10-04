@@ -1,12 +1,13 @@
 import React from "react";
-import { Menu, Dropdown } from "antd";
+import { Menu, Dropdown, Row, Col, Input, Table, Icon } from "antd";
+import { PageHeader } from "@components/PageHeader";
 import List from "../../List";
 import FormCreate from "../../../containers/customers/Customer/FormCreate";
 import FormUpdate from "../../../containers/customers/Customer/FormUpdate";
 import Constant from "../../../constants/customers/customer";
 import CustomerAction from "../../../actions/customers/customer";
-import GroupCustomerAction from "../../../actions/customers/group";
-import CustomerService from "../../../services/customers/CustomerService";
+import CustomerService from "@services/CustomerService";
+import GroupCustomerService from "../../../services/customers/GroupService";
 import Enum from "../../../enum";
 import "./index.css";
 
@@ -15,7 +16,29 @@ export default class CustomerList extends List {
     super(props);
     this.state = {
       ...this.state,
-      isShowFilter: false
+      isShowFilter: false,
+      customerList: {
+        fetching: false,
+        fetched: false,
+        pagination: {
+          limit: this.pageSize,
+          offset: 0,
+          total: 0
+        },
+        list: [],
+        error: null
+      },
+      customerGroup: {
+        fetching: false,
+        fetched: false,
+        pagination: {
+          limit: this.pageSize,
+          offset: 0,
+          total: 0
+        },
+        list: [],
+        error: null
+      }
     };
     this.columns = [
       {
@@ -67,6 +90,7 @@ export default class CustomerList extends List {
       }
     ];
     this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpend();
     // this.isShowExpandable = true;
@@ -92,11 +116,13 @@ export default class CustomerList extends List {
 
     this.RESET_CONSTANT = Constant.RESET_CUSTOMERS;
     this.timer = null;
+    this.searchTimer = null;
     this.pathname = "/customer";
+    this.placeholder = this.CATranslate("text_search_code", this.props.locale);
   }
 
   componentDidMount(){
-    this.props.dispatch(GroupCustomerAction.fetch(this.pageSize));
+    this.fetchCustomerGroups();
     const params = new URLSearchParams(document.location.search);
 
     if (params.get("search")) {
@@ -114,14 +140,19 @@ export default class CustomerList extends List {
     this.fetchList(true);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.update.updated) {
-      this.props.dispatch(CustomerAction.fetch(this.pageSize));
+  componentDidUpdate(prevProps) {
+    if ((!prevProps.add.added && this.props.add.added) || (!prevProps.update.updated && this.props.update.updated)) {
+      this.fetchList(true);
+    }
+
+    if (!prevProps.groupCustomersAdd.added && this.props.groupCustomersAdd.added) {
+      this.fetchCustomerGroups();
+    }
+
+    if (!prevProps.update.updated && this.props.update.updated) {
       this.props.dispatch(CustomerAction.reset(Constant.RESET_DETAIL_CUSTOMERS));
     }
-  }
 
-  componentDidUpdate() {
     if (this.props.detail.fetched) {
       this.setState({loadingPopup: false});
       this.props.dispatch(CustomerAction.reset(Constant.RESET_DETAIL_PARTIAL_CUSTOMERS));
@@ -145,7 +176,39 @@ export default class CustomerList extends List {
     }
   }
 
-  fetchList(withPagination = false) {
+  fetchCustomerGroups() {
+    this.setState(prevState => ({
+      customerGroup: {
+        ...prevState.customerGroup,
+        fetching: true,
+        error: null
+      }
+    }));
+
+    GroupCustomerService.lists(this.pageSize)
+      .then(response => {
+        this.setState(prevState => ({
+          customerGroup: {
+            ...prevState.customerGroup,
+            fetching: false,
+            fetched: true,
+            pagination: response.data.pagination,
+            list: response.data.data
+          }
+        }));
+      })
+      .catch(error => {
+        this.setState(prevState => ({
+          customerGroup: {
+            ...prevState.customerGroup,
+            fetching: false,
+            error
+          }
+        }));
+      });
+  }
+
+  fetchList(withPagination = false, sortField = "", sortOrder = "") {
     let offset = this.state.current;
     let limit = this.pageSize;
     let searchKey = "";
@@ -158,6 +221,7 @@ export default class CustomerList extends List {
 
     if (params.get("current")) {
       offset = Number(params.get("current"));
+      this.setState({current: offset});
     }
 
     if (params.get("search")) {
@@ -180,15 +244,62 @@ export default class CustomerList extends List {
       offset = 1;
       this.setState({current: 1});
       params.delete("current");
-      this.Util.pushParamsToURL(this.pathName, params.toString());
+      this.Util.pushParamsToURL(this.pathname, params.toString());
     }
 
     offset = (offset - 1) * limit;
-    this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey));
+    this.setState(prevState => ({
+      customerList: {
+        ...prevState.customerList,
+        fetching: true,
+        error: null
+      }
+    }));
+
+    CustomerService.get({ limit, offset, sortField, sortOrder, filter, searchKey })
+      .then(response => {
+        this.setState(prevState => ({
+          customerList: {
+            ...prevState.customerList,
+            fetching: false,
+            fetched: true,
+            pagination: response.data.pagination,
+            list: response.data.data
+          }
+        }));
+      })
+      .catch(error => {
+        this.setState(prevState => ({
+          customerList: {
+            ...prevState.customerList,
+            fetching: false,
+            error
+          }
+        }));
+      });
+  }
+
+  onChange = (pagination, filters, sorter) => {
+    if (!sorter || !sorter.order) {
+      return;
+    }
+
+    const sortField = sorter && sorter.field ? sorter.field : "";
+    const sortOrder = this.sortOrder(sorter.order);
+    const current = pagination && pagination.current ? pagination.current : this.state.current;
+    const pageSize = pagination && pagination.pageSize ? pagination.pageSize : this.pageSize;
+    const params = new URLSearchParams(document.location.search);
+
+    params.set("limit", pageSize);
+    params.set("current", current);
+
+    this.setState({current, isClickFilter: false});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList(true, sortField, sortOrder);
   }
 
   onSearchKey = (e) => {
-    clearTimeout(this.timer);
+    clearTimeout(this.searchTimer);
     const value = e.target.value;
     const params = new URLSearchParams(document.location.search);
     if (value) {
@@ -197,10 +308,11 @@ export default class CustomerList extends List {
       params.delete("search");
     }
 
+    params.delete("current");
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.timer = setTimeout(() => {
+    this.searchTimer = setTimeout(() => {
       this.fetchList();
-    }, 800);
+    }, 300);
   }
 
   onChangeGroup = (value) => {
@@ -211,6 +323,7 @@ export default class CustomerList extends List {
       params.delete("groupId");
     }
 
+    params.delete("current");
     this.Util.pushParamsToURL(this.pathname, params.toString());
     this.fetchList();
   }
@@ -223,6 +336,7 @@ export default class CustomerList extends List {
       params.delete("type");
     }
 
+    params.delete("current");
     this.Util.pushParamsToURL(this.pathname, params.toString());
     this.fetchList();
   }
@@ -230,7 +344,7 @@ export default class CustomerList extends List {
   onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
-    params.set("offset", current);
+    params.set("current", current);
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
@@ -240,11 +354,35 @@ export default class CustomerList extends List {
   onChangePagination = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
-    params.set("offset", current);
+    params.set("current", current);
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
     this.fetchList(true);
+  }
+
+  handleDelete() {
+    if (this.service) {
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+        .then(() => {
+          this.fetchList(true);
+          this.setState({
+            selectedRowKeys: [],
+            selectedListIds: [],
+            selectedRows: [],
+            modalVisible: false,
+            deleting: false
+          });
+        })
+        .catch(() => {
+          this.setState({deleting: false});
+        });
+    }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.searchTimer);
   }
 
   expandedRender(record){
@@ -269,46 +407,92 @@ export default class CustomerList extends List {
   renderBreadCrumb() {}
 
   renderTableList() {
-    const fetchingProp = this.props[this.fetchingProp];
+    const fetchingProps = this.state.customerList;
+    const params = new URLSearchParams(document.location.search);
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        name: record.name
+      })
+    };
+
     return (
-      <div className="table-wrapper" style={{marginTop: 10}}>
-        <this.Row>
-          <this.Col span={3} style={{marginBottom: 0}}>
-            <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_customer" /></h3>
-          </this.Col>
-          <this.Col span={21} style={{display: "flex", justifyContent: "flex-end"}}>
-            <this.InputText
-              name="search"
-              prefix={<this.Icon type="search" />}
-              placeholder= {this.CATranslate("text_search_code", this.props.locale)}
-              allowClear={true}
-              style={{width: 220, marginBottom: 0}}
-              onChange={this.onSearchKey}
-              form={this.props.form} />
-            <this.Select
-              name="groupCustomerId"
-              dataSource={this.groupCustomerList.concat(this.props.customerGroup.list)}
-              defaultValue={this.groupCustomerList[0].id}
-              valueKey="id"
-              style={{width: 180, marginLeft: 10, marginBottom: 0}}
-              onChange={this.onChangeGroup}
-              form={this.props.form} />
-            <this.Select
-              name="type"
-              dataSource={this.customerTypes}
-              defaultValue={null}
-              style={{width: 180, marginLeft: 10, marginBottom: 0}}
-              onChange={this.onChangeType}
-              form={this.props.form} />
-            <div style={{display: "flex", marginLeft: 10, marginTop: 4}}>
-              {this.renderButtonAddNew()}
-              {this.renderButtonDelete()}
-            </div>
-          </this.Col>
-        </this.Row>
-        {this.renderTable(fetchingProp)}
-        <div style={{marginTop: 15}}>
-          {this.renderPagination(fetchingProp)}
+      <div className="table-wrapper">
+        <PageHeader
+          title={<this.Translate id="text_customer" />}
+          subtitle="Manage customer records and contact details"
+          breadcrumbs={[
+            {text: "Dashboard", href: "/dashboard"},
+            {text: <this.Translate id="text_customer" />}
+          ]}
+          actions={[
+            {
+              text: <this.Translate id="text_add_new" />,
+              type: "primary",
+              icon: "plus",
+              onClick: this.handleShowFormAdd,
+              disabled: this.state.loadingPopup || fetchingProps.fetching
+            },
+            this.renderButtonDelete()
+          ]}
+        />
+
+        <div style={{paddingLeft: 40, paddingRight: 40, paddingTop: 25}}>
+          <Row style={{marginBottom: 10}}>
+            <Col md={24} style={{display: "flex", justifyContent: "flex-end", flexWrap: "wrap"}}>
+              <Input
+                name="search"
+                placeholder={this.placeholder}
+                suffix={<Icon type="search" />}
+                defaultValue={params.get("search") ? params.get("search") : ""}
+                allowClear={true}
+                style={{width: 260, marginRight: 10, marginBottom: 10}}
+                onChange={this.onSearchKey}
+              />
+              <this.Select
+                name="groupCustomerId"
+                dataSource={this.groupCustomerList.concat(this.state.customerGroup.list)}
+                defaultValue={this.groupCustomerList[0].id}
+                valueKey="id"
+                style={{width: 180, marginRight: 10, marginBottom: 10}}
+                onChange={this.onChangeGroup}
+                form={this.props.form} />
+              <this.Select
+                name="type"
+                dataSource={this.customerTypes}
+                defaultValue={null}
+                style={{width: 180, marginBottom: 10}}
+                onChange={this.onChangeType}
+                form={this.props.form} />
+            </Col>
+          </Row>
+
+          <Table
+            rowKey="id"
+            bordered
+            rowSelection={rowSelection}
+            loading={fetchingProps.fetching}
+            columns={this.columns}
+            dataSource={fetchingProps.list}
+            onChange={this.onChange}
+            onRow={record => ({
+              onDoubleClick: () => this.handleShowFormEdit(record),
+              onClick: event => this.handleOnTapHandler(event, record)
+            })}
+            pagination={{
+              total: fetchingProps.pagination.total,
+              pageSize: fetchingProps.pagination.limit,
+              current: this.state.current,
+              pageSizeOptions: this.pageSizeOptions,
+              showTotal: total => `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`,
+              showSizeChanger: true,
+              onShowSizeChange: this.onShowSizeChange,
+              onChange: this.onChangePagination
+            }}
+            locale={{emptyText: <this.Translate id="table_empty_data" />}}
+            size="middle"
+          />
         </div>
         <this.clearFloating/>
       </div>

@@ -36,7 +36,7 @@ import {
 import Util from "../../../../common/util";
 import history from "../../../../common/router/history";
 import InvoiceService from "../../../services/transactions/InvoiceService";
-import CustomerService from "../../../../crm/services/customers/CustomerService";
+import CustomerService from "../../../../../../services/CustomerService";
 import SerialService from "../../../services/transactions/SerialService";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";

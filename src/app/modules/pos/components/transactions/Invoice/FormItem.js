@@ -50,7 +50,7 @@ import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import CurrencyExchangeService from "../../../services/settings/ExchangeRateService";
-import CustomerService from "../../../../crm/services/customers/CustomerService";
+import CustomerService from "../../../../../../services/CustomerService";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";

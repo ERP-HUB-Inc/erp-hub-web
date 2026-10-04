@@ -36,7 +36,7 @@ import Enum from "../../../enums";
 import EnumProduct from "../../../../inventory/enums";
 import EnumCustomer from "../../../../crm/enum";
 import Util from "../../../../common/util";
-import CustomerService from "../../../../crm/services/customers/CustomerService";
+import CustomerService from "../../../../../../services/CustomerService";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import CustomerAction from "../../../../crm/actions/customers/customer";

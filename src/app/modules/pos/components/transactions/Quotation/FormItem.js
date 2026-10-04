@@ -36,7 +36,7 @@ import Enum from "../../../enums";
 import EnumProduct from "../../../../inventory/enums";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
-import CustomerService from "../../../../crm/services/customers/CustomerService";
+import CustomerService from "../../../../../../services/CustomerService";
 import QuotationService from "../../../services/transactions/QuotationService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import CustomerAction from "../../../../crm/actions/customers/customer";

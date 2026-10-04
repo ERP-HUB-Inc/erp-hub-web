@@ -16,7 +16,8 @@ import {
   Tag,
   Avatar,
   Skeleton,
-  Empty
+  Empty,
+  Drawer
 } from "antd";
 import {
   ArrowLeft,
@@ -35,7 +36,6 @@ import {
   Check,
   Clock,
   Clock3,
-  MoreHorizontal,
   Printer,
   Copy,
   XCircle,
@@ -45,7 +45,6 @@ import {
   FileText,
   Edit3,
   Eye,
-  History,
   SquarePen,
   CircleGauge,
   Settings
@@ -137,7 +136,8 @@ class SaleOrderDetail extends React.PureComponent{
     formData: {},
     invoiceDetail: {},
     activeKey: 1,
-    loadingTab: false
+    loadingTab: false,
+    historyDrawerVisible: false
   }
   SALE_ORDER_STATUS_STR = {
     [Enum.SALE_ORDER_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
@@ -352,6 +352,18 @@ class SaleOrderDetail extends React.PureComponent{
     };
   }
 
+  getCustomerSocialLinks = (formData) => {
+    const candidates = [
+      {label: "Facebook", value: formData.facebook || formData.facebookUrl || formData.customer?.facebook || formData.customer?.facebookUrl},
+      {label: "Instagram", value: formData.instagram || formData.instagramUrl || formData.customer?.instagram || formData.customer?.instagramUrl},
+      {label: "Telegram", value: formData.telegram || formData.telegramUrl || formData.customer?.telegram || formData.customer?.telegramUrl},
+      {label: "TikTok", value: formData.tiktok || formData.tiktokUrl || formData.customer?.tiktok || formData.customer?.tiktokUrl},
+      {label: "Messenger", value: formData.messenger || formData.messengerUrl || formData.customer?.messenger || formData.customer?.messengerUrl}
+    ];
+
+    return candidates.filter(link => hasValue(link.value));
+  }
+
   getProductImage = (entry) => {
     const image = entry.image || entry.imageUrl || entry.productImage || entry.product?.image;
     if (!image) return null;
@@ -551,8 +563,19 @@ class SaleOrderDetail extends React.PureComponent{
       </div>
       <div className="so-top-tools">
         <Tag color="green">Live Sync</Tag>
-        <Clock size={16} />
-        <Settings size={16} />
+        <button
+          className="so-history-button"
+          onClick={() => this.setState({historyDrawerVisible: true})}
+          aria-label="Order history and audit logs"
+          type="button"
+        >
+          <Clock size={16} />
+        </button>
+        <Dropdown overlay={this.renderActionMenu(formData)} placement="bottomRight">
+          <button className="so-settings-button" onClick={e => e.preventDefault()} aria-label="Sale order actions">
+            <Settings size={16} />
+          </button>
+        </Dropdown>
       </div>
     </div>
   )
@@ -591,11 +614,6 @@ class SaleOrderDetail extends React.PureComponent{
             <ReceiptText size={14} />
             <span style={{marginLeft: 6}}><Translate id="text_convert_to_invoice" /></span>
           </Button>
-          <Dropdown overlay={this.renderActionMenu(formData)} placement="bottomRight">
-            <button className="ant-btn so-more-button" onClick={e => e.preventDefault()}>
-              <MoreHorizontal size={16} />
-            </button>
-          </Dropdown>
         </div>
       </div>
     );
@@ -765,9 +783,36 @@ class SaleOrderDetail extends React.PureComponent{
         <div><Mail size={14} /> <span>{formData.email || EMPTY_VALUE}</span></div>
         <div><Phone size={14} /> <span>{formData.phoneNumber || EMPTY_VALUE}</span></div>
       </div>
+      {this.renderCustomerSocialLinks(formData)}
       {this.renderCustomerShippingAddress(formData, customerName)}
     </DetailCard>
   )
+
+  renderCustomerSocialLinks = (formData) => {
+    const socialLinks = this.getCustomerSocialLinks(formData);
+
+    return (
+      <div className="so-social-links-section">
+        <div className="so-customer-map-title">Contact Links</div>
+        {socialLinks.length ? (
+          <div className="so-social-links">
+            {socialLinks.map(link => (
+              <a
+                href={link.value}
+                key={link.label}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div className="so-empty-text">No social links</div>
+        )}
+      </div>
+    );
+  }
 
   renderCustomerShippingAddress = (formData, customerName) => {
     const shippingAddress = this.getShippingAddress(formData);
@@ -932,33 +977,38 @@ class SaleOrderDetail extends React.PureComponent{
     }
   }
 
-  renderHistory = (formData) => {
+  renderHistoryTimeline = (formData) => {
     const events = this.getAuditEvents(formData);
 
     return (
-      <DetailCard
-        title="Order History & Audit Logs"
-        icon={<History size={16} />}
-        action={<span className="so-card-subtitle">Chronological</span>}
-        uppercase
-      >
-        <div className="so-timeline">
-          {events.map((event, index) => (
-            <div className="so-timeline-item" key={`${event.title}-${index}`}>
-              <div className="so-timeline-dot" />
-              <div>
-                <div className="so-timeline-title">
-                  <span>{event.title}</span>
-                  <span>{event.time}</span>
-                </div>
-                <div className="so-timeline-description">{event.description}</div>
+      <div className="so-timeline">
+        {events.map((event, index) => (
+          <div className="so-timeline-item" key={`${event.title}-${index}`}>
+            <div className="so-timeline-dot" />
+            <div>
+              <div className="so-timeline-title">
+                <span>{event.title}</span>
+                <span>{event.time}</span>
               </div>
+              <div className="so-timeline-description">{event.description}</div>
             </div>
-          ))}
-        </div>
-      </DetailCard>
+          </div>
+        ))}
+      </div>
     );
   }
+
+  renderHistoryDrawer = (formData) => (
+    <Drawer
+      title="Order History & Audit Logs"
+      placement="right"
+      width="min(420px, 100vw)"
+      visible={this.state.historyDrawerVisible}
+      onClose={() => this.setState({historyDrawerVisible: false})}
+    >
+      {this.renderHistoryTimeline(formData)}
+    </Drawer>
+  )
 
   render() {
     const {formData} = this.state;
@@ -979,6 +1029,7 @@ class SaleOrderDetail extends React.PureComponent{
           Object.keys(this.state.formData).length ?
             <React.Fragment>
               {this.renderTopNavigation(formData)}
+              {this.renderHistoryDrawer(formData)}
               {this.renderHeader(formData, customerName)}
               {this.renderProgress(formData)}
               <div className="so-detail-grid">
@@ -986,7 +1037,6 @@ class SaleOrderDetail extends React.PureComponent{
                   {this.renderProducts(formData)}
                   {this.renderPaymentDetails(formData)}
                   {this.renderDocuments(formData)}
-                  {this.renderHistory(formData)}
                 </main>
                 <aside className="so-side-column">
                   {this.renderCustomerCard(formData, customerName)}
