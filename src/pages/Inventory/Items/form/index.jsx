@@ -31,7 +31,10 @@ import Datatable from "@layout/datatable";
 import CommonUtil from "@common/util";
 import Util from "@helper/inventory";
 import Enum from "@enums/index";
-import { 
+import {
+  RefreshCw
+} from "lucide-react";
+import {
    SelectCategory,
    SelectLocation
 } from "@components/index";
@@ -692,6 +695,19 @@ export default class ProductList extends Datatable {
       </this.Link>;
    }
 
+   renderRefreshButton() {
+      return (
+         <Button
+            className="item-filter-refresh-button"
+            onClick={() => this.fetchList(true)}
+            loading={this.state.loading}
+         >
+            {!this.state.loading && <RefreshCw size={14} />}
+            Refresh
+         </Button>
+      );
+   }
+
    buttonActionCollection() {
       return <Dropdown.Button type="primary" onClick={() => console.log("Hello World")} overlay={(
             <Menu onClick={() => console.log("Hello World")}>
@@ -983,6 +999,8 @@ export default class ProductList extends Datatable {
                       ref={this.SelectLocationRef}
                       onChange={this.onChangeLocation}
                     />
+
+                    {this.renderRefreshButton()}
                   </Col>
                 </Row>
 
@@ -1029,6 +1047,8 @@ export default class ProductList extends Datatable {
                       ref={this.SelectCategoryRef}
                       onChange={this.onChangeCategory}
                     />
+
+                    {this.renderRefreshButton()}
                   </Col>
                 </Row>
 

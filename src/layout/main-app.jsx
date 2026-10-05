@@ -203,6 +203,10 @@ export default class SiderDemo extends React.Component {
       loader: () => import("../app/modules/pos/components/reports/Sale/SalesReport"),
       loading: () => <StartUp />,
     });
+    const FinancialReport = Loadable({
+      loader: () => import("../app/modules/pos/components/reports/Financial/FinancialReport"),
+      loading: () => <StartUp />,
+    });
     const ReportStock = Loadable({
       loader: () => import("../app/modules/pos/containers/reports/StockReport"),
       loading: () => <StartUp />,
@@ -466,6 +470,7 @@ export default class SiderDemo extends React.Component {
                       <Route path="/inventories/adjustments" component={Vendor} />
                       <Route path="/reports/sales-report-center" component={SaleReportCenter} />
                       <Route path="/reports/sales-report" component={SaleReport} />
+                      <Route path="/reports/financial" component={FinancialReport} />
                       <Route path="/settings" component={SettingsPage} />
                       <Route path="/categories" component={Category} />
                       <Route path="/brands" component={Brand} />

@@ -18,6 +18,9 @@ import {
   Table,
   MonetaryValue
 } from "@components/index";
+import {
+  RefreshCw
+} from "lucide-react";
 import Datatable from "@layout/datatable";
 import { Translate } from "@redux/index";
 import history from "@router/index";
@@ -515,6 +518,17 @@ export default class StockIOPage extends Datatable {
     this.fetchStockIO({ withPagination: true, urlSearchParams: params });
   };
 
+  renderRefreshButton = () => (
+    <Button
+      className="stock-io-filter-refresh-button"
+      onClick={() => this.fetchStockIO({ type: this.state.activeTab === "ALL" ? undefined : this.state.activeTab, withPagination: true })}
+      loading={this.state.loading}
+    >
+      {!this.state.loading && <RefreshCw size={14} />}
+      Refresh
+    </Button>
+  )
+
   onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
@@ -693,6 +707,7 @@ export default class StockIOPage extends Datatable {
                       onChange={this.handleChangeDateRange}
                       style={{ maxWidth: 350, marginRight: 10 }}
                     />
+                    {this.renderRefreshButton()}
                   </Col>
                 </Row>
 
@@ -770,6 +785,7 @@ export default class StockIOPage extends Datatable {
                       onChange={this.handleChangeDateRange}
                       style={{ maxWidth: 350, marginRight: 10 }}
                     />
+                    {this.renderRefreshButton()}
                   </Col>
                 </Row>
 
@@ -848,6 +864,7 @@ export default class StockIOPage extends Datatable {
                       onChange={this.handleChangeDateRange}
                       style={{ maxWidth: 350, marginRight: 10 }}
                     />
+                    {this.renderRefreshButton()}
                   </Col>
                 </Row>
 

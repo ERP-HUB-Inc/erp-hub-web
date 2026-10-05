@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Col, Row, Card, Table } from "antd";
+import { Button, Col, Row, Card, Table, Tag } from "antd";
 import { Link } from "react-router-dom";
-import { Translate } from "@redux/index";
 import ProductService from "@services/ItemService";
 import Util from "@helper/util";
+import history from "@router/index";
+import { FileText } from "lucide-react";
 
 const util = new Util();
 export default function PurchaseHistory({ id }) {
@@ -26,81 +27,75 @@ export default function PurchaseHistory({ id }) {
   );
 
   const columns = [
-    // {
-    //   title: <Translate id="text_item_name" />,
-    //   dataIndex: "productName",
-    //   key: "productName",
-    // },
-    // {
-    //   title: <Translate id="text_barcode" />,
-    //   dataIndex: "barcode",
-    //   key: "barcode",
-    // },
-    // {
-    //   title: <Translate id="text_option" />,
-    //   dataIndex: "variantName",
-    //   key: "variantName",
-    // },
     {
-      title: <Translate id="text_purchase_date" />,
-      dataIndex: "date",
-      key: "date",
-      render: (date, record) => (
+      title: "PO Number",
+      dataIndex: "number",
+      key: "number",
+      width: 140,
+      render: (value, record) => (
         <Link to={`/stocks/purchase/update/${record.purchaseOrderId}`}>
-          {util.formatDate(date, "DD/MM/YYYY")}
+          {value || record.purchaseOrderNumber || record.purchaseNumber || "-"}
         </Link>
       ),
     },
     {
-      title: "Stock Location",
-      dataIndex: "locationName",
-      key: "locationName",
+      title: "Order Date",
+      dataIndex: "date",
+      key: "date",
+      width: 130,
+      render: (date) => util.formatDate(date, "DD/MM/YYYY"),
     },
     {
-      title: "Vendor/Seller",
+      title: "Supplier / Vendor",
       dataIndex: "supplierName",
       key: "supplierName",
+      render: value => value || "-",
     },
     {
-      title: "Shipping Fee",
-      dataIndex: "shippingFee",
-      key: "shippingFee",
-      align: "right",
-      render: (shippingFee) => util.formatCurrency(shippingFee ? Number(shippingFee) : 0),
-    },
-    {
-      title: <Translate id="text_quantity_buy_in" />,
+      title: "Ordered Qty",
       dataIndex: "quantity",
       key: "quantity",
+      align: "right",
+      width: 120,
       render: (quantity, record) => `${quantity} ${record?.unitName || "Pcs"}`,
     },
     {
-      title: <Translate id="text_unit_cost" />,
+      title: "Unit Cost",
       dataIndex: "cost",
       key: "cost",
+      width: 130,
       align: "right",
       render: (cost) => util.formatCurrency(cost ?? 0),
     },
     {
-      title: <Translate id="text_discount" />,
-      dataIndex: "discount",
-      key: "discount",
-      align: "right",
-      render: (discount) => util.formatCurrency(discount ? Number(discount) : 0),
-    },
-    {
-      title: <Translate id="text_total" />,
+      title: "Total Amount",
       dataIndex: "total",
       key: "total",
+      width: 140,
       align: "right",
       render: (total) => util.formatCurrency(total ?? 0),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: 120,
+      render: value => <Tag color="green">{value || "Received"}</Tag>,
     },
   ];
   return (
     <Card
-      title={<Translate id="text_purchase_history" />}
+      title={(
+        <div className="item-detail-card-title">
+          <i><FileText size={16} /></i>
+          <div>
+            <strong>Purchase History & Supplier Procurement</strong>
+            <span>Historical PO records, vendor acquisitions, and landing costs</span>
+          </div>
+        </div>
+      )}
+      extra={<Button type="primary" icon="plus" onClick={() => history.push("/purchase-orders/create")}>Create PO</Button>}
       bordered={false}
-      style={{ marginTop: 25 }}
       bodyStyle={{ paddingTop: 15 }}
     >
       <Row>
@@ -112,6 +107,7 @@ export default function PurchaseHistory({ id }) {
             loading={loading}
             columns={columns}
             pagination={false}
+            scroll={{ x: 900 }}
           />
         </Col>
       </Row>

@@ -198,12 +198,12 @@ export default function SalesReport() {
   }, [autoRefreshInterval, filters, isHasAccessPermission]);
 
   const statistics = [
-    { title: "Revenue", value: getMoney(summary.totalRevenue || summary.salesRevenue || summary.revenue), icon: "dollar", iconClassName: "is-blue" },
-    { title: "Net Sales", value: getMoney(summary.netSales || summary.totalNetSale), icon: "rise", iconClassName: "is-green", valueStyle: { color: "#3f8600" } },
-    { title: "Orders", value: getQuantity(summary.totalOrders || summary.orderCount || summary.orders), icon: "shopping-cart", iconClassName: "is-purple" },
+    { title: "Revenue", value: getMoney(summary.salesRevenue), icon: "dollar", iconClassName: "is-blue" },
+    { title: "Net Sales", value: getMoney(summary.netSales), icon: "rise", iconClassName: "is-green", valueStyle: { color: "#3f8600" } },
+    { title: "Orders", value: getQuantity(summary.transactionCount), icon: "shopping-cart", iconClassName: "is-purple" },
     { title: "Items Sold", value: getQuantity(summary.totalQuantity || summary.quantitySold || summary.itemsSold), icon: "inbox", iconClassName: "is-teal" },
-    { title: "Discount", value: getMoney(summary.totalDiscount || summary.discount), icon: "tags", iconClassName: "is-orange" },
-    { title: "Gross Profit", value: getMoney(summary.grossProfit || summary.totalProfit || summary.profit), icon: "line-chart", iconClassName: "is-red" }
+    { title: "Discount", value: getMoney(summary.discount), icon: "tags", iconClassName: "is-orange" },
+    { title: "Gross Profit", value: getMoney(summary.grossProfit), icon: "line-chart", iconClassName: "is-red" }
   ];
 
   const productColumns = [
@@ -211,7 +211,7 @@ export default function SalesReport() {
     { title: "Variant", dataIndex: "variantName", key: "variantName", width: 140, render: getEmpty },
     { title: "Qty Sold", dataIndex: "quantitySold", key: "quantitySold", width: 110, align: "right", render: value => getQuantity(value) },
     { title: "Revenue", dataIndex: "salesRevenue", key: "salesRevenue", width: 140, align: "right", sorter: true, render: value => getMoney(value) },
-    { title: "Item Cos", dataIndex: "salesCost", key: "salesCost", width: 140, align: "right", render: value => getMoney(value) },
+    { title: "Item Cost", dataIndex: "salesCost", key: "salesCost", width: 140, align: "right", render: value => getMoney(value) },
     { title: "Gross Profit", dataIndex: "grossProfit", key: "grossProfit", width: 140, align: "right", render: value => getMoney(value) },
     { title: "Profit Margin", dataIndex: "grossMargin", key: "grossMargin", width: 130, align: "right", render: value => value === null || value === undefined ? "-" : getPercent(value) },
     { title: "Transactions", dataIndex: "transactionCount", key: "transactionCount", width: 125, align: "right", render: value => getQuantity(value) }

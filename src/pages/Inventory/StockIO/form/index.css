@@ -123,3 +123,11 @@
 #payment-term .ant-form-item-label{
     visibility: hidden;
 }
+
+.stock-io-filter-refresh-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    vertical-align: top;
+}
