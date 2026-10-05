@@ -48,6 +48,41 @@ const socket = io("http://127.0.0.1:8100", {
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
+const sidebarMenuRoutes = [
+  { path: "/", selectedKey: "1" },
+  { path: "/sales", selectedKey: "21", openKey: "2" },
+  { path: "/transactions/sale-order", selectedKey: "21", openKey: "2" },
+  { path: "/customers", selectedKey: "24", openKey: "2" },
+  { path: "/customer-profile", selectedKey: "24", openKey: "2" },
+  { path: "/purchase-orders", selectedKey: "31", openKey: "3" },
+  { path: "/vendors", selectedKey: "33", openKey: "3" },
+  { path: "/inventories/items", selectedKey: "41", openKey: "4" },
+  { path: "/inventories/stock-io", selectedKey: "42", openKey: "4" },
+  { path: "/inventories/transfers", selectedKey: "42", openKey: "4" },
+  { path: "/inventories/adjustments", selectedKey: "42", openKey: "4" },
+  { path: "/general-ledger", selectedKey: "51", openKey: "5" },
+  { path: "/accounts-receivable", selectedKey: "52", openKey: "5" },
+  { path: "/accounts-payable", selectedKey: "53", openKey: "5" },
+  { path: "/reports/sales-report", selectedKey: "61", openKey: "6" },
+  { path: "/reports/purchase", selectedKey: "62", openKey: "6" },
+  { path: "/reports/stock", selectedKey: "63", openKey: "6" },
+  { path: "/reports/items", selectedKey: "64", openKey: "6" },
+  { path: "/reports/financial", selectedKey: "65", openKey: "6" },
+  { path: "/settings", selectedKey: "7" },
+];
+
+function getSidebarDefaultKeys(pathname) {
+  const currentPath = pathname || "/";
+  const matchedRoute = sidebarMenuRoutes
+    .filter(route => currentPath === route.path || (route.path !== "/" && currentPath.indexOf(`${route.path}/`) === 0))
+    .sort((firstRoute, secondRoute) => secondRoute.path.length - firstRoute.path.length)[0] || sidebarMenuRoutes[0];
+
+  return {
+    selectedKeys: [matchedRoute.selectedKey],
+    openKeys: matchedRoute.openKey ? [matchedRoute.openKey] : [],
+  };
+}
+
 export default class SiderDemo extends React.Component {
    state = {
      collapsed: false,
@@ -230,6 +265,7 @@ export default class SiderDemo extends React.Component {
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
     const isPOSPage = window.location.pathname === "/pos";
+    const sidebarDefaultKeys = getSidebarDefaultKeys(window.location.pathname);
     const styledContent = {
       margin: '0px 0px',
       // marginTop: 52,
@@ -258,7 +294,12 @@ export default class SiderDemo extends React.Component {
                   <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: "100vh" }}>
                     <LogoTextOnly />
                     {/* <DynamicMenu /> */}
-                    <Menu theme={theme} mode="inline" defaultSelectedKeys={["1"]}>
+                    <Menu
+                      theme={theme}
+                      mode="inline"
+                      defaultSelectedKeys={sidebarDefaultKeys.selectedKeys}
+                      defaultOpenKeys={sidebarDefaultKeys.openKeys}
+                    >
                       <Menu.Item key="1">
                         <Link to="/">
                           <Icon type="dashboard" />
