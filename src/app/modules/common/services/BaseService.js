@@ -2,6 +2,8 @@ import axios from "axios";
 import ConstantAuth from "../constants/authentication";
 import Util from "../util";
 
+let refreshTokenRequest = null;
+
 export default class BaseService {
 
    constructor() {
@@ -52,6 +54,72 @@ export default class BaseService {
       this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
    }
 
+   isTokenExpiredError(error) {
+      const status = error && error.response && error.response.status;
+      const code = error && error.response && error.response.data && error.response.data.error && error.response.data.error.code;
+      return status === 401 || code === 606;
+   }
+
+   isAuthRefreshAllowed(url = "") {
+      return url.indexOf("/auth/login") === -1 && url.indexOf("/auth/refresh-token") === -1;
+   }
+
+   refreshAccessToken() {
+      const accessToken = this.Util.getAccessToken();
+      const refreshToken = this.Util.getRefreshToken();
+
+      if (!accessToken || !refreshToken) {
+         return Promise.reject(new Error("Missing refresh token"));
+      }
+
+      if (!refreshTokenRequest) {
+         refreshTokenRequest = axios({
+            method: "POST",
+            url: `${this.generateAPIUrl()}/auth/refresh-token`,
+            headers: {
+               "Content-Type": "application/json",
+               "Authorization": `Bearer ${accessToken}`
+            },
+            data: { refreshToken }
+         })
+            .then(response => {
+               const data = response && response.data && response.data.data ? response.data.data : response.data;
+               const nextAccessToken = data && (data.accessToken || data.token);
+               const nextRefreshToken = data && data.refreshToken;
+
+               this.Util.updateAuthTokens(nextAccessToken, nextRefreshToken);
+               return nextAccessToken;
+            })
+            .finally(() => {
+               refreshTokenRequest = null;
+            });
+      }
+
+      return refreshTokenRequest;
+   }
+
+   request(option, method) {
+      const requestOption = {
+         method,
+         ...option
+      };
+
+      return axios(requestOption).catch(error => {
+         if (requestOption._retry || !this.isAuthRefreshAllowed(requestOption.url) || !this.isTokenExpiredError(error)) {
+            return Promise.reject(error);
+         }
+
+         return this.refreshAccessToken().then(accessToken => {
+            requestOption._retry = true;
+            requestOption.headers = {
+               ...(requestOption.headers || {}),
+               "Authorization": `Bearer ${accessToken}`
+            };
+            return axios(requestOption);
+         });
+      });
+   }
+
    generateAPIUrl() {
       let host = process.env.REACT_APP_API_HOST;
       let port = process.env.REACT_APP_API_PORT;
@@ -65,11 +133,7 @@ export default class BaseService {
       headers: {},
       data: {},
    }) {
-      const response = axios({
-         method: "POST",
-         ...option
-      });
-      return response;
+      return this.request(option, "POST");
    }
 
    GET(option = {
@@ -77,15 +141,7 @@ export default class BaseService {
       headers: {},
       data: {},
    }) {
-      try {
-         const response = axios({
-            method: "GET",
-            ...option
-         });
-         return response;  
-      } catch (error) {
-         
-      }
+      return this.request(option, "GET");
    }
 
    PUT(option = {
@@ -93,11 +149,7 @@ export default class BaseService {
       headers: {},
       data: {},
    }) {
-      const response = axios({
-         method: "PUT",
-         ...option
-      });
-      return response;
+      return this.request(option, "PUT");
    }
 
    DELETE(option = {
@@ -105,10 +157,6 @@ export default class BaseService {
       headers: {},
       data: {},
    }) {
-      const response = axios({
-         method: "DELETE",
-         ...option
-      });
-      return response;
+      return this.request(option, "DELETE");
    }
 }

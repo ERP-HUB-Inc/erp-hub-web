@@ -1,9 +1,58 @@
 import axios from "axios";
 import Service from "./Core";
+import Util from "@helper/util";
+
+const util = new Util();
 
 const api = axios.create({
   baseURL: "http://127.0.0.1:8080",
 });
+
+let refreshTokenRequest = null;
+
+function getTokenExpiredError(error) {
+   const status = error && error.response && error.response.status;
+   const code = error && error.response && error.response.data && error.response.data.error && error.response.data.error.code;
+   return status === 401 || code === 606;
+}
+
+function isAuthRefreshAllowed(url = "") {
+   return url.indexOf("/auth/login") === -1 && url.indexOf("/auth/refresh-token") === -1;
+}
+
+function refreshAccessToken() {
+   const accessToken = util.getAccessToken();
+   const refreshToken = util.getRefreshToken();
+
+   if (!accessToken || !refreshToken) {
+      return Promise.reject(new Error("Missing refresh token"));
+   }
+
+   if (!refreshTokenRequest) {
+      refreshTokenRequest = axios({
+         method: "POST",
+         url: `${api.defaults.baseURL}/auth/refresh-token`,
+         headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
+         },
+         data: { refreshToken }
+      })
+         .then(response => {
+            const data = response && response.data && response.data.data ? response.data.data : response.data;
+            const nextAccessToken = data && (data.accessToken || data.token);
+            const nextRefreshToken = data && data.refreshToken;
+
+            util.updateAuthTokens(nextAccessToken, nextRefreshToken);
+            return nextAccessToken;
+         })
+         .finally(() => {
+            refreshTokenRequest = null;
+         });
+   }
+
+   return refreshTokenRequest;
+}
 
 api.interceptors.request.use((config) => {
    if (localStorage.getItem("ACCESS_TOKEN")) {
@@ -17,6 +66,28 @@ api.interceptors.request.use((config) => {
    }
   return config;
 });
+
+api.interceptors.response.use(
+   response => response,
+   error => {
+      const originalRequest = error.config || {};
+
+      if (originalRequest._retry || !isAuthRefreshAllowed(originalRequest.url) || !getTokenExpiredError(error)) {
+         return Promise.reject(error);
+      }
+
+      originalRequest._retry = true;
+
+      return refreshAccessToken().then(accessToken => {
+         originalRequest.headers = {
+            ...(originalRequest.headers || {}),
+            Authorization: `Bearer ${accessToken}`
+         };
+
+         return api(originalRequest);
+      });
+   }
+);
 
 export default class BaseService extends Service {
    constructor() {

@@ -23,7 +23,7 @@ export default class Util {
   logout(history) {
     localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("STORE_ACCESS_TOKEN");
-    history.push("/signin");
+    history.push("/login");
   }
   checkValueSwitch(values) {
     return values ? 1 : 0;
@@ -75,6 +75,23 @@ export default class Util {
     const result = this.getAuthSession();
     if (result) return result.accessToken;
     else return null;
+  }
+
+  getRefreshToken() {
+    const result = this.getAuthSession();
+    if (result) return result.refreshToken;
+    else return null;
+  }
+
+  updateAuthTokens(accessToken, refreshToken) {
+    const result = this.getAuthSession();
+    if (!result || !accessToken) return;
+
+    this.setAuthSession({
+      ...result,
+      accessToken,
+      refreshToken: refreshToken || result.refreshToken
+    });
   }
 
   getSetting() {

@@ -155,7 +155,7 @@ class ClientRegister extends Component {
                         </this.RadioBox> 
                       </this.FormGroup> */}
 
-              <this.Link to="/signin">
+              <this.Link to="/login">
                 <span className="have-acc">Have an account?</span> <span className="store-link">sign in </span>
               </this.Link>
               <div className="main-signin">

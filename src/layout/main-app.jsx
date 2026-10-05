@@ -16,6 +16,7 @@ import { Provider } from "react-redux";
 import {
   BrowserRouter,
   Link,
+  Redirect,
   Route,
   Router,
   Switch
@@ -86,10 +87,22 @@ function getSidebarDefaultKeys(pathname) {
   };
 }
 
+const ProtectedRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => (
+      (new Util()).getAuthSession()
+        ? <Component {...props} />
+        : <Redirect to="/login" />
+    )}
+  />
+);
+
 export default class SiderDemo extends React.Component {
    state = {
      collapsed: false,
-     alertData: null
+     alertData: null,
+     currentPath: window.location.pathname
    };
 
    componentDidMount() {
@@ -110,12 +123,19 @@ export default class SiderDemo extends React.Component {
       socket.on("contact-synced", (data) => {
         console.log("contact-synced", data);
       });
+
+      this.unlistenHistory = history.listen(location => {
+        if (location.pathname !== this.state.currentPath) {
+          this.setState({ currentPath: location.pathname });
+        }
+      });
    }
 
   componentWillUnmount() {
     socket.off("connect");
     socket.off("disconnect");
     socket.off("chat-message");
+    if (this.unlistenHistory) this.unlistenHistory();
   }
  
    toggle = () => {
@@ -125,7 +145,9 @@ export default class SiderDemo extends React.Component {
    };
 
    onLogout = () => {
-    (new Util()).logout(history)
+    localStorage.removeItem("ACCESS_TOKEN");
+    localStorage.removeItem("STORE_ACCESS_TOKEN");
+    history.push("/login");
    }
 
    handleUpdate = () => {
@@ -317,8 +339,9 @@ export default class SiderDemo extends React.Component {
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
-    const isPOSPage = window.location.pathname === "/pos";
-    const sidebarDefaultKeys = getSidebarDefaultKeys(window.location.pathname);
+    const hasAuthSession = Boolean((new Util()).getAuthSession());
+    const isFullScreenPage = ["/pos", "/login"].includes(this.state.currentPath) || !hasAuthSession;
+    const sidebarDefaultKeys = getSidebarDefaultKeys(this.state.currentPath);
     const headerUser = this.getHeaderUser();
     const notificationCount = HEADER_UNREAD_NOTIFICATION_COUNT > 9 ? "9+" : HEADER_UNREAD_NOTIFICATION_COUNT;
     const styledContent = {
@@ -346,7 +369,7 @@ export default class SiderDemo extends React.Component {
                   linkText="Explore Features"
                 />
               } */}
-                {!isPOSPage ? (
+                {!isFullScreenPage ? (
                   <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: "100vh" }}>
                     <LogoTextOnly />
                     {/* <DynamicMenu /> */}
@@ -490,7 +513,7 @@ export default class SiderDemo extends React.Component {
                 )}
 
                 <Layout>
-                  {!isPOSPage && (
+                  {!isFullScreenPage && (
                     <Header
                       className="market-app-header"
                       style={{
@@ -540,62 +563,62 @@ export default class SiderDemo extends React.Component {
                     </Header>
                   )}
 
-                  <Content style={isPOSPage ? { height: "100vh" } : styledContent} id="center-container">
+                  <Content style={isFullScreenPage ? { height: "100vh" } : styledContent} id="center-container">
                     <Switch>
-                      <Route path="/pos" component={POS} />
-                      <Route path="/sales" component={SalesOrder} />
-                      <Route path="/transactions/sale-order/detail/:id" component={SalesOrderDetail} />
-                      <Route path="/quotes" component={Quotes} />
-                      <Route path="/invoices/view/:id" component={InvoiceDetail} />
-                      <Route path="/invoices/create" component={NewInoice} />
-                      <Route path="/invoices/update/:id" component={NewInoice} />
-                      <Route path="/invoices" component={Invoice} />
-                      <Route path="/customers" component={Customers} />
-                      <Route path="/customer-profile/:id" component={CustomerProfile} />
-                      <Route path="/purchase-orders/create" component={NewPurchaseOrder} />
-                      <Route path="/purchase-orders/update/:id" component={UpdatePurchaseOrder} />
-                      <Route path="/purchase-orders" component={PurchaseOrder} />
-                      <Route path="/vendors/create" component={Vendor} />
-                      <Route path="/vendors/update/:id" component={Vendor} />
-                      <Route path="/vendors" component={Vendor} />
-                      <Route path="/inventories/items/create" component={NewItem} />
-                      <Route path="/inventories/items/update/:id" component={EditItem} />
-                      <Route path="/inventories/items/view/:id" component={ViewItem} />
-                      <Route path="/inventories/items/split/:productVariantId" component={SplitItem} />
-                      <Route path="/inventories/items" component={Item} />
+                      <Route path="/login" component={Login} />
+                      <ProtectedRoute path="/pos" component={POS} />
+                      <ProtectedRoute path="/sales" component={SalesOrder} />
+                      <ProtectedRoute path="/transactions/sale-order/detail/:id" component={SalesOrderDetail} />
+                      <ProtectedRoute path="/quotes" component={Quotes} />
+                      <ProtectedRoute path="/invoices/view/:id" component={InvoiceDetail} />
+                      <ProtectedRoute path="/invoices/create" component={NewInoice} />
+                      <ProtectedRoute path="/invoices/update/:id" component={NewInoice} />
+                      <ProtectedRoute path="/invoices" component={Invoice} />
+                      <ProtectedRoute path="/customers" component={Customers} />
+                      <ProtectedRoute path="/customer-profile/:id" component={CustomerProfile} />
+                      <ProtectedRoute path="/purchase-orders/create" component={NewPurchaseOrder} />
+                      <ProtectedRoute path="/purchase-orders/update/:id" component={UpdatePurchaseOrder} />
+                      <ProtectedRoute path="/purchase-orders" component={PurchaseOrder} />
+                      <ProtectedRoute path="/vendors/create" component={Vendor} />
+                      <ProtectedRoute path="/vendors/update/:id" component={Vendor} />
+                      <ProtectedRoute path="/vendors" component={Vendor} />
+                      <ProtectedRoute path="/inventories/items/create" component={NewItem} />
+                      <ProtectedRoute path="/inventories/items/update/:id" component={EditItem} />
+                      <ProtectedRoute path="/inventories/items/view/:id" component={ViewItem} />
+                      <ProtectedRoute path="/inventories/items/split/:productVariantId" component={SplitItem} />
+                      <ProtectedRoute path="/inventories/items" component={Item} />
                       {/* StockIO Management */}
-                      <Route path="/inventories/stock-io/create" component={NewStockInOut} />
-                      <Route path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
-                      <Route path="/inventories/stock-io/import" component={StockIOBulkImport} />
-                      <Route path="/inventories/stock-io/ai-import" component={StockIOAIImport} />
-                      <Route path="/inventories/stock-io" component={StockInOut} />
-                      <Route path="/inventories/transfers" component={Vendor} />
-                      <Route path="/inventories/adjustments" component={Vendor} />
-                      <Route path="/reports/sales-report-center" component={SaleReportCenter} />
-                      <Route path="/reports/sales-report" component={SaleReport} />
-                      <Route path="/reports/financial" component={FinancialReport} />
-                      <Route path="/settings" component={SettingsPage} />
-                      <Route path="/categories" component={Category} />
-                      <Route path="/brands" component={Brand} />
-                      <Route path="/setting-logs" component={SystemLogs} />
+                      <ProtectedRoute path="/inventories/stock-io/create" component={NewStockInOut} />
+                      <ProtectedRoute path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
+                      <ProtectedRoute path="/inventories/stock-io/import" component={StockIOBulkImport} />
+                      <ProtectedRoute path="/inventories/stock-io/ai-import" component={StockIOAIImport} />
+                      <ProtectedRoute path="/inventories/stock-io" component={StockInOut} />
+                      <ProtectedRoute path="/inventories/transfers" component={Vendor} />
+                      <ProtectedRoute path="/inventories/adjustments" component={Vendor} />
+                      <ProtectedRoute path="/reports/sales-report-center" component={SaleReportCenter} />
+                      <ProtectedRoute path="/reports/sales-report" component={SaleReport} />
+                      <ProtectedRoute path="/reports/financial" component={FinancialReport} />
+                      <ProtectedRoute path="/settings" component={SettingsPage} />
+                      <ProtectedRoute path="/categories" component={Category} />
+                      <ProtectedRoute path="/brands" component={Brand} />
+                      <ProtectedRoute path="/setting-logs" component={SystemLogs} />
 
                       {/* Report */}
-                      <Route path="/reports/items" component={ReportProduct} />
-                      <Route path="/reports/stock" component={ReportStock} />
+                      <ProtectedRoute path="/reports/items" component={ReportProduct} />
+                      <ProtectedRoute path="/reports/stock" component={ReportStock} />
                       {/* <Route path="/receipt" component={POSPaymentDrawer} /> */}
-                      <Route path="/receipt" component={Receipt} />
-                      <Route path="/SalesDashboard" component={SalesDashboard} />
-                      <Route path="/order-dashboards" component={OrdersDashboard} />
-                      <Route path="/table-views" component={TabletView} />
-                      <Route path="/columns" component={ColumnSelection} />
-                      <Route path="/stock-in-ui" component={POSMonitor} />
-                      <Route path="/item-ai-ui" component={ItemManagementUI} />
-                      <Route path="/item-ai-generator" component={ItemAIGenerator} />
-                      <Route path="/sticky-footer-page" component={StickyFooterPage} />
-                      <Route path="/stock-io-form" component={StockIOForm} />
-                      <Route path="/vendor-detail" component={VendorDetailPage} />
-                      <Route path="/login" component={Login} />
-                      <Route path="/" component={Dashboard} />
+                      <ProtectedRoute path="/receipt" component={Receipt} />
+                      <ProtectedRoute path="/SalesDashboard" component={SalesDashboard} />
+                      <ProtectedRoute path="/order-dashboards" component={OrdersDashboard} />
+                      <ProtectedRoute path="/table-views" component={TabletView} />
+                      <ProtectedRoute path="/columns" component={ColumnSelection} />
+                      <ProtectedRoute path="/stock-in-ui" component={POSMonitor} />
+                      <ProtectedRoute path="/item-ai-ui" component={ItemManagementUI} />
+                      <ProtectedRoute path="/item-ai-generator" component={ItemAIGenerator} />
+                      <ProtectedRoute path="/sticky-footer-page" component={StickyFooterPage} />
+                      <ProtectedRoute path="/stock-io-form" component={StockIOForm} />
+                      <ProtectedRoute path="/vendor-detail" component={VendorDetailPage} />
+                      <ProtectedRoute path="/" component={Dashboard} />
                     </Switch>
                   </Content>
                 </Layout>

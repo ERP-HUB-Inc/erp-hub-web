@@ -73,7 +73,7 @@ class Router extends Component {
         .then(response => {
           if (response.data === false) {
             localStorage.removeItem(Authentication.ACCESS_TOKEN);
-            history.push("/signin");
+            history.push("/login");
           }
         });
     }

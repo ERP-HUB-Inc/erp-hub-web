@@ -57,7 +57,7 @@ export default class App extends React.Component {
         <Switch>
           <Router history={history}>
             <div style={{height: "100%"}} id="main-route-content">
-              <Route path="/signin" component={UserLogin} />
+              <Route path="/login" component={UserLogin} />
               <Route path="/store" component={LoginStore} />
               <Route path="/register" component={ClientRegister} />
               <Route path="/register/detail" component={ClientRegisterDetail} />
