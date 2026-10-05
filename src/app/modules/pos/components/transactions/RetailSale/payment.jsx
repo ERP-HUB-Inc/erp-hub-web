@@ -19,6 +19,7 @@ import TransactionAction from "../../../action/transaction/transaction";
 import SalesUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import ReceiptV2 from "./receipt-v2";
+import ReceiptNew from "./receipt.new";
 import QuickCash from "./quick.cash";
 import PaymentSummary from "./payment.summary";
 import { convertKHRToUSD, convertUSDToKHR } from "@helper/index";
@@ -42,6 +43,8 @@ export default class PaymentScreen extends Modal {
       formData: {},
       loadingSubmit: false,
       submittingPayment: false,
+      isPrintReceiptChecked: true,
+      receiptPrintData: null,
     };
     this.paymentMethodSelectedIndex = null;
     this.wrapClassName = "pos-payment";
@@ -305,16 +308,31 @@ export default class PaymentScreen extends Modal {
         this.setState({ submittingPayment: true });
         RetailSaleService.createNewSale(saleData)
           .then((response) => {
-            sweetalert({
-              icon: "success",
-              title: "Payment Successful!",
-              text: "The payment has been completed successfully.",
-              buttons: false,
-              timer: 1500,
-            }).then(() => {
-              this.props.handleOnResetOrder();
-              this.props.handleCancel();
-            });
+            const receiptPrintData = this.getReceiptPrintData(response, saleData);
+
+            const completePayment = () => {
+              sweetalert({
+                icon: "success",
+                title: "Payment Successful!",
+                text: "The payment has been completed successfully.",
+                buttons: false,
+                timer: 1500,
+              }).then(() => {
+                this.props.handleOnResetOrder();
+                this.props.handleCancel();
+              });
+            };
+
+            if (this.state.isPrintReceiptChecked) {
+              this.setState({ receiptPrintData }, () => {
+                setTimeout(() => {
+                  window.print();
+                  completePayment();
+                }, 100);
+              });
+            } else {
+              completePayment();
+            }
           })
           .catch((error) => {
             console.error("Error creating sale:", error);
@@ -335,6 +353,32 @@ export default class PaymentScreen extends Modal {
       }
     });
   };
+
+  getReceiptPrintData(response, saleData) {
+    const responseData = _.get(response, "data.data", {});
+    const customer = responseData.customer || this.props.customer || {};
+    const cashier = this.currentUser || {};
+    const exchangeRate = _.get(this.props.exchangeRate, "sellRate", 4100);
+    const grandTotalUSD = this.getGrandTotal();
+    const tenderUSD = this.props.form.getFieldValue("tenderInCashUSD") || 0;
+    const tenderKHR = this.props.form.getFieldValue("tenderInCashKHR") || 0;
+
+    return {
+      invoiceNo: responseData.invoiceNo || responseData.saleNo || responseData.code || responseData.id,
+      cashier: cashier.fullName || cashier.name || cashier.username,
+      date: responseData.createdAt || new Date(),
+      customerName: customer.firstName || customer.lastName ? `${customer.firstName || ""} ${customer.lastName || ""}`.trim() : customer.name,
+      exchangeRate,
+      items: saleData.items,
+      discountAmount: _.get(this.props.summaryTotal, "discountAmount", 0),
+      taxAmount: _.get(this.props.summaryTotal, "taxAmount", 0),
+      grandTotalUSD,
+      tenderUSD,
+      tenderKHR,
+      changeUSD: Math.max(this.getChangeAmountInUSD(), 0),
+      changeKHR: this.getChangeAmountInKHR(),
+    };
+  }
 
   renderMoneyExhangeAfterPay(balance, changeAmount) {
     if (this.state.customerPaymentList.length <= 0) {
@@ -440,6 +484,7 @@ export default class PaymentScreen extends Modal {
     }
 
     return (
+      <React.Fragment>
       <Drawer
         title={null}
         placement="bottom"
@@ -825,7 +870,11 @@ export default class PaymentScreen extends Modal {
             borderRadius: "0 0 4px 4px",
           }}
         >
-          <Checkbox style={{ marginRight: 25 }} checked={true}>
+          <Checkbox
+            style={{ marginRight: 25 }}
+            checked={this.state.isPrintReceiptChecked}
+            onChange={event => this.setState({ isPrintReceiptChecked: event.target.checked })}
+          >
             Print Receipt
           </Checkbox>
           <Tooltip title="Shortcut: F5">
@@ -864,6 +913,8 @@ export default class PaymentScreen extends Modal {
           </Tooltip>
         </div>
       </Drawer>
+      {this.state.receiptPrintData ? <ReceiptNew data={this.state.receiptPrintData} embedded /> : null}
+      </React.Fragment>
     );
   }
 }

@@ -33,8 +33,45 @@ class Receipt extends React.Component {
     this.handlePrint = this.handlePrint.bind(this);
   }
 
-  calculateTotal() {
-    return this.state.items.reduce(function (sum, item) {
+  formatDate(value) {
+    if (!value) return this.state.date;
+    var date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+  }
+
+  getReceiptData() {
+    var data = this.props.data || {};
+    return {
+      items: data.items && data.items.length ? data.items.map(function (item) {
+        var price = Number(item.unitPrice || item.newPrice || item.price || item.retailPrice || 0);
+        var qty = Number(item.quantity || item.qty || 1);
+        return {
+          description: item.itemName || item.name || item.description || "Item",
+          qty: qty,
+          price: price,
+          discount: Number(item.discount || 0),
+        };
+      }) : this.state.items,
+      invoiceNo: data.invoiceNo || this.state.invoiceNo,
+      cashier: data.cashier || this.state.cashier,
+      date: this.formatDate(data.date),
+      customerName: data.customerName || "General Customer",
+      exchangeRate: Number(data.exchangeRate || this.state.exchangeRate),
+      queueNo: data.queueNo || this.state.queueNo,
+      logo: data.logo || this.state.logo,
+      wifi: data.wifi || this.state.wifi,
+      discountAmount: Number(data.discountAmount || 0),
+      taxAmount: Number(data.taxAmount || 0),
+      grandTotalUSD: Number(data.grandTotalUSD || 0),
+      tenderUSD: Number(data.tenderUSD || 0),
+      tenderKHR: Number(data.tenderKHR || 0),
+      changeUSD: Number(data.changeUSD || 0),
+      changeKHR: Number(data.changeKHR || 0),
+    };
+  }
+
+  calculateTotal(items) {
+    return items.reduce(function (sum, item) {
       return sum + item.price * item.qty;
     }, 0);
   }
@@ -44,18 +81,26 @@ class Receipt extends React.Component {
   }
 
   render() {
-    var subtotal = this.calculateTotal();
-    var totalInRiel = subtotal * this.state.exchangeRate;
+    var receipt = this.getReceiptData();
+    var subtotal = this.calculateTotal(receipt.items);
+    var grandTotal = receipt.grandTotalUSD || subtotal + receipt.taxAmount - receipt.discountAmount;
+    var totalInRiel = grandTotal * receipt.exchangeRate;
+    var receiptPageClassName = this.props.embedded
+      ? "receipt-page receipt-page-embedded min-h-screen bg-gray-900 flex items-center justify-center p-4"
+      : "receipt-page min-h-screen bg-gray-900 flex items-center justify-center p-4";
+
     return (
-      <div className="receipt-page min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className={receiptPageClassName}>
         <div className="w-full max-w-md">
-          <button
-            onClick={this.handlePrint}
-            className="no-print mb-4 w-full bg-blue-600 text-white font-bold py-3 px-6 rounded hover:bg-blue-700"
-            style={{ display: "block" }}
-          >
-            Print Receipt
-          </button>
+          {!this.props.embedded ? (
+            <button
+              onClick={this.handlePrint}
+              className="no-print mb-4 w-full bg-blue-600 text-white font-bold py-3 px-6 rounded hover:bg-blue-700"
+              style={{ display: "block" }}
+            >
+              Print Receipt
+            </button>
+          ) : null}
 
           <div
             className="receipt-print-area bg-white shadow-2xl"
@@ -63,7 +108,7 @@ class Receipt extends React.Component {
           >
             <div className="receipt-header p-6 text-center border-b-2 border-dashed border-gray-300">
               <img
-                src={this.state.logo}
+                src={receipt.logo}
                 alt="Store logo"
                 className="receipt-logo mx-auto mb-2 rounded-full object-cover"
               />
@@ -72,7 +117,7 @@ class Receipt extends React.Component {
               <p className="text-sm">855069526809</p>
               <div className="receipt-queue mt-3 px-3 py-2 bg-gray-100 rounded">
                 <p className="text-2xl font-bold text-gray-800 leading-none mb-0">
-                  Queue No: {this.state.queueNo}
+                  Queue No: {receipt.queueNo}
                 </p>
               </div>
             </div>
@@ -85,19 +130,19 @@ class Receipt extends React.Component {
               <div className="receipt-meta text-sm mb-4">
                 <div className="flex justify-between mb-1">
                   <span>លេខបង្កាន់ដៃ/Invoice No:</span>
-                  <span>{this.state.invoiceNo}</span>
+                  <span>{receipt.invoiceNo}</span>
                 </div>
                 <div className="flex justify-between mb-1">
                   <span>អ្នកគិតលុយ/Cashier:</span>
-                  <span>{this.state.cashier}</span>
+                  <span>{receipt.cashier}</span>
                 </div>
                 <div className="flex justify-between mb-1">
                   <span>កាលបរិច្ឆេទ/Date:</span>
-                  <span>{this.state.date}</span>
+                  <span>{receipt.date}</span>
                 </div>
                 <div className="flex justify-between mb-1">
                   <span>អតិថិជន/Customer:</span>
-                  <span>General Customer</span>
+                  <span>{receipt.customerName}</span>
                 </div>
               </div>
 
@@ -112,7 +157,7 @@ class Receipt extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.items.map(function (item, index) {
+                  {receipt.items.map(function (item, index) {
                     return (
                       <tr key={index} className="border-b border-gray-200">
                         <td className="py-2">{item.description}</td>
@@ -135,17 +180,22 @@ class Receipt extends React.Component {
                 </div>
                 <div className="receipt-row flex justify-between text-sm mb-2">
                   <span>បញ្ចុះតម្លៃ/Discount:</span>
-                  <span>0%</span>
-                  <span>0$</span>
+                  <span>{receipt.discountAmount.toFixed(2)}$</span>
                 </div>
+                {receipt.taxAmount > 0 ? (
+                  <div className="receipt-row flex justify-between text-sm mb-2">
+                    <span>ពន្ធ/Tax:</span>
+                    <span>{receipt.taxAmount.toFixed(2)}$</span>
+                  </div>
+                ) : null}
                 <div className="receipt-row receipt-total-row flex justify-between font-bold text-lg mb-2">
                   <span>សរុបរួម /Grand Total:</span>
-                  <span>{subtotal.toFixed(2)}$</span>
+                  <span>{grandTotal.toFixed(2)}$</span>
                 </div>
                 <div className="receipt-row flex justify-between text-sm">
                   <span>
                     អត្រាប្តូរប្រាក់/Exchange:{" "}
-                    {this.state.exchangeRate.toLocaleString()}៛
+                    {receipt.exchangeRate.toLocaleString()}៛
                   </span>
                   <span>{totalInRiel.toLocaleString()}៛</span>
                 </div>
@@ -154,19 +204,19 @@ class Receipt extends React.Component {
               <div className="receipt-payment border-t-2 border-gray-400 mt-4 pt-3 mb-2">
                 <div className="receipt-row flex justify-between mb-2">
                   <span>ប្រាក់ទទួល ($)/Received:</span>
-                  <span className="font-bold">{subtotal.toFixed(2)}$</span>
+                  <span className="font-bold">{receipt.tenderUSD.toFixed(2)}$</span>
                 </div>
                 <div className="receipt-row flex justify-between mb-2">
                   <span>ប្រាក់អាប់ ($)/Changed:</span>
-                  <span>0$</span>
+                  <span>{receipt.changeUSD.toFixed(2)}$</span>
                 </div>
                 <div className="receipt-row flex justify-between mb-2">
                   <span>ប្រាក់ទទួល (៛)/Received:</span>
-                  <span className="font-bold">0៛</span>
+                  <span className="font-bold">{receipt.tenderKHR.toLocaleString()}៛</span>
                 </div>
                 <div className="receipt-row flex justify-between">
                   <span>ប្រាក់អាប់ (៛)/Changed:</span>
-                  <span>0៛</span>
+                  <span>{receipt.changeKHR.toLocaleString()}៛</span>
                 </div>
               </div>
 
@@ -178,9 +228,9 @@ class Receipt extends React.Component {
                 <p className="text-gray-600">Thank you for shopping with us.</p>
                 <p className="mt-1">
                   WiFi:{" "}
-                  <span className="font-semibold">{this.state.wifi.name}</span>{" "}
+                  <span className="font-semibold">{receipt.wifi.name}</span>{" "}
                   | Pass:{" "}
-                  <span className="font-mono">{this.state.wifi.password}</span>
+                  <span className="font-mono">{receipt.wifi.password}</span>
                 </p>
               </div>
             </div>
@@ -191,6 +241,15 @@ class Receipt extends React.Component {
           .receipt-logo {
             height: 56px;
             width: 56px;
+          }
+
+          .receipt-page-embedded {
+            height: 0 !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+            padding: 0 !important;
+            position: fixed !important;
+            width: 0 !important;
           }
 
           @media print {
@@ -220,9 +279,20 @@ class Receipt extends React.Component {
               align-items: flex-start !important;
               background: #fff !important;
               display: block !important;
+              height: auto !important;
               justify-content: flex-start !important;
               min-height: 0 !important;
+              overflow: visible !important;
               padding: 0 !important;
+              position: static !important;
+              width: 80mm !important;
+            }
+
+            .receipt-page-embedded {
+              height: auto !important;
+              overflow: visible !important;
+              position: static !important;
+              width: 80mm !important;
             }
 
             .receipt-page > div {

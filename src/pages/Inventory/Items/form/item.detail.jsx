@@ -1,4 +1,5 @@
 import React from "react";
+import JsBarcode from "jsbarcode";
 import {
   Alert,
   Avatar,
@@ -215,6 +216,7 @@ export default function ProductDetail(props) {
   const [loading, setLoading] = React.useState(false);
   const [stockLoading, setStockLoading] = React.useState(false);
   const [internalNote, setInternalNote] = React.useState("");
+  const printBarcodeRef = React.useRef(null);
   const params = new URLSearchParams(props.location.search);
   const productOption = params.get("productOption");
   const itemId = props.match.params.id;
@@ -259,13 +261,55 @@ export default function ProductDetail(props) {
   const isInStock = totalAvailable > 0;
   const statusTag = isInStock ? { color: "green", label: "In Stock" } : { color: "red", label: "Out of Stock" };
   const manageStockLabel = getManageStockLabel(data);
+  const itemBarcode = getItemBarcode(data);
+  const itemSku = getItemSku(data);
+
+  React.useEffect(() => {
+    if (!printBarcodeRef.current || !itemBarcode) return;
+
+    JsBarcode(printBarcodeRef.current, String(itemBarcode), {
+      format: "CODE128",
+      displayValue: true,
+      font: "monospace",
+      fontSize: 13,
+      height: 46,
+      margin: 0,
+      width: 1.45
+    });
+  }, [itemBarcode]);
 
   function handleButtonUpdate() {
     history.push(`/inventories/items/update/${itemId}?productOption=${productOption || ""}`);
   }
 
   function handlePrintBarcode() {
-    message.info("Barcode print UI is ready; print flow is not connected yet.");
+    if (!itemBarcode) {
+      message.warning("This item does not have a barcode to print.");
+      return;
+    }
+
+    if (printBarcodeRef.current) {
+      JsBarcode(printBarcodeRef.current, String(itemBarcode), {
+        format: "CODE128",
+        displayValue: true,
+        font: "monospace",
+        fontSize: 13,
+        height: 46,
+        margin: 0,
+        width: 1.45
+      });
+    }
+
+    document.body.classList.add("item-label-printing");
+
+    const removePrintMode = () => {
+      document.body.classList.remove("item-label-printing");
+      window.removeEventListener("afterprint", removePrintMode);
+    };
+
+    window.addEventListener("afterprint", removePrintMode);
+    window.print();
+    setTimeout(removePrintMode, 500);
   }
 
   function handleStockAdjustment() {
@@ -348,7 +392,7 @@ export default function ProductDetail(props) {
               </div>
               <div className="item-detail-meta-grid">
                 <DataRow label="Barcode" value={getItemBarcode(data)} />
-                <DataRow label="SKU" value={getItemSku(data)} />
+                <DataRow label="SKU" value={itemSku} />
                 <DataRow label="Category" value={categoryName} />
                 <DataRow label="Brand" value={brandName} />
                 <DataRow label="Unit of Measure" value={unitName} />
@@ -362,7 +406,7 @@ export default function ProductDetail(props) {
               </Button>
               <Button onClick={handlePrintBarcode}>
                 <Printer size={14} />
-                Print Barcode
+                Print Label
               </Button>
               <Button type="primary" onClick={handleStockAdjustment}>
                 <ArrowRightLeft size={14} />
@@ -490,6 +534,17 @@ export default function ProductDetail(props) {
                 </div>
               </SectionCard>
             </aside>
+          </div>
+
+          <div className="item-detail-print-label" aria-hidden="true">
+            <div className="item-detail-print-label-card">
+              <strong>{data.name || EMPTY_VALUE}</strong>
+              <svg ref={printBarcodeRef} />
+              <div className="item-detail-print-label-meta">
+                <span>SKU: {itemSku || EMPTY_VALUE}</span>
+                <span>{formatMoney(retailPrice)}</span>
+              </div>
+            </div>
           </div>
         </React.Fragment>
       )}
