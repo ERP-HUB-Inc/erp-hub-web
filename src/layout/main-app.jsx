@@ -7,7 +7,8 @@ import OrdersDashboard from '@settings/OrderDashboard';
 import SettingsPage from '@settings/SettingPage';
 import SystemLogs from '@settings/SystemLogs';
 import TabletView from '@settings/TableView';
-import { Avatar, Badge, Icon, Layout, List, Menu } from "antd";
+import { Avatar, Badge, Button, Divider, Dropdown, Icon, Layout, List, Menu, Tooltip, message } from "antd";
+import { Bell, ChevronDown, RefreshCw } from "lucide-react";
 import React from 'react';
 import ReactGA from "react-ga4";
 import Loadable from "react-loadable";
@@ -47,6 +48,8 @@ const socket = io("http://127.0.0.1:8100", {
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
+const APP_VERSION = process.env.REACT_APP_VERSION || "2.0.51";
+const HEADER_UNREAD_NOTIFICATION_COUNT = 2;
 
 const sidebarMenuRoutes = [
   { path: "/", selectedKey: "1" },
@@ -123,6 +126,56 @@ export default class SiderDemo extends React.Component {
 
    onLogout = () => {
     (new Util()).logout(history)
+   }
+
+   handleUpdate = () => {
+    message.info("Application update flow is not connected yet.");
+   }
+
+   getHeaderUser() {
+    const user = (new Util()).getCurrentUser() || {};
+    const displayName = user.fullName || user.displayName || user.name || user.userName || user.username || "User";
+    const roleName = user.roleName || user.position || (user.role && user.role.name) || user.roleCode || "Signed in";
+    const avatar = user.photo || user.avatar || user.imageUrl;
+
+    return {
+      displayName,
+      roleName,
+      avatar,
+      initials: this.getInitials(displayName),
+    };
+   }
+
+   getInitials(name) {
+    return String(name || "User")
+      .trim()
+      .split(/\s+/)
+      .map(part => part.charAt(0))
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+   }
+
+   renderUserMenu() {
+    return (
+      <Menu className="market-header-profile-menu">
+        <Menu.Item>
+          <Link to="/profile">
+            <Icon type="user" />
+            <span>Profile</span>
+          </Link>
+        </Menu.Item>
+        <Menu.Item onClick={this.handleUpdate}>
+          <Icon type="redo" />
+          <span>Update Now</span>
+        </Menu.Item>
+        <Divider style={{ marginTop: 5, marginBottom: 5 }} />
+        <Menu.Item onClick={this.onLogout}>
+          <Icon type="logout" />
+          <span>Logout</span>
+        </Menu.Item>
+      </Menu>
+    );
    }
  
    render() {
@@ -266,10 +319,13 @@ export default class SiderDemo extends React.Component {
     const theme = 'light';
     const isPOSPage = window.location.pathname === "/pos";
     const sidebarDefaultKeys = getSidebarDefaultKeys(window.location.pathname);
+    const headerUser = this.getHeaderUser();
+    const notificationCount = HEADER_UNREAD_NOTIFICATION_COUNT > 9 ? "9+" : HEADER_UNREAD_NOTIFICATION_COUNT;
     const styledContent = {
       margin: '0px 0px',
       // marginTop: 52,
       padding: 0,
+      paddingTop: 58,
       height: '100vh'
     }
 
@@ -436,6 +492,7 @@ export default class SiderDemo extends React.Component {
                 <Layout>
                   {!isPOSPage && (
                     <Header
+                      className="market-app-header"
                       style={{
                         background: "#fff",
                         padding: 0,
@@ -446,35 +503,40 @@ export default class SiderDemo extends React.Component {
                         alignItems: "center",
                         justifyContent: "space-between",
                         paddingRight: "24px",
-                        display: "none"
                       }}
                     >
                       {/* <div style={{ display: "flex", alignItems: "center" }}>
                         <Icon className="trigger" type={this.state.collapsed ? "menu-unfold" : "menu-fold"} onClick={this.toggle} />
                       </div> */}
-
-                      {/* <Dropdown
-                        overlay={
-                          <Menu>
-                            <Menu.Item>
-                              <Icon type="user" />
-                              Profile
-                            </Menu.Item>
-                            <Menu.Item>
-                              <Icon type="redo" />
-                              Update Now
-                            </Menu.Item>
-                            <Divider style={{ marginTop: 5, marginBottom: 5 }} />
-                            <Menu.Item onClick={this.onLogout}>
-                              <Icon type="logout" />
-                              Logout
-                            </Menu.Item>
-                          </Menu>
-                        }
-                        trigger={["hover"]}
-                      >
-                        <Link to="#">Marco JR</Link>
-                      </Dropdown> */}
+                      <div className="market-header-left-spacer" />
+                      <div className="market-header-right-actions">
+                        <span className="market-header-version">v{APP_VERSION}</span>
+                        <Tooltip title="Check for updates">
+                          <Button className="market-header-update-button" onClick={this.handleUpdate}>
+                            <RefreshCw size={14} />
+                            <span>Update</span>
+                          </Button>
+                        </Tooltip>
+                        <Dropdown overlay={<NotificationMenu />} trigger={["click"]} placement="bottomRight">
+                          <button type="button" className="market-header-icon-button" aria-label="Notifications">
+                            <Badge count={notificationCount} className="market-header-notification-badge">
+                              <Bell size={18} />
+                            </Badge>
+                          </button>
+                        </Dropdown>
+                        <Dropdown overlay={this.renderUserMenu()} trigger={["click"]} placement="bottomRight">
+                          <button type="button" className="market-header-user-button">
+                            <Avatar size={34} src={headerUser.avatar} className="market-header-avatar">
+                              {headerUser.initials}
+                            </Avatar>
+                            <span className="market-header-user-copy">
+                              <strong>{headerUser.displayName}</strong>
+                              <span>{headerUser.roleName}</span>
+                            </span>
+                            <ChevronDown size={14} />
+                          </button>
+                        </Dropdown>
+                      </div>
                     </Header>
                   )}
 
