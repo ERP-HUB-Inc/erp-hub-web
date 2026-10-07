@@ -18,7 +18,8 @@ import {
    Tag,
    Typography,
    Button,
-   Statistic
+   Statistic,
+   Select
 } from "antd";
 import ReactGA from "react-ga4";
 import debounce from 'lodash/debounce';
@@ -70,7 +71,8 @@ export default class ProductList extends Datatable {
          dataSourceToPrint: [],
          stockInItems: {}, // Format: { [productId]: { quantity, unitId, notes, type } }
          unitOptions: [], // Load your unit options here
-         activeTab: "item"
+         activeTab: "item",
+         productTypes: []
       };
       this.SelectCategoryRef = React.createRef();
       this.SelectLocationRef = React.createRef();
@@ -477,8 +479,29 @@ export default class ProductList extends Datatable {
          if (params.get("search")) this.props.form.setFieldsValue({ key: params.get("search") });
          if (params.get("categoryId")) this.props.form.setFieldsValue({categoryId: params.get("categoryId")});
          if (params.get("locationId")) this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))});
+         if (params.get("type")) this.props.form.setFieldsValue({type: Number(params.get("type"))});
 
          this.fetchList(true);
+
+         ProductService.getFormData()
+         .then(response => {
+            const productTypes = response?.data?.data?.productTypes || [];
+            this.setState({
+               productTypes: productTypes.length
+                  ? productTypes.map(productType => ({
+                     ...productType,
+                     id: Number(productType.id),
+                     name: productType.name || productType.label || productType.code
+                  }))
+                  : [
+                     { id: 0, code: "PHYSICAL_PRODUCT", name: "Physical Product" },
+                     { id: 1, code: "SERVICE", name: "Service" },
+                     { id: 2, code: "BUNDLE_COMBO", name: "Bundle / Combo" },
+                     { id: 3, code: "RAW_MATERIAL", name: "Raw Material" },
+                     { id: 4, code: "NON_STOCK_ITEM", name: "Non-Stock Item" },
+                  ]
+            });
+         });
 
          // Fetch the list of locations with pagination, sorting by "name" in ascending order
          LocationService.get(500, 0, "name", "ASC")
@@ -580,7 +603,9 @@ export default class ProductList extends Datatable {
    fetchList(withPagination = false) {
          let search = "";
          let filter = {};
+         let filterValue = {};
          let locationId = 0;
+         let type = "";
          let limit = this.pageSize;
          let offset = this.state.current;
          const params = new URLSearchParams(document.location.search);
@@ -588,8 +613,10 @@ export default class ProductList extends Datatable {
          if (params.get("limit")) limit = Number(params.get("limit"));
          if (params.get("current")) offset = Number(params.get("current"));
          if (params.get("search")) search = params.get("search");
-         if (params.get("categoryId")) filter = JSON.stringify({ categoryId: params.get("categoryId") });
+         if (params.get("categoryId")) filterValue.categoryId = params.get("categoryId");
          if (params.get("locationId")) locationId = Number(params.get("locationId"));
+         if (params.get("type")) type = Number(params.get("type"));
+         if (Object.keys(filterValue).length) filter = JSON.stringify(filterValue);
 
          if (!withPagination) {
             offset = 1;
@@ -602,7 +629,7 @@ export default class ProductList extends Datatable {
          
          this.setState({loading: true});
          
-         ProductService.get({ limit, offset, filter, search, locationId })
+         ProductService.get({ limit, offset, filter, search, locationId, type })
          .then(response => {
             if (response.data) {
                this.setState({
@@ -826,6 +853,42 @@ export default class ProductList extends Datatable {
       this.fetchList();
    }
 
+   onChangeType = (type) => {
+      const params = new URLSearchParams(document.location.search);
+
+      if (type || type === 0) {
+         params.set("type", type);
+      } else {
+         params.delete("type");
+      }
+
+      this.Util.pushParamsToURL(this.pathName, params.toString());
+      this.fetchList();
+   }
+
+   renderProductTypeFilter() {
+      const defaultValue = new URLSearchParams(document.location.search).get("type");
+
+      return (
+         <Select
+            allowClear
+            showSearch
+            optionFilterProp="children"
+            placeholder="Product Type"
+            size="default"
+            defaultValue={defaultValue !== null ? Number(defaultValue) : undefined}
+            onChange={this.onChangeType}
+            style={{ width: 190, marginLeft: 8, verticalAlign: "top" }}
+         >
+            {this.state.productTypes.map(productType => (
+               <Select.Option key={productType.id} value={productType.id}>
+                  {productType.name}
+               </Select.Option>
+            ))}
+         </Select>
+      );
+   }
+
    onShowSizeChange = (current, pageSize) => {
       if (this.action) {
          const params = new URLSearchParams(document.location.search);
@@ -837,6 +900,14 @@ export default class ProductList extends Datatable {
 
          if (params.get("locationId")) {
             strParam += `&locationId=${params.get("locationId")}`;
+         }
+
+         if (params.get("categoryId")) {
+            strParam += `&categoryId=${params.get("categoryId")}`;
+         }
+
+         if (params.get("type")) {
+            strParam += `&type=${params.get("type")}`;
          }
 
          this.setState({ current, isClickFilter: false });
@@ -858,6 +929,14 @@ export default class ProductList extends Datatable {
 
          if (params.get("locationId")) {
             strParam += `&locationId=${params.get("locationId")}`;
+         }
+
+         if (params.get("categoryId")) {
+            strParam += `&categoryId=${params.get("categoryId")}`;
+         }
+
+         if (params.get("type")) {
+            strParam += `&type=${params.get("type")}`;
          }
 
          this.setState({ current, isClickFilter: false });
@@ -990,6 +1069,8 @@ export default class ProductList extends Datatable {
                       allowClear={true}
                     />
 
+                    {this.renderProductTypeFilter()}
+
                     <SelectCategory
                       ref={this.SelectCategoryRef}
                       onChange={this.onChangeCategory}
@@ -1042,6 +1123,8 @@ export default class ProductList extends Datatable {
                       style={{ width: 350, marginBottom: 0 }}
                       allowClear={true}
                     />
+
+                    {this.renderProductTypeFilter()}
 
                     <SelectCategory
                       ref={this.SelectCategoryRef}

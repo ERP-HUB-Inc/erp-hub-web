@@ -44,6 +44,8 @@ import CategoryList from "./category-list";
 import { StockBadge } from "@components/stateless/stock-badge";
 import { getLocationId } from "@helper/user";
 
+const APP_VERSION = process.env.REACT_APP_VERSION || "2.0.51";
+
 export default class RetailSale extends Component {
   constructor(props) {
     super(props);
@@ -60,6 +62,7 @@ export default class RetailSale extends Component {
       customerFieldPrice: "price",
       textFullScreen: <Translate id="text_full_screen" />,
       iconFullScreen: "icon-full-screen",
+      searchText: "",
       items: [],
       orderItems: [],
       discountValue: { type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0 },
@@ -108,26 +111,7 @@ export default class RetailSale extends Component {
       }
     });
 
-    window.addEventListener("keydown", (e) => {
-      const EndKey = 35,
-        F2 = 113,
-        F11 = 122,
-        F = 70,
-        S = 83;
-      if (e.key === EndKey) {
-        this.handleOnMakePayment();
-      } else if (e.key === F2) {
-        this.handleOnSetupDiscount();
-      } else if (e.key === F11 && e.shiftKey) {
-        this.setState({ orderItems: [] });
-      } else if (e.key === F && e.ctrlKey) {
-        e.preventDefault();
-        document.getElementById("searchProduct").focus();
-      } else if (e.key === S && e.ctrlKey) {
-        e.preventDefault();
-        this.handleOnSaveParkReceipt();
-      }
-    });
+    window.addEventListener("keydown", this.handleKeyboardShortcut);
 
     ExchangeRateService.getCurrentExchangeRate().then((response) => {
       const data = response.data;
@@ -202,7 +186,7 @@ export default class RetailSale extends Component {
 
   componentWillUnmount() {
     this.hadDidUpdateCheckDevice = false;
-    window.removeEventListener("keydown", null);
+    window.removeEventListener("keydown", this.handleKeyboardShortcut);
   }
 
   handleOnSelectCategory = (categoryId) => {
@@ -276,6 +260,8 @@ export default class RetailSale extends Component {
       discount,
       discountType,
       enableDescription: item.enableDescription,
+      enableInventoryTracking: item.enableInventoryTracking,
+      stockQuantity: this.isInventoryTrackingEnabled(item) ? this.getProductVariantStock(variant) : null,
       tax: tax.taxRate / 100,
       taxDescription: tax,
       description: item.name,
@@ -379,6 +365,7 @@ export default class RetailSale extends Component {
 
   onSearch = (e) => {
     const search = e.target.value;
+    this.setState({ searchText: search });
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       ItemService.get({ limit: 25, locationId: this.Util.getLocationId(), search: search }).then((response) => {
@@ -388,6 +375,17 @@ export default class RetailSale extends Component {
       });
     }, 1000);
   };
+
+  handleOnClearSearch = () => {
+    clearTimeout(this.timer);
+    this.setState({ searchText: "" });
+    ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
+      if (response && response.data && response.data.data) {
+        this.setState({ items: response.data.data });
+      }
+    });
+    this.focusSearchInput();
+  }
 
   saveReceipt(key, orderItems = []) {
     localStorage.setItem(
@@ -449,7 +447,74 @@ export default class RetailSale extends Component {
     localStorage.removeItem(Enum.CURRENT_RECEIPT);
     this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
     this.props.form.setFieldsValue({ searchRecord: "" }); //searchRecord: customer search field
-    this.discountRef.current.reset();
+    if (this.discountRef.current) {
+      this.discountRef.current.reset();
+    }
+  }
+
+  handleOnNewSale = () => {
+    this.setState({ orderItems: [] });
+  }
+
+  focusSearchInput = () => {
+    if (this.searchItemInput && this.searchItemInput.focus) {
+      this.searchItemInput.focus();
+    }
+  }
+
+  isTypingShortcutTarget(event) {
+    const target = event.target;
+    if (!target) return false;
+
+    const tagName = target.tagName ? target.tagName.toLowerCase() : "";
+    return tagName === "input" || tagName === "textarea" || tagName === "select" || target.isContentEditable;
+  }
+
+  handleKeyboardShortcut = (event) => {
+    const key = event.key;
+    const normalizedKey = typeof key === "string" ? key.toLowerCase() : "";
+    const isTypingTarget = this.isTypingShortcutTarget(event);
+
+    if ((event.metaKey || event.ctrlKey) && normalizedKey === "k") {
+      event.preventDefault();
+      this.focusSearchInput();
+      return;
+    }
+
+    if (event.ctrlKey && normalizedKey === "f") {
+      event.preventDefault();
+      this.focusSearchInput();
+      return;
+    }
+
+    if (key === "F1") {
+      event.preventDefault();
+      this.handleOnNewSale();
+      return;
+    }
+
+    if (key === "F2") {
+      event.preventDefault();
+      this.handleOnSetupDiscount();
+      return;
+    }
+
+    if (key === "F6") {
+      event.preventDefault();
+      this.handleOnSaveParkReceipt();
+      return;
+    }
+
+    if (key === "F11" && event.shiftKey) {
+      event.preventDefault();
+      this.handleOnNewSale();
+      return;
+    }
+
+    if ((key === "Enter" || key === "End") && !isTypingTarget) {
+      event.preventDefault();
+      this.handleOnMakePayment();
+    }
   }
 
   handleOnResizeScreen = () => {
@@ -463,6 +528,28 @@ export default class RetailSale extends Component {
 
   getProductStock(product) {
     return Number(Util.countProductQTYCurrentLocation(product, getLocationId())) || 0;
+  }
+
+  isInventoryTrackingEnabled(product) {
+    return product?.enableInventoryTracking !== false;
+  }
+
+  isProductOutOfStock(product) {
+    return this.isInventoryTrackingEnabled(product) && this.getProductStock(product) <= 0;
+  }
+
+  getProductStockStatus(product) {
+    if (!this.isInventoryTrackingEnabled(product)) {
+      return "in";
+    }
+
+    const productStock = this.getProductStock(product);
+
+    if (productStock <= 0) {
+      return "out";
+    }
+
+    return productStock <= (Number(product.reorderPoint) || 5) ? "low" : "in";
   }
 
   getProductVariantStock(productVariant) {
@@ -501,8 +588,9 @@ export default class RetailSale extends Component {
     let freeProducts = [];
     let newPrice = null;
     let { orderItems, initialOrderDiscount, initialOrderDiscountType, isDiscountHasAdded, discountValue } = this.state;
+    const isInventoryTrackingEnabled = this.isInventoryTrackingEnabled(product);
 
-    if (this.getProductStock(product) <= 0) {
+    if (isInventoryTrackingEnabled && this.getProductStock(product) <= 0) {
       this.handleOutOfStockProduct(product);
       return;
     }
@@ -527,7 +615,7 @@ export default class RetailSale extends Component {
     }
 
     const stockInCurrentLocation = this.getProductVariantStock(productVariant);
-    if (stockInCurrentLocation <= 0) {
+    if (isInventoryTrackingEnabled && stockInCurrentLocation <= 0) {
       this.handleOutOfStockProduct(product);
       return;
     }
@@ -545,7 +633,7 @@ export default class RetailSale extends Component {
       orderAmount = orderQuantity * productVariant.price;
     }
 
-    if (orderQuantity > stockInCurrentLocation) {
+    if (isInventoryTrackingEnabled && orderQuantity > stockInCurrentLocation) {
       const message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
       this.Message.error(`${Util.getProductNameV2(product)} ${message} ${stockInCurrentLocation}`);
       return;
@@ -741,6 +829,18 @@ export default class RetailSale extends Component {
 
     if (field === "quantity") {
       const orderQuantity = value;
+      if (orderProduct.enableInventoryTracking !== false && orderQuantity > orderProduct.stockQuantity) {
+        const message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
+        orderProducts[proderOrderRowIndex][field] = orderProduct.stockQuantity;
+        this.props.form.setFieldsValue({
+          [`quantity[${proderOrderRowIndex}]`]: orderProduct.stockQuantity,
+        });
+        this.Message.error(`${orderProduct.itemName} ${message} ${orderProduct.stockQuantity}`);
+        this.appendProductTaxList(orderProducts);
+        this.setState({ orderItems: orderProducts });
+        return;
+      }
+
       const orderAmount = orderQuantity * orderProduct.price;
       const promotion = await this.getProductPromotion(orderProduct.productVariantId, orderQuantity, orderAmount);
       if (promotion.discountType === "basic") {
@@ -762,6 +862,11 @@ export default class RetailSale extends Component {
 
   handleOnSelectProductSearchList = (product, productVariants) => {
     if (this.openFormSaleRegisration()) {
+      return;
+    }
+
+    if (this.isProductOutOfStock(product)) {
+      this.handleOutOfStockProduct(product);
       return;
     }
 
@@ -921,12 +1026,13 @@ export default class RetailSale extends Component {
     return countProduct > 0 ? (
       this.state.items.map((product, index) => {
         const productStock = this.getProductStock(product);
-        const isOutOfStock = productStock <= 0;
+        const isOutOfStock = this.isProductOutOfStock(product);
+        const stockStatus = this.getProductStockStatus(product);
 
         return (
           <div className="product-box" key={index}>
             <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className={`product ${isOutOfStock ? "disabled" : ""}`}>
-              <StockBadge status={isOutOfStock ? "out" : productStock < 5 ? "low" : "in"} count={productStock} />
+              <StockBadge status={stockStatus} count={productStock} />
               <ItemImage src={new CommonUtil().getImageUrl(product?.image) || product?.imageUrl} name={Util.getProductNameV2(product)} height={imageHeight} />
               <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
                 <div
@@ -961,15 +1067,24 @@ export default class RetailSale extends Component {
     );
   }
 
-  renderSaveAndPayButton = () => (
+  renderSaveAndPayButton = (grandTotal) => (
     <div className="payment-action">
-      {/* <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
-        <span className="icon-save icon-padding-right"></span><Translate id="text_save" />
-      </this.Button> */}
-      <Button type="primary" onClick={this.handleOnMakePayment}>
+      <div className="payment-secondary-actions">
+        <Button className="payment-secondary-button" onClick={this.handleOnSaveParkReceipt}>
+          <span>Hold Sale</span>
+          <span className="payment-keyboard-badge">F6</span>
+        </Button>
+        <Button className="payment-secondary-button" onClick={this.handleOnSetupDiscount}>
+          <span className="payment-more-icon">...</span>
+          <span>More Options</span>
+        </Button>
+      </div>
+      <Button type="primary" className="payment-primary-button" onClick={this.handleOnMakePayment}>
         <span className="icon-checked icon-padding-right"></span>
-        <Translate id="text_pay" />
-        <span style={{ textTransform: "capitalize", fontSize: "12pt" }}>(End)</span>
+        <span>
+          <Translate id="text_pay" /> {this.formatCurrency(grandTotal, "$", 0)} (End)
+        </span>
+        <span className="payment-enter-badge">Enter ↵</span>
       </Button>
     </div>
   );
@@ -1060,9 +1175,10 @@ export default class RetailSale extends Component {
       );
     }
 
-    const { summaryTotal, discountAmount, taxAmount, discountTypeStr } = this.getSummaryTotal();
+    const { summaryTotal, discountAmount, taxAmount } = this.getSummaryTotal();
+    const grandTotal = SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
 
-    const { taxTitle, taxTotal, countTax } = SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale));
+    const { taxTotal } = SalesUtil.getSummaryTax(this.state.productTaxList, <Translate id="text_no_tax" />, this.CATranslate("text_taxes", this.props.locale));
 
     const setting = this.Util.getSetting();
     let currency = setting.currency && setting.currency.trim();
@@ -1081,25 +1197,42 @@ export default class RetailSale extends Component {
         </div>
         <div className="top-header">
           <div className="search-container">
-            <Input
-              ref={(input) => {
-                this.searchItemInput = input;
-              }}
-              size="large"
-              placeholder={"Search item name / SKU / Barcode"}
-              onChange={this.onSearch}
-              prefix={<Icon type="search" />}
-              style={{ width: 350, marginBottom: 0 }}
-              allowClear={true}
-              className="search-item-input"
-            />
+            <div className="pos-header-search">
+              <Input
+                ref={(input) => {
+                  this.searchItemInput = input;
+                }}
+                size="large"
+                placeholder={"Search item name / SKU / Barcode"}
+                value={this.state.searchText}
+                onChange={this.onSearch}
+                prefix={<Icon type="search" />}
+                className="search-item-input"
+              />
+              {this.state.searchText ? (
+                <button type="button" className="pos-header-search-clear" onClick={this.handleOnClearSearch} aria-label="Clear search">
+                  <Icon type="close-circle" />
+                </button>
+              ) : (
+                ""
+              )}
+              <span className="pos-header-shortcut">⌘K / F2</span>
+            </div>
           </div>
           <div className="action-container">
-            <Button type="primary" shape="round" icon="plus-circle" size={"large"} onClick={() => this.setState({ orderItems: [] })}>
-              New Sale
+            <div className="pos-header-version">v{APP_VERSION}</div>
+            <div className="pos-header-branch">
+              <Icon type="environment" />
+              <span>ToulKork</span>
+            </div>
+            <div className="pos-header-shift">
+              <span className="pos-header-dot"></span>
+              <span>Shift Open</span>
+            </div>
+            <Button type="default" shape="round" icon="plus" size={"large"} className="pos-header-new-sale" onClick={this.handleOnNewSale}>
+              New Sale <span className="pos-header-new-sale-shortcut">F1</span>
             </Button>
-            <Button type="default" shape="circle" icon="printer" size={"large"} style={{ borderRadius: "50%" }} onClick={() => this.simulateScan("000476")} />
-            <Button type="default" shape="circle" icon="setting" size={"large"} style={{ borderRadius: "50%" }} onClick={() => this.simulateScan("800477")} />
+            <div className="pos-header-divider"></div>
             <ProfileDropdown />
           </div>
         </div>
@@ -1321,119 +1454,69 @@ export default class RetailSale extends Component {
             </div>
             <div id="wrap-payment">
               <div className="payment">
-                <div className="text-left">
-                  {/* {
-                  !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
-                    <div className="sub-total add-discount" style={{justifyContent: "flex-end"}} onClick={this.handleOnSetupDiscount}>
-                      <span className="icon-add icon-padding-right"></span> <span><Translate id="text_add"/> <Translate id="text_discount"/></span><span style={{fontSize: "10pt"}}>(F2)</span>
-                    </div>
-                    :
-                    ""
-                } */}
-
-                  {/* SUB TOTAL ROW */}
-                  <div className="sub-total">
-                    <div className="sub-total-title">
+                <div className="order-summary">
+                  <div className="order-summary-row">
+                    <div className="order-summary-label">
                       <Translate id="text_sub_total" />
                     </div>
-                    <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount * exchangeRate)}</div>
+                    <div className="order-summary-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount * exchangeRate)}</div>
                   </div>
-                  <div className="sub-total">
-                    <div className="flex">
-                      <div className="sub-total-title">
+                  <div className="order-summary-row">
+                    <div className="order-summary-label order-summary-discount-label">
+                      <span>
                         <Translate id="text_discount" />
-                      </div>
+                      </span>
                       {discountAmount > 0 ? (
                         <Button
+                          className="order-summary-add-button"
                           size="small"
                           shape="round"
-                          type="danger"
-                          style={{
-                            marginLeft: 8,
-                            fontSize: 12,
-                            height: 24,
-                            padding: "0 10px",
-                          }}
                           onClick={this.handleOnSetupDiscount}
                         >
                           Edit
                         </Button>
                       ) : (
                         <Button
+                          className="order-summary-add-button"
                           size="small"
                           icon="plus"
                           shape="round"
-                          type="default"
-                          style={{
-                            marginLeft: 8,
-                            fontSize: 12,
-                            height: 24,
-                            padding: "0 10px",
-                          }}
                           onClick={this.handleOnSetupDiscount}
                         >
-                          Add Discount
+                          Add
                         </Button>
                       )}
                     </div>
-                    <div className="sub-total-value" style={{ color: "#e85757" }}>
+                    <div className="order-summary-value order-summary-discount-value">
                       -{this.formatCurrency(discountAmount * exchangeRate)}
                     </div>
                   </div>
-                  {/* END SUB TOTAL ROW */}
-
-                  {/* DISCOUNT ROW */}
-                  {/* {this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ? (
-                    <div className="sub-total">
-                      <div className="ca-link sub-total-title" style={{ fontWeight: 600, position: "relative" }} onClick={this.handleOnSetupDiscount}>
-                        <div className="delete remove-discount" onClick={this.handleRemoveDiscount}>
-                          <span className="icon-delete"></span>
-                        </div>
-                        <Translate id="text_discount" />
-                        {discountTypeStr}
-                      </div>
-                      <div className="sub-total-value" style={{ position: "relative", color: "#e85757" }}>
-                        {this.formatCurrency(discountAmount * exchangeRate)}
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )} */}
-                  {/*END DISCOUNT ROW */}
-
-                  <div
-                    className="sub-total"
-                    style={{
-                      borderTop: "1px dashed #d1d5db",
-                      marginTop: 10,
-                      paddingTop: 10,
-                    }}
-                  >
-                    <div className="sub-total-title" style={{ fontSize: "16pt", fontWeight: 600 }}>
-                      <Translate id="text_total" />
-                    </div>
-                    <div className="sub-total-value" style={{ fontSize: "16pt", fontWeight: 600, color: "#00897B" }}>
-                      {this.Util.formatCurrency(SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount) * this.state.exchangeRate.sellRate, "៛", 1, 0)}
-                    </div>
+                  <div className="order-summary-row">
+                    <div className="order-summary-label order-summary-muted">Tax (Included 0%)</div>
+                    <div className="order-summary-value">{this.formatCurrency(taxTotal * exchangeRate)}</div>
                   </div>
 
-                  <div className="sub-total">
-                    <div className="sub-total-title" style={{ visibility: "hidden" }}>
-                      <Translate id="text_total" />
+                  <div className="order-summary-divider" />
+
+                  <div className="order-total-due">
+                    <div>
+                      <div className="order-total-title">Total Due</div>
+                      <div className="order-total-rate">
+                        Rate: 1$ = {Number(this.state.exchangeRate.sellRate || 0).toLocaleString()}៛
+                      </div>
                     </div>
-                    <div
-                      className="sub-total-value"
-                      style={{
-                        fontSize: "16pt",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {this.formatCurrency(SalesUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), "$", 0)}
+                    <div className="order-total-values">
+                      <div className="order-total-khr">
+                        {this.Util.formatCurrency(grandTotal * this.state.exchangeRate.sellRate, "៛", 1, 0)}
+                      </div>
+                      <div className="order-total-usd">
+                        {this.formatCurrency(grandTotal, "$", 0)}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              {this.renderSaveAndPayButton()}
+              {this.renderSaveAndPayButton(grandTotal)}
             </div>
           </div>
         </div>

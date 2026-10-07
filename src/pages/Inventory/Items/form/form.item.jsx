@@ -4,7 +4,9 @@ import {
   Spin,
   Row,
   Col,
-  Switch
+  Switch,
+  Select as AntSelect,
+  TreeSelect
 } from "antd";
 import { orderBy } from "lodash";
 import {
@@ -38,6 +40,117 @@ import BaseModal from "@layout/base-modal";
 import Exchange from "./exchange-money-func";
 import "./index.css";
 import FormVariant from "./form.variant";
+
+const DEFAULT_PRODUCT_TYPES = [
+  {
+    id: 0,
+    code: "PHYSICAL_PRODUCT",
+    name: "Physical Product",
+    enableInventoryTracking: true,
+    sellable: true,
+  },
+  {
+    id: 1,
+    code: "SERVICE",
+    name: "Service",
+    enableInventoryTracking: false,
+    sellable: true,
+  },
+  {
+    id: 2,
+    code: "BUNDLE_COMBO",
+    name: "Bundle / Combo",
+    enableInventoryTracking: true,
+    sellable: true,
+  },
+  {
+    id: 3,
+    code: "RAW_MATERIAL",
+    name: "Raw Material",
+    enableInventoryTracking: true,
+    sellable: false,
+  },
+  {
+    id: 4,
+    code: "NON_STOCK_ITEM",
+    name: "Non-Stock Item",
+    enableInventoryTracking: false,
+    sellable: true,
+  },
+];
+
+const NON_STOCK_PRODUCT_TYPE_CODES = [
+  "SERVICE",
+  "DIGITAL_PRODUCT",
+  "SUBSCRIPTION",
+  "MEMBERSHIP",
+  "FEE",
+  "DEPOSIT",
+  "NON_STOCK_ITEM",
+  "GIFT_CARD_VOUCHER",
+];
+
+const normalizeProductTypes = (productTypes = []) => {
+  const safeTypes = Array.isArray(productTypes) && productTypes.length
+    ? productTypes
+    : DEFAULT_PRODUCT_TYPES;
+
+  return safeTypes.map(productType => ({
+    ...productType,
+    id: Number(productType.id),
+    name: productType.name || productType.label || productType.code,
+  }));
+};
+
+const getDefaultProductTypeId = (type) => {
+  if (type === 0 || type === "0") {
+    return 0;
+  }
+
+  return type || type === 0 ? Number(type) : 0;
+};
+
+const buildCategoryTreeData = (categories = []) => {
+  if (!Array.isArray(categories)) {
+    return [];
+  }
+
+  const getTitle = category => category.name || category.label || "Unnamed Category";
+  const buildNode = category => ({
+    title: getTitle(category),
+    value: category.id,
+    key: category.id,
+    children: buildCategoryTreeData(category.children || []),
+  });
+
+  if (categories.some(category => Array.isArray(category.children) && category.children.length)) {
+    return categories.map(buildNode);
+  }
+
+  const byId = {};
+  const roots = [];
+
+  categories.forEach(category => {
+    byId[category.id] = {
+      title: getTitle(category),
+      value: category.id,
+      key: category.id,
+      parentId: category.parentId,
+      children: [],
+    };
+  });
+
+  categories.forEach(category => {
+    const node = byId[category.id];
+    if (category.parentId && byId[category.parentId]) {
+      byId[category.parentId].children.push(node);
+    } else {
+      roots.push(node);
+    }
+  });
+
+  return roots;
+};
 
 function SelectBrand(props) {
   const limit = 15;
@@ -583,15 +696,6 @@ function SelectCondition(props) {
   const [loading, setLoading] = React.useState(false);
   const [conditions, setConditions] = React.useState([]);
 
-  React.useEffect(() => {
-    ProductConditionService.get({ limit })
-    .then(response => {
-      if (response.data && response.data.data) {
-        setConditions(response.data.data);
-      }
-    });
-  }, []);
-
   const handleChange = (value) => {
     if (!value) {
       ProductConditionService.get({ limit })
@@ -604,14 +708,22 @@ function SelectCondition(props) {
   };
 
   React.useEffect(() => {
+    if (Array.isArray(props.dataSource) && props.dataSource.length) {
+      setConditions(props.dataSource);
+      return;
+    }
+
     setLoading(true);
     ProductConditionService.get({ limit })
     .then(response => {
       if (response.data && response.data.data) {
         setConditions(response.data.data);
       }
+    })
+    .finally(() => {
+      setLoading(false);
     });
-  }, [])
+  }, [props.dataSource])
 
   return <SelectSearch
       name="conditionId"
@@ -643,6 +755,9 @@ export default class FormItem extends BaseModal {
       specification: "",
       tags: [],
       conditions: [],
+      productTypes: DEFAULT_PRODUCT_TYPES,
+      categories: [],
+      selectedProductTypeId: getDefaultProductTypeId(props.formData?.type),
       inputVisible: false,
       editCostVisible: false,
       inputValue: "",
@@ -685,17 +800,6 @@ export default class FormItem extends BaseModal {
       }
     ];
 
-    this.typesOfProduct = [
-      {
-        name: <Translate id="text_final_goods" />,
-        value: Enum.TYPE_OF_PRODUCT.GOOD
-      },
-      {
-        name: <Translate id="text_raw_material" />,
-        value: Enum.TYPE_OF_PRODUCT.RAW_MATERIAL
-      }
-    ];
-
     this.statuses = [
       {
         name: "Draft",
@@ -721,7 +825,18 @@ export default class FormItem extends BaseModal {
         serialType: formData.id ? formData.serialType : prevState.serialType,
         tags: formData.tag && formData.tag.length ? formData.tag.split(",") : [],
         variants: formData?.productVariants ? formData.productVariants : [],
+        selectedProductTypeId: getDefaultProductTypeId(formData.type),
       }
+    });
+
+    ProductService.getFormData()
+    .then(response => {
+      const data = response?.data?.data || {};
+      this.setState({
+        conditions: data.conditions || [],
+        productTypes: normalizeProductTypes(data.productTypes),
+        categories: data.categories || [],
+      });
     });
 
     const { currency, currencyId }  = this.Util.getSetting();
@@ -807,11 +922,73 @@ export default class FormItem extends BaseModal {
  }
 
   handleChangeType = (value) => {
-    if (value === Enum.TYPE_OF_PRODUCT.RAW_MATERIAL) {
-      this.setState({productOptionClassDisabled: "disabled-click"});
-    } else {
-      this.setState({productOptionClassDisabled: ""});
+    const selectedProductType = this.getProductTypeById(value);
+    const isBundleProductType = this.isBundleProductType(selectedProductType);
+
+    this.setState({
+      selectedProductTypeId: getDefaultProductTypeId(value),
+      productOptionClassDisabled: isBundleProductType ? "disabled-click" : "",
+      productTypeIndex: isBundleProductType ? Enum.PRODUCT_COMPOSITE : this.state.productTypeIndex,
+      serialType: this.shouldTrackInventory(selectedProductType)
+        ? Enum.SERIAL_TYPE.PRODUCT
+        : Enum.SERIAL_TYPE.SERVICE,
+    });
+
+    if (isBundleProductType) {
+      this.props.form.setFieldsValue({
+        productOption: Enum.PRODUCT_COMPOSITE,
+      });
     }
+
+    if (!this.shouldTrackInventory(selectedProductType)) {
+      this.props.form.setFieldsValue({
+        enableInventoryTracking: false,
+        intialStockQuantity: 0,
+        reorderPoint: 0,
+      });
+    }
+
+    if (!this.isProductTypeSellable(selectedProductType)) {
+      this.props.form.setFieldsValue({
+        isAvialableSale: false,
+        price: 0,
+      });
+    }
+  }
+
+  getProductTypeOptions = () => normalizeProductTypes(this.state.productTypes);
+
+  getProductTypeById = (typeId) => {
+    const safeTypeId = getDefaultProductTypeId(typeId);
+    return this.getProductTypeOptions().find(productType => productType.id === safeTypeId)
+      || DEFAULT_PRODUCT_TYPES[0];
+  }
+
+  shouldTrackInventory = (productType) => {
+    if (!productType) {
+      return true;
+    }
+
+    if (productType.enableInventoryTracking === false) {
+      return false;
+    }
+
+    return !NON_STOCK_PRODUCT_TYPE_CODES.includes(productType.code);
+  }
+
+  isProductTypeSellable = (productType) => {
+    if (!productType) {
+      return true;
+    }
+
+    return productType.sellable !== false &&
+      productType.isSellable !== false &&
+      productType.enableSale !== false &&
+      productType.enableSales !== false;
+  }
+
+  isBundleProductType = (productType) => {
+    return productType?.code === "BUNDLE_COMBO" || Number(productType?.id) === 2;
   }
 
   onChangeItemType = (e) => {
@@ -892,6 +1069,13 @@ export default class FormItem extends BaseModal {
 
     const productHasVariant = formData.productOption === Enum.PRODUCT_VARIANT;
     const productNoVariant = formData.productOption === Enum.NO_VARIANT;
+    const selectedTypeId = form.getFieldValue("type") !== undefined
+      ? form.getFieldValue("type")
+      : this.state.selectedProductTypeId;
+    const selectedProductType = this.getProductTypeById(selectedTypeId);
+    const shouldTrackInventory = this.shouldTrackInventory(selectedProductType);
+    const isSellableProductType = this.isProductTypeSellable(selectedProductType);
+    const categoryTreeData = buildCategoryTreeData(this.state.categories);
 
     const image = {
       uid: "-1",
@@ -980,15 +1164,56 @@ export default class FormItem extends BaseModal {
               </>
             )}
 
-            <SelectCategory
-              defaultValue={formData.categoryId}
-              selected={formData?.category}
-              placeholder="Choose a category..."
-              form={form}
-            />
+            <Form.Item
+              label="Product Type"
+              help="Product type controls inventory and sales behavior. Category remains separate for browsing and reporting."
+              colon={false}
+              labelAlign="left"
+            >
+              {form.getFieldDecorator("type", {
+                initialValue: getDefaultProductTypeId(formData.type),
+                rules: [{ required: true, message: "Please select product type" }],
+              })(
+                <AntSelect
+                  size="large"
+                  showSearch
+                  optionFilterProp="children"
+                  placeholder="Choose product type..."
+                  onChange={this.handleChangeType}
+                >
+                  {this.getProductTypeOptions().map(productType => (
+                    <AntSelect.Option key={productType.id} value={productType.id}>
+                      {productType.name}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              )}
+            </Form.Item>
+
+            <Form.Item
+              label={<Translate id="text_category" />}
+              colon={false}
+              labelAlign="left"
+            >
+              {form.getFieldDecorator("categoryId", {
+                initialValue: formData.categoryId || undefined,
+              })(
+                <TreeSelect
+                  size="large"
+                  treeData={categoryTreeData}
+                  treeDefaultExpandAll
+                  allowClear
+                  showSearch
+                  placeholder="Choose a category..."
+                  dropdownStyle={{ maxHeight: 360, overflow: "auto" }}
+                  treeNodeFilterProp="title"
+                />
+              )}
+            </Form.Item>
 
             <SelectCondition
               defaultValue={formData.conditionId}
+              dataSource={this.state.conditions}
               placeholder={this.CATranslate("text_select_condition", locale)}
               form={form}
             />
@@ -1088,6 +1313,13 @@ export default class FormItem extends BaseModal {
               />
             </Form.Item>
 
+            <InputNumber
+              name="productOption"
+              data={formData.productOption || Enum.NO_VARIANT}
+              form={form}
+              style={{ display: "none" }}
+            />
+
             <Select
               name="status"
               label={
@@ -1172,6 +1404,7 @@ export default class FormItem extends BaseModal {
                 placeholder={"0.00"}
                 errorRequired={<Translate id="error_require_price" />}
                 max={99999999}
+                disabled={!isSellableProductType}
                 form={form}
               />
 
@@ -1245,7 +1478,7 @@ export default class FormItem extends BaseModal {
           >
             <CustomCheckbox
               name="enableInventoryTracking"
-              defaultValue={formData.enableInventoryTracking}
+              defaultValue={formData.id ? shouldTrackInventory && formData.enableInventoryTracking : shouldTrackInventory}
               label={"Track Inventory for this Item"}
               subtitle={
                 "You cannot enable/disable inventory tracking once you've created transactions for this item"
@@ -1253,24 +1486,7 @@ export default class FormItem extends BaseModal {
               tooltip={
                 "Enable this option to track this item's stock based on its sales and purchase transactions."
               }
-              disabled={this.state.serialType === Enum.SERIAL_TYPE.SERVICE}
-              form={form}
-            />
-
-            <Select
-              name="type"
-              label={<Translate id="text_type" />}
-              tooltip={
-                "Select 'Raw Material' if the item is used in production, or 'Final Goods' if it is ready for direct sale."
-              }
-              dataSource={this.typesOfProduct}
-              defaultValue={
-                formData.type !== ""
-                  ? formData.type
-                  : this.typesOfProduct[0].value
-              }
-              disabled={!!formData.id}
-              onChange={this.handleChangeType}
+              disabled={this.state.serialType === Enum.SERIAL_TYPE.SERVICE || !shouldTrackInventory}
               form={form}
             />
 
@@ -1290,6 +1506,7 @@ export default class FormItem extends BaseModal {
                 label={"Initial Stock Quantity"}
                 data={formData.intialStockQuantity}
                 placeholder="Enter initial stock quantity"
+                disabled={!shouldTrackInventory}
                 form={form}
               />
             )}
@@ -1300,6 +1517,7 @@ export default class FormItem extends BaseModal {
                 label={"Reorder Level"}
                 data={formData.reorderPoint}
                 placeholder="Enter reorder point"
+                disabled={!shouldTrackInventory}
                 form={form}
               />
             )}

@@ -147,7 +147,7 @@ export default class SiderDemo extends React.Component {
    onLogout = () => {
     localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("STORE_ACCESS_TOKEN");
-    history.push("/login");
+    window.location.replace("/login");
    }
 
    handleUpdate = () => {

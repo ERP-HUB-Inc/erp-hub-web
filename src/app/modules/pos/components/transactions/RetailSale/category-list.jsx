@@ -12,7 +12,7 @@ import CategoryService from '@services/CategoryService';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const TEAL = '#0b9e7f';
+const TEAL = '#14b8a6';
 const LIMIT = 8; // how many categories to fetch per page
 
 const CAT_COLORS = [
@@ -51,12 +51,12 @@ const normalizeCategory = (cat) => ({
 
 const Wrapper = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 14px;
   overflow-x: auto;
   overflow-y: visible;
   scrollbar-width: none;
-  padding-bottom: 4px;
+  padding: 2px 2px 8px;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
 
@@ -70,25 +70,28 @@ const Wrapper = styled.div`
 `;
 
 const Tab = styled.button`
-  height: 64px;
-  padding: 0 20px 0 10px;
-  border-radius: 32px;
-  border: 2px solid ${({ $active }) => ($active ? TEAL : '#e8e8e8')};
-  background: ${({ $active }) => ($active ? '#f0faf7' : '#fff')};
+  height: 68px;
+  min-width: 176px;
+  max-width: 220px;
+  padding: 0 16px 0 12px;
+  border-radius: 18px;
+  border: 1px solid ${({ $active }) => ($active ? '#99e6dc' : '#e5edf0')};
+  background: ${({ $active }) => ($active ? '#f3fffc' : '#fff')};
   white-space: nowrap;
   flex-shrink: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   box-shadow: ${({ $active }) =>
-    $active ? `0 4px 12px ${TEAL}30` : '0 1px 4px rgba(0,0,0,0.06)'};
-  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    $active ? `0 8px 20px rgba(20, 184, 166, 0.14)` : '0 4px 14px rgba(15, 23, 42, 0.04)'};
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 
   &:hover {
     border-color: ${TEAL};
-    background: #f0faf7;
-    box-shadow: 0 4px 12px ${TEAL}25;
+    background: #f8fffd;
+    box-shadow: 0 8px 20px rgba(20, 184, 166, 0.12);
+    transform: translateY(-1px);
   }
 
   &:active {
@@ -98,19 +101,19 @@ const Tab = styled.button`
 `;
 
 const TabIcon = styled.div`
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: ${({ $color }) => $color || '#e0e0e0'};
+  width: 42px;
+  height: 42px;
+  border-radius: ${({ $active }) => ($active ? '14px' : '50%')};
+  background: ${({ $active, $color }) => ($active ? TEAL : $color || '#e0e0e0')};
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: ${({ $hasImage }) => ($hasImage ? 'inherit' : '13px')};
-  font-weight: 700;
+  font-size: ${({ $hasImage }) => ($hasImage ? 'inherit' : '12px')};
+  font-weight: 800;
   color: #fff;
   flex-shrink: 0;
   overflow: hidden;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
 
   img {
     width: 100%;
@@ -124,20 +127,26 @@ const TabText = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 1px;
+  min-width: 0;
 `;
 
 const TabName = styled.span`
   font-size: 14px;
-  font-weight: 700;
-  color: ${({ $active }) => ($active ? TEAL : '#222')};
+  font-weight: 800;
+  color: ${({ $active }) => ($active ? '#0f766e' : '#0f172a')};
   line-height: 1.2;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const TabCount = styled.span`
   font-size: 12px;
-  font-weight: 400;
-  color: #999;
+  font-weight: 600;
+  color: #94a3b8;
   line-height: 1.2;
+  margin-top: 3px;
 `;
 
 const LoadMore = styled.div`
@@ -329,7 +338,7 @@ const CategoryList = ({
      return (
           <Wrapper ref={scrollRef}>
                {categories.map((cat) => {
-               const isActive  = activeId === cat.id;
+               const isActive  = activeId === cat.id || (!activeId && cat.id === 'all');
                const hasImage  = !!cat.image;
                const CatIcon   = getCatIcon(cat.name); // null if no match
 
@@ -342,6 +351,7 @@ const CategoryList = ({
                          <TabIcon
                               $color={hasImage ? 'transparent' : getCatColor(cat.id)}
                               $hasImage={hasImage}
+                              $active={isActive}
                          >
                               {hasImage
                                    ? <img src={cat.image} alt={cat.name} />
