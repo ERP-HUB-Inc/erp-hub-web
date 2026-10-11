@@ -82,6 +82,13 @@ export default function ProductDetailHistory({ id }) {
     return <span className={`item-detail-quantity-change ${className}`}>{sign}{quantityChange} {record?.unitName || "Pcs"}</span>;
   };
 
+  const rendeCurrentQuantity = record => {
+    const currentQuantity = record.currentQuantity;
+    const sign = currentQuantity > 0 ? "+" : "";
+    const className = currentQuantity > 0 ? "is-positive" : currentQuantity < 0 ? "is-negative" : "";
+    return <span className={`item-detail-quantity-change ${className}`}>{sign}{currentQuantity} {record?.unitName || "Pcs"}</span>;
+  };
+
   const columns = [
     {
       title: "Date & Time",
@@ -111,13 +118,20 @@ export default function ProductDetailHistory({ id }) {
       render: (_, record) => renderQuantityChange(record),
     },
     {
+      title: "Final Qty",
+      key: "currentQuantity",
+      align: "right",
+      width: 120,
+      render: (_, record)=> rendeCurrentQuantity(record),
+    },
+    {
       title: "Reference / Doc #",
       dataIndex: "referenceNo",
       key: "referenceNo",
       render: (value, record) => value || record.reference || record.documentNo || record.productVariant || "-",
     },
     {
-      title: "Staff / Performed By",
+      title: "Performed By",
       dataIndex: "staffName",
       key: "staffName",
       render: (value, record) => value || record.userName || record.createdBy || "-",

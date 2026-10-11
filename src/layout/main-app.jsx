@@ -27,6 +27,7 @@ import StartUp from "../app/modules/common/components/StartUp";
 import Util from "../app/modules/common/util";
 import configureStore from "../app/store/configureStore";
 import { ERPHub, LogoTextOnly } from '../components';
+import OnboardingService, { getResponseData } from '../pages/Onboarding/OnboardingService';
 import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
 import ItemAIGenerator from './item-ai-tool';
 import ItemManagementUI from './item-management-ai';
@@ -39,6 +40,7 @@ import VendorDetailPage from './vendor-detail';
 import POSPaymentDrawer from './payment-screen';
 import POSMonitor from './pos-monitor';
 import Login from './login';
+import OnboardingPage from '../pages/Onboarding';
 
 const socket = io("http://127.0.0.1:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
@@ -51,6 +53,13 @@ const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 const APP_VERSION = process.env.REACT_APP_VERSION || "2.0.51";
 const HEADER_UNREAD_NOTIFICATION_COUNT = 2;
+const ONBOARDING_SETUP_PATH = "/onboarding/setup";
+const ONBOARDING_WORK_PATHS = [
+  "/inventories/items/create",
+  "/inventories/items",
+  "/inventories/stock-io/create",
+  "/vendors/create"
+];
 
 const sidebarMenuRoutes = [
   { path: "/", selectedKey: "1" },
@@ -87,14 +96,103 @@ function getSidebarDefaultKeys(pathname) {
   };
 }
 
+class OnboardingStatusRoute extends React.Component {
+  state = { loading: true, status: null, error: false };
+
+  componentDidMount() {
+    this.loadStatus();
+  }
+
+  async loadStatus() {
+    this.setState({ loading: true, error: false });
+    try {
+      const response = await OnboardingService.getStatus();
+      const result = getResponseData(response);
+      if (!result || !result.status) throw new Error("Missing onboarding status");
+      this.setState({ status: result.status, loading: false });
+    } catch (error) {
+      this.setState({ error: true, loading: false });
+    }
+  }
+
+  render() {
+    const { component: Component, location, mode } = this.props;
+    const { loading, status, error } = this.state;
+
+    if (loading) return <StartUp />;
+    if (error) {
+      return (
+        <div role="alert" style={{ padding: 32, textAlign: "center" }}>
+          <p>We couldn’t verify your workspace setup.</p>
+          <button type="button" onClick={() => this.loadStatus()}>Retry</button>
+        </div>
+      );
+    }
+
+    const inProgress = status === "IN_PROGRESS";
+    if (mode === "onboarding") {
+      return inProgress ? <Component {...this.props} /> : <Redirect to="/" />;
+    }
+
+    const isOnboardingWorkPath = ONBOARDING_WORK_PATHS.some(path =>
+      location.pathname === path || location.pathname.indexOf(`${path}/`) === 0
+    );
+    if (inProgress && !isOnboardingWorkPath) {
+      return <Redirect to={ONBOARDING_SETUP_PATH} />;
+    }
+
+    return <Component {...this.props} />;
+  }
+}
+
 const ProtectedRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => (
       (new Util()).getAuthSession()
-        ? <Component {...props} />
-        : <Redirect to="/login" />
+        ? <OnboardingStatusRoute {...props} key={props.location.pathname} component={Component} />
+        : <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
     )}
+  />
+);
+
+class OnboardingTokenHandoff extends React.Component {
+  componentDidMount() {
+    const { token, location, history } = this.props;
+    const query = new URLSearchParams(location.search);
+    const util = new Util();
+
+    util.setAuthSession({ ...(util.getAuthSession() || {}), accessToken: token });
+    query.delete("token");
+    const search = query.toString();
+    history.replace({
+      pathname: location.pathname,
+      search: search ? `?${search}` : "",
+      hash: location.hash
+    });
+  }
+
+  render() {
+    return <StartUp />;
+  }
+}
+
+const OnboardingRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => {
+      const query = new URLSearchParams(props.location.search);
+      const token = query.get("token");
+      const util = new Util();
+
+      if (token) {
+        return <OnboardingTokenHandoff {...props} token={token} />;
+      }
+
+      return util.getAuthSession()
+        ? <OnboardingStatusRoute {...props} key={props.location.pathname} component={Component} mode="onboarding" />
+        : <Redirect to={{ pathname: "/login", state: { from: props.location } }} />;
+    }}
   />
 );
 
@@ -340,7 +438,8 @@ export default class SiderDemo extends React.Component {
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
     const hasAuthSession = Boolean((new Util()).getAuthSession());
-    const isFullScreenPage = ["/pos", "/login"].includes(this.state.currentPath) || !hasAuthSession;
+    const isOnboardingPage = this.state.currentPath.indexOf("/onboarding/") === 0;
+    const isFullScreenPage = ["/pos", "/login"].includes(this.state.currentPath) || isOnboardingPage || !hasAuthSession;
     const sidebarDefaultKeys = getSidebarDefaultKeys(this.state.currentPath);
     const headerUser = this.getHeaderUser();
     const notificationCount = HEADER_UNREAD_NOTIFICATION_COUNT > 9 ? "9+" : HEADER_UNREAD_NOTIFICATION_COUNT;
@@ -563,9 +662,15 @@ export default class SiderDemo extends React.Component {
                     </Header>
                   )}
 
-                  <Content style={isFullScreenPage ? { height: "100vh" } : styledContent} id="center-container">
+                  <Content
+                    className={isOnboardingPage ? "mc-onboarding-content" : undefined}
+                    style={isOnboardingPage ? { minHeight: "100vh", margin: 0, padding: 0, overflowY: "auto" } : isFullScreenPage ? { height: "100vh" } : styledContent}
+                    id="center-container"
+                  >
                     <Switch>
                       <Route path="/login" component={Login} />
+                      <Route exact path="/onboarding/location" render={props => <Redirect to={{ pathname: ONBOARDING_SETUP_PATH, search: props.location.search }} />} />
+                      <OnboardingRoute path="/onboarding/setup" component={OnboardingPage} />
                       <ProtectedRoute path="/pos" component={POS} />
                       <ProtectedRoute path="/sales" component={SalesOrder} />
                       <ProtectedRoute path="/transactions/sale-order/detail/:id" component={SalesOrderDetail} />

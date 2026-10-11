@@ -74,7 +74,8 @@ class UserAuthentication extends Component {
         await this.loadInitializeSetting();
 
         const currentUser = authSession.currentUser || {};
-        history.push(currentUser.roleCode === Enum.CASHIER_ROLE ? "/pos" : "/");
+        const requestedPath = this.props.location && this.props.location.state && this.props.location.state.from && this.props.location.state.from.pathname;
+        history.push(requestedPath === "/onboarding/setup" ? requestedPath : currentUser.roleCode === Enum.CASHIER_ROLE ? "/pos" : "/");
       } catch (error) {
         this.setState({ errorMessage: this.getLoginErrorMessage(error) });
       } finally {

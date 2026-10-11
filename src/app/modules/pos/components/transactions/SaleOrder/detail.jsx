@@ -285,9 +285,11 @@ class SaleOrderDetail extends React.PureComponent{
   }
 
   getPaymentState = (formData) => {
+    const transactionPayment = formData.transactionPayment.length > 0 ? formData.transactionPayment[0] : { tender: 0, balance: 0 };
     const deposit = toNumber(formData.deposit);
+    const tender = toNumber(transactionPayment.tender);
     const total = toNumber(formData.total) - toNumber(formData.discount);
-    const balance = Math.max(total - deposit, 0);
+    const balance = Math.max(total - deposit - tender, 0);
 
     if (total <= 0) {
       return { label: "No charge", color: "default", paid: 0, balance };

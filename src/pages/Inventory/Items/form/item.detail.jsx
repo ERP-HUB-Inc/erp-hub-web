@@ -130,14 +130,13 @@ function getManageStockLabel(item) {
 
 function normalizeStockLocations(stockResponse, item) {
   if (!Array.isArray(stockResponse)) return [];
-
   const rows = [];
   stockResponse.forEach((stockGroup, groupIndex) => {
     if (Array.isArray(stockGroup.productLocations) && stockGroup.productLocations.length) {
       stockGroup.productLocations.forEach((location, locationIndex) => {
         rows.push({
           id: `${stockGroup.id || groupIndex}-${location.id || location.locationId || locationIndex}`,
-          locationName: location.locationName || location.location?.name || location.name || stockGroup.name || EMPTY_VALUE,
+          location: location.location || stockGroup.name || EMPTY_VALUE,
           zone: location.zone || location.bin || location.code || location.location?.code || EMPTY_VALUE,
           onHand: toNumber(location.quantity),
           reserved: toNumber(location.reservedQuantity || location.reserved),
@@ -323,9 +322,9 @@ export default function ProductDetail(props) {
   const stockColumns = [
     {
       title: "Location Name",
-      dataIndex: "locationName",
-      key: "locationName",
-      render: value => <strong>{value || EMPTY_VALUE}</strong>
+      dataIndex: "location",
+      key: "id",
+      render: value => value || EMPTY_VALUE
     },
     {
       title: "Zone / Bin",
@@ -474,7 +473,7 @@ export default function ProductDetail(props) {
                   </Avatar>
                   <div>
                     <strong>{getFirstVariant(data).name || data.name || EMPTY_VALUE}</strong>
-                    <span>UUID: {data.id || EMPTY_VALUE}</span>
+                    <span>SKU: {getFirstVariant(data).sku || EMPTY_VALUE}</span>
                   </div>
                 </div>
                 <DataRow label="Warranty Tier" value={data.warrantyTier || itemDetailFallback.specifications.warrantyTier} />
