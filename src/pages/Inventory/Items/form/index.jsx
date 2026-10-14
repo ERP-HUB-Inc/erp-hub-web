@@ -490,7 +490,7 @@ export default class ProductList extends Datatable {
                productTypes: productTypes.length
                   ? productTypes.map(productType => ({
                      ...productType,
-                     id: Number(productType.id),
+                     id: productType.id,
                      name: productType.name || productType.label || productType.code
                   }))
                   : [

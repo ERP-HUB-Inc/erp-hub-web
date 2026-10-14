@@ -35,6 +35,15 @@ class SaleOrderService extends BaseService {
     });
   }
 
+  dashboardSummary(start, end) {
+    this.setHeader();
+    const params = new URLSearchParams({start, end});
+    return this.GET({
+      url: `${this.baseUrl}/v1/summary/dashboard?${params.toString()}`,
+      headers: this.header
+    });
+  }
+
   checkAvailableNo(number) {
     this.setHeader();
     return this.GET({

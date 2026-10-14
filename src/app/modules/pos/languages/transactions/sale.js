@@ -1,4 +1,24 @@
 export default {
+"text_order_channel": [
+	"Order & Channel",
+	"ការបញ្ជាទិញ និងបណ្តាញ"
+],
+
+"text_delivery_address": [
+	"Delivery address",
+	"អាសយដ្ឋានដឹកជញ្ជូន"
+],
+
+"text_item_summary": [
+	"Items Summary",
+	"សង្ខេបមុខទំនិញ"
+],
+
+"text_fulfillment": [
+	"Fulfillment",
+	"ការបំពេញការបញ្ជាទិញ"
+],
+
 "text_buyer": [
 	"Buyer",
 	"អ្នកទិញ"

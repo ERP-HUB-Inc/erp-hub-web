@@ -1,127 +1,111 @@
 import React from "react";
 import Util from "../../../../../common/util";
+import "./packing-slip.css";
 
 const PackingSlip = React.forwardRef((props, ref) => {
-
   const util = new Util();
-  const setting = util.getSetting();
+  const setting = util.getSetting() || {};
+  const formData = props.formData || PackingSlip.defaultProps.formData;
+  const paperSize = ["a5", "80mm", "58mm"].includes(props.paperSize) ? props.paperSize : "a4";
+  const entries = Array.isArray(formData.transactionEntries)
+    ? formData.transactionEntries.filter(entry => Number(entry.status) !== 3)
+    : [];
+  const logoName = formData.client && formData.client.logo;
+  const logoUrl = logoName && formData.clientId
+    ? util.getGeneralImage(`${formData.clientId}/general/${logoName}`).url
+    : "";
+  const orderDate = formData.registerDate ? util.formatDate(formData.registerDate, "DD MMM YYYY") : "—";
 
-  const {formData} = props.formData ? props : PackingSlip.defaultProps;
-  
   return (
-    <div ref={ref} style={{width: "250mm", margin: "auto", minHeight: "297mm", background: "white"}}>
-      <table style={{width: "100%", marginBottom: 50}}>
-        <tbody>
-          <tr style={{background: "none"}}>
-            <td style={{textAlign: "left"}}>
-              <img src={util.getGeneralImage(`${formData.clientId}/general/${formData.client ? formData.client.logo : ""}`).url} alt="Logo" style={{height: 140}} />
-            </td>
-            <td style={{textAlign: "right", verticalAlign: "top"}}>
-              <h1 style={{textTransform: "uppercase", fontWeight: "bold"}}>Packing Slip</h1>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <article ref={ref} className={`so-packing-slip-sheet paper-${paperSize}`}>
+      <header className="so-packing-slip-header">
+        <div className="so-packing-slip-sender-brand">
+          {logoUrl
+            ? <img className="so-packing-slip-logo" src={logoUrl} alt={`${setting.businessName || "Business"} logo`} />
+            : <span className="so-packing-slip-brand-mark" aria-hidden="true">{String(setting.businessName || "B").split(/\s+/).filter(Boolean).slice(0, 2).map(word => word[0]).join("").toUpperCase()}</span>}
+          <div className="so-packing-slip-business">
+            <strong>{setting.businessName || "Business"}</strong>
+          </div>
+        </div>
+        <div className="so-packing-slip-title-block">
+          <span className="so-packing-slip-eyebrow">Order fulfillment</span>
+          <h1>Packing Slip</h1>
+          <strong>{formData.number || "—"}</strong>
+          <span>{orderDate}</span>
+        </div>
+      </header>
 
-      <table style={{width: "100%", marginBottom: 40}}>
-        <thead>
-          <tr>
-            <th style={{...styles.th, width: "50%"}}>អ្នកផ្ញើរ/SENDER</th>
-            <th style={{...styles.th, width: "50%"}}>អ្នកទទួល/RECEIVER</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style={{background: "none"}}>
-            <td style={styles.td}>
-              <ul style={{listStyle: "none", paddingLeft: 0, margin: 0}}>
-                {
-                  formData.company ?
-                  <li>
-                    Company/Shop Name: <strong>{setting.businessName}</strong> 
-                  </li>
-                  :
-                  "" 
-                }
-                <li style={{display: "flex"}}>
-                  Address: <strong dangerouslySetInnerHTML={{__html: setting.address}} style={{paddingLeft: 5}} />
-                </li>
-                <li>
-                  Contact Number: <strong>{setting.phoneNumber}</strong>
-                </li>
-              </ul>
-            </td>
-            <td style={styles.td}>
-              <ul style={{listStyle: "none", paddingLeft: 0, margin: 0}}>
-                <li>Address: {formData.shippingAddress ? formData.shippingAddress : formData.address}</li>
-                <li>Contact Number 1: <strong>{formData.shippingContact1 ? formData.shippingContact1 : formData.phoneNumber}</strong></li>
-                <li>Contact Number 2: {formData.shippingContact2}</li>
-              </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <section className="so-packing-slip-parties">
+        <div className="so-packing-slip-party">
+          <span className="so-packing-slip-section-label">អ្នកផ្ញើរ / Sender</span>
+          <strong>{setting.businessName || "Business"}</strong>
+          {setting.address && <div dangerouslySetInnerHTML={{__html: setting.address}} />}
+          {setting.phoneNumber && <span>Phone: {setting.phoneNumber}</span>}
+        </div>
+        <div className="so-packing-slip-party">
+          <span className="so-packing-slip-section-label">អ្នកទទួល / Receiver</span>
+          <strong>{formData.company || [formData.firstName, formData.lastName].filter(Boolean).join(" ") || "Customer"}</strong>
+          <span>{formData.shippingAddress || formData.address || "Address not provided"}</span>
+          {(formData.shippingContact1 || formData.phoneNumber) && <span>Phone: {formData.shippingContact1 || formData.phoneNumber}</span>}
+          {formData.shippingContact2 && <span>Alternate phone: {formData.shippingContact2}</span>}
+        </div>
+      </section>
 
-      <table style={{width: "100%"}}>
-        <thead>
-          <tr>
-              <th style={{...styles.th, width: 60}}>NO.</th>
-              <th style={{...styles.th, width: "auto"}}>ITEM DESCRIPTION</th>
-              <th style={{...styles.th, width: 120}}>QTY</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            formData.transactionEntries.map((transactionEnty, index) => 
-              <tr key={index}>
-                <td style={styles.td}>{index+1}</td>
-                <td style={styles.td}>{transactionEnty.description}</td>
-                <td style={styles.td}>{transactionEnty.quantity+" "+ transactionEnty.unitName}(s)</td>
-              </tr> 
-            )
-          }
-        </tbody>
-      </table>
-      
-      <div style={{width: "100%", height: 140, marginTop: 40, border: "1.5px solid black", padding: 15}}>
-        <div>Notes</div>
-      </div>
-    </div>
+      <section className="so-packing-slip-items-section">
+        <div className="so-packing-slip-section-heading">
+          <h2>Items to Pack</h2>
+          <span>{entries.length} line{entries.length === 1 ? "" : "s"}</span>
+        </div>
+        <table className="so-packing-slip-items">
+          <thead>
+            <tr>
+              <th className="so-packing-slip-index">#</th>
+              <th>Item description</th>
+              <th className="so-packing-slip-qty">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {entries.length ? entries.map((entry, index) => (
+              <tr key={entry.id || `${entry.itemName || entry.description || "item"}-${index}`}>
+                <td className="so-packing-slip-index">{String(index + 1).padStart(2, "0")}</td>
+                <td>
+                  <strong>{entry.itemName || entry.description || "Unnamed item"}</strong>
+                  {entry.variantName && <span className="so-packing-slip-variant">{entry.variantName}</span>}
+                </td>
+                <td className="so-packing-slip-qty">
+                  <strong>{entry.quantity || 0}</strong>
+                  {entry.unitName && <span>{entry.unitName}</span>}
+                </td>
+              </tr>
+            )) : <tr><td colSpan="3" className="so-packing-slip-empty">No items are recorded for this order.</td></tr>}
+          </tbody>
+        </table>
+      </section>
+
+      <section className="so-packing-slip-notes">
+        <span className="so-packing-slip-section-label">Packing notes</span>
+        <p>{formData.note || " "}</p>
+      </section>
+
+      <footer className="so-packing-slip-signatures">
+        <div><span>Prepared by</span><i /><small>Name / Signature</small></div>
+        <div><span>Received by</span><i /><small>Name / Signature</small></div>
+      </footer>
+    </article>
   );
 });
 
-export default PackingSlip;
-
-const styles = {
-  th: {
-    width: "25%",
-    border: "1.5px solid black",
-    backgroundColor: "#c1bfbf",
-    padding: 10
-  },
-  td: {
-    border: "1.5px solid black",
-    padding: 10 
-  },
-  signatureRow: {
-    display: "flex",
-    flexDirection: "row",
-    paddingTop: 8,
-    paddingBottom: 8,
-    alignItems: "flex-end"
-  }
-};
+PackingSlip.displayName = "PackingSlip";
 
 PackingSlip.defaultProps = {
   formData: {
     number: "",
     companyName: "",
     saleOrderDate: "",
-    subTotal: 0,
     total: 0,
     transactionEntries: []
   },
-  setting:{
-    businessName: "",
-    address: ""
-  }
+  paperSize: "a4"
 };
+
+export default PackingSlip;

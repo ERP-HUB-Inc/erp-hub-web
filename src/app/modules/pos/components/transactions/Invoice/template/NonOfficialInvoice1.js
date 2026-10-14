@@ -38,7 +38,7 @@ export default function NonOfficialInvoice(props) {
   }
 
   const {formData} = props;
-  let discount = Number(formData.discount);
+  let discount = Number(formData.discount || 0);
   let subtotal = getSubTotal(formData);
 
   if (!formData.totalExcludeTax) {
@@ -50,6 +50,7 @@ export default function NonOfficialInvoice(props) {
     tax = 0;
 
   const deliveryFee = formData.deliveryFee ? formData.deliveryFee : 0;
+  const balanceDue = Math.max(Number(formData.total || 0) - discount + Number(deliveryFee || 0) - Number(formData.deposit || 0), 0);
 
   let client = {
     clientId: null,
@@ -95,7 +96,7 @@ export default function NonOfficialInvoice(props) {
                   <div style={{width: 140}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
                 </li>
                 <li style={{display: "flex"}} className="inv-header-title">
-                  <div style={{width: 140}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
+                  <div style={{width: 140}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(balanceDue)}</div>
                 </li>
             </ul>
           </td>

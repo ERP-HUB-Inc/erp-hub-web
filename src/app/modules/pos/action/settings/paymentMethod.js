@@ -1,5 +1,5 @@
 import Constant from "../../constants/settings/paymentMethod";
-import PaymentMethodService from "../../services/settings/PaymentMethodService";
+import PaymentMethodService from "../../../../../services/PaymentMethodService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {

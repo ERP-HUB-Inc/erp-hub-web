@@ -1824,10 +1824,21 @@ class NewInvoice extends React.PureComponent {
                                             placeholder={stringTranslate("text_choose_template", this.props.locale)}
                                             onChange={(value) => this.onChangeTemplate(value)}
                                         >
-                                            <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_template" /> 1</Select.Option>
-                                            <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}><Translate id="text_template" /> 2</Select.Option>
-                                            <Select.Option key={3} value="non-official"><Translate id="text_template" /> 3</Select.Option>
-                                            <Select.Option key={4} value="non-official-2"><Translate id="text_template" /> 4</Select.Option>
+                                            <Select.OptGroup label="Standard">
+                                                <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_template" /> 1 · No tax</Select.Option>
+                                                <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}><Translate id="text_template" /> 2 · Tax invoice</Select.Option>
+                                            </Select.OptGroup>
+                                            <Select.OptGroup label="Non-official">
+                                                <Select.Option key={3} value="non-official"><Translate id="text_template" /> 3 · Non-official</Select.Option>
+                                                <Select.Option key={4} value="non-official-2"><Translate id="text_template" /> 4 · Multi-copy</Select.Option>
+                                            </Select.OptGroup>
+                                            <Select.OptGroup label="Professional">
+                                                <Select.Option key={5} value="professional"><Translate id="text_template" /> 5 · Professional</Select.Option>
+                                                <Select.Option key={6} value="professional-compact"><Translate id="text_template" /> 6 · Compact</Select.Option>
+                                                <Select.Option key={7} value="professional-navy"><Translate id="text_template" /> 7 · Navy</Select.Option>
+                                                <Select.Option key={8} value="professional-classic"><Translate id="text_template" /> 8 · Classic</Select.Option>
+                                                <Select.Option key={9} value="professional-minimal"><Translate id="text_template" /> 9 · Minimal</Select.Option>
+                                            </Select.OptGroup>
                                         </Select>
                                     )
                                 }

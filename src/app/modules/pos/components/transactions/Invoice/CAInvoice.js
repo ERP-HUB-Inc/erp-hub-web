@@ -5,6 +5,7 @@ import NoneTaxInvoice from "./template/NoneTaxInvoice";
 import NonOfficialInvoice1 from "./template/NonOfficialInvoice1";
 import NonOfficialInvoice2 from "./template/NonOfficialInvoice2";
 import TaxInvoice from "./template/TaxInvoice";
+import ProfessionalInvoice from "./template/ProfessionalInvoice";
 import { Button } from "../../../../common/elements/ant-ui";
 import Enum from "../../../enums/index";
 
@@ -34,10 +35,19 @@ const CAInvoice = React.forwardRef((props, ref) => {
 
   const {formData} = props;
 
-  let template = isNaN(parseInt(formData.template)) ? formData.template : parseInt(formData.template);
+  const templateValue = props.template !== undefined ? props.template : formData.template;
+  let template = isNaN(parseInt(templateValue)) ? templateValue : parseInt(templateValue);
 
 
   switch (template) {
+    case "professional":
+    case "professional-compact":
+    case "professional-navy":
+    case "professional-classic":
+    case "professional-minimal":
+      return <InvoiceWrapper paperSize={props.paperSize} passedRef={ref} style={style} className="professional-invoice-wrapper">
+        <ProfessionalInvoice formData={formData} variant={template} />
+      </InvoiceWrapper>;
     case Enum.PAPER_SIZE.INCLUDE_TAX:
       return <InvoiceWrapper paperSize={props.paperSize} passedRef={ref} style={style}>
         <TaxInvoice 
@@ -116,8 +126,8 @@ CAInvoice.defaultProps = {
   notFoundContent: <Button type="info"><Translate id="text_back" /></Button>
 };
 
-function InvoiceWrapper({paperSize, passedRef, style, children}) {
-  return <div id="invoice-content" className={paperSize} ref={passedRef} style={style}>
+function InvoiceWrapper({paperSize, passedRef, style, className = "", children}) {
+  return <div id="invoice-content" className={`${paperSize || ""} ${className}`.trim()} ref={passedRef} style={style}>
     {children}
   </div>;
 }

@@ -1,26 +1,36 @@
 import React from "react";
 import "./style.css";
 import Util from "../../../../../common/util";
-import PaymentMethodService from "../../../../services/settings/PaymentMethodService";
+import PaymentMethodService from "../../../../../../../services/PaymentMethodService";
+import BusinessLogo from "./BusinessLogo";
 
 const util = new Util();
 const dateFormat = "DD/MM/YYYY";
 
 export default function NonOfficialInvoice(props) {
-  const multiInvSetting = util.getMultiInvSetting();
+  let multiInvSetting = null;
+  try {
+    multiInvSetting = util.getMultiInvSetting();
+  } catch (error) {
+    multiInvSetting = null;
+  }
 
   let color = "#3083dd";
   const [state, setState] = React.useState({bankTransfers: [], phoneTransfers: []});
   React.useEffect(() => {
     PaymentMethodService.getPaymentMethodsInvoice()
     .then(response => {
-      if (response && response.data) {
-        const paymentMethods = response.data.data;
-        setState(() => ({
-          bankTransfers: paymentMethods.filter(paymentMethod => paymentMethod.type === "BANK_TRANSFER"),
-          phoneTransfers: paymentMethods.filter(paymentMethod => paymentMethod.type === "TRANSFER_AGENT")
-        }));
-      }
+      const responseData = response && response.data;
+      const paymentMethods = Array.isArray(responseData)
+        ? responseData
+        : responseData && Array.isArray(responseData.data)
+          ? responseData.data
+          : [];
+
+      setState({
+        bankTransfers: paymentMethods.filter(paymentMethod => paymentMethod && paymentMethod.type === "BANK_TRANSFER"),
+        phoneTransfers: paymentMethods.filter(paymentMethod => paymentMethod && paymentMethod.type === "TRANSFER_AGENT")
+      });
     })
     .catch(error => alert(error));
     // eslint-disable-next-line
@@ -41,38 +51,43 @@ export default function NonOfficialInvoice(props) {
     client.logo = util.getClientLogo();
   }
 
-  let style = {};
-  if (props.paperSize === "A5") {
-    style = {width: "222mm", padding: 0};
-  } else {
-    style = {width: "264mm", padding: 0};
-  }
+  const hasMultipleCopies = Array.isArray(multiInvSetting) && multiInvSetting.length > 0;
+  const wrapperStyle = {
+    width: props.paperSize === "A5" ? "222mm" : "264mm",
+    padding: 0
+  };
+  const tableStyle = {width: "100%", padding: 0, tableLayout: "fixed"};
 
-  return (<div id="invoice-content" paperSize={props.paperSize} ref={props.passedRef} style={style}>
-      {
-        multiInvSetting ?
-        multiInvSetting.map((colorInvoice, index) => 
-        <React.Fragment>
+  return (
+    <div
+      id="invoice-content"
+      className={hasMultipleCopies ? "multi-copy-invoice" : ""}
+      paperSize={props.paperSize}
+      ref={props.passedRef}
+      style={wrapperStyle}
+    >
+      {hasMultipleCopies
+        ? multiInvSetting.map((colorInvoice, index) => (
+          <section className="multi-copy-invoice-page" key={`copy-${index}`}>
           <TableInvoice
-            key={index}
             pageNumber={`${index + 1}/${multiInvSetting.length}`}
             client={client}
             formData={formData}
             state={state}
-            style={style}
-            color={colorInvoice.color}
+            style={tableStyle}
+            color={colorInvoice && colorInvoice.color || color}
           />
-        </React.Fragment>
-        )
-        :
+          </section>
+        ))
+        : (
         <TableInvoice
           client={client}
           formData={formData}
           state={state}
-          style={style}
+          style={tableStyle}
           color={color}
         />
-      }
+        )}
     </div>
   );
 }
@@ -134,6 +149,9 @@ function TableInvoice({pageNumber, client, formData, state, style, color}) {
 
   const grandTotal = formData.total - discount + deliveryFee;
   const invoiceDate = formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : "";
+  const entries = Array.isArray(formData.transactionEntries)
+    ? formData.transactionEntries.filter(entry => entry && Number(entry.status) !== 3)
+    : [];
 
   return <table className="table-invoice" style={style}>
   <tbody>
@@ -146,14 +164,20 @@ function TableInvoice({pageNumber, client, formData, state, style, color}) {
           }
           {
             pageNumber && 
-            <div style={{fontSize: 14, color: "white", fontWeight: "bold"}}>S/N: { formData.id ? `${formData.invoiceNumber.replace("-","")}${invoiceDate}${grandTotal.toString().replace(".","")}`.replace(/[^\w.-]+/g, "") : ""}</div> 
+            <div style={{fontSize: 14, color: "white", fontWeight: "bold"}}>S/N: { formData.id ? `${String(formData.invoiceNumber || "").replace("-","")}${invoiceDate}${grandTotal.toString().replace(".","")}`.replace(/[^\w.-]+/g, "") : ""}</div>
           }
         </div>
       </td>
     </tr>
     <tr>
       <td>
-        <img src={util.getGeneralImage(`${client.clientId}/general/${client.logo}`).url} alt="Logo" style={{width: 100}} />
+        <BusinessLogo
+          clientId={client.clientId}
+          logo={client.logo}
+          businessName={formData.client && formData.client.businessName}
+          imageStyle={{width: 100, maxHeight: 70}}
+          placeholderStyle={{width: 74, height: 58, fontSize: 18}}
+        />
       </td>
       <td width="300">
         <ul style={{listStyle: "none", marginRight: 25, paddingLeft: 0}}>
@@ -281,15 +305,15 @@ function TableInvoice({pageNumber, client, formData, state, style, color}) {
           </thead>
           <tbody style={{background: "#fbfbfb", borderBottom: "1px solid #000", verticalAlign: "top"}}>
             {
-              formData.transactionEntries && formData.transactionEntries.filter(entry => entry.description).map((entry, index) => 
-                <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none", display: `${entry.status === 3 ? "none" : ""}`}}>
+              entries.map((entry, index) =>
+                <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none"}}>
                   <td style={{textAlign: "center", border: "1px solid #000"}}>{index + 1}</td>
                   <td style={{border: "1px solid #000"}}>
-                    <pre className="entry-note-column">{entry.description}</pre>
+                    <pre className="entry-note-column">{entry.description || entry.itemName}</pre>
                     {entry.enableDescription ? renderSerials(entry) : null}
                   </td>
-                  <td style={styles.entriesCurrency}>{util.formatCurrency(entry.price)}</td>
                   <td style={styles.entriesCurrency}>{entry.quantity}</td>
+                  <td style={styles.entriesCurrency}>{util.formatCurrency(entry.price)}</td>
                   <td style={styles.entriesCurrency}>{util.formatCurrency(util.floor(entry.price) * entry.quantity)}</td>
                 </tr>
               )
@@ -303,7 +327,7 @@ function TableInvoice({pageNumber, client, formData, state, style, color}) {
         <div style={{display: "flex", justifyContent: "space-between"}}>
           <div dangerouslySetInnerHTML={{ __html: formData.publicNote}} id="public-not" />
           <ul style={{listStyle: "none", paddingLeft: 0}}>
-            {discount > 0 && tax > 0 && deliveryFee > 0 && <InvoiceSummaryRow label="សរុបដំបូង/Subtotal" value={util.formatCurrency(subtotal)} />}
+            <InvoiceSummaryRow label="សរុបដំបូង/Subtotal" value={util.formatCurrency(subtotal)} />
             {discount > 0 && <InvoiceSummaryRow label="បញ្ចុះតម្លៃ/Discount" color="red" value={`-${util.formatCurrency(discount)}`} />}
             {tax > 0 && <InvoiceSummaryRow label="អាករលើតម្លៃបន្ថែម/VAT" value={util.formatCurrency(tax)} />}
             {deliveryFee > 0 && <InvoiceSummaryRow label="ថ្លៃដឹក/Delivery" value={util.formatCurrency(deliveryFee)} />}

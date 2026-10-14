@@ -19,13 +19,14 @@ import {
   Row,
   Col,
   Card,
-  Statistic,
   Input,
   Table,
   Tabs,
   DatePicker,
-  Select
+  Select,
+  Tooltip
 } from "antd";
+import { ShoppingCart, MessagesSquare, Package, Wallet, AlertCircle, RefreshCw } from "lucide-react";
 import SalesOrderPrint from "./Invoice/sales-order-print";
 import PackingSlip from "./Invoice/packing-slip";
 import DeliveryNote from "./Invoice/delivery-note";
@@ -33,9 +34,8 @@ import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
 import SaleOrderService from "@services/SaleOrderService";
 import Enum from "../../../enums";
-import { PageHeader } from "@components/PageHeader";
-import { MonetaryValue } from "@components/index";
-import { QuantityValue } from "@components/stateless/quantity.value";
+import QuickSaleModal from "./quick-sale-modal";
+import "./sale-order-list.css";
 
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
@@ -66,39 +66,112 @@ const DATE_FILTERS = {
   }
 };
 const DEFAULT_DATE_FILTER = "last365Days";
+const toFiniteNumber = value => {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+};
+
+const getBreakdownLabel = entry => typeof entry === "string"
+  ? entry
+  : entry && (entry.name || entry.label || entry.sourceName || entry.providerName || entry.source || entry.provider || entry.sourceId || entry.providerId || entry.code) || "Other";
+const getBreakdownCount = entry => typeof entry === "number"
+  ? toFiniteNumber(entry)
+  : entry ? toFiniteNumber(entry.orderCount ?? entry.count ?? entry.parcelCount ?? entry.shipmentCount) : null;
+
+const FULFILLMENT_STATUSES = [
+  "ORDERED", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED", "CANCELED",
+  "PENDING", "READY", "READY_FOR_DISPATCH", "IN_TRANSIT", "OUT_FOR_DELIVERY",
+  "FULFILLED", "UNFULFILLED"
+];
+
+const getPaymentDisplay = record => {
+  const payment = Array.isArray(record.transactionPayment) ? record.transactionPayment[0] : null;
+  const rawMethod = record.paymentMethodName || record.paymentMethodId || "";
+  const rawStatus = record.paymentStatus || record.paymentState || (payment && payment.status) || "";
+  const combinedStatus = !rawStatus && /\s+(paid|pending)$/i.test(rawMethod)
+    ? rawMethod.match(/\s+(paid|pending)$/i)[1]
+    : "";
+  const method = combinedStatus ? rawMethod.replace(/\s+(paid|pending)$/i, "") : rawMethod;
+
+  return { method, status: rawStatus || combinedStatus };
+};
+
+const getFulfillmentDisplay = record => {
+  const provider = record.fulfillmentProviderName || record.fulfillmentProvider || record.shippingProviderName || record.shippingProvider || record.deliveryProvider || record.shippingMethodName || record.fulfillmentProviderId || "";
+  const shippingValue = record.shippingStatus || "";
+  const isShippingStatus = FULFILLMENT_STATUSES.includes(String(shippingValue).toUpperCase());
+
+  if (provider) return provider;
+  if (shippingValue && !isShippingStatus) return shippingValue;
+  if (record.customerId === "WALK_IN") return "In-Store";
+  return "";
+};
+
+const getFulfillmentProviderLogoSource = provider => {
+  const identity = String(provider || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  if (identity.includes("jnt") || identity.includes("j t")) return "/fulfillments/jnt_express.png";
+  if (identity.includes("grab")) return "/fulfillments/grab_express.png";
+  if (identity.includes("vireak") || identity.includes("virak") || identity.includes("buntham")) return "/fulfillments/vireak-buntham.png";
+  return "";
+};
+const renderFulfillmentProvider = provider => {
+  const inStore = /^in[- ]?store$/i.test(provider);
+  const logoSource = getFulfillmentProviderLogoSource(provider);
+  return (
+    <span
+      className={`sale-order-fulfillment-icon-box${inStore ? " sale-order-fulfillment-in-store" : ""}`}
+      title={provider}
+      aria-label={`Fulfillment provider: ${provider}`}
+      role="img"
+    >
+      {logoSource ? <img src={logoSource} alt="" /> : <Icon type={inStore ? "shop" : "car"} />}
+    </span>
+  );
+};
+
+const formatBadgeLabel = value => String(value).replace(/_/g, " ");
 
 export default class SaleOrderPage extends Component {
   constructor(props) {
     super(props);
+    this.allOrdersCountRequestId = 0;
+    this.dashboardSummaryRequestId = 0;
     this.columnSettingsKey = "sale_order_table_visible_columns";
-    this.requiredColumns = ["number", "action"];
+    this.requiredColumns = ["orderChannel", "action"];
     this.defaultVisibleColumns = [
-      "number",
-      "registerDate",
-      "status",
+      "orderChannel",
       "firstName",
-      "phoneNumber",
-      "totalItem",
-      "subTotal",
-      "discount",
+      "shippingAddress",
+      "itemSummary",
+      "paymentSummary",
+      "shippingStatus",
       "totalSale",
+      "action"
     ];
     this.allColumns = [
       {
-        title: <Translate id="text_sale_order_no" />,
-        settingLabel: "text_sale_order_no",
+        title: "Order & Channel",
+        settingLabel: "text_order_channel",
         dataIndex: "number",
-        key: "number",
-        width: 180,
-        render: (number) => <div className="wrap-product-name" style={{display: "flex"}}>{number}</div>
-      },
-      {
-        title: <Translate id="text_date" />,
-        settingLabel: "text_date",
-        dataIndex: "registerDate",
-        key: "registerDate",
-        width: 180,
-        render: (registerDate) => this.Util.formatDate(registerDate, "DD/MM/YYYY HH:mm")
+        key: "orderChannel",
+        width: 205,
+        render: (number, record) => (
+          <div className="sale-order-order-cell">
+            <span
+              className="sale-order-channel-icon"
+              title={record.channel || "Order channel"}
+              aria-label={record.channel || "Order channel"}
+            >
+              <Icon type={record.channel && /chat|telegram|facebook|social/i.test(record.channel) ? "message" : "global"} />
+            </span>
+            <div className="sale-order-number-cell">
+              <strong>{number}</strong>
+              <span>{this.Util.formatDate(record.registerDate, "h:mm A • MMM D")}</span>
+              {record.channel && <small>{record.channel}</small>}
+            </div>
+          </div>
+        )
       },
       {
         title: <Translate id="text_status" />,
@@ -107,28 +180,109 @@ export default class SaleOrderPage extends Component {
         key: "status",
         width: 120,
         align: "center",
-        render: (status) => status
+        render: (status) => {
+          const statusInfo = this.SALE_ORDER_STATUS_STR[status];
+          const statusName = statusInfo && typeof statusInfo.title !== "string"
+            ? String(statusInfo.title.props.id || status).replace(/^text_/, "").replace(/_/g, " ")
+            : String(status || "Unknown");
+          return <span className={`sale-order-status sale-order-status-${String(statusName).toLowerCase().replace(/[^a-z]+/g, "-")}`}>{statusInfo ? statusInfo.title : statusName}</span>;
+        }
       },
       {
         title: <Translate id="text_customer" />,
         settingLabel: "text_customer",
         dataIndex: "firstName",
         key: "firstName",
-        render: (firstName, record) => record.customerId === "WALK_IN" ? "Walk-In" : `${firstName} ${record.lastName}`
+        render: (firstName, record) => (
+          <div className="sale-order-customer-cell">
+            <strong>{record.customerId === "WALK_IN" ? "Walk-In" : `${firstName || ""} ${record.lastName || ""}`.trim()}</strong>
+            {record.phoneNumber && (
+              <span className="sale-order-customer-phone">
+                {record.phoneNumber}
+                <Button
+                  type="link"
+                  size="small"
+                  className="sale-order-copy-phone"
+                  title="Copy phone number"
+                  aria-label={`Copy phone number ${record.phoneNumber}`}
+                  onClick={event => this.copyPhoneNumber(record.phoneNumber, event)}
+                >
+                  <Icon type="copy" />
+                </Button>
+              </span>
+            )}
+          </div>
+        )
       },
       {
-        title: <Translate id="text_contact_number" />,
-        settingLabel: "text_contact_number",
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        render: phoneNumber => phoneNumber
+        title: "Delivery address",
+        settingLabel: "text_delivery_address",
+        dataIndex: "shippingAddress",
+        key: "shippingAddress",
+        render: address => address || <span className="sale-order-muted">—</span>
       },
       {
-        title: <Translate id="text_shipping_status" />,
-        settingLabel: "text_shipping_status",
+        title: "Items Summary",
+        settingLabel: "text_item_summary",
+        dataIndex: "totalItem",
+        key: "itemSummary",
+        render: (totalItem, record) => {
+          const items = record.itemSummary
+            ? String(record.itemSummary).split(/,\s*/).filter(Boolean)
+            : [];
+          const itemCount = Number(totalItem) || items.length;
+          if (!itemCount && !items.length) return <span className="sale-order-muted">—</span>;
+
+          const summary = <strong>{itemCount || items.length} items</strong>;
+          if (!items.length) return summary;
+
+          return (
+            <Tooltip
+              title={<div className="sale-order-item-summary-tooltip">{items.map((item, index) => <div key={`${index}-${item}`}>{item}</div>)}</div>}
+              overlayClassName="sale-order-item-summary-tooltip-overlay"
+              placement="topLeft"
+              trigger={["hover", "focus"]}
+            >
+              <span className="sale-order-item-summary-trigger" tabIndex={0} aria-label={`Show ${items.length} order items`}>{summary}</span>
+            </Tooltip>
+          );
+        }
+      },
+      {
+        title: "Payment",
+        settingLabel: "text_payment",
+        dataIndex: "paymentMethodName",
+        key: "paymentSummary",
+        render: (paymentMethodName, record) => {
+          const paymentDisplay = getPaymentDisplay({ ...record, paymentMethodName });
+          if (!paymentDisplay.method && !paymentDisplay.status) return <span className="sale-order-muted">—</span>;
+
+          const statusLabel = paymentDisplay.status && formatBadgeLabel(paymentDisplay.status);
+          const statusTone = statusLabel && /^(paid|confirmed)$/i.test(statusLabel)
+            ? "paid"
+            : statusLabel && /^pending$/i.test(statusLabel)
+              ? "pending"
+              : "neutral";
+
+          return (
+            <span className="sale-order-badge-stack">
+              {paymentDisplay.method && <span className="sale-order-payment" title={paymentDisplay.method}>{paymentDisplay.method}</span>}
+              {statusLabel && <span className={`sale-order-payment-status sale-order-payment-status-${statusTone}`} title={statusLabel}>{statusLabel}</span>}
+            </span>
+          );
+        }
+      },
+      {
+        title: "Fulfillment",
+        settingLabel: "text_fulfillment",
         dataIndex: "shippingStatus",
         key: "shippingStatus",
-        render: shippingStatus => shippingStatus || "Unknown"
+        render: (shippingStatus, record) => {
+          const provider = getFulfillmentDisplay({ ...record, shippingStatus });
+          if (!provider) return <span className="sale-order-muted">—</span>;
+
+          return renderFulfillmentProvider(provider);
+        }
       },
       {
         title: <Translate id="text_expected_shipment_date" />,
@@ -139,37 +293,12 @@ export default class SaleOrderPage extends Component {
         render: (expectedShipmentDate) => this.Util.formatDate(expectedShipmentDate, "DD/MM/YYYY")
       },
       {
-        title: <Translate id="text_total_items" />,
-        settingLabel: "text_total_items",
-        dataIndex: "totalItem",
-        key: "totalItem",
-        align: "center",
-        render: (totalItem) => {
-          return <QuantityValue
-                quantity={totalItem}
-                showSign={true}
-                sign={"-"}
-                type={"OUT"}
-                unit="Items"
-                decimals={0}
-          />;
-        }
-      },
-      {
         title: <Translate id="text_deposit" />,
         settingLabel: "text_deposit",
         dataIndex: "deposit",
         key: "deposit",
         align: "right",
         render: deposit => this.Util.formatCurrency(deposit)
-      },
-      {
-        title: <Translate id="text_sub_total" />,
-        settingLabel: "text_sub_total",
-        dataIndex: "subTotal",
-        key: "subTotal",
-        align: "right",
-        render: (subTotal) => <MonetaryValue amount={Number(subTotal)} />,
       },
       {
         title: <Translate id="text_vat" />,
@@ -183,20 +312,37 @@ export default class SaleOrderPage extends Component {
         }
       },
       {
-        title: <Translate id="text_discount" />,
-        settingLabel: "text_discount",
-        dataIndex: "discount",
-        key: "discount",
-        align: "right",
-        render: (discount) => <MonetaryValue type="OUT" showSign={true} amount={Number(discount)} />,
-      },
-      {
-        title: <Translate id="text_sale_total" />,
-        settingLabel: "text_sale_total",
+        title: "Total",
+        settingLabel: "text_total",
         dataIndex: "total",
         key: "totalSale",
         align: "right",
-        render: (total) => <MonetaryValue amount={Number(total)} />
+        render: (total, record) => {
+          const feeValue = record.fulfillmentProviderId && record.fulfillmentFee !== null && record.fulfillmentFee !== undefined
+            ? record.fulfillmentFee
+            : record.deliveryFee;
+          const deliveryFee = Number(feeValue);
+          const discount = Number(record.discount);
+          const provider = getFulfillmentDisplay(record);
+          const hasDeliveryFee = feeValue !== null && feeValue !== undefined && feeValue !== "" && Number.isFinite(deliveryFee);
+          const hasDiscount = Number.isFinite(discount) && discount > 0;
+          const isDeliveryProvider = provider && !/^in[- ]?store$/i.test(provider);
+
+          return (
+            <div className="sale-order-total-cell">
+              <strong className="sale-order-total-value">{this.Util.formatCurrency(Number(total) || 0)}</strong>
+              {hasDeliveryFee && deliveryFee > 0 && (
+                <span className="sale-order-total-note sale-order-total-note-delivery">+{this.Util.formatCurrency(deliveryFee)} Deliv</span>
+              )}
+              {hasDeliveryFee && deliveryFee === 0 && isDeliveryProvider && (
+                <span className="sale-order-total-note sale-order-total-note-delivery">Free Ship</span>
+              )}
+              {hasDiscount && (
+                <span className="sale-order-total-note sale-order-total-note-discount">-{this.Util.formatCurrency(discount)} Discount</span>
+              )}
+            </div>
+          );
+        }
       },
       {
         title: <Translate id="text_action" />,
@@ -298,7 +444,13 @@ export default class SaleOrderPage extends Component {
     this.state = {
       data: [],
       pagination: {},
+      allOrdersTotal: null,
       summaryData: {},
+      summaryLoading: true,
+      summaryError: false,
+      dashboardSummary: null,
+      dashboardSummaryLoading: true,
+      dashboardSummaryError: false,
       activeTab: "allSales",
       current: 1,
       formData: null,
@@ -307,7 +459,8 @@ export default class SaleOrderPage extends Component {
       isShowFilter: true,
       isHasAccessPermission: null,
       visibleColumns: this.defaultVisibleColumns,
-      dateFilter: DEFAULT_DATE_FILTER
+      dateFilter: DEFAULT_DATE_FILTER,
+      quickSaleVisible: false
     };
     this.title = <Translate id="text_orders"/>;
     this.pageSize = 25;
@@ -317,17 +470,22 @@ export default class SaleOrderPage extends Component {
     this.permissionModuleCode = "sales_order";
     this.tabStatusMap = {
       allSales: -1,
-      draftSales: Enum.SALE_ORDER_STATUS.DRAFT,
-      toInvoiceSales: Enum.SALE_ORDER_STATUS.CONFIRMED,
+      confirmSales: [Enum.SALE_ORDER_STATUS.CONFIRMED, "CONFIRMED"],
       shippingSales: "SHIPPING",
-      completedSales: Enum.SALE_ORDER_STATUS.CLOSED,
-      voidSales: Enum.SALE_ORDER_STATUS.VOID,
+      completedSales: ["COMPLETED", Enum.SALE_ORDER_STATUS.CLOSED, "CLOSED"],
+      voidSales: [Enum.SALE_ORDER_STATUS.VOID, "VOID"],
     };
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: <Translate id="text_confirm" />, color: "#1890ff" },
       [Enum.SALE_ORDER_STATUS.CLOSED]: { title: <Translate id="text_closed" />, color: "#f50"},
-      [Enum.SALE_ORDER_STATUS.VOID]: {title: <Translate id="text_void"/>, color: "#d9d9d9"}
+      [Enum.SALE_ORDER_STATUS.VOID]: {title: <Translate id="text_void"/>, color: "#d9d9d9"},
+      DRAFT: { title: <Translate id="text_draft" />, color: "#bfbfbf" },
+      PLACED: { title: "Placed", color: "#722ed1" },
+      CONFIRMED: { title: <Translate id="text_confirm" />, color: "#1890ff" },
+      COMPLETED: { title: "Completed", color: "#52c41a" },
+      CLOSED: { title: <Translate id="text_closed" />, color: "#f50" },
+      VOID: { title: <Translate id="text_void" />, color: "#d9d9d9" }
     };
     this.status_options = [{name: <Translate id="text_all_status"/>, value: -1}];
   }
@@ -346,11 +504,20 @@ export default class SaleOrderPage extends Component {
     }
 
     if (params.get("status") != null) {
-      initialActiveTab = this.getTabKeyByStatus(Number(params.get("status")));
+      initialActiveTab = this.getTabKeyByStatus(params.get("status"));
     }
 
     if (params.get("workflow")) {
-      initialActiveTab = params.get("workflow");
+      const workflow = params.get("workflow");
+      const legacyWorkflowTabs = {
+        draftSales: "allSales",
+        toInvoiceSales: "confirmSales",
+        placedSales: "allSales",
+        confirmedSales: "confirmSales",
+        inProgressSales: "confirmSales",
+        closedSales: "completedSales"
+      };
+      initialActiveTab = legacyWorkflowTabs[workflow] || workflow;
     }
 
     this.ensureDefaultDateRange(params);
@@ -358,12 +525,13 @@ export default class SaleOrderPage extends Component {
     nextState.dateFilter = this.getDateFilterKeyFromParams(params);
     this.setState(nextState);
 
-    Object.keys(this.SALE_ORDER_STATUS_STR).forEach((prop) => {
+    [Enum.SALE_ORDER_STATUS.DRAFT, Enum.SALE_ORDER_STATUS.CONFIRMED, Enum.SALE_ORDER_STATUS.CLOSED, Enum.SALE_ORDER_STATUS.VOID].forEach((prop) => {
       this.status_options.push( {name: this.SALE_ORDER_STATUS_STR[prop].title, value: prop});
     });
 
     this.loadVisibleColumns();
     this.fetchSummary();
+    this.fetchDashboardSummary(params.get("start"), params.get("end"));
     this.fetchList(true, initialActiveTab);
   }
 
@@ -376,7 +544,11 @@ export default class SaleOrderPage extends Component {
         );
 
         if (validColumns.length > 0) {
-          const nextColumns = Array.from(new Set([...this.requiredColumns, ...validColumns]));
+          const nextColumns = Array.from(new Set([
+            ...this.defaultVisibleColumns,
+            ...this.requiredColumns,
+            ...validColumns
+          ]));
           this.setState({visibleColumns: nextColumns});
           return;
         }
@@ -569,10 +741,12 @@ export default class SaleOrderPage extends Component {
 
     this.setState({dateFilter, current: 1});
     this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchDashboardSummary(params.get("start"), params.get("end"));
     this.fetchList();
   }
 
   fetchList(withPagination= false, activeTab = this.state.activeTab) {
+    const allOrdersCountRequestId = ++this.allOrdersCountRequestId;
     let searchKey = "";
     let filter = {};
     let limit = this.pageSize;
@@ -603,7 +777,19 @@ export default class SaleOrderPage extends Component {
     };
 
     if (params.get("status")) {
-      filter.status = Number(params.get("status"));
+      const rawStatus = params.get("status");
+      const normalizedStatus = Number.isNaN(Number(rawStatus)) ? rawStatus.toUpperCase() : String(Number(rawStatus));
+      const statusAliases = {
+        "0": [Enum.SALE_ORDER_STATUS.DRAFT, "DRAFT"],
+        DRAFT: [Enum.SALE_ORDER_STATUS.DRAFT, "DRAFT"],
+        "1": [Enum.SALE_ORDER_STATUS.CONFIRMED, "CONFIRMED"],
+        CONFIRMED: [Enum.SALE_ORDER_STATUS.CONFIRMED, "CONFIRMED"],
+        "2": [Enum.SALE_ORDER_STATUS.CLOSED, "CLOSED"],
+        CLOSED: [Enum.SALE_ORDER_STATUS.CLOSED, "CLOSED"],
+        "4": [Enum.SALE_ORDER_STATUS.VOID, "VOID"],
+        VOID: [Enum.SALE_ORDER_STATUS.VOID, "VOID"]
+      };
+      filter.status = statusAliases[normalizedStatus] || rawStatus;
     }
 
     offset = (offset - 1) * limit;
@@ -616,24 +802,72 @@ export default class SaleOrderPage extends Component {
 
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
-    this.setState({loading: true});
+    this.setState({loading: true, allOrdersTotal: null});
     SaleOrderService.get({limit, offset, filter: JSON.stringify(filter), searchKey, rangFilter: ranges})
     .then((response) => {
         if (response.data && response.data.data) {
           this.setState({
             data: response.data.data,
             pagination: response.data.pagination,
+            ...(activeTab === "allSales" && allOrdersCountRequestId === this.allOrdersCountRequestId
+              ? {allOrdersTotal: Number(response.data.pagination && response.data.pagination.total) || 0}
+              : {}),
           });
         }
     })
     .catch(() => message.error("Error"))
     .finally(() => this.setState({loading: false, loadingButton: false}));
+
+    if (activeTab !== "allSales") {
+      SaleOrderService.get({limit: 1, offset: 0, filter: "{}", searchKey, rangFilter: ranges})
+        .then(response => {
+          if (allOrdersCountRequestId !== this.allOrdersCountRequestId) return;
+          const total = response.data && response.data.pagination && response.data.pagination.total;
+          this.setState({allOrdersTotal: Number.isFinite(Number(total)) ? Number(total) : null});
+        })
+        .catch(() => {
+          if (allOrdersCountRequestId === this.allOrdersCountRequestId) this.setState({allOrdersTotal: null});
+        });
+    }
   }
 
   fetchSummary() {
-    SaleOrderService.summary().then(({data})=>{
-      this.setState({summaryData: data.data});
-    });
+    this.setState({summaryLoading: true, summaryError: false});
+    SaleOrderService.summary()
+      .then(({data}) => {
+        this.setState({summaryData: data && data.data && typeof data.data === "object" ? data.data : {}});
+      })
+      .catch(() => this.setState({summaryError: true}))
+      .finally(() => this.setState({summaryLoading: false}));
+  }
+
+  fetchDashboardSummary(start, end) {
+    const params = new URLSearchParams(window.location.search);
+    this.ensureDefaultDateRange(params);
+    const rangeStart = start || params.get("start");
+    const rangeEnd = end || params.get("end");
+    const requestId = ++this.dashboardSummaryRequestId;
+
+    this.setState({dashboardSummaryLoading: true, dashboardSummaryError: false});
+    SaleOrderService.dashboardSummary(rangeStart, rangeEnd)
+      .then(response => {
+        if (requestId !== this.dashboardSummaryRequestId) return;
+        const responseData = response && response.data;
+        const summary = responseData && responseData.data && typeof responseData.data === "object"
+          ? responseData.data
+          : responseData;
+        this.setState({dashboardSummary: summary && typeof summary === "object" ? summary : null});
+      })
+      .catch(() => {
+        if (requestId === this.dashboardSummaryRequestId) {
+          this.setState({dashboardSummary: null, dashboardSummaryError: true});
+        }
+      })
+      .finally(() => {
+        if (requestId === this.dashboardSummaryRequestId) {
+          this.setState({dashboardSummaryLoading: false});
+        }
+      });
   }
 
   handleVoid(id) {
@@ -645,6 +879,7 @@ export default class SaleOrderPage extends Component {
           message.success("Void success");
           this.fetchList();
           this.fetchSummary();
+          this.fetchDashboardSummary();
         })
         .catch(() => message.error("Error!......"));
       }
@@ -660,6 +895,7 @@ export default class SaleOrderPage extends Component {
           message.success("Delete success");
           this.fetchList();
           this.fetchSummary();
+          this.fetchDashboardSummary();
         })
         .catch(() => message.error("Error!......"));
       }
@@ -697,6 +933,7 @@ export default class SaleOrderPage extends Component {
         }
 
         this.Util.pushParamsToURL(this.pathname, params.toString());
+        this.fetchDashboardSummary(params.get("start"), params.get("end"));
         this.setState({loadingButton: true});
         this.fetchList();
       }
@@ -821,20 +1058,65 @@ export default class SaleOrderPage extends Component {
   handleRefresh = () => {
     this.setState({loadingButton: true}, () => {
       this.fetchList(true);
+      this.fetchDashboardSummary();
     });
   }
 
+  copyPhoneNumber = (phoneNumber, event) => {
+    event.stopPropagation();
+    const copyFallback = () => {
+      const input = document.createElement("textarea");
+      input.value = phoneNumber;
+      input.setAttribute("readonly", "");
+      input.style.position = "absolute";
+      input.style.left = "-9999px";
+      document.body.appendChild(input);
+      input.select();
+      const copied = document.execCommand("copy");
+      document.body.removeChild(input);
+      return copied;
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(phoneNumber)
+        .then(() => message.success("Phone number copied"))
+        .catch(() => {
+          if (copyFallback()) {
+            message.success("Phone number copied");
+          } else {
+            message.error("Could not copy phone number");
+          }
+        });
+      return;
+    }
+
+    if (copyFallback()) {
+      message.success("Phone number copied");
+    } else {
+      message.error("Could not copy phone number");
+    }
+  }
+
   getTabKeyByStatus = (status) => {
-    const normalizedStatus = Number(status);
+    const normalizedStatus = typeof status === "string" && Number.isNaN(Number(status))
+      ? status.toUpperCase()
+      : Number(status);
 
     switch (normalizedStatus) {
       case Enum.SALE_ORDER_STATUS.DRAFT:
-        return "draftSales";
+      case "DRAFT":
+        return "allSales";
       case Enum.SALE_ORDER_STATUS.CONFIRMED:
-        return "toInvoiceSales";
+      case "CONFIRMED":
+        return "confirmSales";
+      case "PLACED":
+        return "allSales";
+      case "COMPLETED":
       case Enum.SALE_ORDER_STATUS.CLOSED:
+      case "CLOSED":
         return "completedSales";
       case Enum.SALE_ORDER_STATUS.VOID:
+      case "VOID":
         return "voidSales";
       default:
         return "allSales";
@@ -858,21 +1140,18 @@ export default class SaleOrderPage extends Component {
     const workflowFilter = {};
 
     switch (activeTab) {
-      case "draftSales":
-        workflowFilter.status = Enum.SALE_ORDER_STATUS.DRAFT;
-        break;
-      case "toInvoiceSales":
-        workflowFilter.status = Enum.SALE_ORDER_STATUS.CONFIRMED;
+      case "confirmSales":
+        workflowFilter.status = this.tabStatusMap.confirmSales;
         break;
       case "shippingSales":
-        workflowFilter.status = Enum.SALE_ORDER_STATUS.CONFIRMED;
+        workflowFilter.status = [Enum.SALE_ORDER_STATUS.CONFIRMED, "CONFIRMED"];
         workflowFilter.shippingStatus = ["ORDERED", "PACKED", "SHIPPED"];
         break;
       case "completedSales":
-        workflowFilter.status = Enum.SALE_ORDER_STATUS.CLOSED;
+        workflowFilter.status = this.tabStatusMap.completedSales;
         break;
       case "voidSales":
-        workflowFilter.status = Enum.SALE_ORDER_STATUS.VOID;
+        workflowFilter.status = this.tabStatusMap.voidSales;
         break;
       default:
         break;
@@ -886,16 +1165,16 @@ export default class SaleOrderPage extends Component {
     const selectedDateRange = this.getRangeFromParams();
 
     return (
-      <React.Fragment>
-        <Row style={{ marginBottom: 10 }} gutter={8}>
-          <Col span={16}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <div className="sale-order-list-content">
+        <Row className="sale-order-toolbar" gutter={12}>
+          <Col xs={24} xl={15}>
+            <div className="sale-order-filters">
               <Input
                   name="search"
-                  placeholder="Search SO number, customer name, or phone"
+                  placeholder="Search order number, customer, or phone"
                   prefix={<Icon type="search" />}
                   defaultValue={params.get("search") ? params.get("search") : ""}
-                  style={{height: 32, width: 350, maxWidth: "100%"}}
+                  style={{ height: 32, width: 350, maxWidth: "100%" }}
                   allowClear={true}
                   onChange={this.handleSearch}
               />
@@ -917,19 +1196,23 @@ export default class SaleOrderPage extends Component {
               />
             </div>
           </Col>
-          <Col span={8} style={{ textAlign: "right" }}>
-            <Button style={{ marginRight: 10 }} onClick={this.handleRefresh} loading={this.state.loadingButton}>
-              <Icon type="reload" />
-              <span style={{ marginLeft: 6 }}>Reload</span>
-            </Button>
-            {this.renderColumnSettings()}
+          <Col xs={24} xl={9}>
+            <div className="sale-order-toolbar-actions">
+              <Button onClick={this.handleRefresh} loading={this.state.loadingButton}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <RefreshCw size={14} aria-hidden="true" />
+                  <span>Refresh</span>
+                </span>
+              </Button>
+              {this.renderColumnSettings()}
+            </div>
           </Col>
         </Row>
-        <div style={{ color: "#6b7280", fontSize: 12, marginBottom: 10 }}>
+        <div className="sale-order-date-caption">
           {this.getShowingDateLabel()}
         </div>
         <Table
-            bordered
+            className="sale-order-table"
             pagination={{
               total: this.state.pagination.total,
               pageSize: this.state.pagination.limit,
@@ -953,126 +1236,222 @@ export default class SaleOrderPage extends Component {
             loading={this.state.loading}
             columns={this.getVisibleColumns()}
             dataSource={this.state.data}
+            rowSelection={{ columnWidth: 42 }}
             onChange={this.onChange}
             size="middle"
             scroll={{ x: "max-content" }}
         />
-      </React.Fragment>
+      </div>
     );
   }
 
   render() {
     const {summaryData} = this.state;
+    const totalOrders = this.state.allOrdersTotal == null ? "—" : Number(this.state.allOrdersTotal);
+    const dashboard = this.state.dashboardSummary || {};
+    const getCount = value => toFiniteNumber(value);
+    const formatAmounts = values => (Array.isArray(values) ? values : [])
+      .map(item => {
+        const amount = toFiniteNumber(item && (item.amount ?? item.totalAmount ?? item.total ?? item.value));
+        if (amount === null) return null;
+        const currencyCode = item.currencyCode || item.code || item.currency || "";
+        return this.Util.formatCurrency(amount, currencyCode ? `${currencyCode} ` : "");
+      })
+      .filter(Boolean)
+      .join(" · ");
+    const today = dashboard.todayComparison && dashboard.todayComparison.today || {};
+    const yesterday = dashboard.todayComparison && dashboard.todayComparison.yesterday || {};
+    const todayCount = getCount(today.orderCount);
+    const yesterdayCount = getCount(yesterday.orderCount);
+    let todayComparisonNote = "Order comparison unavailable";
+    let todayComparisonTone = "neutral";
+    if (todayCount !== null && yesterdayCount !== null) {
+      if (yesterdayCount === 0 && todayCount > 0) {
+        todayComparisonNote = `New today · ${yesterdayCount} yesterday`;
+        todayComparisonTone = "positive";
+      } else if (yesterdayCount === 0) {
+        todayComparisonNote = "No orders today or yesterday";
+      } else {
+        const change = Math.round(((todayCount - yesterdayCount) / yesterdayCount) * 100);
+        todayComparisonNote = change === 0
+          ? `No change vs yesterday (${yesterdayCount} orders)`
+          : `${change > 0 ? "↑" : "↓"} ${Math.abs(change)}% vs yesterday (${yesterdayCount} orders)`;
+        todayComparisonTone = change > 0 ? "positive" : change < 0 ? "negative" : "neutral";
+      }
+    }
 
-    return (<React.Fragment>
-          {/* <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-            <Col span={8}>
-              <Card>
-                <Statistic
-                    title={<Translate id="text_confirmed"/>}
-                    value={summaryData.confirmed ? summaryData.confirmed : 0 }
-                    precision="0"
-                    valueStyle={{color: "rgb(24, 144, 255)"}}
-                />
-              </Card>
-            </Col>
-            <Col span={8}>
-              <Card>
-                <Statistic
-                    title={<Translate id="text_closed"/>}
-                    value={summaryData.closed ? summaryData.closed : 0 }
-                    precision="0"
-                    valueStyle={{ color: "#3f8600" }}
-                />
-              </Card>
-            </Col>
-            <Col span={8}>
-              <Card>
-                <Statistic
-                    title={<Translate id="text_void"/>}
-                    value={summaryData.void ? summaryData.void : 0 }
-                    precision="0"
-                    valueStyle={{ color: "#cf1322" }}
-                />
-              </Card>
-            </Col>
-          </Row> */}
-          <div className="content-list">
-            <div className="table-wrapper">
-              <PageHeader
-                title={`All Sales (${this.state?.pagination?.total || 0})`}
-                subtitle="See and manage your orders"
-                breadcrumbs={[
-                  { text: "Dashboard", href: "/dashboard" },
-                  { text: "Sales Orders" },
-                ]}
-                actions={[
-                  {
-                    text: "New Sales Order",
-                    type: "primary",
-                    icon: "plus",
-                    onClick: () => {
-                      ReactGA.event({
-                        category: "Action Button",
-                        action: "Add New SO",
-                        label: "ERP HUB Web",
-                      });
+    const sourceLabels = {telegram: "Telegram", fb: "Facebook", facebook: "Facebook", tiktok: "TikTok"};
+    const sourceDetails = (Array.isArray(dashboard.chatSocial && dashboard.chatSocial.bySource) ? dashboard.chatSocial.bySource : [])
+      .map(entry => {
+        const rawLabel = String(getBreakdownLabel(entry));
+        const label = sourceLabels[rawLabel.toLowerCase()] || rawLabel;
+        return {label, value: getBreakdownCount(entry)};
+      });
+    const chatSocialCount = getCount(dashboard.chatSocial && dashboard.chatSocial.orderCount);
+    const providerDetails = (Array.isArray(dashboard.readyForDispatch && dashboard.readyForDispatch.byProvider) ? dashboard.readyForDispatch.byProvider : [])
+      .map(entry => ({label: getBreakdownLabel(entry), value: getBreakdownCount(entry)}));
+    const dispatchOrderCount = getCount(dashboard.readyForDispatch && dashboard.readyForDispatch.orderCount);
+    const dispatchParcelCount = getCount(dashboard.readyForDispatch && dashboard.readyForDispatch.parcelCount);
+    const missingWaybills = getCount(dashboard.readyForDispatch && dashboard.readyForDispatch.missingWaybillCount);
+    const dispatchNote = missingWaybills === null
+      ? "Waybill coverage unavailable"
+      : missingWaybills > 0
+        ? `Requires waybills · ${missingWaybills}`
+        : "All waybills ready";
+    const dispatchTone = missingWaybills === null ? "neutral" : missingWaybills > 0 ? "negative" : "positive";
+    const dashboardErrorNote = this.state.dashboardSummaryError ? "Could not load dashboard statistics." : "Statistics unavailable from the API.";
+    const selectedRange = dashboard.selectedRange || {};
+    const formatScopeDate = value => value ? moment(value).format("MMM D, YYYY") : "";
+    const scopeStart = formatScopeDate(selectedRange.start || new URLSearchParams(window.location.search).get("start"));
+    const scopeEnd = formatScopeDate(selectedRange.end || new URLSearchParams(window.location.search).get("end"));
+    const dashboardScope = [scopeStart, scopeEnd].filter(Boolean).join(" – ");
+    const statsLoading = this.state.dashboardSummaryLoading;
+    const summaryCards = [
+      {
+        label: "Today’s orders",
+        Icon: ShoppingCart,
+        tone: "green",
+        value: todayCount === null ? "—" : todayCount,
+        secondary: formatAmounts(today.amountByCurrency) || "—",
+        note: this.state.dashboardSummaryError ? dashboardErrorNote : todayComparisonNote,
+        noteTone: todayComparisonTone
+      },
+      {
+        label: "Chat & social orders",
+        Icon: MessagesSquare,
+        tone: "purple",
+        value: getCount(dashboard.chatSocial && dashboard.chatSocial.orderCount) ?? "—",
+        secondary: formatAmounts(dashboard.chatSocial && dashboard.chatSocial.amountByCurrency) || "—",
+        details: sourceDetails,
+        note: this.state.dashboardSummaryError
+          ? dashboardErrorNote
+          : sourceDetails.length ? "Orders by source" : chatSocialCount === 0 ? "No chat or social orders in this range" : "Source breakdown unavailable",
+        noteTone: "neutral"
+      },
+      {
+        label: "Ready for dispatch",
+        Icon: Package,
+        tone: "blue",
+        value: getCount(dashboard.readyForDispatch && dashboard.readyForDispatch.orderCount) ?? "—",
+        secondary: dispatchParcelCount === null
+          ? "orders"
+          : `${dispatchParcelCount} parcels`,
+        details: providerDetails,
+        note: this.state.dashboardSummaryError
+          ? dashboardErrorNote
+          : providerDetails.length ? dispatchNote : dispatchOrderCount === 0 ? "No dispatch needed" : dispatchNote,
+        noteTone: this.state.dashboardSummaryError ? "negative" : dispatchTone
+      },
+      {
+        label: "Unpaid & COD in-transit",
+        Icon: Wallet,
+        tone: "slate",
+        value: getCount(dashboard.unpaidAndCodInTransit && dashboard.unpaidAndCodInTransit.orderCount) ?? "—",
+        secondary: formatAmounts(dashboard.unpaidAndCodInTransit && dashboard.unpaidAndCodInTransit.outstandingByCurrency) || "—",
+        details: [
+          {label: "COD in transit", value: getCount(dashboard.unpaidAndCodInTransit && dashboard.unpaidAndCodInTransit.codInTransitCount)},
+          {label: "Awaiting bank verification", value: getCount(dashboard.unpaidAndCodInTransit && dashboard.unpaidAndCodInTransit.awaitingBankVerificationCount)}
+        ],
+        note: this.state.dashboardSummaryError ? dashboardErrorNote : "Outstanding orders in the selected range",
+        noteTone: "neutral"
+      }
+    ];
 
-                      history.push("/sales/create");
-                    },
-                  },
-                ]}
-              />
-              <Tabs
-                activeKey={this.state.activeTab}
-                onChange={this.handleTabChange}
-              >
-                <TabPane
-                  tab={`All (${this.state?.pagination?.total || 0})`}
-                  key="allSales"
-                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                >
-                  {this.renderSaleOrderTable()}
-                </TabPane>
-                <TabPane
-                  tab={`Draft (${summaryData.draft ? summaryData.draft : 0})`}
-                  key="draftSales"
-                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                >
-                  {this.renderSaleOrderTable()}
-                </TabPane>
-                <TabPane
-                  tab={`To Invoice (${summaryData.confirmed ? summaryData.confirmed : 0})`}
-                  key="toInvoiceSales"
-                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                >
-                  {this.renderSaleOrderTable()}
-                </TabPane>
-                <TabPane
-                  tab="Shipping"
-                  key="shippingSales"
-                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                >
-                  {this.renderSaleOrderTable()}
-                </TabPane>
-                <TabPane
-                  tab={`Completed (${summaryData.closed ? summaryData.closed : 0})`}
-                  key="completedSales"
-                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                >
-                  {this.renderSaleOrderTable()}
-                </TabPane>
-                <TabPane
-                  tab={`Void (${summaryData.void ? summaryData.void : 0})`}
-                  key="voidSales"
-                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                >
-                  {this.renderSaleOrderTable()}
-                </TabPane>
-              </Tabs>
+    return (
+      <div className="sale-order-page">
+        <div className="sale-order-page-header">
+          <div>
+            <div className="sale-order-title-row">
+              <h1>Sales Orders</h1>
+              <span className="sale-order-total-badge">{totalOrders} Total</span>
             </div>
+            <p>Track and manage customer orders through fulfillment.</p>
           </div>
-        </React.Fragment>
+          <div className="sale-order-header-actions">
+            <Button size="large" className="sale-order-quick-button" type="primary" onClick={() => this.setState({quickSaleVisible: true})}>
+              <Icon type="thunderbolt" /> Quick Sale (Chat Paste) <span className="sale-order-ai-tag">AUTO</span>
+            </Button>
+            <Button size="large" onClick={() => {
+              ReactGA.event({ category: "Action Button", action: "Add New SO", label: "ERP HUB Web" });
+              history.push("/transactions/sale-order/create");
+            }}>
+              <Icon type="plus" /> Manual Order
+            </Button>
+            <Button size="large" disabled title="Waybill printing is not available in the current Sales Order API">
+              <Icon type="printer" /> Batch Print Waybills
+            </Button>
+          </div>
+        </div>
+
+        {dashboardScope && <div className="sale-order-summary-range">
+          Statistics: {dashboardScope}{dashboard.timeZone ? ` · ${dashboard.timeZone}` : ""}
+        </div>}
+        <Row className="sale-order-summary" gutter={16}>
+          {summaryCards.map(card => (
+            <Col key={card.label} xs={24} sm={12} xl={6}>
+              <Card className={`sale-order-summary-card sale-order-summary-${card.tone}`} bordered={false} aria-busy={statsLoading}>
+                {statsLoading ? <div className="sale-order-summary-skeleton" aria-label="Loading Sales Order statistics"><i /><i /><i /></div> : <>
+                  <div className="sale-order-summary-topline">
+                    <span>{card.label}</span>
+                    <span className="sale-order-summary-icon"><card.Icon size={19} strokeWidth={1.8} /></span>
+                  </div>
+                  <div className="sale-order-summary-metric">
+                    <strong>{card.value}</strong>
+                    <span>{card.secondary}</span>
+                  </div>
+                  {card.details && card.details.length > 0 && <div className="sale-order-summary-details">
+                    {card.details.map((detail, index) => (
+                      <span className="sale-order-summary-detail" key={`${detail.label}-${index}`}>
+                        <span>{detail.label}</span>
+                        <strong>{detail.value === null || detail.value === undefined ? "—" : detail.value}</strong>
+                      </span>
+                    ))}
+                  </div>}
+                  <div className={`sale-order-summary-note sale-order-summary-note-${card.noteTone || "neutral"}`}>
+                    {card.noteTone === "negative" && !this.state.dashboardSummaryError && <AlertCircle size={13} />}
+                    {card.note}
+                  </div>
+                </>}
+              </Card>
+            </Col>
+          ))}
+        </Row>
+
+        <div className="sale-order-table-panel">
+          <Tabs className="sale-order-tabs" activeKey={this.state.activeTab} onChange={this.handleTabChange}>
+                <TabPane
+                  tab={`All (${totalOrders})`}
+                  key="allSales"
+                />
+                <TabPane
+                  tab={`Confirm (${summaryData.confirmed || 0})`}
+                  key="confirmSales"
+                />
+                <TabPane
+                  tab="To Pack & Ship"
+                  key="shippingSales"
+                />
+                <TabPane
+                  tab={`Completed${typeof summaryData.completed === "number" || typeof summaryData.closed === "number" ? ` (${(Number(summaryData.completed) || 0) + (Number(summaryData.closed) || 0)})` : ""}`}
+                  key="completedSales"
+                />
+                <TabPane
+                  tab={`Cancelled / Void (${summaryData.void ? summaryData.void : 0})`}
+                  key="voidSales"
+                />
+          </Tabs>
+          {this.renderSaleOrderTable()}
+        </div>
+        <QuickSaleModal
+          visible={this.state.quickSaleVisible}
+          onCancel={() => this.setState({quickSaleVisible: false})}
+          onCreated={() => {
+            this.fetchList(true);
+            this.fetchSummary();
+            this.fetchDashboardSummary();
+          }}
+        />
+      </div>
     );
   }
 }

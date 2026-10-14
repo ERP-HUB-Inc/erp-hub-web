@@ -261,6 +261,12 @@
   text-transform: uppercase;
 }
 
+.so-line-items-header .so-table-money,
+.so-line-items-header .so-table-number {
+  font-size: inherit;
+  text-align: right;
+}
+
 .so-product-row {
   align-items: center;
   border-bottom: 1px solid #f1f5f9;
@@ -837,4 +843,166 @@
   .so-document-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.so-tax-invoice-preview-stage {
+  box-sizing: border-box;
+  width: fit-content;
+  min-width: 100%;
+  overflow-x: auto;
+  padding: 22px;
+  background: #eef1f5;
+}
+
+.so-tax-invoice-preview-toolbar {
+  display: flex;
+  max-width: 210mm;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 auto 14px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.so-tax-invoice-preview-toolbar > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.so-invoice-preview-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.so-invoice-preview-controls .ant-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.so-tax-invoice-preview-toolbar strong {
+  color: #172033;
+  font-size: 13px;
+}
+
+.so-tax-invoice-preview-toolbar span {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.so-tax-invoice-preview-toolbar .ant-select {
+  min-width: 220px;
+}
+
+.so-tax-invoice-preview-stage #invoice-content {
+  box-sizing: border-box;
+  width: 210mm !important;
+  max-width: none;
+  min-height: 297mm;
+  margin: 0 auto !important;
+  padding: 10mm !important;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, .09);
+}
+
+.so-tax-invoice-preview-stage #invoice-content .table-invoice {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.so-tax-invoice-preview-stage #invoice-content .table-invoice-data {
+  border-color: #cbd5e1;
+}
+
+.so-tax-invoice-preview-stage #invoice-content .table-invoice-data tr th,
+.so-tax-invoice-preview-stage #invoice-content .table-invoice-data tr td {
+  border-color: #cbd5e1;
+}
+
+.so-tax-invoice-preview-stage #invoice-content .table-invoice-entry thead th {
+  border-bottom: 1px solid #cbd5e1;
+  background: #f3f7f8;
+  color: #475569;
+}
+
+.so-tax-invoice-preview-stage #invoice-content [style*="width: 705px"] {
+  width: auto !important;
+  max-width: 100%;
+}
+
+.so-tax-invoice-preview-stage #invoice-content.multi-copy-invoice {
+  width: fit-content !important;
+  min-height: 0;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.so-tax-invoice-preview-stage .multi-copy-invoice-page {
+  box-sizing: border-box;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto 22px;
+  padding: 10mm;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, .09);
+}
+
+.so-tax-invoice-preview-stage .multi-copy-invoice-page > .table-invoice {
+  width: 100% !important;
+  table-layout: fixed;
+}
+
+.so-tax-invoice-preview-stage .multi-copy-invoice-page .table-invoice-entry {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.so-tax-invoice-preview-stage .multi-copy-invoice-page .table-invoice-entry th,
+.so-tax-invoice-preview-stage .multi-copy-invoice-page .table-invoice-entry td {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  .so-tax-invoice-preview-stage { padding: 14px; }
+  .so-tax-invoice-preview-toolbar { align-items: stretch; flex-direction: column; }
+}
+
+@media print {
+  .so-tax-invoice-preview-stage {
+    width: auto;
+    min-width: 0;
+    overflow: visible;
+    padding: 0;
+    background: transparent;
+  }
+
+  .so-tax-invoice-preview-stage #invoice-content {
+    margin: 0 !important;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .so-tax-invoice-preview-stage .multi-copy-invoice-page {
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .so-tax-invoice-preview-stage .multi-copy-invoice-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .so-tax-invoice-preview-toolbar { display: none; }
 }

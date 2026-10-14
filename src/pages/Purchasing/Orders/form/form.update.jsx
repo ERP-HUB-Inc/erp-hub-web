@@ -29,6 +29,8 @@ import history from "@router/index";
 import Util from "@helper/inventory";
 import { getLocationId } from "@helper/user";
 import { SelectItem, SelectVendor } from "@components/stateful";
+import PurchaseOrderCosts from "./PurchaseOrderCosts";
+import { restoreCharges, serializeCharges, validateCharges } from "./purchaseOrderCostUtils";
 
 const { Option } = Select;
 
@@ -40,6 +42,8 @@ const PurchaseOrderForm = (props) => {
   const [warehouses, setWarehouses] = useState([]);
   const [units, setUnits] = useState([]);
   const [items, setItems] = useState([]);
+  const [charges, setCharges] = useState([]);
+  const [costs, setCosts] = useState({ discount: 0, shippingFee: 0, tax: 0, taxInclusive: false });
 
   useEffect(() => {
     if (poItems.length === 0) {
@@ -259,11 +263,19 @@ const PurchaseOrderForm = (props) => {
         discount: po.discount,
         shippingFee: po.shippingFee,
         tax: po.tax || 0,
+        taxInclusive: po.taxInclusive || false,
         status: po.status || "DRAFT",
       };
 
 
       setPO(payload);
+      setCosts({
+        discount: po.discount || 0,
+        shippingFee: po.shippingFee || 0,
+        tax: po.tax || 0,
+        taxInclusive: po.taxInclusive || false,
+      });
+      setCharges(restoreCharges(po.additionalCharges));
       setPOItems(
         po.entries.map((entry) => ({
           id: entry.id,
@@ -404,15 +416,23 @@ const PurchaseOrderForm = (props) => {
         });
       });
 
+      const chargeError = validateCharges(charges);
+      if (chargeError) {
+        Modal.error({ title: "Invalid additional charge", content: chargeError });
+        return;
+      }
+
       setSubmitting(true);
 
       const payload = {
         locationId: value.locationId,
-        deliveryDueDate: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
+        deliveryDueDate: moment(value.deliveryDueDate).format("YYYY-MM-DD HH:mm:ss"),
         supplierId: value.vendorId,
-        discount: value.discount,
-        shippingFee: value.shippingFee,
-        tax: 0,
+        discount: value.discount || 0,
+        shippingFee: value.shippingFee || 0,
+        tax: value.tax || 0,
+        taxInclusive: value.taxInclusive || false,
+        additionalCharges: serializeCharges(charges),
         status: "DRAFT",
         entries: value.item.map((id, index) => {
           const item = items.find((item) => item.id === id);
@@ -432,34 +452,11 @@ const PurchaseOrderForm = (props) => {
         }),
       };
       await POService.updatePurchaseOrder(po.id, payload);
+      sweetalert({ icon: "success", title: "Purchase order updated", buttons: false, timer: 1500 });
     } catch (error) {
-      console.error("❌ PO Creation Failed:", error);
+      Modal.error({ title: "Could not update purchase order", content: "Check the form and try again." });
     } finally {
-      sweetalert({
-        icon: "success",
-        title: "PO In Recorded",
-        text: "Your PO has been saved.",
-        buttons: false,
-        timer: 1500
-      })
-      .then(() => {
-        setSubmitting(false);
-        props.form.resetFields();
-        const newItem = {
-          key: Date.now(),
-          itemId: null,
-          itemName: "",
-          sku: "",
-          quantity: null,
-          warehouse: warehouses[0]?.id,
-          batch: "",
-          expiry: null,
-          notes: "",
-          currentStock: 0,
-          avgQuantity: 0,
-        };
-        setPOItems([newItem]);
-      });
+      setSubmitting(false);
     }
   };
 
@@ -472,15 +469,23 @@ const PurchaseOrderForm = (props) => {
         });
       });
 
+      const chargeError = validateCharges(charges);
+      if (chargeError) {
+        Modal.error({ title: "Invalid additional charge", content: chargeError });
+        return;
+      }
+
       setSubmitting(true);
 
       const payload = {
         locationId: `${value.locationId}`,
         deliveryDueDate: moment(value.deliveryDueDate).format("YYYY-MM-DD"),
         supplierId: value.vendorId,
-        discount: value.discount,
-        shippingFee: value.shippingFee,
-        tax: 0,
+        discount: value.discount || 0,
+        shippingFee: value.shippingFee || 0,
+        tax: value.tax || 0,
+        taxInclusive: value.taxInclusive || false,
+        additionalCharges: serializeCharges(charges),
         status: status || "ORDERED",
         entries: value.item
           .map((id, index) => {
@@ -506,18 +511,11 @@ const PurchaseOrderForm = (props) => {
           .filter((item) => item.variantId !== ""),
       };
       await POService.updatePurchaseOrder(po.id, payload);
+      sweetalert({ icon: "success", title: "Purchase order updated", buttons: false, timer: 1500 });
     } catch (error) {
-      console.error("❌ PO Creation Failed:", error);
+      Modal.error({ title: "Could not update purchase order", content: "Check the form and try again." });
     } finally {
-      sweetalert({
-        icon: "success",
-        title: "PO In Recorded",
-        text: "Your PO has been saved.",
-        buttons: false,
-        timer: 1500,
-      }).then(() => {
-        setSubmitting(false);
-      });
+      setSubmitting(false);
     }
   };
 
@@ -661,7 +659,7 @@ const PurchaseOrderForm = (props) => {
     return false;
   };
 
-  return loading ? (
+  return loading || !po ? (
     <Spin spinning={true} />
   ) : (
     <div style={{ padding: 24, background: "#f0f2f5", minHeight: "100vh" }}>
@@ -737,22 +735,6 @@ const PurchaseOrderForm = (props) => {
                 )}
               </Form.Item>
             </Col>
-            <Col md={6}>
-              <Form.Item
-                label="Discount"
-                extra="Discount provided by the supplier or seller."
-              >
-                {props.form.getFieldDecorator("discount", {
-                  rules: [],
-                  initialValue: po?.discount,
-                })(
-                  <InputNumber
-                    size="medium"
-                    placeholder="Enter discount amount (e.g., 5.00)"
-                  />,
-                )}
-              </Form.Item>
-            </Col>
             {/* <Col md={6}>
               <div style={{ marginBottom: 8 }}>
                 <strong>Quick Actions</strong>
@@ -776,22 +758,6 @@ const PurchaseOrderForm = (props) => {
               />
             </Col> */}
           </Row>
-          <Row gutter={16} style={{ marginBottom: 24 }}>
-            <Col md={6}>
-              <Form.Item label="Shipping Fee">
-                {props.form.getFieldDecorator("shippingFee", {
-                  rules: [],
-                  initialValue: po?.shippingFee,
-                })(
-                  <InputNumber
-                    size="meduim"
-                    placeholder="Enter shipping fee (e.g., 2.50)"
-                  />,
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Divider />
 
           {/* Items Table */}
@@ -821,6 +787,16 @@ const PurchaseOrderForm = (props) => {
               bordered
             />
           </div>
+
+          <Divider />
+          <PurchaseOrderCosts
+            form={props.form}
+            items={poItems}
+            costs={costs}
+            onCostsChange={setCosts}
+            charges={charges}
+            onChargesChange={setCharges}
+          />
 
           {/* Action Buttons */}
           <div

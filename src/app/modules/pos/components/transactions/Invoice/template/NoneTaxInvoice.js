@@ -1,6 +1,7 @@
 import React from "react";
 import Util from "../../../../../common/util";
 import "./style.css";
+import BusinessLogo from "./BusinessLogo";
 
 const util = new Util();
 const dateFormat = "DD-MM-YYYY";
@@ -38,7 +39,7 @@ export default function NoneTaxInvoice(props) {
   }
 
   const {formData} = props;
-  let discount = Number(formData.discount);
+  let discount = Number(formData.discount || 0);
   let subtotal = getSubTotal(formData);
 
   if (!formData.totalExcludeTax) {
@@ -50,6 +51,7 @@ export default function NoneTaxInvoice(props) {
     tax = 0;
 
   const deliveryFee = formData.deliveryFee ? formData.deliveryFee : 0;
+  const balanceDue = Math.max(Number(formData.total || 0) - discount + Number(deliveryFee || 0) - Number(formData.deposit || 0), 0);
 
   let client = {
     clientId: null,
@@ -70,7 +72,13 @@ export default function NoneTaxInvoice(props) {
       <tbody>
         <tr style={{background: "none", verticalAlign: "top"}}>
           <td style={{height: 100, paddingLeft: 0}}>
-            <img src={util.getGeneralImage(`${client.clientId}/general/${client.logo}`).url} alt="Logo" style={{height: "100%"}} />
+            <BusinessLogo
+              clientId={client.clientId}
+              logo={client.logo}
+              businessName={formData.client && formData.client.businessName}
+              imageStyle={{height: "100%", maxWidth: 150}}
+              placeholderStyle={{width: 84, height: 84, fontSize: 20}}
+            />
           </td>
           <td style={{width: 230}}>
             <ul style={styles.ulStyle}>
@@ -102,7 +110,7 @@ export default function NoneTaxInvoice(props) {
                 <div style={{width: 150}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
               </li>
               <li style={{display: "flex"}} className="inv-header-title">
-                <div style={{width: 150}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
+                <div style={{width: 150}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(balanceDue)}</div>
               </li>
             </ul>
           </td>

@@ -1,0 +1,426 @@
+.so-packing-slip-preview-stage {
+  box-sizing: border-box;
+  width: fit-content;
+  min-width: 100%;
+  padding: 22px;
+  background: #eef1f5;
+}
+
+.so-packing-slip-preview-toolbar {
+  display: flex;
+  max-width: 210mm;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 auto 14px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.so-packing-slip-preview-toolbar > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.so-packing-slip-preview-toolbar strong {
+  color: #172033;
+  font-size: 13px;
+}
+
+.so-packing-slip-preview-toolbar span {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.so-packing-slip-preview-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.so-packing-slip-preview-controls .ant-select {
+  min-width: 174px;
+}
+
+.so-packing-slip-preview-controls .ant-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.so-packing-slip-sheet {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 15mm 14mm 12mm;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, .09);
+  color: #172033;
+  font-family: Arial, sans-serif;
+}
+
+.so-packing-slip-sheet.paper-a4 { width: 210mm; }
+.so-packing-slip-sheet.paper-a5 { width: 148mm; min-height: 210mm; padding: 10mm 9mm 8mm; }
+.so-packing-slip-sheet.paper-80mm { width: 80mm; min-height: 0; padding: 4mm; }
+.so-packing-slip-sheet.paper-58mm { width: 58mm; min-height: 0; padding: 3mm; }
+
+.so-packing-slip-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid #14b8a6;
+}
+
+.so-packing-slip-sender-brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.so-packing-slip-logo,
+.so-packing-slip-brand-mark {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.so-packing-slip-brand-mark {
+  background: #e6f8f6;
+  color: #0f766e;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.so-packing-slip-business strong {
+  color: #172033;
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.so-packing-slip-title-block {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  text-align: right;
+}
+
+.so-packing-slip-eyebrow,
+.so-packing-slip-section-label {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.so-packing-slip-title-block h1 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.so-packing-slip-title-block strong {
+  color: #0f766e;
+  font-size: 12px;
+}
+
+.so-packing-slip-title-block > span:last-child {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.so-packing-slip-parties {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 19px 0 24px;
+}
+
+.so-packing-slip-party {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 12px 13px;
+  border: 1px solid #e5ebf0;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #59677a;
+  font-size: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.so-packing-slip-party .so-packing-slip-section-label {
+  margin-bottom: 2px;
+}
+
+.so-packing-slip-party strong {
+  color: #1e293b;
+  font-size: 11px;
+}
+
+.so-packing-slip-party p { margin: 0; }
+
+.so-packing-slip-items-section {
+  margin-top: 3px;
+}
+
+.so-packing-slip-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+
+.so-packing-slip-section-heading h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.so-packing-slip-section-heading span {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.so-packing-slip-items {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.so-packing-slip-items th {
+  padding: 9px 10px;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #dbe3eb;
+  background: #f3f7f8;
+  color: #526174;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .06em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.so-packing-slip-items td {
+  padding: 11px 10px;
+  border-bottom: 1px solid #edf1f5;
+  color: #334155;
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+.so-packing-slip-items th:first-child,
+.so-packing-slip-items td:first-child { width: 42px; }
+.so-packing-slip-items th:last-child,
+.so-packing-slip-items td:last-child { width: 100px; }
+
+.so-packing-slip-index {
+  color: #94a3b8 !important;
+  text-align: center !important;
+}
+
+.so-packing-slip-qty {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.so-packing-slip-qty strong { color: #172033; }
+.so-packing-slip-qty span { margin-left: 4px; color: #64748b; }
+
+.so-packing-slip-variant {
+  display: block;
+  margin-top: 3px;
+  color: #78869a;
+  font-size: 9px;
+}
+
+.so-packing-slip-empty {
+  padding: 22px !important;
+  color: #94a3b8 !important;
+  text-align: center;
+}
+
+.so-packing-slip-notes {
+  min-height: 75px;
+  margin-top: 20px;
+  padding: 11px 12px;
+  border: 1px solid #dbe3eb;
+  border-radius: 7px;
+}
+
+.so-packing-slip-notes p {
+  margin: 7px 0 0;
+  color: #334155;
+  font-size: 10px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.so-packing-slip-signatures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.so-packing-slip-signatures > div {
+  display: flex;
+  flex-direction: column;
+  color: #64748b;
+  font-size: 10px;
+}
+
+.so-packing-slip-signatures i {
+  height: 28px;
+  margin-top: 18px;
+  border-bottom: 1px solid #94a3b8;
+}
+
+.so-packing-slip-signatures small {
+  margin-top: 5px;
+  color: #94a3b8;
+  font-size: 9px;
+  text-align: center;
+}
+
+.paper-a5 .so-packing-slip-header { gap: 12px; padding-bottom: 12px; }
+.paper-a5 .so-packing-slip-logo,
+.paper-a5 .so-packing-slip-brand-mark { width: 38px; height: 38px; flex-basis: 38px; }
+.paper-a5 .so-packing-slip-business strong { font-size: 13px; }
+.paper-a5 .so-packing-slip-title-block h1 { font-size: 17px; }
+.paper-a5 .so-packing-slip-parties { gap: 8px; margin: 13px 0 16px; }
+.paper-a5 .so-packing-slip-party { padding: 8px; font-size: 9px; }
+.paper-a5 .so-packing-slip-items th { padding: 7px 6px; }
+.paper-a5 .so-packing-slip-items td { padding: 8px 6px; font-size: 9px; }
+.paper-a5 .so-packing-slip-items th:first-child,
+.paper-a5 .so-packing-slip-items td:first-child { width: 28px; }
+.paper-a5 .so-packing-slip-items th:last-child,
+.paper-a5 .so-packing-slip-items td:last-child { width: 65px; }
+.paper-a5 .so-packing-slip-notes { min-height: 58px; margin-top: 13px; }
+.paper-a5 .so-packing-slip-signatures { gap: 14px; padding-top: 17px; }
+
+.paper-80mm .so-packing-slip-header,
+.paper-58mm .so-packing-slip-header {
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 7px;
+}
+
+.paper-80mm .so-packing-slip-sender-brand,
+.paper-58mm .so-packing-slip-sender-brand { gap: 6px; }
+.paper-80mm .so-packing-slip-logo,
+.paper-80mm .so-packing-slip-brand-mark,
+.paper-58mm .so-packing-slip-logo,
+.paper-58mm .so-packing-slip-brand-mark { width: 26px; height: 26px; flex-basis: 26px; border-radius: 6px; }
+.paper-80mm .so-packing-slip-brand-mark,
+.paper-58mm .so-packing-slip-brand-mark { font-size: 10px; }
+.paper-80mm .so-packing-slip-business,
+.paper-58mm .so-packing-slip-business { min-width: 0; overflow: hidden; }
+.paper-80mm .so-packing-slip-business strong,
+.paper-58mm .so-packing-slip-business strong { display: block; max-width: 35mm; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.paper-80mm .so-packing-slip-title-block,
+.paper-58mm .so-packing-slip-title-block { gap: 1px; }
+.paper-80mm .so-packing-slip-eyebrow,
+.paper-58mm .so-packing-slip-eyebrow { display: none; }
+.paper-80mm .so-packing-slip-title-block h1,
+.paper-58mm .so-packing-slip-title-block h1 { font-size: 12px; }
+.paper-80mm .so-packing-slip-title-block strong,
+.paper-80mm .so-packing-slip-title-block > span:last-child,
+.paper-58mm .so-packing-slip-title-block strong,
+.paper-58mm .so-packing-slip-title-block > span:last-child { max-width: 34mm; overflow: hidden; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.paper-80mm .so-packing-slip-parties,
+.paper-58mm .so-packing-slip-parties { grid-template-columns: 1fr; gap: 4px; margin: 8px 0 10px; }
+.paper-80mm .so-packing-slip-party,
+.paper-58mm .so-packing-slip-party { gap: 2px; padding: 5px 6px; border-radius: 5px; font-size: 8px; }
+.paper-80mm .so-packing-slip-party .so-packing-slip-section-label,
+.paper-58mm .so-packing-slip-party .so-packing-slip-section-label { font-size: 7px; }
+.paper-80mm .so-packing-slip-party strong,
+.paper-58mm .so-packing-slip-party strong { font-size: 9px; }
+.paper-80mm .so-packing-slip-party:first-child > div,
+.paper-80mm .so-packing-slip-party:first-child > span:not(.so-packing-slip-section-label),
+.paper-58mm .so-packing-slip-party:first-child > div,
+.paper-58mm .so-packing-slip-party:first-child > span:not(.so-packing-slip-section-label) { display: none; }
+.paper-80mm .so-packing-slip-items th,
+.paper-58mm .so-packing-slip-items th { padding: 5px 4px; font-size: 7px; letter-spacing: .02em; }
+.paper-80mm .so-packing-slip-items td,
+.paper-58mm .so-packing-slip-items td { padding: 5px 4px; font-size: 8px; }
+.paper-80mm .so-packing-slip-items th:first-child,
+.paper-80mm .so-packing-slip-items td:first-child,
+.paper-58mm .so-packing-slip-items th:first-child,
+.paper-58mm .so-packing-slip-items td:first-child { width: 22px; }
+.paper-80mm .so-packing-slip-items th:last-child,
+.paper-80mm .so-packing-slip-items td:last-child,
+.paper-58mm .so-packing-slip-items th:last-child,
+.paper-58mm .so-packing-slip-items td:last-child { width: 53px; }
+.paper-80mm .so-packing-slip-qty span,
+.paper-58mm .so-packing-slip-qty span { display: block; margin: 1px 0 0; }
+.paper-80mm .so-packing-slip-notes,
+.paper-58mm .so-packing-slip-notes { min-height: 32px; margin-top: 8px; padding: 5px 6px; }
+.paper-80mm .so-packing-slip-signatures,
+.paper-58mm .so-packing-slip-signatures { display: none; }
+
+.paper-58mm .so-packing-slip-logo,
+.paper-58mm .so-packing-slip-brand-mark { width: 22px; height: 22px; flex-basis: 22px; }
+.paper-58mm .so-packing-slip-business strong { max-width: 24mm; font-size: 9px; }
+.paper-58mm .so-packing-slip-title-block { min-width: 0; }
+.paper-58mm .so-packing-slip-title-block h1 { font-size: 11px; }
+.paper-58mm .so-packing-slip-title-block strong,
+.paper-58mm .so-packing-slip-title-block strong,
+.paper-58mm .so-packing-slip-title-block > span:last-child { max-width: 23mm; }
+.paper-58mm .so-packing-slip-items th:first-child,
+.paper-58mm .so-packing-slip-items td:first-child { width: 16px; }
+.paper-58mm .so-packing-slip-items th:last-child,
+.paper-58mm .so-packing-slip-items td:last-child { width: 31px; }
+.paper-58mm .so-packing-slip-items th,
+.paper-58mm .so-packing-slip-items td { padding-right: 2px; padding-left: 2px; }
+.paper-58mm .so-packing-slip-notes { min-height: 26px; margin-top: 7px; padding: 4px; }
+
+@media (max-width: 720px) {
+  .so-packing-slip-preview-toolbar { flex-direction: column; align-items: stretch; }
+  .so-packing-slip-preview-controls { justify-content: space-between; }
+}
+
+@page packing-slip-a4 { size: A4; margin: 0; }
+@page packing-slip-a5 { size: A5; margin: 0; }
+@page packing-slip-80mm { size: 80mm auto; margin: 0; }
+@page packing-slip-58mm { size: 58mm auto; margin: 0; }
+
+.so-packing-slip-sheet.paper-a4 { page: packing-slip-a4; }
+.so-packing-slip-sheet.paper-a5 { page: packing-slip-a5; }
+.so-packing-slip-sheet.paper-80mm { page: packing-slip-80mm; }
+.so-packing-slip-sheet.paper-58mm { page: packing-slip-58mm; }
+
+@media print {
+  .so-packing-slip-sheet {
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+}

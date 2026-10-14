@@ -28,6 +28,8 @@ import history from "@router/index";
 import Util from "@helper/inventory";
 import { getLocationId } from "@helper/user";
 import { SelectItem, SelectVendor } from '@components/stateful';
+import PurchaseOrderCosts from "./PurchaseOrderCosts";
+import { serializeCharges, validateCharges } from "./purchaseOrderCostUtils";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -38,6 +40,8 @@ const PurchaseOrderForm = (props) => {
   const [warehouses, setWarehouses] = useState([]);
   const [units, setUnits] = useState([]);
   const [items, setItems] = useState([]);
+  const [charges, setCharges] = useState([]);
+  const [costs, setCosts] = useState({ discount: 0, shippingFee: 0, tax: 0, taxInclusive: false });
 
   useEffect(() => {
     if (poItems.length === 0) {
@@ -353,15 +357,23 @@ const PurchaseOrderForm = (props) => {
         });
       });
 
+      const chargeError = validateCharges(charges);
+      if (chargeError) {
+        Modal.error({ title: "Invalid additional charge", content: chargeError });
+        return;
+      }
+
       setSubmitting(true);
 
       const payload = {
         locationId: value.locationId,
         deliveryDueDate: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
         supplierId: value.vendorId,
-        discount: value.discount,
-        shippingFee: value.shippingFee,
-        tax: 0,
+        discount: value.discount || 0,
+        shippingFee: value.shippingFee || 0,
+        tax: value.tax || 0,
+        taxInclusive: value.taxInclusive || false,
+        additionalCharges: serializeCharges(charges),
         status: "DRAFT",
         entries: value.item.map((id, index) => {
           const item = items.find((item) => item.id === id);
@@ -406,10 +418,14 @@ const PurchaseOrderForm = (props) => {
           avgQuantity: 0,
         };
         setPOItems([newItem]);
+        setCharges([]);
+        setCosts({ discount: 0, shippingFee: 0, tax: 0, taxInclusive: false });
       });
 
     } catch (error) {
-      console.error("❌ PO Creation Failed:", error);
+      Modal.error({ title: "Could not create purchase order", content: "Check the form and try again." });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -422,15 +438,23 @@ const PurchaseOrderForm = (props) => {
         });
       });
 
+      const chargeError = validateCharges(charges);
+      if (chargeError) {
+        Modal.error({ title: "Invalid additional charge", content: chargeError });
+        return;
+      }
+
       setSubmitting(true);
 
       const payload = {
         locationId: value.locationId,
         deliveryDueDate: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
         supplierId: value.vendorId,
-        discount: value.discount,
-        shippingFee: value.shippingFee,
-        tax: 0,
+        discount: value.discount || 0,
+        shippingFee: value.shippingFee || 0,
+        tax: value.tax || 0,
+        taxInclusive: value.taxInclusive || false,
+        additionalCharges: serializeCharges(charges),
         status: status || "ORDERED",
         entries: value.item
           .map((itemId, index) => {
@@ -478,9 +502,13 @@ const PurchaseOrderForm = (props) => {
           avgQuantity: 0,
         };
         setPOItems([newItem]);
+        setCharges([]);
+        setCosts({ discount: 0, shippingFee: 0, tax: 0, taxInclusive: false });
       });
     } catch (error) {
-      console.error("❌ PO Creation Failed:", error);
+      Modal.error({ title: "Could not create purchase order", content: "Check the form and try again." });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -697,21 +725,6 @@ const PurchaseOrderForm = (props) => {
                 )}
               </Form.Item>
             </Col>
-            <Col md={6}>
-              <Form.Item
-                label="Discount"
-                extra="Discount provided by the supplier or seller."
-              >
-                {props.form.getFieldDecorator("discount", {
-                  rules: [],
-                })(
-                  <InputNumber
-                    size="medium"
-                    placeholder="Enter discount amount (e.g., 5.00)"
-                  />,
-                )}
-              </Form.Item>
-            </Col>
             {/* <Col md={6}>
               <div style={{ marginBottom: 8 }}>
                 <strong>Quick Actions</strong>
@@ -735,21 +748,6 @@ const PurchaseOrderForm = (props) => {
               />
             </Col> */}
           </Row>
-          <Row gutter={16} style={{ marginBottom: 24 }}>
-            <Col md={6}>
-              <Form.Item label="Shipping Fee">
-                {props.form.getFieldDecorator("shippingFee", {
-                  rules: [],
-                })(
-                  <InputNumber
-                    size="meduim"
-                    placeholder="Enter shipping fee (e.g., 2.50)"
-                  />,
-                )}
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Divider />
 
           {/* Items Table */}
@@ -779,6 +777,16 @@ const PurchaseOrderForm = (props) => {
               bordered
             />
           </div>
+
+          <Divider />
+          <PurchaseOrderCosts
+            form={props.form}
+            items={poItems}
+            costs={costs}
+            onCostsChange={setCosts}
+            charges={charges}
+            onChargesChange={setCharges}
+          />
 
           {/* Action Buttons */}
           <div

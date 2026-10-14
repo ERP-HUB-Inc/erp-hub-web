@@ -17,8 +17,10 @@ import {
   Avatar,
   Skeleton,
   Empty,
-  Drawer
+  Drawer,
+  Select
 } from "antd";
+import ReactToPrint from "react-to-print";
 import {
   ArrowLeft,
   ChevronRight,
@@ -81,6 +83,12 @@ function hasValue(value) {
   return value !== undefined && value !== null && value !== "";
 }
 
+function getInvoiceTemplateOption(value) {
+  if (!hasValue(value)) return Enum.PAPER_SIZE.EXCLUDE_TAX;
+  const numericValue = Number.parseInt(value, 10);
+  return Number.isNaN(numericValue) ? value : numericValue;
+}
+
 function getInitials(name) {
   if (!name || name === EMPTY_VALUE) return "SO";
 
@@ -137,7 +145,9 @@ class SaleOrderDetail extends React.PureComponent{
     invoiceDetail: {},
     activeKey: 1,
     loadingTab: false,
-    historyDrawerVisible: false
+    historyDrawerVisible: false,
+    invoicePreviewTemplate: null,
+    packingSlipPaperSize: "a4"
   }
   SALE_ORDER_STATUS_STR = {
     [Enum.SALE_ORDER_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
@@ -207,7 +217,12 @@ class SaleOrderDetail extends React.PureComponent{
     if (!Object.keys(invoiceDetail).length) {
       SaleOrderService.getInvoiceBySaleOrderId(this.state.formData.id)
       .then(response => {
-        this.setState({invoiceDetail: response.data});
+        this.setState(state => ({
+          invoiceDetail: response.data,
+          invoicePreviewTemplate: state.invoicePreviewTemplate === null
+            ? getInvoiceTemplateOption(response.data && response.data.template)
+            : state.invoicePreviewTemplate
+        }));
       });
     }
   } 
@@ -219,7 +234,12 @@ class SaleOrderDetail extends React.PureComponent{
       this.setState({loadingTab: true});
       SaleOrderService.getInvoiceBySaleOrderId(id)
       .then(response => {
-        this.setState({invoiceDetail: response.data});
+        this.setState(state => ({
+          invoiceDetail: response.data,
+          invoicePreviewTemplate: state.invoicePreviewTemplate === null
+            ? getInvoiceTemplateOption(response.data && response.data.template)
+            : state.invoicePreviewTemplate
+        }));
       })
       .finally(() => this.setState({loadingTab: false}));
     }
@@ -284,11 +304,18 @@ class SaleOrderDetail extends React.PureComponent{
       : [];
   }
 
+  getDeliveryFee = (formData) => {
+    const fee = formData.fulfillmentProviderId && hasValue(formData.fulfillmentFee)
+      ? formData.fulfillmentFee
+      : formData.deliveryFee;
+    return hasValue(fee) ? toNumber(fee) : 0;
+  }
+
   getPaymentState = (formData) => {
     const transactionPayment = formData.transactionPayment.length > 0 ? formData.transactionPayment[0] : { tender: 0, balance: 0 };
     const deposit = toNumber(formData.deposit);
     const tender = toNumber(transactionPayment.tender);
-    const total = toNumber(formData.total) - toNumber(formData.discount);
+    const total = this.getGrandTotal(formData);
     const balance = Math.max(total - deposit - tender, 0);
 
     if (total <= 0) {
@@ -313,7 +340,7 @@ class SaleOrderDetail extends React.PureComponent{
     return Math.max(total - totalExcludeTax, 0);
   }
 
-  getGrandTotal = (formData) => toNumber(formData.total) - toNumber(formData.discount)
+  getGrandTotal = (formData) => toNumber(formData.total) - toNumber(formData.discount) + this.getDeliveryFee(formData)
 
   getFulfillmentState = (formData) => {
     if (this.isClosedStatus(formData.status)) {
@@ -439,7 +466,7 @@ class SaleOrderDetail extends React.PureComponent{
     },
     {
       key: "2",
-      title: "Tax Invoice",
+      title: "Invoice",
       status: this.getPaymentState(formData).balance > 0 ? "UNPAID" : "PAID",
       color: this.getPaymentState(formData).balance > 0 ? "orange" : "green",
       reference: this.state.invoiceDetail.number || "Available after conversion",
@@ -603,20 +630,6 @@ class SaleOrderDetail extends React.PureComponent{
             <MetaItem icon={<CircleDot size={14} />} label="Channel" value={header.channel} />
           </div>
         </div>
-        <div className="so-header-actions">
-          <Button type="info" onClick={() => history.push({pathname: `/transactions/sale-order/update/${formData.id}`})}>
-            <Edit3 size={14} />
-            <span style={{marginLeft: 6}}><Translate id="text_edit" /></span>
-          </Button>
-          <Button onClick={() => window.print()}>
-            <Printer size={14} />
-            <span style={{marginLeft: 6}}>Print / PDF</span>
-          </Button>
-          <Button onClick={() => history.push({pathname: `/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`})}>
-            <ReceiptText size={14} />
-            <span style={{marginLeft: 6}}><Translate id="text_convert_to_invoice" /></span>
-          </Button>
-        </div>
       </div>
     );
   }
@@ -671,10 +684,10 @@ class SaleOrderDetail extends React.PureComponent{
             <div className="so-line-items-header">
               <span>Item / SKU</span>
               <span>Status</span>
-              <span>Price</span>
-              <span>Qty</span>
-              <span>Tax</span>
-              <span>Total</span>
+              <span className="so-table-money">Price</span>
+              <span className="so-table-number">Qty</span>
+              <span className="so-table-money">Tax</span>
+              <span className="so-table-money">Total</span>
             </div>
             {items.map((entry, index) => this.renderProductRow(entry, index, fulfillmentState))}
             <div className="so-line-items-footer">
@@ -693,7 +706,7 @@ class SaleOrderDetail extends React.PureComponent{
     const price = toNumber(entry.price);
     const lineTotal = hasValue(entry.amount) ? toNumber(entry.amount) : quantity * this.util.floor(price);
     const imageUrl = this.getProductImage(entry);
-    const sku = entry.sku || entry.barcode || entry.productVariantId;
+    const sku = entry.sku || entry.barcode || entry.variantSku || entry.productVariantSku;
     const tax = toNumber(entry.tax);
 
     return (
@@ -725,6 +738,10 @@ class SaleOrderDetail extends React.PureComponent{
     const total = toNumber(formData.total);
     const totalExcludeTax = hasValue(formData.totalExcludeTax) ? toNumber(formData.totalExcludeTax) : total;
     const discount = toNumber(formData.discount);
+    const deliveryFeeValue = formData.fulfillmentProviderId && hasValue(formData.fulfillmentFee)
+      ? formData.fulfillmentFee
+      : formData.deliveryFee;
+    const deliveryFee = this.getDeliveryFee(formData);
     const tax = this.getTaxAmount(formData);
     const deposit = toNumber(formData.deposit);
     const grandTotal = this.getGrandTotal(formData);
@@ -756,6 +773,7 @@ class SaleOrderDetail extends React.PureComponent{
           <div className="so-summary-list">
             <SummaryRow label={`Subtotal (${items.length} item${items.length === 1 ? "" : "s"}, ${totalUnits} units)`} value={this.formatMoney(totalExcludeTax)} />
             <SummaryRow label="Discount" value={discount ? `-${this.formatMoney(discount)}` : this.formatMoney(0)} danger={discount > 0} />
+            {hasValue(deliveryFeeValue) && <SummaryRow label="Delivery Fee" value={this.formatMoney(deliveryFee)} />}
             <SummaryRow label="Estimated Tax" value={this.formatMoney(tax)} />
             <Divider className="so-summary-divider" />
             <SummaryRow label="Grand Total" value={this.formatMoney(grandTotal)} strong />
@@ -945,12 +963,52 @@ class SaleOrderDetail extends React.PureComponent{
     switch (this.state.activeKey) {
       case tabs.INVOICE:
         return (
-          <div className="invoice-page">
+          <div className="so-tax-invoice-preview-stage">
+            <div className="so-tax-invoice-preview-toolbar">
+              <div>
+                <strong>Invoice Preview</strong>
+                <span>Choose a saved invoice template to preview.</span>
+              </div>
+              <div className="so-invoice-preview-controls">
+                <Select
+                  aria-label="Invoice template"
+                  value={getInvoiceTemplateOption(this.state.invoicePreviewTemplate !== null
+                    ? this.state.invoicePreviewTemplate
+                    : this.state.invoiceDetail.template)}
+                  onChange={invoicePreviewTemplate => this.setState({invoicePreviewTemplate})}
+                  dropdownMatchSelectWidth={false}
+                >
+                <Select.OptGroup label="Standard">
+                  <Select.Option value={Enum.PAPER_SIZE.EXCLUDE_TAX}>Template 1 · No tax</Select.Option>
+                  <Select.Option value={Enum.PAPER_SIZE.INCLUDE_TAX}>Template 2 · Tax invoice</Select.Option>
+                </Select.OptGroup>
+                <Select.OptGroup label="Non-official">
+                  <Select.Option value="non-official">Template 3 · Non-official</Select.Option>
+                  <Select.Option value="non-official-2">Template 4 · Multi-copy</Select.Option>
+                </Select.OptGroup>
+                <Select.OptGroup label="Professional">
+                  <Select.Option value="professional">Template 5 · Professional</Select.Option>
+                  <Select.Option value="professional-compact">Template 6 · Compact</Select.Option>
+                  <Select.Option value="professional-navy">Template 7 · Navy</Select.Option>
+                  <Select.Option value="professional-classic">Template 8 · Classic</Select.Option>
+                  <Select.Option value="professional-minimal">Template 9 · Minimal</Select.Option>
+                </Select.OptGroup>
+                </Select>
+                <ReactToPrint
+                  content={() => this.invoiceRef}
+                  documentTitle={`Invoice ${this.state.invoiceDetail.invoiceNumber || formData.number || ""}`}
+                  trigger={() => <Button type="primary"><Printer size={14} /><span style={{marginLeft: 7}}>Print Invoice</span></Button>}
+                />
+              </div>
+            </div>
             {this.state.loadingTab ?
               <LoadingComponent />
               :
               <CAInvoice
                 formData={this.state.invoiceDetail}
+                template={getInvoiceTemplateOption(this.state.invoicePreviewTemplate !== null
+                  ? this.state.invoicePreviewTemplate
+                  : this.state.invoiceDetail.template)}
                 ref={ref => this.invoiceRef = ref}
                 notFoundContent={<Translate id="text_sale_order_is_closed" />}
               />
@@ -959,23 +1017,62 @@ class SaleOrderDetail extends React.PureComponent{
         );
       case tabs.PACKING_SLIP:
         return (
-          <div style={{display: "flex", justifyContent: "center"}}>
-            <div style={{padding: 20, width: "fit-content", background: "white"}}>
-              <PackingSlipTem formData={formData} ref={ref => (this.packingSlipRef = ref)} />
+          <div className="so-packing-slip-preview-stage">
+            <div className="so-packing-slip-preview-toolbar">
+              <div>
+                <strong>Packing Slip Preview</strong>
+                <span>Choose paper size for preview and printing.</span>
+              </div>
+              <div className="so-packing-slip-preview-controls">
+                <Select
+                  aria-label="Packing slip paper size"
+                  value={this.state.packingSlipPaperSize}
+                  onChange={packingSlipPaperSize => this.setState({packingSlipPaperSize})}
+                  dropdownMatchSelectWidth={false}
+                >
+                  <Select.Option value="a4">A4 · 210 × 297 mm</Select.Option>
+                  <Select.Option value="a5">A5 · 148 × 210 mm</Select.Option>
+                  <Select.Option value="80mm">80 mm · Thermal</Select.Option>
+                  <Select.Option value="58mm">58 mm · Compact thermal</Select.Option>
+                </Select>
+                <ReactToPrint
+                  content={() => this.packingSlipRef}
+                  documentTitle={`Packing Slip ${formData.number || ""}`}
+                  trigger={() => <Button type="primary"><Printer size={14} /><span style={{marginLeft: 7}}>Print Packing Slip</span></Button>}
+                />
+              </div>
             </div>
+            <PackingSlipTem
+              formData={formData}
+              paperSize={this.state.packingSlipPaperSize}
+              ref={ref => (this.packingSlipRef = ref)}
+            />
           </div>
         );
       case tabs.DELIVERY_NOTE:
         return (
-          <div style={{display: "flex", justifyContent: "center"}}>
-            <div style={{padding: 20, width: "fit-content", background: "white"}}>
-              <DeliveryNote formData={formData} ref={ref => (this.deliveryNoteRef = ref)} />
+          <div className="so-delivery-note-preview-stage">
+            <div className="so-delivery-note-preview-toolbar">
+              <div>
+                <strong>Delivery Note Preview</strong>
+                <span>Review the shipment details before printing.</span>
+              </div>
+              <ReactToPrint
+                content={() => this.deliveryNoteRef}
+                documentTitle={`Delivery Note ${formData.number || ""}`}
+                trigger={() => <Button type="primary"><Printer size={14} /><span style={{marginLeft: 7}}>Print Delivery Note</span></Button>}
+              />
             </div>
+            <DeliveryNote formData={formData} ref={ref => (this.deliveryNoteRef = ref)} />
           </div>
         );
       case tabs.SALE_ORDER:
       default:
-        return <SaleOrderInvoice formData={formData} />;
+        return (
+          <div className="so-invoice-preview-stage">
+            <SaleOrderInvoice formData={formData} />
+          </div>
+        );
     }
   }
 

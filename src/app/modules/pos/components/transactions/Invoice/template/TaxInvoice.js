@@ -1,5 +1,6 @@
 import React from "react";
 import Util from "../../../../../common/util";
+import BusinessLogo from "./BusinessLogo";
 
 const util = new Util();
 
@@ -64,7 +65,14 @@ export default function TaxInvoice(props) {
       <tbody>
         <tr style={{background: "none"}}>
           <td style={{position: "relative", textAlign: "center", lineHeight: "28px", borderBottom: "2px solid #000", paddingBottom: 0}}>
-            <img src={`${util.getGeneralImage(`${formData.clientId}/general/${formData.client ? formData.client.logo : ""}`).url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
+            <BusinessLogo
+              clientId={formData.clientId}
+              logo={formData.client && formData.client.logo}
+              businessName={formData.client && formData.client.businessName}
+              className="tax-invoice-business-logo"
+              imageStyle={{position: "absolute", top: 0, left: 0, width: 90, height: 90}}
+              placeholderStyle={{position: "absolute", top: 0, left: 0, width: 74, height: 74, fontSize: 18}}
+            />
             <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{formData.client ? formData.client.businessNamekm : ""}</h2>
             <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{formData.client ? formData.client.businessName : ""}</h3>
             <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {formData.client ? formData.client.VATNo : ""}</h6>
