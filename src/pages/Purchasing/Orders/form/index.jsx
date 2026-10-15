@@ -238,6 +238,7 @@ export default class PurchaseOrderPage extends Datatable {
     }
 
     this.fetchList(true);
+    if (this.searchInput) this.searchInput.focus();
   }
 
   getVendorInitials = (vendorName) => {
@@ -568,6 +569,7 @@ export default class PurchaseOrderPage extends Datatable {
               <Row style={{ marginBottom: 10 }}>
                 <Col md={24}>
                   <Input
+                    ref={(input) => { this.searchInput = input; }}
                     name="search"
                     placeholder="Enter PO number, vendor name, or receiver"
                     suffix={<Icon type="search" />}

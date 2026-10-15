@@ -18,6 +18,7 @@ import {
   Table,
   MonetaryValue
 } from "@components/index";
+import { Checkbox, Popover } from "antd";
 import {
   RefreshCw
 } from "lucide-react";
@@ -47,6 +48,7 @@ export default class StockIOPage extends Datatable {
       selectedRows: [],
       loading: false,
       deleting: false,
+      visibleColumns: ["number", "createdAt", "quantity", "amount", "status", "locationId", "userId", "receiverId", "action"],
     };
     this.columns = [
       {
@@ -286,6 +288,7 @@ export default class StockIOPage extends Datatable {
   }
 
   componentDidMount() {
+    this.loadVisibleColumns();
     const params = new URLSearchParams(window.location.search);
     if (params.get("limit")) {
       this.pageSize = parseInt(params.get("limit"));
@@ -296,6 +299,7 @@ export default class StockIOPage extends Datatable {
     }
 
     this.fetchStockIO({ withPagination: true });
+    if (this.searchInput) this.searchInput.focus();
   }
 
   fetchStockIO({ type, withPagination, urlSearchParams }) {
@@ -529,6 +533,80 @@ export default class StockIOPage extends Datatable {
     </Button>
   )
 
+  loadVisibleColumns = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("stock_io_visible_columns"));
+      if (!Array.isArray(saved)) return;
+      const required = ["number", "action"];
+      const visibleColumns = this.columns
+        .map((column) => column.key)
+        .filter((key) => saved.includes(key) || required.includes(key));
+      this.setState({ visibleColumns });
+    } catch (error) {
+      // Use the default columns if saved settings are unavailable.
+    }
+  };
+
+  updateVisibleColumns = (visibleColumns) => {
+    this.setState({ visibleColumns }, () => {
+      try {
+        localStorage.setItem("stock_io_visible_columns", JSON.stringify(this.state.visibleColumns));
+      } catch (error) {
+        // Column selection still works when storage is unavailable.
+      }
+    });
+  };
+
+  renderColumnSettings = () => {
+    const { visibleColumns } = this.state;
+    const required = ["number", "action"];
+    const allVisible = visibleColumns.length === this.columns.length;
+
+    return (
+      <Popover
+        trigger="click"
+        placement="bottomRight"
+        content={
+          <div style={{ width: 260 }}>
+            <div className="stock-io-column-settings-header">
+              <Checkbox
+                checked={allVisible}
+                indeterminate={!allVisible}
+                onChange={(event) => this.updateVisibleColumns(
+                  event.target.checked ? this.columns.map((column) => column.key) : required
+                )}
+              >
+                Show all
+              </Checkbox>
+              <Button size="small" onClick={() => this.updateVisibleColumns(this.columns.map((column) => column.key))}>
+                Reset
+              </Button>
+            </div>
+            <div style={{ maxHeight: 320, overflowY: "auto" }}>
+              {this.columns.map((column) => (
+                <div key={column.key} style={{ marginBottom: 8 }}>
+                  <Checkbox
+                    checked={visibleColumns.includes(column.key)}
+                    disabled={required.includes(column.key)}
+                    onChange={(event) => this.updateVisibleColumns(
+                      event.target.checked
+                        ? [...visibleColumns, column.key]
+                        : visibleColumns.filter((key) => key !== column.key)
+                    )}
+                  >
+                    {column.title}
+                  </Checkbox>
+                </div>
+              ))}
+            </div>
+          </div>
+        }
+      >
+        <Button><Icon type="setting" /> Columns</Button>
+      </Popover>
+    );
+  };
+
   onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
@@ -677,16 +755,18 @@ export default class StockIOPage extends Datatable {
                 key="ALL"
                 style={{ paddingLeft: "40px", paddingRight: "40px" }}
               >
-                <Row style={{ marginBottom: 10 }}>
-                  <Col span={24}>
+                <Row className="stock-io-toolbar" gutter={12}>
+                  <Col xs={24} xl={18}>
+                    <div className="stock-io-filters">
                     <Input
+                      ref={(input) => { this.searchInput = input; }}
                       name="search"
                       placeholder="Enter PO number, vendor name, or receiver"
                       suffix={<Icon type="search" />}
                       defaultValue={
                         params.get("search") ? params.get("search") : ""
                       }
-                      style={{ height: 32, width: 350, marginRight: 10 }}
+                      style={{ height: 32, width: 350, maxWidth: "100%" }}
                       allowClear={true}
                       onChange={this.handleSearch}
                     />
@@ -705,9 +785,15 @@ export default class StockIOPage extends Datatable {
                           : null
                       }
                       onChange={this.handleChangeDateRange}
-                      style={{ maxWidth: 350, marginRight: 10 }}
+                      style={{ maxWidth: "100%" }}
                     />
-                    {this.renderRefreshButton()}
+                    </div>
+                  </Col>
+                  <Col xs={24} xl={6}>
+                    <div className="stock-io-toolbar-actions">
+                      {this.renderRefreshButton()}
+                      {this.renderColumnSettings()}
+                    </div>
                   </Col>
                 </Row>
 
@@ -735,7 +821,7 @@ export default class StockIOPage extends Datatable {
                   }}
                   rowSelection={rowSelection}
                   loading={this.state.loading}
-                  columns={this.columns}
+                  columns={this.columns.filter((column) => this.state.visibleColumns.includes(column.key))}
                   dataSource={this.state.data}
                   onChange={(_, filterParams) => {
                     const params = new URLSearchParams(
@@ -755,8 +841,9 @@ export default class StockIOPage extends Datatable {
                 key="IN"
                 style={{ paddingLeft: "40px", paddingRight: "40px" }}
               >
-                <Row style={{ marginBottom: 10 }}>
-                  <Col span={24}>
+                <Row className="stock-io-toolbar" gutter={12}>
+                  <Col xs={24} xl={18}>
+                    <div className="stock-io-filters">
                     <Input
                       name="search"
                       placeholder="Enter PO number, vendor name, or receiver"
@@ -764,7 +851,7 @@ export default class StockIOPage extends Datatable {
                       defaultValue={
                         params.get("search") ? params.get("search") : ""
                       }
-                      style={{ height: 32, width: 350, marginRight: 10 }}
+                      style={{ height: 32, width: 350, maxWidth: "100%" }}
                       allowClear={true}
                       onChange={this.handleSearch}
                     />
@@ -783,9 +870,15 @@ export default class StockIOPage extends Datatable {
                           : null
                       }
                       onChange={this.handleChangeDateRange}
-                      style={{ maxWidth: 350, marginRight: 10 }}
+                      style={{ maxWidth: "100%" }}
                     />
-                    {this.renderRefreshButton()}
+                    </div>
+                  </Col>
+                  <Col xs={24} xl={6}>
+                    <div className="stock-io-toolbar-actions">
+                      {this.renderRefreshButton()}
+                      {this.renderColumnSettings()}
+                    </div>
                   </Col>
                 </Row>
 
@@ -813,7 +906,7 @@ export default class StockIOPage extends Datatable {
                   }}
                   rowSelection={rowSelection}
                   loading={this.state.loading}
-                  columns={this.columns}
+                  columns={this.columns.filter((column) => this.state.visibleColumns.includes(column.key))}
                   dataSource={this.state.data}
                   onRow={(record) => ({
                     onDoubleClick: () =>
@@ -834,8 +927,9 @@ export default class StockIOPage extends Datatable {
                 key="OUT"
                 style={{ paddingLeft: "40px", paddingRight: "40px" }}
               >
-                <Row style={{ marginBottom: 10 }}>
-                  <Col span={24}>
+                <Row className="stock-io-toolbar" gutter={12}>
+                  <Col xs={24} xl={18}>
+                    <div className="stock-io-filters">
                     <Input
                       name="search"
                       placeholder="Enter PO number, vendor name, or receiver"
@@ -843,7 +937,7 @@ export default class StockIOPage extends Datatable {
                       defaultValue={
                         params.get("search") ? params.get("search") : ""
                       }
-                      style={{ height: 32, width: 350, marginRight: 10 }}
+                      style={{ height: 32, width: 350, maxWidth: "100%" }}
                       allowClear={true}
                       onChange={this.handleSearch}
                     />
@@ -862,9 +956,15 @@ export default class StockIOPage extends Datatable {
                           : null
                       }
                       onChange={this.handleChangeDateRange}
-                      style={{ maxWidth: 350, marginRight: 10 }}
+                      style={{ maxWidth: "100%" }}
                     />
-                    {this.renderRefreshButton()}
+                    </div>
+                  </Col>
+                  <Col xs={24} xl={6}>
+                    <div className="stock-io-toolbar-actions">
+                      {this.renderRefreshButton()}
+                      {this.renderColumnSettings()}
+                    </div>
                   </Col>
                 </Row>
 
@@ -892,7 +992,7 @@ export default class StockIOPage extends Datatable {
                   }}
                   rowSelection={rowSelection}
                   loading={this.state.loading}
-                  columns={this.columns}
+                  columns={this.columns.filter((column) => this.state.visibleColumns.includes(column.key))}
                   dataSource={this.state.data}
                   onRow={(record) => ({
                     onDoubleClick: () =>

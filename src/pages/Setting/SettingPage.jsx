@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Tabs, Table, Button, Tag, Avatar, Dropdown, Menu, Icon } from 'antd';
 import {
   Link
 } from "react-router-dom";
+import SystemLogs from './SystemLogs';
 
 const { TabPane } = Tabs;
+const SETTING_TABS = ['general', 'users', 'modules', 'integration', 'backup', 'workflows', 'reports', 'logs'];
 
-const ERPSettings = () => {
-  const [activeTab, setActiveTab] = useState('users');
+const ERPSettings = ({ history, location }) => {
+  const query = new URLSearchParams(location.search);
+  const requestedTab = query.get('tab');
+  const activeTab = SETTING_TABS.includes(requestedTab) ? requestedTab : 'users';
+
+  const handleTabChange = (tab) => {
+    const params = new URLSearchParams(location.search);
+    params.set('tab', tab);
+    history.push({ pathname: location.pathname, search: params.toString() });
+  };
 
   // Sample data for the users table
   const usersData = [
@@ -177,7 +187,7 @@ const ERPSettings = () => {
       {/* Tabs */}
       <Tabs
         activeKey={activeTab}
-        onChange={setActiveTab}
+        onChange={handleTabChange}
         style={{ padding: '0 32px' }}
         tabBarStyle={{ 
           marginBottom: 0,
@@ -986,174 +996,7 @@ const ERPSettings = () => {
         </TabPane>
         
         <TabPane tab="System Logs" key="logs">
-          <div style={{ padding: '24px 0' }}>
-            <h3 style={{ marginBottom: '16px', color: '#262626' }}>System Activity Logs</h3>
-            <p style={{ color: '#595959', marginBottom: '24px' }}>
-              View system logs, user activities, and audit trails for compliance and troubleshooting.
-            </p>
-            
-            {/* Quick Stats */}
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-              gap: '16px',
-              marginBottom: '24px'
-            }}>
-              <div style={{ 
-                padding: '16px', 
-                backgroundColor: '#f6ffed', 
-                border: '1px solid #b7eb8f',
-                borderRadius: '6px'
-              }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#52c41a' }}>1,247</div>
-                <div style={{ fontSize: '13px', color: '#595959' }}>Total Logs Today</div>
-              </div>
-              <div style={{ 
-                padding: '16px', 
-                backgroundColor: '#fff2e6', 
-                border: '1px solid #ffd591',
-                borderRadius: '6px'
-              }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#faad14' }}>67</div>
-                <div style={{ fontSize: '13px', color: '#595959' }}>Warnings</div>
-              </div>
-              <div style={{ 
-                padding: '16px', 
-                backgroundColor: '#fff1f0', 
-                border: '1px solid #ffa39e',
-                borderRadius: '6px'
-              }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f5222d' }}>23</div>
-                <div style={{ fontSize: '13px', color: '#595959' }}>Errors</div>
-              </div>
-              <div style={{ 
-                padding: '16px', 
-                backgroundColor: '#e6f7ff', 
-                border: '1px solid #91d5ff',
-                borderRadius: '6px'
-              }}>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1890ff' }}>45</div>
-                <div style={{ fontSize: '13px', color: '#595959' }}>Active Users</div>
-              </div>
-            </div>
-
-            {/* Recent Activities Preview */}
-            <div style={{ 
-              border: '1px solid #f0f0f0',
-              borderRadius: '6px',
-              backgroundColor: 'white'
-            }}>
-              <div style={{ 
-                padding: '16px 20px',
-                borderBottom: '1px solid #f0f0f0',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <h4 style={{ margin: 0, color: '#262626' }}>Recent Activity</h4>
-                <Button 
-                  type="primary"
-                  icon="arrow-right"
-                  onClick={() => {
-                    // Navigate to System Logs page
-                    window.location.href = '#/system-logs'; // This would be your routing logic
-                  }}
-                >
-                  View All Logs
-                </Button>
-              </div>
-              
-              <div style={{ padding: '20px' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ 
-                      width: '8px', 
-                      height: '8px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#1890ff' 
-                    }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '14px', color: '#262626' }}>
-                        User Login - sophanna.mn@company.com
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#8c8c8c' }}>
-                        14:30:25 • Authentication Module
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ 
-                      width: '8px', 
-                      height: '8px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#faad14' 
-                    }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '14px', color: '#262626' }}>
-                        Payment Failed - ABA PayWay timeout
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#8c8c8c' }}>
-                        14:25:18 • Payment Gateway Module
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ 
-                      width: '8px', 
-                      height: '8px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#52c41a' 
-                    }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '14px', color: '#262626' }}>
-                        Inventory Updated - Stock level changed
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#8c8c8c' }}>
-                        14:20:45 • Inventory Module
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ 
-                      width: '8px', 
-                      height: '8px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#f5222d' 
-                    }} />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '14px', color: '#262626' }}>
-                        Database Error - Connection timeout
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#8c8c8c' }}>
-                        14:15:32 • Database Module
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div style={{ 
-              marginTop: '24px',
-              display: 'flex',
-              gap: '12px',
-              flexWrap: 'wrap'
-            }}>
-              <Button icon="download" type="default">
-                Export Logs
-              </Button>
-              <Button icon="setting" type="default">
-                Configure Alerts
-              </Button>
-              <Button icon="sync" type="default">
-                Refresh Data
-              </Button>
-            </div>
-          </div>
+          {activeTab === 'logs' && <SystemLogs embedded history={history} location={location} />}
         </TabPane>
       </Tabs>
     </div>

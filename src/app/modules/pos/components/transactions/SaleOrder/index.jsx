@@ -360,7 +360,7 @@ export default class SaleOrderPage extends Component {
                 </this.Link>
               </Menu.Item>
               <Menu.Item>
-                <this.Link to={`/transactions/sale-order/update/${record.id}`}>
+                <this.Link to={`/sales/update/${record.id}`}>
                   <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
@@ -533,6 +533,7 @@ export default class SaleOrderPage extends Component {
     this.fetchSummary();
     this.fetchDashboardSummary(params.get("start"), params.get("end"));
     this.fetchList(true, initialActiveTab);
+    if (this.searchInput) this.searchInput.focus();
   }
 
   loadVisibleColumns = () => {
@@ -1170,6 +1171,7 @@ export default class SaleOrderPage extends Component {
           <Col xs={24} xl={15}>
             <div className="sale-order-filters">
               <Input
+                  ref={(input) => { this.searchInput = input; }}
                   name="search"
                   placeholder="Search order number, customer, or phone"
                   prefix={<Icon type="search" />}

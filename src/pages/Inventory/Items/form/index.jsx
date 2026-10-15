@@ -19,7 +19,9 @@ import {
    Typography,
    Button,
    Statistic,
-   Select
+   Select,
+   Popover,
+   Checkbox
 } from "antd";
 import ReactGA from "react-ga4";
 import debounce from 'lodash/debounce';
@@ -72,6 +74,10 @@ export default class ProductList extends Datatable {
          stockInItems: {}, // Format: { [productId]: { quantity, unitId, notes, type } }
          unitOptions: [], // Load your unit options here
          activeTab: "item",
+         visibleColumns: {
+            item: ["name", "incomingStock", "quantity", "price", "action"],
+            stock: ["name", "quantity", "qtyIn", "reorderPoint"]
+         },
          productTypes: []
       };
       this.SelectCategoryRef = React.createRef();
@@ -472,6 +478,7 @@ export default class ProductList extends Datatable {
    }
 
    componentDidMount() {
+         this.loadVisibleColumns();
          const params = new URLSearchParams(document.location.search);
          const { currency, currencyId }  = this.Util.getSetting();
 
@@ -732,6 +739,101 @@ export default class ProductList extends Datatable {
             {!this.state.loading && <RefreshCw size={14} />}
             Refresh
          </Button>
+      );
+   }
+
+   getColumnsForTab(tab) {
+      return tab === "stock" ? this.stockColumns : this.columns;
+   }
+
+   getRequiredColumnsForTab(tab) {
+      return tab === "stock" ? ["name", "qtyIn"] : ["name", "action"];
+   }
+
+   loadVisibleColumns() {
+      try {
+         const saved = JSON.parse(localStorage.getItem("inventory_items_visible_columns"));
+         if (!saved || typeof saved !== "object") return;
+
+         this.setState((state) => {
+            const visibleColumns = { ...state.visibleColumns };
+            ["item", "stock"].forEach((tab) => {
+               if (!Array.isArray(saved[tab])) return;
+               const keys = this.getColumnsForTab(tab).map((column) => column.key);
+               visibleColumns[tab] = keys.filter((key) =>
+                  saved[tab].includes(key) || this.getRequiredColumnsForTab(tab).includes(key)
+               );
+            });
+            return { visibleColumns };
+         });
+      } catch (error) {
+         // Use the default columns if saved settings are unavailable.
+      }
+   }
+
+   updateVisibleColumns(tab, selectedKeys) {
+      this.setState(
+         (state) => ({ visibleColumns: { ...state.visibleColumns, [tab]: selectedKeys } }),
+         () => {
+            try {
+               localStorage.setItem("inventory_items_visible_columns", JSON.stringify(this.state.visibleColumns));
+            } catch (error) {
+               // Column selection still works when storage is unavailable.
+            }
+         }
+      );
+   }
+
+   renderColumnSettings(tab) {
+      const columns = this.getColumnsForTab(tab);
+      const visible = this.state.visibleColumns[tab];
+      const required = this.getRequiredColumnsForTab(tab);
+      const allVisible = visible.length === columns.length;
+
+      return (
+         <Popover
+            trigger="click"
+            placement="bottomRight"
+            content={
+               <div style={{ width: 260 }}>
+                  <div className="item-column-settings-header">
+                     <Checkbox
+                        checked={allVisible}
+                        indeterminate={!allVisible}
+                        onChange={(event) => this.updateVisibleColumns(
+                           tab,
+                           event.target.checked ? columns.map((column) => column.key) : required
+                        )}
+                     >
+                        Show all
+                     </Checkbox>
+                     <Button size="small" onClick={() => this.updateVisibleColumns(tab, columns.map((column) => column.key))}>
+                        Reset
+                     </Button>
+                  </div>
+                  <div style={{ maxHeight: 320, overflowY: "auto" }}>
+                     {columns.map((column) => (
+                        <div key={column.key} style={{ marginBottom: 8 }}>
+                           <Checkbox
+                              checked={visible.includes(column.key)}
+                              disabled={required.includes(column.key)}
+                              onChange={(event) => this.updateVisibleColumns(
+                                 tab,
+                                 event.target.checked
+                                    ? [...visible, column.key]
+                                    : visible.filter((key) => key !== column.key)
+                              )}
+                           >
+                              {column.title}
+                           </Checkbox>
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            }
+         >
+            <Button><Icon type="setting" /> Columns</Button>
+         </Popover>
       );
    }
 
@@ -1052,8 +1154,9 @@ export default class ProductList extends Datatable {
                 key="item"
                 style={{ paddingLeft: "40px", paddingRight: "40px" }}
               >
-                <Row style={{ marginBottom: 10 }}>
-                  <Col md={24}>
+                <Row className="item-list-toolbar" gutter={12}>
+                  <Col xs={24} xl={18}>
+                    <div className="item-list-filters">
                     <Input
                       ref={(input) => {
                         this.searchItemInput = input;
@@ -1081,7 +1184,13 @@ export default class ProductList extends Datatable {
                       onChange={this.onChangeLocation}
                     />
 
-                    {this.renderRefreshButton()}
+                    </div>
+                  </Col>
+                  <Col xs={24} xl={6}>
+                    <div className="item-list-toolbar-actions">
+                      {this.renderRefreshButton()}
+                      {this.renderColumnSettings("item")}
+                    </div>
                   </Col>
                 </Row>
 
@@ -1090,7 +1199,7 @@ export default class ProductList extends Datatable {
                   bordered={true}
                   pagination={false}
                   dataSource={this.state.products}
-                  columns={this.columns}
+                  columns={this.columns.filter((column) => this.state.visibleColumns.item.includes(column.key))}
                   rowClassName={this.rowClassName}
                   locale={{ emptyText: <Translate id="table_empty_data" /> }}
                   onRow={(record) => ({
@@ -1110,8 +1219,9 @@ export default class ProductList extends Datatable {
                 key="stock"
                 style={{ paddingLeft: "40px", paddingRight: "40px" }}
               >
-                <Row style={{ marginBottom: 10 }}>
-                  <Col md={24}>
+                <Row className="item-list-toolbar" gutter={12}>
+                  <Col xs={24} xl={18}>
+                    <div className="item-list-filters">
                     <Input
                       placeholder={this.CATranslate(
                         "text_search_item",
@@ -1131,7 +1241,13 @@ export default class ProductList extends Datatable {
                       onChange={this.onChangeCategory}
                     />
 
-                    {this.renderRefreshButton()}
+                    </div>
+                  </Col>
+                  <Col xs={24} xl={6}>
+                    <div className="item-list-toolbar-actions">
+                      {this.renderRefreshButton()}
+                      {this.renderColumnSettings("stock")}
+                    </div>
                   </Col>
                 </Row>
 
@@ -1140,7 +1256,7 @@ export default class ProductList extends Datatable {
                   bordered={true}
                   pagination={false}
                   dataSource={this.state.products}
-                  columns={this.stockColumns}
+                  columns={this.stockColumns.filter((column) => this.state.visibleColumns.stock.includes(column.key))}
                   rowClassName={this.rowClassName}
                   locale={{ emptyText: <Translate id="table_empty_data" /> }}
                   // expandedRowRender={this.expandedRender}

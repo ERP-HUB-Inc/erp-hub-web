@@ -317,6 +317,16 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
+    const SalesOrderCreate = Loadable({
+      loader: () => import("../pages/Sales/Order/form.create"),
+      loading: () => <StartUp />,
+    });
+
+    const SalesOrderEdit = Loadable({
+      loader: () => import("../pages/Sales/Order/form.update"),
+      loading: () => <StartUp />,
+    });
+
     const SalesOrderDetail = Loadable({
       loader: () => import("../app/modules/pos/components/transactions/SaleOrder/detail"),
       loading: () => <StartUp />,
@@ -672,6 +682,8 @@ export default class SiderDemo extends React.Component {
                       <Route exact path="/onboarding/location" render={props => <Redirect to={{ pathname: ONBOARDING_SETUP_PATH, search: props.location.search }} />} />
                       <OnboardingRoute path="/onboarding/setup" component={OnboardingPage} />
                       <ProtectedRoute path="/pos" component={POS} />
+                      <ProtectedRoute path="/sales/create" component={SalesOrderCreate} />
+                      <ProtectedRoute path="/sales/update/:id" component={SalesOrderEdit} />
                       <ProtectedRoute path="/sales" component={SalesOrder} />
                       <ProtectedRoute path="/transactions/sale-order/detail/:id" component={SalesOrderDetail} />
                       <ProtectedRoute path="/quotes" component={Quotes} />

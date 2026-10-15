@@ -124,10 +124,42 @@
     visibility: hidden;
 }
 
+.stock-io-toolbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stock-io-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.stock-io-toolbar-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.stock-io-column-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
 .stock-io-filter-refresh-button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     height: 32px;
-    vertical-align: top;
+}
+
+@media (max-width: 1199px) {
+    .stock-io-toolbar-actions {
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
 }
