@@ -26,13 +26,13 @@ import {
   Select,
   Tooltip
 } from "antd";
-import { ShoppingCart, MessagesSquare, Package, Wallet, AlertCircle, RefreshCw } from "lucide-react";
+import { ShoppingCart, MessagesSquare, Package, Wallet, AlertCircle, RefreshCw, Phone, Music2, Store, Building2, Send, Globe2 } from "lucide-react";
 import SalesOrderPrint from "./Invoice/sales-order-print";
 import PackingSlip from "./Invoice/packing-slip";
 import DeliveryNote from "./Invoice/delivery-note";
-import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
 import SaleOrderService from "@services/SaleOrderService";
+import PaymentMethodService from "@services/PaymentMethodService";
 import Enum from "../../../enums";
 import QuickSaleModal from "./quick-sale-modal";
 import "./sale-order-list.css";
@@ -78,6 +78,32 @@ const getBreakdownLabel = entry => typeof entry === "string"
 const getBreakdownCount = entry => typeof entry === "number"
   ? toFiniteNumber(entry)
   : entry ? toFiniteNumber(entry.orderCount ?? entry.count ?? entry.parcelCount ?? entry.shipmentCount) : null;
+const ORDER_ORIGIN_LABELS = {
+  manual: "Phone Call",
+  telegram: "Telegram",
+  facebook: "Messenger",
+  facebook_page: "Messenger",
+  tiktok: "TikTok Shop",
+  walk_in: "Walk-In",
+  b2b: "B2B Trade"
+};
+const getOrderChannelLabel = record => {
+  if (record.channel) return record.channel;
+  const origin = String(record.originId || "").toLowerCase();
+  if (ORDER_ORIGIN_LABELS[origin]) return ORDER_ORIGIN_LABELS[origin];
+  if (origin) return origin.replace(/[_-]+/g, " ").replace(/\b\w/g, character => character.toUpperCase());
+  return String(record.orderChannel || "").replace(/[_-]+/g, " ");
+};
+const getOrderChannelIcon = record => {
+  const source = `${record.originId || ""} ${record.channel || ""} ${record.orderChannel || ""}`.toLowerCase();
+  if (/telegram/.test(source)) return Send;
+  if (/facebook|messenger/.test(source)) return MessagesSquare;
+  if (/tiktok|tik.?tok/.test(source)) return Music2;
+  if (/walk.?in|in.?store/.test(source)) return Store;
+  if (/b2b|business|trade/.test(source)) return Building2;
+  if (/manual|phone|call/.test(source)) return Phone;
+  return Globe2;
+};
 
 const FULFILLMENT_STATUSES = [
   "ORDERED", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED", "CANCELED",
@@ -85,9 +111,14 @@ const FULFILLMENT_STATUSES = [
   "FULFILLED", "UNFULFILLED"
 ];
 
-const getPaymentDisplay = record => {
+const getPaymentDisplay = (record, paymentMethods = []) => {
   const payment = Array.isArray(record.transactionPayment) ? record.transactionPayment[0] : null;
-  const rawMethod = record.paymentMethodName || record.paymentMethodId || "";
+  const rawRelatedMethod = record.paymentMethod || (payment && payment.paymentMethod);
+  const relatedMethod = Array.isArray(rawRelatedMethod) ? rawRelatedMethod[0] : rawRelatedMethod;
+  const relatedMethodName = typeof relatedMethod === "string" ? relatedMethod : relatedMethod && (relatedMethod.name || relatedMethod.label || relatedMethod.methodName);
+  const paymentMethodId = record.paymentMethodId || relatedMethod && relatedMethod.id || (payment && payment.paymentMethodId);
+  const configuredMethod = paymentMethods.find(method => String(method.id) === String(paymentMethodId));
+  const rawMethod = record.paymentMethodName || relatedMethodName || (configuredMethod && (configuredMethod.name || configuredMethod.label)) || "";
   const rawStatus = record.paymentStatus || record.paymentState || (payment && payment.status) || "";
   const combinedStatus = !rawStatus && /\s+(paid|pending)$/i.test(rawMethod)
     ? rawMethod.match(/\s+(paid|pending)$/i)[1]
@@ -156,22 +187,26 @@ export default class SaleOrderPage extends Component {
         dataIndex: "number",
         key: "orderChannel",
         width: 205,
-        render: (number, record) => (
-          <div className="sale-order-order-cell">
-            <span
-              className="sale-order-channel-icon"
-              title={record.channel || "Order channel"}
-              aria-label={record.channel || "Order channel"}
-            >
-              <Icon type={record.channel && /chat|telegram|facebook|social/i.test(record.channel) ? "message" : "global"} />
-            </span>
-            <div className="sale-order-number-cell">
-              <strong>{number}</strong>
-              <span>{this.Util.formatDate(record.registerDate, "h:mm A • MMM D")}</span>
-              {record.channel && <small>{record.channel}</small>}
+        render: (number, record) => {
+          const channel = getOrderChannelLabel(record);
+          const channelIcon = getOrderChannelIcon(record);
+          return (
+            <div className="sale-order-order-cell">
+              <span
+                className="sale-order-channel-icon"
+                title={channel || "Order channel"}
+                aria-label={channel || "Order channel"}
+              >
+                {React.createElement(channelIcon, { size: 15, strokeWidth: 2 })}
+              </span>
+              <div className="sale-order-number-cell">
+                <strong>{number}</strong>
+                <span>{this.Util.formatDate(record.registerDate, "h:mm A • MMM D")}</span>
+                {channel && <small>{channel}</small>}
+              </div>
             </div>
-          </div>
-        )
+          );
+        }
       },
       {
         title: <Translate id="text_status" />,
@@ -254,7 +289,7 @@ export default class SaleOrderPage extends Component {
         dataIndex: "paymentMethodName",
         key: "paymentSummary",
         render: (paymentMethodName, record) => {
-          const paymentDisplay = getPaymentDisplay({ ...record, paymentMethodName });
+          const paymentDisplay = getPaymentDisplay({ ...record, paymentMethodName }, this.state.paymentMethods);
           if (!paymentDisplay.method && !paymentDisplay.status) return <span className="sale-order-muted">—</span>;
 
           const statusLabel = paymentDisplay.status && formatBadgeLabel(paymentDisplay.status);
@@ -279,9 +314,17 @@ export default class SaleOrderPage extends Component {
         key: "shippingStatus",
         render: (shippingStatus, record) => {
           const provider = getFulfillmentDisplay({ ...record, shippingStatus });
-          if (!provider) return <span className="sale-order-muted">—</span>;
+          const progress = shippingStatus ? String(shippingStatus).replace(/_/g, " ") : "";
+          const dispatchStatus = String(record.dispatchStatus || "").toUpperCase();
+          if (!provider && !progress && !dispatchStatus) return <span className="sale-order-muted">—</span>;
 
-          return renderFulfillmentProvider(provider);
+          return (
+            <div className="sale-order-fulfillment-cell">
+              {provider && renderFulfillmentProvider(provider)}
+              {progress && <span className={`sale-order-shipping-progress sale-order-shipping-${String(shippingStatus).toLowerCase().replace(/_/g, "-")}`}>{progress}</span>}
+              {dispatchStatus === "QUEUED" && <small className="sale-order-dispatch-progress">Dispatch queued</small>}
+            </div>
+          );
         }
       },
       {
@@ -456,6 +499,7 @@ export default class SaleOrderPage extends Component {
       formData: null,
       loading: false,
       loadingButton: false,
+      paymentMethods: [],
       isShowFilter: true,
       isHasAccessPermission: null,
       visibleColumns: this.defaultVisibleColumns,
@@ -530,6 +574,10 @@ export default class SaleOrderPage extends Component {
     });
 
     this.loadVisibleColumns();
+    PaymentMethodService.get({ limit: 100 }).then(response => {
+      const methods = response && response.data && response.data.data;
+      this.setState({ paymentMethods: Array.isArray(methods) ? methods : [] });
+    }).catch(() => this.setState({ paymentMethods: [] }));
     this.fetchSummary();
     this.fetchDashboardSummary(params.get("start"), params.get("end"));
     this.fetchList(true, initialActiveTab);
@@ -965,12 +1013,17 @@ export default class SaleOrderPage extends Component {
     return [this.renderButtonAddNew()];
   }
 
+  navigateToCreate = () => {
+    const pathname = this.props.location && this.props.location.pathname || "";
+    this.props.history.push(pathname.indexOf("/sales") === 0 ? "/sales/create" : "/transactions/sale-order/create");
+  }
+
   renderButtonAddNew() {
     return <this.Button
         type="info"
         id="btnAdd"
         className="mg-right"
-        onClick={() => history.push({pathname: "/transactions/sale-order/create"})}>
+        onClick={this.navigateToCreate}>
         <span className="icon-add icon-padding-right"></span>
         <Translate id="text_add_new" />
       </this.Button>;
@@ -1375,7 +1428,7 @@ export default class SaleOrderPage extends Component {
             </Button>
             <Button size="large" onClick={() => {
               ReactGA.event({ category: "Action Button", action: "Add New SO", label: "ERP HUB Web" });
-              history.push("/transactions/sale-order/create");
+              this.navigateToCreate();
             }}>
               <Icon type="plus" /> Manual Order
             </Button>

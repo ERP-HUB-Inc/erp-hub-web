@@ -488,6 +488,39 @@
   object-fit: contain;
 }
 
+.sale-order-fulfillment-cell {
+  display: flex;
+  min-width: 85px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.sale-order-shipping-progress {
+  display: inline-block;
+  max-width: 155px;
+  overflow: hidden;
+  padding: 2px 7px;
+  border: 1px solid #d9e1ec;
+  border-radius: 999px;
+  background: #f5f7fa;
+  color: #526174;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sale-order-shipping-packed,
+.sale-order-shipping-ordered { border-color: #f1dfb8; background: #fff8e8; color: #8a5b08; }
+.sale-order-shipping-shipped,
+.sale-order-shipping-in-transit,
+.sale-order-shipping-out-for-delivery { border-color: #cdddf6; background: #eff5ff; color: #315b9b; }
+.sale-order-shipping-delivered,
+.sale-order-shipping-fulfilled { border-color: #cce8d6; background: #effaf3; color: #277348; }
+.sale-order-dispatch-progress { color: #60738a; font-size: 10px; }
+
 .sale-order-total-value {
   color: #1d2b40;
   font-size: 14px;

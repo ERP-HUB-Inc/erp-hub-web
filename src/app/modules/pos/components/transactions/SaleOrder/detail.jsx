@@ -18,13 +18,17 @@ import {
   Skeleton,
   Empty,
   Drawer,
-  Select
+  Select,
+  Modal,
+  Input,
+  InputNumber
 } from "antd";
 import ReactToPrint from "react-to-print";
 import {
   ArrowLeft,
   ChevronRight,
   Package,
+  PackageCheck,
   PackageOpen,
   UserRound,
   MapPin,
@@ -32,10 +36,12 @@ import {
   Phone,
   CircleDollarSign,
   CircleAlert,
-  CircleDot,
   Truck,
-  CheckCircle2,
   Check,
+  CheckCircle2,
+  Send,
+  Route,
+  BadgeCheck,
   Clock,
   Clock3,
   Printer,
@@ -49,7 +55,11 @@ import {
   Eye,
   SquarePen,
   CircleGauge,
-  Settings
+  Settings,
+  MessagesSquare,
+  Music2,
+  Store,
+  Globe2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../../../../common/elements/ant-ui";
@@ -58,6 +68,8 @@ import Enum from "../../../enums";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
+import CustomerService from "@services/CustomerService";
+import PaymentMethodService from "@services/PaymentMethodService";
 import SaleOrderInvoice from "./Invoice";
 import CAInvoice from "../Invoice/CAInvoice";
 import PackingSlipTem from "./Invoice/packing-slip";
@@ -81,6 +93,15 @@ function toNumber(value) {
 
 function hasValue(value) {
   return value !== undefined && value !== null && value !== "";
+}
+
+function getApiErrorMessage(error) {
+  const data = error && error.response && error.response.data;
+  const value = data && data.message && data.message.error && data.message.error.message
+    || data && data.error && data.error.message
+    || data && data.message
+    || error && error.message;
+  return typeof value === "string" && value.trim() ? value : "The Sales Order action could not be completed.";
 }
 
 function getInvoiceTemplateOption(value) {
@@ -147,7 +168,30 @@ class SaleOrderDetail extends React.PureComponent{
     loadingTab: false,
     historyDrawerVisible: false,
     invoicePreviewTemplate: null,
-    packingSlipPaperSize: "a4"
+    packingSlipPaperSize: "a4",
+    locationEditOpen: false,
+    locationSaving: false,
+    locationResolving: false,
+    locationAddress: "",
+    locationProvince: "",
+    locationCity: "",
+    locationMapsUrl: "",
+    locationGeolocation: null,
+    paymentMethods: [],
+    paymentModalVisible: false,
+    paymentSaving: false,
+    paymentRefreshFailed: false,
+    paymentMethodId: undefined,
+    paymentAmount: undefined,
+    paymentReferenceNo: "",
+    paymentNote: "",
+    paymentError: "",
+    paymentIdempotencyKey: "",
+    lifecycleAction: "",
+    fulfillmentHistoryVisible: false,
+    fulfillmentHistory: [],
+    fulfillmentHistoryLoading: false,
+    fulfillmentHistoryError: ""
   }
   SALE_ORDER_STATUS_STR = {
     [Enum.SALE_ORDER_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
@@ -169,22 +213,85 @@ class SaleOrderDetail extends React.PureComponent{
     .then(response => this.setState({formData: response.data}))
     .catch(() => this.setState({formData: {}}))
     .finally(() => this.setState({loading: false}));
+    PaymentMethodService.get({ limit: 100 })
+      .then(response => {
+        const methods = response && response.data && response.data.data;
+        this.setState({ paymentMethods: Array.isArray(methods) ? methods : [] });
+      })
+      .catch(() => this.setState({ paymentMethods: [] }));
   }
 
-  handleMakeAsConfirm(id) {
-    SaleOrderService.markAsConfirm(id)
-    .then(() => {
-      message.success("Make confirm success");
-      this.setState(preState => {
-        return {
-          formData: {
-            ...preState.formData,
-            status: Enum.SALE_ORDER_STATUS.CONFIRMED
-          }
-        };
-      });
-    })
-    .catch(() => message.error("Error!....."));
+  runLifecycleAction = async (action, id = this.state.formData.id) => {
+    if (this.state.lifecycleAction) return;
+    const actions = {
+      confirm: { request: SaleOrderService.markAsConfirm, success: "Order confirmed." },
+      packed: { request: SaleOrderService.markPacked, success: "Order marked as packed." },
+      dispatch: { request: SaleOrderService.dispatch, success: "Carrier pickup requested." },
+      shipped: { request: SaleOrderService.markShipped, success: "Order marked as shipped." },
+      inTransit: { request: SaleOrderService.markInTransit, success: "Delivery marked in transit." },
+      delivered: { request: SaleOrderService.markDelivered, success: "Order marked as delivered." }
+    };
+    const selectedAction = actions[action];
+    if (!selectedAction || !id) return;
+    let actionSucceeded = false;
+    this.setState({ lifecycleAction: action });
+    try {
+      await selectedAction.request.call(SaleOrderService, id);
+      actionSucceeded = true;
+      const response = await SaleOrderService.detail(id);
+      const latestOrder = response && response.data && (response.data.data || response.data);
+      if (!latestOrder || typeof latestOrder !== "object") throw new Error("Order refresh returned no data.");
+      this.setState({ formData: latestOrder });
+      if (this.state.fulfillmentHistoryVisible) this.loadFulfillmentHistory(id);
+      message.success(selectedAction.success);
+    } catch (error) {
+      message.error(actionSucceeded
+        ? "The action succeeded, but the order could not be refreshed. Reload the page to see its current status."
+        : getApiErrorMessage(error));
+    } finally {
+      this.setState({ lifecycleAction: "" });
+    }
+  }
+
+  openFulfillmentHistory = () => {
+    this.setState({ fulfillmentHistoryVisible: true });
+    this.loadFulfillmentHistory(this.state.formData.id);
+  }
+
+  loadFulfillmentHistory = async (id = this.state.formData.id) => {
+    if (!id) return;
+    this.setState({ fulfillmentHistoryLoading: true, fulfillmentHistoryError: "" });
+    try {
+      const response = await SaleOrderService.fulfillmentHistory(id);
+      const payload = response && response.data;
+      const historyRows = Array.isArray(payload) ? payload : payload && Array.isArray(payload.data) ? payload.data : [];
+      const sortedRows = historyRows.slice().sort((left, right) => moment(left.createdAt).valueOf() - moment(right.createdAt).valueOf());
+      this.setState({ fulfillmentHistory: sortedRows });
+    } catch (error) {
+      this.setState({ fulfillmentHistory: [], fulfillmentHistoryError: getApiErrorMessage(error) });
+    } finally {
+      this.setState({ fulfillmentHistoryLoading: false });
+    }
+  }
+
+  getFulfillmentHistoryTitle = (entry) => {
+    const toStatus = String(entry.toStatus || "").replace(/_/g, " ");
+    if (entry.action === "ORDER_CONFIRMED") return "Order confirmed";
+    if (entry.action === "DISPATCH_REQUESTED") return "Carrier pickup requested";
+    if (entry.action === "STATUS_CHANGED") return toStatus ? `Status changed to ${toStatus}` : "Fulfillment status changed";
+    return String(entry.action || toStatus || "Fulfillment updated").replace(/_/g, " ");
+  }
+
+  getFulfillmentHistoryIcon = (entry) => {
+    const action = String(entry.action || "").toUpperCase();
+    const status = String(entry.toStatus || "").toUpperCase();
+    if (action === "ORDER_CONFIRMED" || status === "ORDERED") return <CheckCircle2 size={15} />;
+    if (action === "DISPATCH_REQUESTED") return <Send size={15} />;
+    if (status === "PACKED") return <PackageCheck size={15} />;
+    if (status === "SHIPPED") return <Truck size={15} />;
+    if (status === "IN_TRANSIT") return <Route size={15} />;
+    if (status === "DELIVERED" || status === "FULFILLED") return <BadgeCheck size={15} />;
+    return <Clock3 size={15} />;
   }
 
   handleVoid(id) {
@@ -210,6 +317,75 @@ class SaleOrderDetail extends React.PureComponent{
         .catch(() => message.error("Error!......"));
       }
     });
+  }
+
+  openLocationEditor = () => {
+    const order = this.state.formData;
+    const savedGeolocation = order.geolocation || order.customer?.geolocation || null;
+    this.setState({
+      locationEditOpen: true,
+      locationAddress: order.shippingAddress || order.address || "",
+      locationProvince: order.fulfillmentProvince || "",
+      locationCity: order.fulfillmentCity || "",
+      locationMapsUrl: "",
+      locationGeolocation: savedGeolocation && typeof savedGeolocation === "object" ? savedGeolocation : null
+    });
+  }
+
+  resolveEditedLocation = async () => {
+    const googleMapsUrl = this.state.locationMapsUrl.trim();
+    if (!googleMapsUrl) return message.warning("Paste a Google Maps share link first.");
+    this.setState({ locationResolving: true });
+    try {
+      const response = await CustomerService.resolveLocation(googleMapsUrl);
+      const result = response && response.data && (response.data.data || response.data);
+      const latitude = Number(result && result.latitude);
+      const longitude = Number(result && result.longitude);
+      if (!result || !Number.isFinite(latitude) || latitude < -90 || latitude > 90 || !Number.isFinite(longitude) || longitude < -180 || longitude > 180 || !result.formattedAddress) {
+        throw new Error("The location service returned incomplete location details.");
+      }
+      this.setState({
+        locationAddress: result.formattedAddress,
+        locationProvince: result.province || this.state.locationProvince,
+        locationCity: result.city || this.state.locationCity,
+        locationGeolocation: { latitude, longitude }
+      });
+      message.success("Location found. Review the address, then save.");
+    } catch (error) {
+      const data = error && error.response && error.response.data;
+      const errorMessage = data && data.message && data.message.error && data.message.error.message || data && data.message || error.message || "Could not resolve this Google Maps link.";
+      message.error(typeof errorMessage === "string" ? errorMessage : "Could not resolve this Google Maps link.");
+    } finally {
+      this.setState({ locationResolving: false });
+    }
+  }
+
+  saveLocationEdit = async () => {
+    if (this.state.locationResolving || this.state.locationSaving) return;
+    const order = this.state.formData;
+    const address = this.state.locationAddress.trim();
+    if (!address) return message.warning("Enter a shipping address before saving.");
+    this.setState({ locationSaving: true });
+    const updates = {
+      shippingAddress: address,
+      fulfillmentProvince: this.state.locationProvince.trim(),
+      fulfillmentCity: this.state.locationCity.trim(),
+      ...(this.state.locationGeolocation ? { geolocation: this.state.locationGeolocation } : {})
+    };
+    try {
+      await SaleOrderService.updateLocation(order.id, updates);
+      this.setState(state => ({
+        locationEditOpen: false,
+        formData: { ...state.formData, ...updates, address }
+      }));
+      message.success("Shipping location updated.");
+    } catch (error) {
+      const data = error && error.response && error.response.data;
+      const errorMessage = data && data.message && data.message.error && data.message.error.message || data && data.message || error.message || "Could not update the shipping location.";
+      message.error(typeof errorMessage === "string" ? errorMessage : "Could not update the shipping location.");
+    } finally {
+      this.setState({ locationSaving: false });
+    }
   }
 
   getInvoiceData = () => {
@@ -278,6 +454,39 @@ class SaleOrderDetail extends React.PureComponent{
     return saleType[type] || type || EMPTY_VALUE;
   }
 
+  getOrderChannelLabel = (formData) => {
+    const origin = String(formData.originId || "").trim().toLowerCase();
+    const originLabels = {
+      manual: "Phone Call",
+      call: "Phone Call",
+      phone: "Phone Call",
+      telegram: "Telegram",
+      facebook: "Messenger",
+      facebook_page: "Messenger",
+      messenger: "Messenger",
+      tiktok: "TikTok Shop",
+      walk_in: "Walk-In",
+      b2b: "B2B Trade"
+    };
+    if (originLabels[origin]) return originLabels[origin];
+    if (formData.channel && String(formData.channel).toUpperCase() !== "MANUAL") return formData.channel;
+
+    const orderChannel = String(formData.orderChannel || "").trim();
+    if (orderChannel) return orderChannel.replace(/[_-]+/g, " ").replace(/\b\w/g, character => character.toUpperCase());
+    return formData.channel || EMPTY_VALUE;
+  }
+
+  getOrderChannelIcon = (formData) => {
+    const source = `${formData.originId || ""} ${formData.channel || ""} ${formData.orderChannel || ""}`.toLowerCase();
+    if (/telegram/.test(source)) return <Send size={14} />;
+    if (/facebook|messenger/.test(source)) return <MessagesSquare size={14} />;
+    if (/tiktok|tik.?tok/.test(source)) return <Music2 size={14} />;
+    if (/walk.?in|in.?store/.test(source)) return <Store size={14} />;
+    if (/b2b|business|trade/.test(source)) return <Building2 size={14} />;
+    if (/manual|phone|call/.test(source)) return <Phone size={14} />;
+    return <Globe2 size={14} />;
+  }
+
   formatDate = (value) => {
     if (!value || !moment(value).isValid()) return EMPTY_VALUE;
 
@@ -298,6 +507,39 @@ class SaleOrderDetail extends React.PureComponent{
 
   formatMoney = (value) => this.util.formatCurrency(toNumber(value))
 
+  getPaymentMethodName = (formData) => {
+    const payment = Array.isArray(formData.transactionPayment) ? formData.transactionPayment[0] : null;
+    const rawMethod = formData.paymentMethod || (payment && payment.paymentMethod);
+    const relatedMethod = Array.isArray(rawMethod) ? rawMethod[0] : rawMethod;
+    const methodId = formData.paymentMethodId || relatedMethod && relatedMethod.id || payment && payment.paymentMethodId;
+    const relatedName = typeof relatedMethod === "string" && relatedMethod !== String(methodId || "")
+      ? relatedMethod
+      : relatedMethod && (relatedMethod.name || relatedMethod.label || relatedMethod.methodName);
+    const configuredMethod = this.state.paymentMethods.find(method => String(method.id) === String(methodId));
+    return formData.paymentMethodName || relatedName || configuredMethod && (configuredMethod.name || configuredMethod.label) || EMPTY_VALUE;
+  }
+
+  getPaymentTerms = (formData) => {
+    const rawTerms = formData.paymentTerms || formData.paymentTerm || formData.payTerm;
+    if (typeof rawTerms === "string" && rawTerms.trim()) return rawTerms;
+    if (rawTerms && typeof rawTerms === "object") {
+      const label = rawTerms.name || rawTerms.label || rawTerms.description;
+      if (label) return label;
+    }
+    const rawDays = formData.payTermNumber ?? formData.paymentTermDays;
+    if (rawDays === undefined || rawDays === null || rawDays === "") return EMPTY_VALUE;
+    const days = Number(rawDays);
+    if (!Number.isFinite(days) || days < 0) return EMPTY_VALUE;
+    return days === 0 ? "Due on Receipt" : `Net ${days} day${days === 1 ? "" : "s"}`;
+  }
+
+  getOrderCurrency = (formData) => {
+    const currency = formData.currencyCode || formData.currency || formData.currencyName;
+    if (typeof currency === "string" && currency.trim()) return currency;
+    if (currency && typeof currency === "object") return currency.code || currency.currencyCode || currency.name || EMPTY_VALUE;
+    return EMPTY_VALUE;
+  }
+
   getOrderItems = (formData) => {
     return Array.isArray(formData.transactionEntries)
       ? formData.transactionEntries.filter(entry => Number(entry.status) !== 3)
@@ -312,9 +554,9 @@ class SaleOrderDetail extends React.PureComponent{
   }
 
   getPaymentState = (formData) => {
-    const transactionPayment = formData.transactionPayment.length > 0 ? formData.transactionPayment[0] : { tender: 0, balance: 0 };
+    const transactionPayments = Array.isArray(formData.transactionPayment) ? formData.transactionPayment : [];
+    const tender = transactionPayments.reduce((sum, payment) => sum + toNumber(payment.tender || payment.amount), 0);
     const deposit = toNumber(formData.deposit);
-    const tender = toNumber(transactionPayment.tender);
     const total = this.getGrandTotal(formData);
     const balance = Math.max(total - deposit - tender, 0);
 
@@ -326,11 +568,69 @@ class SaleOrderDetail extends React.PureComponent{
       return { label: "Paid", color: "green", paid: total, balance: 0 };
     }
 
-    if (deposit > 0) {
-      return { label: "Partially paid", color: "orange", paid: deposit, balance };
+    if (deposit + tender > 0) {
+      return { label: "Partially paid", color: "orange", paid: deposit + tender, balance };
     }
 
     return { label: "Unpaid", color: "red", paid: 0, balance };
+  }
+
+  openPaymentModal = () => {
+    const formData = this.state.formData;
+    const currentMethodId = formData.paymentMethodId || (formData.paymentMethod && formData.paymentMethod.id);
+    const pendingRetry = Boolean(this.state.paymentIdempotencyKey);
+    this.setState({
+      paymentModalVisible: true,
+      paymentMethodId: pendingRetry ? this.state.paymentMethodId : currentMethodId ? String(currentMethodId) : undefined,
+      paymentAmount: pendingRetry ? this.state.paymentAmount : this.getPaymentState(formData).balance,
+      paymentReferenceNo: pendingRetry ? this.state.paymentReferenceNo : "",
+      paymentNote: pendingRetry ? this.state.paymentNote : "",
+      paymentError: ""
+    });
+  }
+
+  recordPayment = async () => {
+    const { formData, paymentMethodId, paymentAmount } = this.state;
+    const amount = Number(paymentAmount);
+    if (!paymentMethodId) {
+      this.setState({ paymentError: "Select a payment method." });
+      return;
+    }
+    if (!Number.isFinite(amount) || amount <= 0) {
+      this.setState({ paymentError: "Enter an amount greater than zero." });
+      return;
+    }
+    if (this.state.paymentRefreshFailed) {
+      this.setState({ paymentError: "Reload the order before recording another payment." });
+      return;
+    }
+
+    const idempotencyKey = this.state.paymentIdempotencyKey || `payment-${formData.id}-${Date.now()}`;
+    const payload = {
+      paymentMethodId,
+      amount,
+      ...(this.state.paymentReferenceNo.trim() ? { referenceNo: this.state.paymentReferenceNo.trim() } : {}),
+      ...(this.state.paymentNote.trim() ? { note: this.state.paymentNote.trim() } : {})
+    };
+    this.setState({ paymentSaving: true, paymentError: "", paymentIdempotencyKey: idempotencyKey });
+    try {
+      await SaleOrderService.recordPayment(formData.id, payload, idempotencyKey);
+      this.setState({ paymentModalVisible: false, paymentIdempotencyKey: "", paymentReferenceNo: "", paymentNote: "" });
+      message.success("Payment recorded.");
+      try {
+        const response = await SaleOrderService.detail(formData.id);
+        const latestOrder = response && response.data && (response.data.data || response.data);
+        if (!latestOrder || typeof latestOrder !== "object") throw new Error("Order refresh returned no data.");
+        this.setState({ formData: latestOrder, paymentRefreshFailed: false });
+      } catch (refreshError) {
+        this.setState({ paymentRefreshFailed: true });
+        message.warning("Payment was recorded, but the order could not be refreshed. Reload the page before recording another payment.");
+      }
+    } catch (error) {
+      this.setState({ paymentError: getApiErrorMessage(error) });
+    } finally {
+      this.setState({ paymentSaving: false });
+    }
   }
 
   getTaxAmount = (formData) => {
@@ -340,15 +640,28 @@ class SaleOrderDetail extends React.PureComponent{
     return Math.max(total - totalExcludeTax, 0);
   }
 
-  getGrandTotal = (formData) => toNumber(formData.total) - toNumber(formData.discount) + this.getDeliveryFee(formData)
+  getGrandTotal = (formData) => {
+    const total = toNumber(formData.total);
+    const discount = toNumber(formData.discount);
+
+    // API orders with subTotal already include deliveryFee in `total`.
+    // Older records may not have subTotal, so retain the legacy calculation for them.
+    return hasValue(formData.subTotal)
+      ? total - discount
+      : total - discount + this.getDeliveryFee(formData);
+  }
 
   getFulfillmentState = (formData) => {
-    if (this.isClosedStatus(formData.status)) {
-      return { label: "Fulfilled", color: "green" };
-    }
-
     if (formData.shippingStatus) {
-      return { label: formData.shippingStatus, color: "orange" };
+      const shippingStatus = String(formData.shippingStatus).toUpperCase();
+      const color = shippingStatus === "DELIVERED" || shippingStatus === "FULFILLED"
+        ? "green"
+        : shippingStatus === "CANCELLED" || shippingStatus === "CANCELED"
+          ? "red"
+          : shippingStatus === "IN_TRANSIT" || shippingStatus === "SHIPPED"
+            ? "blue"
+            : "orange";
+      return { label: shippingStatus.replace(/_/g, " "), color };
     }
 
     return { label: "Unfulfilled", color: "orange" };
@@ -413,17 +726,21 @@ class SaleOrderDetail extends React.PureComponent{
     createdAt: this.formatDateTime(formData.registerDate),
     customer: this.getCustomerLink(formData, customerName),
     location: formData?.client?.businessName || EMPTY_VALUE,
-    channel: this.getSaleType(formData.type)
+    channel: this.getOrderChannelLabel(formData),
+    channelIcon: this.getOrderChannelIcon(formData)
   })
 
   getLifecycleData = (formData) => {
     const paymentState = this.getPaymentState(formData);
     const fulfillmentState = this.getFulfillmentState(formData);
-    const isConfirmed = formData.status === Enum.SALE_ORDER_STATUS.CONFIRMED || formData.status === "CONFIRMED" || this.isClosedStatus(formData.status);
-    const isFulfilled = fulfillmentState.label === "Fulfilled";
+    const isConfirmed = ["CONFIRMED", "1"].includes(String(formData.status || "").toUpperCase()) || this.isClosedStatus(formData.status);
+    const isFulfilled = ["DELIVERED", "FULFILLED"].includes(String(formData.shippingStatus || "").toUpperCase());
     const isClosed = this.isClosedStatus(formData.status);
     const isPaid = paymentState.balance <= 0;
     const placedDate = this.formatShortDate(formData.registerDate) !== EMPTY_VALUE ? moment(formData.registerDate).format("MMM DD, HH:mm") : EMPTY_VALUE;
+    const confirmedDate = this.formatShortDate(formData.confirmedAt) !== EMPTY_VALUE ? moment(formData.confirmedAt).format("MMM DD, HH:mm") : "Confirmed";
+    const paymentEventDate = this.formatDateTime(isPaid ? formData.settledAt : formData.paymentPendingAt);
+    const closedEventDate = this.formatDateTime(formData.closedAt);
 
     return [
       {
@@ -433,7 +750,7 @@ class SaleOrderDetail extends React.PureComponent{
       },
       {
         title: "Confirmed",
-        detail: isConfirmed ? "Confirmed" : "Awaiting confirmation",
+        detail: isConfirmed ? confirmedDate : "Awaiting confirmation",
         state: isConfirmed ? "completed" : "current"
       },
       {
@@ -443,12 +760,16 @@ class SaleOrderDetail extends React.PureComponent{
       },
       {
         title: "Payment Pending",
-        detail: isPaid ? "Settled" : `${this.formatMoney(paymentState.balance)} Outstanding`,
+        detail: isPaid
+          ? `Settled${paymentEventDate !== EMPTY_VALUE ? ` · ${paymentEventDate}` : ""}`
+          : `${this.formatMoney(paymentState.balance)} Outstanding${paymentEventDate !== EMPTY_VALUE ? ` · ${paymentEventDate}` : ""}`,
         state: isPaid ? "completed" : "current"
       },
       {
         title: "Order Closed",
-        detail: isClosed ? "Closed" : "Pending final settlement",
+        detail: isClosed
+          ? `Closed${closedEventDate !== EMPTY_VALUE ? ` · ${closedEventDate}` : ""}`
+          : "Pending final settlement",
         state: isClosed ? "completed" : "future"
       }
     ];
@@ -514,7 +835,7 @@ class SaleOrderDetail extends React.PureComponent{
       });
     }
 
-    if (formData.status === Enum.SALE_ORDER_STATUS.CONFIRMED || formData.status === "CONFIRMED" || this.isClosedStatus(formData.status)) {
+    if (["CONFIRMED", "1"].includes(String(formData.status || "").toUpperCase()) || this.isClosedStatus(formData.status)) {
       events.push({
         title: "Order Confirmed",
         time: EMPTY_VALUE,
@@ -553,10 +874,6 @@ class SaleOrderDetail extends React.PureComponent{
         <Link target="_blank" to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
           <ReceiptText size={14} /> <Translate id="text_convert_to_invoice" />
         </Link>
-      </Menu.Item>
-      <Divider style={{marginTop: 4, marginBottom: 4}} />
-      <Menu.Item key="confirm" onClick={() => this.handleMakeAsConfirm(formData.id)} disabled={this.isClosedStatus(formData.status)}>
-        <CheckCircle2 size={14} /> <Translate id="text_mark_as_confirm" />
       </Menu.Item>
       <Divider style={{marginTop: 4, marginBottom: 4}} />
       <Menu.Item key="print" onClick={() => window.print()} title="Ctrl + P">
@@ -620,14 +937,14 @@ class SaleOrderDetail extends React.PureComponent{
           <div className="so-title-row">
             <Tag color={fulfillmentState.color} className="so-status-tag">{fulfillmentState.label}</Tag>
             <Tag color={paymentState.color} className="so-status-tag">{paymentState.label}</Tag>
-            <Tag color="blue" className="so-status-tag">{header.channel}</Tag>
+            <Tag color="blue" className="so-status-tag"><span className="so-channel-badge">{header.channelIcon}{header.channel}</span></Tag>
           </div>
           <h1>Order #{header.number}</h1>
           <div className="so-header-meta">
             <MetaItem icon={<CalendarDays size={14} />} label="Created" value={header.createdAt} />
             <MetaItem icon={<UserRound size={14} />} label="Customer" value={header.customer} />
             <MetaItem icon={<Building2 size={14} />} label="Location" value={header.location} />
-            <MetaItem icon={<CircleDot size={14} />} label="Channel" value={header.channel} />
+            <MetaItem icon={header.channelIcon} label="Channel" value={header.channel} />
           </div>
         </div>
       </div>
@@ -653,7 +970,10 @@ class SaleOrderDetail extends React.PureComponent{
               <div className="so-lifecycle-marker">
                 {step.state === "completed" ? <Check size={14} /> : null}
               </div>
-              <div className="so-lifecycle-title">{step.title}</div>
+              <div className="so-lifecycle-title">
+                <span>{step.title}</span>
+                {step.title === "Fulfilled & Handed" && <button type="button" className="so-lifecycle-history-button" onClick={this.openFulfillmentHistory} aria-label="View fulfillment history" title="View fulfillment history"><Clock size={14} /></button>}
+              </div>
               <div className="so-lifecycle-detail">{step.detail || EMPTY_VALUE}</div>
             </div>
           ))}
@@ -736,7 +1056,11 @@ class SaleOrderDetail extends React.PureComponent{
   renderPaymentDetails = (formData) => {
     const items = this.getOrderItems(formData);
     const total = toNumber(formData.total);
-    const totalExcludeTax = hasValue(formData.totalExcludeTax) ? toNumber(formData.totalExcludeTax) : total;
+    const subtotal = hasValue(formData.subTotal)
+      ? toNumber(formData.subTotal)
+      : hasValue(formData.totalExcludeTax)
+        ? toNumber(formData.totalExcludeTax)
+        : total;
     const discount = toNumber(formData.discount);
     const deliveryFeeValue = formData.fulfillmentProviderId && hasValue(formData.fulfillmentFee)
       ? formData.fulfillmentFee
@@ -744,6 +1068,8 @@ class SaleOrderDetail extends React.PureComponent{
     const deliveryFee = this.getDeliveryFee(formData);
     const tax = this.getTaxAmount(formData);
     const deposit = toNumber(formData.deposit);
+    const transactionPayments = Array.isArray(formData.transactionPayment) ? formData.transactionPayment : [];
+    const paidToDate = deposit + transactionPayments.reduce((sum, payment) => sum + toNumber(payment.tender || payment.amount), 0);
     const grandTotal = this.getGrandTotal(formData);
     const paymentState = this.getPaymentState(formData);
     const totalUnits = items.reduce((summary, item) => summary + toNumber(item.quantity), 0);
@@ -753,15 +1079,15 @@ class SaleOrderDetail extends React.PureComponent{
       <DetailCard
         title="Payment & Settlement Breakdown"
         icon={<CircleDollarSign size={16} />}
-        action={<Tag color={paymentState.color}>{paymentState.label}</Tag>}
+        action={<div className="so-payment-actions">{paymentState.balance > 0 ? <Button type="primary" disabled={this.state.paymentRefreshFailed} onClick={this.openPaymentModal}>Record payment</Button> : null}<Tag color={paymentState.color}>{paymentState.label}</Tag></div>}
         uppercase
       >
         <div className="so-payment-grid">
           <div>
             <div className="so-payment-meta-panel">
-              <MetaItem label="Payment Terms" value="Due on Receipt" />
-              <MetaItem label="Preferred Method" value={formData.paymentMethod || EMPTY_VALUE} />
-              <MetaItem label="Currency" value={formData.currency || EMPTY_VALUE} />
+              <MetaItem label="Payment Terms" value={this.getPaymentTerms(formData)} />
+              <MetaItem label="Preferred Method" value={this.getPaymentMethodName(formData)} />
+              <MetaItem label="Currency" value={this.getOrderCurrency(formData)} />
             </div>
             {isFulfilled && paymentState.balance > 0 ? (
               <div className="so-payment-warning">
@@ -771,13 +1097,13 @@ class SaleOrderDetail extends React.PureComponent{
             ) : null}
           </div>
           <div className="so-summary-list">
-            <SummaryRow label={`Subtotal (${items.length} item${items.length === 1 ? "" : "s"}, ${totalUnits} units)`} value={this.formatMoney(totalExcludeTax)} />
+            <SummaryRow label={`Subtotal (${items.length} item${items.length === 1 ? "" : "s"}, ${totalUnits} units)`} value={this.formatMoney(subtotal)} />
             <SummaryRow label="Discount" value={discount ? `-${this.formatMoney(discount)}` : this.formatMoney(0)} danger={discount > 0} />
             {hasValue(deliveryFeeValue) && <SummaryRow label="Delivery Fee" value={this.formatMoney(deliveryFee)} />}
             <SummaryRow label="Estimated Tax" value={this.formatMoney(tax)} />
             <Divider className="so-summary-divider" />
             <SummaryRow label="Grand Total" value={this.formatMoney(grandTotal)} strong />
-            <SummaryRow label="Total Paid to Date" value={this.formatMoney(deposit)} />
+            <SummaryRow label="Total Paid to Date" value={this.formatMoney(paidToDate)} />
             <div className="so-balance-due">
               <div>
                 <span>Balance Due</span>
@@ -836,6 +1162,13 @@ class SaleOrderDetail extends React.PureComponent{
 
   renderCustomerShippingAddress = (formData, customerName) => {
     const shippingAddress = this.getShippingAddress(formData);
+    const geolocation = formData.geolocation || formData.customer?.geolocation;
+    const latitude = Number(geolocation && geolocation.latitude);
+    const longitude = Number(geolocation && geolocation.longitude);
+    const hasCoordinates = Number.isFinite(latitude) && latitude >= -90 && latitude <= 90 && Number.isFinite(longitude) && longitude >= -180 && longitude <= 180;
+    const mapEmbedUrl = hasCoordinates
+      ? `https://maps.google.com/maps?q=${latitude},${longitude}&z=15&output=embed`
+      : "";
 
     return (
       <div className="so-customer-map-section">
@@ -847,18 +1180,23 @@ class SaleOrderDetail extends React.PureComponent{
           <button
             className="so-link-button"
             type="button"
-            onClick={() => history.push({pathname: `/transactions/sale-order/update/${formData.id}`})}
+            onClick={this.openLocationEditor}
           >
-            Edit location
+            Quick edit
           </button>
         </div>
         <div className="so-map-preview" aria-label="Shipping address map preview">
-          <div className="so-map-grid" />
-          <div className="so-map-route so-map-route-one" />
-          <div className="so-map-route so-map-route-two" />
-          <div className="so-map-pin">
-            <MapPin size={18} />
-          </div>
+          {hasCoordinates ? (
+            <iframe
+              title={`Google Maps location for ${customerName}`}
+              src={mapEmbedUrl}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          ) : (
+            <div className="so-map-empty"><MapPin size={18} /><span>Map location hasn’t been added</span></div>
+          )}
         </div>
         <div className="so-address so-customer-address-text">
           <strong>{customerName}</strong>
@@ -875,6 +1213,19 @@ class SaleOrderDetail extends React.PureComponent{
     const addressLines = this.getAddressLines(formData);
     const fulfillmentState = this.getFulfillmentState(formData);
     const location = formData?.client?.businessName || EMPTY_VALUE;
+    const orderStatus = String(formData.status || "").toUpperCase();
+    const shippingStatus = String(formData.shippingStatus || "").toUpperCase();
+    const dispatchStatus = String(formData.dispatchStatus || "").toUpperCase();
+    const isConfirmed = ["CONFIRMED", "1"].includes(orderStatus);
+    const canConfirm = ["DRAFT", "PLACED", "0"].includes(orderStatus);
+    const hasFulfillment = Boolean(formData.fulfillmentMode || formData.fulfillmentProviderId);
+    const transitions = [];
+    if (canConfirm) transitions.push({ key: "confirm", label: "Confirm order" });
+    if (isConfirmed && shippingStatus === "ORDERED") transitions.push({ key: "packed", label: "Mark packed" });
+    if (isConfirmed && shippingStatus === "PACKED" && dispatchStatus !== "QUEUED") transitions.push({ key: "dispatch", label: "Request carrier pickup", disabled: !hasFulfillment });
+    if (dispatchStatus === "QUEUED") transitions.push({ key: "shipped", label: "Mark shipped" });
+    if (shippingStatus === "SHIPPED") transitions.push({ key: "inTransit", label: "Mark in transit" });
+    if (shippingStatus === "IN_TRANSIT") transitions.push({ key: "delivered", label: "Mark delivered" });
 
     return (
       <DetailCard
@@ -886,6 +1237,7 @@ class SaleOrderDetail extends React.PureComponent{
         <div className="so-info-list">
           <MetaItem label="Method" value={addressLines.length ? "Delivery" : "In-Store Pickup / Counter Delivery"} />
           <MetaItem label="Pickup Location" value={location} />
+          <MetaItem label="Dispatch Status" value={formData.dispatchStatus || EMPTY_VALUE} />
         </div>
         <div className="so-internal-block">
           <div className="so-internal-block-title"><MapPin size={14} /> Shipping Address</div>
@@ -898,6 +1250,19 @@ class SaleOrderDetail extends React.PureComponent{
             <div className="so-empty-text">Not required (Counter hand-off)</div>
           )}
         </div>
+        {transitions.length > 0 && <div className="so-order-transition-actions">
+          <div className="so-internal-block-title">Next action</div>
+          <div className="so-order-transition-buttons">
+            {transitions.map((transition, index) => <Button
+              key={transition.key}
+              type={index === 0 ? "primary" : "default"}
+              disabled={Boolean(this.state.lifecycleAction) || transition.disabled}
+              loading={this.state.lifecycleAction === transition.key}
+              onClick={() => this.runLifecycleAction(transition.key, formData.id)}
+            >{transition.label}</Button>)}
+          </div>
+          {transitions.some(transition => transition.key === "dispatch" && transition.disabled) && <small className="so-transition-hint">Set a fulfillment mode or provider before requesting carrier pickup.</small>}
+        </div>}
       </DetailCard>
     );
   }
@@ -1129,6 +1494,133 @@ class SaleOrderDetail extends React.PureComponent{
             <React.Fragment>
               {this.renderTopNavigation(formData)}
               {this.renderHistoryDrawer(formData)}
+              <Modal
+                title="Quick edit shipping location"
+                visible={this.state.locationEditOpen}
+                onCancel={() => this.setState({ locationEditOpen: false })}
+                onOk={this.saveLocationEdit}
+                okText="Save location"
+                confirmLoading={this.state.locationSaving}
+                okButtonProps={{ disabled: this.state.locationResolving }}
+                destroyOnClose
+              >
+                <div className="so-location-edit">
+                  <p>Update the delivery destination without changing the order items or payment details.</p>
+                  <label htmlFor="so-location-share-link">Google Maps share link</label>
+                  <div className="so-location-edit-link">
+                    <Input
+                      id="so-location-share-link"
+                      value={this.state.locationMapsUrl}
+                      onChange={event => this.setState({ locationMapsUrl: event.target.value })}
+                      onPressEnter={event => { event.preventDefault(); this.resolveEditedLocation(); }}
+                      placeholder="Paste a maps.app.goo.gl link"
+                    />
+                    <Button type="default" loading={this.state.locationResolving} onClick={this.resolveEditedLocation}>Find address</Button>
+                  </div>
+                  <label htmlFor="so-location-address">Shipping address</label>
+                  <Input.TextArea id="so-location-address" rows={3} value={this.state.locationAddress} onChange={event => this.setState({ locationAddress: event.target.value })} placeholder="Enter delivery address" />
+                  <div className="so-location-edit-fields">
+                    <div><label htmlFor="so-location-province">Province</label><Input id="so-location-province" value={this.state.locationProvince} onChange={event => this.setState({ locationProvince: event.target.value })} /></div>
+                    <div><label htmlFor="so-location-city">City</label><Input id="so-location-city" value={this.state.locationCity} onChange={event => this.setState({ locationCity: event.target.value })} /></div>
+                  </div>
+                  {this.state.locationGeolocation && Number.isFinite(Number(this.state.locationGeolocation.latitude)) && Number.isFinite(Number(this.state.locationGeolocation.longitude)) && <div className="so-location-edit-coordinates"><MapPin size={15} /> Coordinates {Number(this.state.locationGeolocation.latitude).toFixed(6)}, {Number(this.state.locationGeolocation.longitude).toFixed(6)}</div>}
+                </div>
+              </Modal>
+              <Modal
+                title="Record payment"
+                visible={this.state.paymentModalVisible}
+                onCancel={() => !this.state.paymentSaving && this.setState({ paymentModalVisible: false })}
+                onOk={this.recordPayment}
+                okText="Record payment"
+                confirmLoading={this.state.paymentSaving}
+                destroyOnClose
+              >
+                <div className="so-record-payment-form">
+                  <p>Record a payment against order <strong>{formData.number || formData.id}</strong>.</p>
+                  <label htmlFor="so-payment-method">Payment method</label>
+                  <Select
+                    id="so-payment-method"
+                    value={this.state.paymentMethodId}
+                    onChange={value => this.setState({ paymentMethodId: value, paymentIdempotencyKey: "", paymentError: "" })}
+                    placeholder="Select payment method"
+                    showSearch
+                    optionFilterProp="children"
+                  >
+                    {this.state.paymentMethods.map(method => (
+                      <Select.Option key={method.id} value={String(method.id)}>
+                        {method.name || method.label || method.methodName || String(method.id)}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                  <label htmlFor="so-payment-amount">Amount</label>
+                  <InputNumber
+                    id="so-payment-amount"
+                    min={0.01}
+                    precision={2}
+                    value={this.state.paymentAmount}
+                    onChange={value => this.setState({ paymentAmount: value, paymentIdempotencyKey: "", paymentError: "" })}
+                    style={{ width: "100%" }}
+                    placeholder="Enter amount"
+                  />
+                  <label htmlFor="so-payment-reference">Reference number <span>(optional)</span></label>
+                  <Input
+                    id="so-payment-reference"
+                    value={this.state.paymentReferenceNo}
+                    onChange={event => this.setState({ paymentReferenceNo: event.target.value, paymentIdempotencyKey: "" })}
+                    placeholder="Receipt or transaction reference"
+                  />
+                  <label htmlFor="so-payment-note">Note <span>(optional)</span></label>
+                  <Input.TextArea
+                    id="so-payment-note"
+                    rows={3}
+                    value={this.state.paymentNote}
+                    onChange={event => this.setState({ paymentNote: event.target.value, paymentIdempotencyKey: "" })}
+                    placeholder="Add a note about this payment"
+                  />
+                  {this.state.paymentError ? <div className="so-record-payment-error" role="alert">{this.state.paymentError}</div> : null}
+                </div>
+              </Modal>
+              <Drawer
+                title="Fulfillment history"
+                placement="right"
+                width={420}
+                visible={this.state.fulfillmentHistoryVisible}
+                onClose={() => this.setState({ fulfillmentHistoryVisible: false })}
+                className="so-fulfillment-history-drawer"
+              >
+                <div className="so-fulfillment-history-intro">
+                  <strong>{formData.number || "Sales Order"}</strong>
+                  <span>Delivery status changes and carrier actions</span>
+                </div>
+                {this.state.fulfillmentHistoryLoading ? (
+                  <div className="so-fulfillment-history-state"><Spin tip="Loading fulfillment history…" /></div>
+                ) : this.state.fulfillmentHistoryError ? (
+                  <div className="so-fulfillment-history-error" role="alert">
+                    <span>{this.state.fulfillmentHistoryError}</span>
+                    <Button type="default" onClick={() => this.loadFulfillmentHistory(formData.id)}>Try again</Button>
+                  </div>
+                ) : this.state.fulfillmentHistory.length ? (
+                  <div className="so-fulfillment-history-list">
+                    {this.state.fulfillmentHistory.map((entry, index) => {
+                      const fromStatus = String(entry.fromStatus || "").replace(/_/g, " ");
+                      const toStatus = String(entry.toStatus || "").replace(/_/g, " ");
+                      const statusTransition = fromStatus && toStatus && fromStatus !== toStatus ? `${fromStatus} → ${toStatus}` : toStatus;
+                      return <div className="so-fulfillment-history-entry" key={entry.id || `${entry.createdAt}-${index}`}>
+                        <span className={`so-fulfillment-history-dot${index === this.state.fulfillmentHistory.length - 1 ? " is-latest" : ""}`} />
+                        {index < this.state.fulfillmentHistory.length - 1 && <span className="so-fulfillment-history-line" />}
+                        <div className="so-fulfillment-history-content">
+                          <div className="so-fulfillment-history-head"><span className={`so-fulfillment-history-icon is-${String(entry.action === "DISPATCH_REQUESTED" ? entry.action : entry.toStatus || entry.action || "event").toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>{this.getFulfillmentHistoryIcon(entry)}</span><strong>{this.getFulfillmentHistoryTitle(entry)}</strong><time>{this.formatDateTime(entry.createdAt)}</time></div>
+                          {statusTransition && <span className="so-fulfillment-history-transition">{statusTransition}</span>}
+                          <span className="so-fulfillment-history-actor">By {entry.userName || "System"}</span>
+                          {entry.note && <p>{entry.note}</p>}
+                        </div>
+                      </div>;
+                    })}
+                  </div>
+                ) : (
+                  <Empty description="No fulfillment history recorded yet." />
+                )}
+              </Drawer>
               {this.renderHeader(formData, customerName)}
               {this.renderProgress(formData)}
               <div className="so-detail-grid">

@@ -93,12 +93,63 @@ class SaleOrderService extends BaseService {
     });
   }
 
+  recordPayment(id, data, idempotencyKey) {
+    this.setHeader();
+    return this.POST({
+      url: `${this.baseUrl}/${id}/payments`,
+      data,
+      headers: { ...this.header, "Idempotency-Key": idempotencyKey }
+    });
+  }
+
+  updateLocation(id, data) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/${id}/location`,
+      data,
+      headers: this.header
+    });
+  }
+
+  fulfillmentHistory(id) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/${id}/fulfillment-history`,
+      headers: this.header
+    });
+  }
+
   markAsConfirm(id) {
     this.setHeader();
     return this.PUT({
       url: `${this.baseUrl}/mark_confirm/${id}`,
       headers: this.header
     });
+  }
+
+  markPacked(id) {
+    this.setHeader();
+    return this.PUT({ url: `${this.baseUrl}/${id}/mark_packed`, headers: this.header });
+  }
+
+  dispatch(id) {
+    this.setHeader();
+    return this.POST({ url: `${this.baseUrl}/${id}/dispatch`, headers: this.header });
+  }
+
+  markShipped(id) {
+    this.setHeader();
+    return this.PUT({ url: `${this.baseUrl}/${id}/mark_shipped`, headers: this.header });
+  }
+
+  markInTransit(id) {
+    this.setHeader();
+    return this.PUT({ url: `${this.baseUrl}/${id}/mark_in_transit`, headers: this.header });
+  }
+
+  markDelivered(id) {
+    this.setHeader();
+    return this.PUT({ url: `${this.baseUrl}/${id}/mark_delivered`, headers: this.header });
   }
 
   void(id) {

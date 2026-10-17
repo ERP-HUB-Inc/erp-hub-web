@@ -13,6 +13,15 @@ class FulfillmentProviderService extends BaseService {
       headers: this.header
     });
   }
+
+  calculateFee(data) {
+    this.setHeader();
+    return this.POST({
+      url: `${this.baseUrl}/calculate-fee`,
+      data,
+      headers: this.header
+    });
+  }
 }
 
 export default new FulfillmentProviderService();

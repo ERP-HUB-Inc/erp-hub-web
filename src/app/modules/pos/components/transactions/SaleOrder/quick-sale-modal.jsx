@@ -623,7 +623,7 @@ function QuickSaleModal({ visible, onCancel, onCreated }) {
         invoiceDate: moment().format("YYYY-MM-DD"),
         expectedShipmentDate: null,
         registerDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-        status: confirm ? "CONFIRMED" : "DRAFT",
+        status: "DRAFT",
         totalExcludeTax: subtotal,
         deposit: 0,
         total: subtotal,
@@ -633,6 +633,18 @@ function QuickSaleModal({ visible, onCancel, onCreated }) {
       const id = response && response.data && response.data.data && response.data.data.id;
       if (!id) throw new Error("The Sales Order was created without a returned order ID.");
       setSavedOrderId(id);
+      if (confirm) {
+        try {
+          await SaleOrderService.markAsConfirm(id);
+        } catch (confirmationError) {
+          const errorData = confirmationError && confirmationError.response && confirmationError.response.data;
+          const apiMessage = errorData && errorData.message && errorData.message.error && errorData.message.error.message || errorData && errorData.message || confirmationError.message;
+          message.error(`Sales Order saved as draft, but confirmation failed: ${typeof apiMessage === "string" ? apiMessage : "Please retry from the order detail."}`);
+          onCreated();
+          onCancel();
+          return;
+        }
+      }
       message.success(confirm ? "Sales Order created and confirmed." : "Sales Order saved as draft.");
       if (printWaybill) message.info("The order is saved. Waybill printing is not available in the current API.");
       onCreated();

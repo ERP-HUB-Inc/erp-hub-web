@@ -82,6 +82,12 @@
   margin-right: 0;
 }
 
+.so-channel-badge {
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
+}
+
 .so-header-meta {
   align-items: center;
   color: #64748b;
@@ -229,9 +235,33 @@
 }
 
 .so-lifecycle-title {
+  align-items: center;
   color: #0f172a;
+  display: flex;
   font-size: 13px;
   font-weight: 700;
+  gap: 6px;
+}
+
+.so-lifecycle-history-button {
+  align-items: center;
+  background: #eef4f8;
+  border: 1px solid #d8e2eb;
+  border-radius: 5px;
+  color: #58718b;
+  cursor: pointer;
+  display: inline-flex;
+  height: 23px;
+  justify-content: center;
+  padding: 0;
+  width: 23px;
+}
+
+.so-lifecycle-history-button:hover,
+.so-lifecycle-history-button:focus {
+  background: #e5f4ec;
+  border-color: #a9d4bb;
+  color: #187348;
 }
 
 .so-lifecycle-detail {
@@ -347,6 +377,43 @@
   display: grid;
   gap: 18px;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 1fr);
+}
+
+.so-payment-actions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.so-record-payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.so-record-payment-form p {
+  color: #64748b;
+  margin: 0 0 8px;
+}
+
+.so-record-payment-form label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.so-record-payment-form label span {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.so-record-payment-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #b91c1c;
+  padding: 9px 11px;
 }
 
 .so-payment-meta-panel,
@@ -615,8 +682,63 @@
   white-space: nowrap;
 }
 
+.so-location-edit {
+  display: grid;
+  gap: 8px;
+}
+
+.so-location-edit > p {
+  margin: 0 0 5px;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.so-location-edit > label,
+.so-location-edit-fields label {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.so-location-edit-link {
+  display: flex;
+  gap: 8px;
+}
+
+.so-location-edit-link .ant-input {
+  min-width: 0;
+  flex: 1;
+}
+
+.so-location-edit-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.so-location-edit-fields > div {
+  display: grid;
+  gap: 6px;
+}
+
+.so-location-edit-coordinates {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  color: #16805a;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 480px) {
+  .so-location-edit-link { flex-direction: column; }
+  .so-location-edit-fields { grid-template-columns: 1fr; }
+}
+
 .so-map-preview {
-  background: #eaf1f8;
+  background: #f1f5f9;
   border: 1px solid #dbe4ee;
   border-radius: 8px;
   height: 132px;
@@ -625,51 +747,26 @@
   position: relative;
 }
 
-.so-map-grid {
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.24) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.24) 1px, transparent 1px);
-  background-size: 28px 28px;
-  inset: 0;
-  position: absolute;
+.so-map-preview iframe {
+  border: 0;
+  display: block;
+  height: 100%;
+  width: 100%;
 }
 
-.so-map-route {
-  background: rgba(37, 99, 235, 0.24);
-  border-radius: 999px;
-  height: 12px;
-  position: absolute;
-}
-
-.so-map-route-one {
-  left: -20px;
-  top: 44px;
-  transform: rotate(-15deg);
-  width: 190px;
-}
-
-.so-map-route-two {
-  bottom: 34px;
-  right: -24px;
-  transform: rotate(18deg);
-  width: 170px;
-}
-
-.so-map-pin {
+.so-map-empty {
   align-items: center;
-  background: #2563eb;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
-  color: #fff;
+  color: #718096;
   display: flex;
-  height: 40px;
+  flex-direction: column;
+  font-size: 11px;
+  gap: 7px;
+  height: 100%;
   justify-content: center;
-  left: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
+}
+
+.so-map-empty svg {
+  color: #94a3b8;
 }
 
 .so-customer-address-text {
@@ -693,6 +790,73 @@
   font-weight: 700;
   gap: 6px;
 }
+
+.so-order-transition-actions {
+  display: grid;
+  gap: 9px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #e8edf2;
+}
+
+.so-order-transition-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.so-order-transition-buttons .ant-btn {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.so-transition-hint {
+  color: #8793a2;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.so-fulfillment-history-intro {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 22px;
+  padding: 12px;
+  border: 1px solid #e5ebf1;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.so-fulfillment-history-intro strong { color: #1e293b; font-size: 13px; }
+.so-fulfillment-history-intro span { color: #718096; font-size: 11px; }
+.so-fulfillment-history-state { display: flex; min-height: 120px; align-items: center; justify-content: center; }
+.so-fulfillment-history-error { display: grid; gap: 12px; color: #a33b31; font-size: 12px; }
+.so-fulfillment-history-error .ant-btn { justify-self: start; }
+.so-fulfillment-history-list { display: grid; }
+.so-fulfillment-history-entry { position: relative; display: flex; min-height: 82px; gap: 12px; }
+.so-fulfillment-history-dot { z-index: 1; width: 11px; height: 11px; flex: 0 0 11px; margin: 3px 0 0 2px; border: 2px solid #94a3b8; border-radius: 50%; background: #fff; }
+.so-fulfillment-history-dot.is-latest { border-color: #16805a; background: #16805a; box-shadow: 0 0 0 3px #e6f5ed; }
+.so-fulfillment-history-line { position: absolute; top: 14px; bottom: 0; left: 7px; width: 1px; background: #dce4eb; }
+.so-fulfillment-history-content { display: grid; min-width: 0; flex: 1; gap: 5px; padding-bottom: 18px; }
+.so-fulfillment-history-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.so-fulfillment-history-head { justify-content: flex-start; align-items: center; gap: 8px; }
+.so-fulfillment-history-head strong { min-width: 0; flex: 1; color: #24364b; font-size: 12px; }
+.so-fulfillment-history-icon { display: inline-flex; width: 27px; height: 27px; flex: 0 0 27px; align-items: center; justify-content: center; border-radius: 8px; background: #eef3f8; color: #526a83; }
+.so-fulfillment-history-icon.is-ordered,
+.so-fulfillment-history-icon.is-order-confirmed { background: #eaf7ef; color: #25804e; }
+.so-fulfillment-history-icon.is-packed { background: #fff5df; color: #9a6a14; }
+.so-fulfillment-history-icon.is-dispatch-requested,
+.so-fulfillment-history-icon.is-shipped { background: #edf4ff; color: #3568ae; }
+.so-fulfillment-history-icon.is-in-transit { background: #f1edff; color: #7255ae; }
+.so-fulfillment-history-icon.is-delivered,
+.so-fulfillment-history-icon.is-fulfilled { background: #e8f7ef; color: #197347; }
+.so-fulfillment-history-head time { flex: 0 0 auto; color: #77879a; font-size: 10px; white-space: nowrap; }
+.so-fulfillment-history-transition { color: #16805a; font-size: 11px; font-weight: 650; }
+.so-fulfillment-history-actor { color: #77879a; font-size: 10px; }
+.so-fulfillment-history-content p { margin: 0; color: #64748b; font-size: 11px; line-height: 1.5; }
 
 .so-address {
   color: #475569;
