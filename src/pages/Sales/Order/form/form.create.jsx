@@ -16,7 +16,7 @@ import PaymentMethodService from "../../../../services/PaymentMethodService";
 import FulfillmentProviderService from "../../../../services/FulfillmentProviderService";
 import ExchangeRateService from "../../../../app/modules/pos/services/settings/ExchangeRateService";
 import SaleOrderService from "@services/SaleOrderService";
-import { calculateOrderPreview } from "./orderFormUtils";
+import { calculateOrderPreview, isInventoryTrackingEnabled } from "./orderFormUtils";
 import cambodiaProvinces from "./cambodiaProvinces.json";
 import "./index.css";
 
@@ -90,7 +90,7 @@ const getOrderItem = (entry, index) => {
     key: `saved-${entry.id || index}`,
     entryId: entry.id || "",
     itemName: entry.itemName || productName,
-    product: { ...product, id: entry.productId || product.id || variant.productId, name: productName, categoryId: entry.categoryId || product.categoryId, stockUnitId: entry.unitId || product.stockUnitId, unit: product.unit || { name: entry.unitName } },
+    product: { ...product, id: entry.productId || product.id || variant.productId, name: productName, categoryId: entry.categoryId || product.categoryId, stockUnitId: entry.unitId || product.stockUnitId, enableInventoryTracking: entry.enableInventoryTracking ?? product.enableInventoryTracking ?? product.productType?.enableInventoryTracking ?? variant.enableInventoryTracking, unit: product.unit || { name: entry.unitName } },
     variant: { ...variant, id: entry.productVariantId || variant.id, name: variant.name || entry.variantName || "", price: entry.price, cost: entry.cost, unitId: entry.unitId || variant.unitId, unitName: entry.unitName || variant.unitName, availableQuantity: entry.availableQuantity ?? variant.availableQuantity },
     quantity: Number(entry.quantity || 1),
     price: Number(entry.price || 0),
@@ -488,7 +488,7 @@ function NewSalesOrder({ dispatch, customerAdd, history, match, isUpdate = false
     if (confirm && ((fulfillment !== "Self-Pickup" && !shippingAddressValue) || items.some(item => !item.variant || Number(item.quantity) <= 0 || Number(item.price) < 0))) { setError("Enter the required destination details and check item quantities and prices."); return; }
     if (confirm && fulfillment === "Courier Delivery" && !selectedProvider) { setError("Choose a configured courier provider."); return; }
     if (confirm && !(selectedLocationId || locationId)) { setError("An active stock location is required to verify inventory before confirmation."); return; }
-    if (!isUpdate && items.some(item => Number.isFinite(Number(getStock(item.variant))) && getStock(item.variant) !== null && getStock(item.variant) !== undefined && Number(item.quantity) > Number(getStock(item.variant)))) { setError("An item exceeds its displayed available stock. Refresh inventory or reduce quantity."); return; }
+    if (!isUpdate && items.some(item => isInventoryTrackingEnabled(item) && Number.isFinite(Number(getStock(item.variant))) && getStock(item.variant) !== null && getStock(item.variant) !== undefined && Number(item.quantity) > Number(getStock(item.variant)))) { setError("An item exceeds its displayed available stock. Refresh inventory or reduce quantity."); return; }
     if (Number(orderDiscount) < 0 || (discountType === "PERCENTAGE" ? Number(orderDiscount) > 100 : discount > subtotal)) { setError("Order discount is outside the allowed range."); return; }
     // The current create contract has no fields for payment method, tax, coupons, or dispatch.
     if (!isUpdate && (payment !== "Cash on Delivery" || fulfillment !== "Courier Delivery" || items.some(item => Number(item.discount) || Number(item.tax)) || Number(orderDiscount))) {
@@ -593,12 +593,15 @@ function NewSalesOrder({ dispatch, customerAdd, history, match, isUpdate = false
     setSaving(true);
     try {
       if (!isUpdate && confirm && (selectedLocationId || locationId)) {
-        const checks = await Promise.all(items.map(item => VariantService.getDetailWithLocation(item.variant.id, selectedLocationId || locationId)));
+        const trackedItems = items.map((item, index) => ({ item, index })).filter(({ item }) => isInventoryTrackingEnabled(item));
+        const checks = await Promise.all(trackedItems.map(({ item }) => VariantService.getDetailWithLocation(item.variant.id, selectedLocationId || locationId)));
         checks.forEach((response, index) => {
           const variant = response && response.data && (response.data.data || response.data);
+          const checkedItem = trackedItems[index].item;
+          if (!isInventoryTrackingEnabled(checkedItem, variant)) return;
           const available = getStock(variant);
-          if (available !== null && available !== undefined && Number(available) < Number(items[index].quantity)) {
-            throw new Error(`${getProductName(items[index].product)} no longer has enough available stock.`);
+          if (available !== null && available !== undefined && Number(available) < Number(checkedItem.quantity)) {
+            throw new Error(`${getProductName(checkedItem.product)} no longer has enough available stock.`);
           }
         });
       }
@@ -674,10 +677,11 @@ function NewSalesOrder({ dispatch, customerAdd, history, match, isUpdate = false
         </div>}
         <div className="new-so-table-wrap"><table><thead><tr>{["#", "ITEM DESCRIPTION & LOCATION", "QUANTITY", "UNIT PRICE", "DISCOUNT", "TAX", "LINE TOTAL", "ACTION"].map(head => <th key={head}>{head}</th>)}</tr></thead><tbody>{items.length ? items.map((item, index) => {
           const stock = getStock(item.variant);
+          const inventoryTracked = isInventoryTrackingEnabled(item);
           const lineGross = Number(item.quantity) * Number(item.price);
           const lineDiscount = String(item.discountType || "USD").toUpperCase() === "PERCENTAGE" ? lineGross * Number(item.discount || 0) / 100 : Number(item.discount || 0);
           const lineTotal = (lineGross - lineDiscount) * (1 + Number(item.tax || 0) / 100);
-          return <tr key={item.key}><td>{String(index + 1).padStart(2, "0")}</td><td><div className="new-so-product"><span className="new-so-product-icon"><Package size={19} /></span><div><strong>{getProductName(item.product)} {item.variant.name || ""}</strong><small>SKU: {item.variant.barcode || item.variant.code || item.product.code || "—"} · Current location</small><small className={Number(stock) < Number(item.quantity) ? "new-so-low-stock" : "new-so-stock"}>{stock === null || stock === undefined ? "Stock unavailable" : `${stock} available · Not reserved`}</small></div></div></td><td><div className="new-so-stepper"><Button size="small" onClick={() => updateItem(item.key, { quantity: Math.max(1, Number(item.quantity) - 1) })}><Minus size={13} /></Button><InputNumber min={1} value={item.quantity} onChange={value => updateItem(item.key, { quantity: value || 1 })} /><Button size="small" onClick={() => updateItem(item.key, { quantity: Number(item.quantity) + 1 })}><Plus size={13} /></Button></div><small>{item.product.unit && item.product.unit.name || item.variant.unitName || "Units"}</small></td><td><InputNumber min={0} precision={2} value={item.price} onChange={value => updateItem(item.key, { price: value || 0, priceEdited: true })} />{item.variant.retailPrice && <small>Retail {money(item.variant.retailPrice)}</small>}</td><td><InputNumber min={0} value={item.discount} title="Discount amount in USD" onChange={value => updateItem(item.key, { discount: value || 0, discountType: "USD" })} /></td><td><InputNumber min={0} max={100} disabled={isUpdate} title={isUpdate ? "Tax is not included in the supplied update API contract" : "Tax rate"} value={item.tax} formatter={value => `${value}%`} parser={value => value.replace("%", "")} onChange={value => updateItem(item.key, { tax: value || 0 })} /></td><td><strong>{money(lineTotal)}</strong><small>USD</small></td><td><div className="new-so-row-actions"><Button title="Duplicate line" onClick={() => { setItems(current => [...current, { ...item, key: `${Date.now()}-${Math.random()}`, entryId: "" }]); touch(); }}><Copy size={15} /></Button><Button title="Remove line" onClick={() => { if (isUpdate && item.entryId) setDeletedItems(current => [...current, item]); setItems(current => current.filter(value => value.key !== item.key)); touch(); }}><Trash2 size={15} /></Button></div></td></tr>;
+          return <tr key={item.key}><td>{String(index + 1).padStart(2, "0")}</td><td><div className="new-so-product"><span className="new-so-product-icon"><Package size={19} /></span><div><strong>{getProductName(item.product)} {item.variant.name || ""}</strong><small>SKU: {item.variant.barcode || item.variant.code || item.product.code || "—"} · Current location</small><small className={!inventoryTracked ? "new-so-stock" : Number(stock) < Number(item.quantity) ? "new-so-low-stock" : "new-so-stock"}>{!inventoryTracked ? "Inventory not tracked" : stock === null || stock === undefined ? "Stock unavailable" : `${stock} available · Not reserved`}</small></div></div></td><td><div className="new-so-stepper"><Button size="small" onClick={() => updateItem(item.key, { quantity: Math.max(1, Number(item.quantity) - 1) })}><Minus size={13} /></Button><InputNumber min={1} value={item.quantity} onChange={value => updateItem(item.key, { quantity: value || 1 })} /><Button size="small" onClick={() => updateItem(item.key, { quantity: Number(item.quantity) + 1 })}><Plus size={13} /></Button></div><small>{item.product.unit && item.product.unit.name || item.variant.unitName || "Units"}</small></td><td><InputNumber min={0} precision={2} value={item.price} onChange={value => updateItem(item.key, { price: value || 0, priceEdited: true })} />{item.variant.retailPrice && <small>Retail {money(item.variant.retailPrice)}</small>}</td><td><InputNumber min={0} value={item.discount} title="Discount amount in USD" onChange={value => updateItem(item.key, { discount: value || 0, discountType: "USD" })} /></td><td><InputNumber min={0} max={100} disabled={isUpdate} title={isUpdate ? "Tax is not included in the supplied update API contract" : "Tax rate"} value={item.tax} formatter={value => `${value}%`} parser={value => value.replace("%", "")} onChange={value => updateItem(item.key, { tax: value || 0 })} /></td><td><strong>{money(lineTotal)}</strong><small>USD</small></td><td><div className="new-so-row-actions"><Button title="Duplicate line" onClick={() => { setItems(current => [...current, { ...item, key: `${Date.now()}-${Math.random()}`, entryId: "" }]); touch(); }}><Copy size={15} /></Button><Button title="Remove line" onClick={() => { if (isUpdate && item.entryId) setDeletedItems(current => [...current, item]); setItems(current => current.filter(value => value.key !== item.key)); touch(); }}><Trash2 size={15} /></Button></div></td></tr>;
         }) : <tr><td colSpan="8" className="new-so-empty">Search the catalog to add the first item.</td></tr>}</tbody></table></div>
         <div className="new-so-items-bottom"><Button className="new-so-add-line" type="link" onClick={() => searchProducts("")}><Plus size={15} /><span>Add another line item</span></Button><span><BadgeCheck size={16} /> Inventory shown is an availability check; reservation occurs according to the server order lifecycle.</span></div>
       </Section>

@@ -8,6 +8,20 @@ class SaleOrderService extends BaseService {
     this.initializeRoute();
   }
 
+  get(option = {}) {
+    const legacyParams = this.bindQueryParam(option);
+    const dateParams = new URLSearchParams();
+    if (option.start) dateParams.set("start", option.start);
+    if (option.end) dateParams.set("end", option.end);
+
+    const query = [legacyParams, dateParams.toString()].filter(Boolean).join("&");
+    return this.GET({
+      url: `${this.baseUrl}${query ? `?${query}` : ""}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   lists(
     limit,
     offset,
@@ -36,8 +50,23 @@ class SaleOrderService extends BaseService {
   }
 
   dashboardSummary(start, end) {
+    const isValidDate = (value) => {
+      if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+      const [year, month, day] = value.split("-").map(Number);
+      const parsed = new Date(Date.UTC(year, month - 1, day));
+      return parsed.getUTCFullYear() === year
+        && parsed.getUTCMonth() === month - 1
+        && parsed.getUTCDate() === day;
+    };
+
+    if (!isValidDate(start) || !isValidDate(end) || start > end) {
+      return Promise.reject(new Error("Dashboard summary requires a valid start and end date (YYYY-MM-DD)."));
+    }
+
     this.setHeader();
-    const params = new URLSearchParams({start, end});
+    const params = new URLSearchParams();
+    params.set("start", start);
+    params.set("end", end);
     return this.GET({
       url: `${this.baseUrl}/v1/summary/dashboard?${params.toString()}`,
       headers: this.header

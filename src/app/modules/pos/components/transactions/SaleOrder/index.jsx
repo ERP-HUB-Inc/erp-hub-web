@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import ReactGA from "react-ga4";
 import moment from "moment";
 import { Translate } from "@redux/index";
-import ReactToPrint from "react-to-print";
 import {
   Icon,
   Dropdown,
@@ -26,10 +25,7 @@ import {
   Select,
   Tooltip
 } from "antd";
-import { ShoppingCart, MessagesSquare, Package, Wallet, AlertCircle, RefreshCw, Phone, Music2, Store, Building2, Send, Globe2 } from "lucide-react";
-import SalesOrderPrint from "./Invoice/sales-order-print";
-import PackingSlip from "./Invoice/packing-slip";
-import DeliveryNote from "./Invoice/delivery-note";
+import { ShoppingCart, MessagesSquare, Package, Wallet, AlertCircle, RefreshCw, RotateCcw, Phone, Music2, Store, Building2, Send, Globe2 } from "lucide-react";
 import Component from "../../../../common/components/Component";
 import SaleOrderService from "@services/SaleOrderService";
 import PaymentMethodService from "@services/PaymentMethodService";
@@ -59,7 +55,7 @@ const DATE_FILTERS = {
   },
   last365Days: {
     label: "Last 365 days",
-    getRange: () => [moment().subtract(365, "days"), moment()]
+    getRange: () => [moment().subtract(364, "days"), moment()]
   },
   custom: {
     label: "Custom range"
@@ -70,6 +66,29 @@ const toFiniteNumber = value => {
   if (value === null || value === undefined || value === "") return null;
   const number = Number(value);
   return Number.isFinite(number) ? number : null;
+};
+
+const getSalesOrderActionErrorMessage = (error, action) => {
+  const response = error && error.response;
+  const data = response && response.data;
+  const candidates = [
+    data && data.message && data.message.error && data.message.error.message,
+    data && data.error && data.error.message,
+    data && data.message && data.message.message,
+    data && data.message,
+    data && data.error,
+    error && error.message
+  ];
+
+  const apiMessage = candidates.find(value => typeof value === "string" && value.trim() && !/^request failed with status code \d+$/i.test(value.trim()));
+  if (apiMessage) return apiMessage.trim();
+
+  const status = response && response.status;
+  if (!response) return `Could not ${action} the Sales Order because the server could not be reached. Check your connection and try again.`;
+  if (status === 401 || status === 403) return `You don’t have permission to ${action} this Sales Order.`;
+  if (status === 404) return "This Sales Order could not be found. Refresh the list and try again.";
+  if (status === 409) return `This Sales Order can’t be ${action}d in its current state. Refresh the list and try again.`;
+  return `Could not ${action} the Sales Order. Please try again.`;
 };
 
 const getBreakdownLabel = entry => typeof entry === "string"
@@ -395,7 +414,7 @@ export default class SaleOrderPage extends Component {
         width: 80,
         render: (text, record) => {
           const menu = (
-            <Menu>
+            <Menu className="sale-order-action-menu">
               <Menu.Item>
                 <this.Link to={`/transactions/sale-order/detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} />
@@ -407,64 +426,31 @@ export default class SaleOrderPage extends Component {
                   <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item>
-                <this.Link target="_blank" to={`/transactions/sale-order/create?id=${record.id}&action=clone`}>
-                  <Icon type="copy" style={{marginRight: 10}} /> <Translate id="text_clone" />
-                </this.Link>
+              <Menu.Item disabled className="sale-order-unavailable-action">
+                <Tooltip title="This action isn’t available in the current version." placement="right">
+                  <span className="sale-order-unavailable-action-label"><Icon type="copy" style={{marginRight: 10}} /> <Translate id="text_clone" /></span>
+                </Tooltip>
               </Menu.Item>
-              <Menu.Item>
-                <this.Link to={`/transactions/create-invoice?saleOrderId=${record.id}&action=convertToInvoice`}>
-                  <Icon type="retweet" style={{marginRight: 10}} /> <Translate id="text_convert_to_invoice" />
-                </this.Link>
+              <Menu.Item disabled className="sale-order-unavailable-action">
+                <Tooltip title="This action isn’t available in the current version." placement="right">
+                  <span className="sale-order-unavailable-action-label"><Icon type="retweet" style={{marginRight: 10}} /> <Translate id="text_convert_to_invoice" /></span>
+                </Tooltip>
               </Menu.Item>
               <Divider style={{marginTop: 4, marginBottom: 4}} />
-              <Menu.Item>
-                <div>
-                  <ReactToPrint
-                    trigger={() => {
-                      return (
-                        <div>
-                          <Icon type="printer" style={{marginRight: 10}} />
-                          <Translate id="text_print" />
-                        </div>
-                      );
-                    }}
-                    content={() => this.componentRef}
-                    onBeforeGetContent={() => this.fetchSalesOrderById(record.id)}
-                  />
-                </div>
+              <Menu.Item disabled className="sale-order-unavailable-action">
+                <Tooltip title="This action isn’t available in the current version." placement="right">
+                  <span className="sale-order-unavailable-action-label"><Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" /></span>
+                </Tooltip>
               </Menu.Item>
-              <Menu.Item>
-                <div>
-                  <ReactToPrint
-                    trigger={() => {
-                      return (
-                        <div>
-                          <Icon type="file-protect" style={{marginRight: 10}} />
-                          <Translate id="text_packing_slip" />
-                        </div>
-                      );
-                    }}
-                    content={() => this.packingSlipRef}
-                    onBeforeGetContent={() => this.fetchSalesOrderById(record.id)}
-                  />
-                </div>
+              <Menu.Item disabled className="sale-order-unavailable-action">
+                <Tooltip title="This action isn’t available in the current version." placement="right">
+                  <span className="sale-order-unavailable-action-label"><Icon type="file-protect" style={{marginRight: 10}} /> <Translate id="text_packing_slip" /></span>
+                </Tooltip>
               </Menu.Item>
-              <Menu.Item>
-                <div>
-                  <ReactToPrint
-                    trigger={() => {
-                      return (
-                        <div>
-                          <Icon type="file-text" style={{marginRight: 10}} />
-                          <Translate id="text_delivery_note" />
-                        </div>
-                      );
-                    }}
-                    content={() => this.deliveryNoteRef}
-                    onBeforeGetContent={() => this.fetchSalesOrderById(record.id)}
-                  />
-                </div>
+              <Menu.Item disabled className="sale-order-unavailable-action">
+                <Tooltip title="This action isn’t available in the current version." placement="right">
+                  <span className="sale-order-unavailable-action-label"><Icon type="file-text" style={{marginRight: 10}} /> <Translate id="text_delivery_note" /></span>
+                </Tooltip>
               </Menu.Item>
               <Divider style={{marginTop: 4, marginBottom: 4}} />
               <Menu.Item onClick={() => this.handleVoid(record.id)}>
@@ -496,7 +482,6 @@ export default class SaleOrderPage extends Component {
       dashboardSummaryError: false,
       activeTab: "allSales",
       current: 1,
-      formData: null,
       loading: false,
       loadingButton: false,
       paymentMethods: [],
@@ -504,6 +489,7 @@ export default class SaleOrderPage extends Component {
       isHasAccessPermission: null,
       visibleColumns: this.defaultVisibleColumns,
       dateFilter: DEFAULT_DATE_FILTER,
+      searchValue: "",
       quickSaleVisible: false
     };
     this.title = <Translate id="text_orders"/>;
@@ -546,6 +532,7 @@ export default class SaleOrderPage extends Component {
     if (params.get("offset")) {
       nextState.current = parseInt(params.get("offset"));
     }
+    nextState.searchValue = params.get("search") || "";
 
     if (params.get("status") != null) {
       initialActiveTab = this.getTabKeyByStatus(params.get("status"));
@@ -710,7 +697,9 @@ export default class SaleOrderPage extends Component {
   }
 
   ensureDefaultDateRange = (params) => {
-    if (!params.get("start") || !params.get("end")) {
+    const start = moment(params.get("start"), "YYYY-MM-DD", true);
+    const end = moment(params.get("end"), "YYYY-MM-DD", true);
+    if (!start.isValid() || !end.isValid() || end.isBefore(start, "day")) {
       const defaultRange = DATE_FILTERS[DEFAULT_DATE_FILTER].getRange();
       params.set("start", this.formatDateParam(defaultRange[0]));
       params.set("end", this.formatDateParam(defaultRange[1]));
@@ -722,14 +711,13 @@ export default class SaleOrderPage extends Component {
 
   getRangeFromParams = () => {
     const params = new URLSearchParams(window.location.search);
-    if (!params.get("start") || !params.get("end")) {
+    const start = moment(params.get("start"), "YYYY-MM-DD", true);
+    const end = moment(params.get("end"), "YYYY-MM-DD", true);
+    if (!start.isValid() || !end.isValid() || end.isBefore(start, "day")) {
       return DATE_FILTERS[DEFAULT_DATE_FILTER].getRange();
     }
 
-    return [
-      moment(params.get("start")),
-      moment(params.get("end"))
-    ];
+    return [start, end];
   }
 
   getDateFilterKeyFromParams = (params = new URLSearchParams(window.location.search)) => {
@@ -756,7 +744,7 @@ export default class SaleOrderPage extends Component {
       return 0;
     }
 
-    return moment(dates[1]).startOf("day").diff(moment(dates[0]).startOf("day"), "days");
+    return moment(dates[1]).startOf("day").diff(moment(dates[0]).startOf("day"), "days") + 1;
   }
 
   getShowingDateLabel = () => {
@@ -770,7 +758,14 @@ export default class SaleOrderPage extends Component {
       return;
     }
 
-    const dayCount = this.getRangeDayCount(dates);
+    const start = moment(dates[0]).startOf("day");
+    const end = moment(dates[1]).startOf("day");
+    if (!start.isValid() || !end.isValid() || end.isBefore(start, "day")) {
+      message.warning("Choose a valid date range with the end date on or after the start date.");
+      return;
+    }
+
+    const dayCount = this.getRangeDayCount([start, end]);
 
     if (dayCount > MAX_DATE_RANGE_DAYS && confirmWideRange) {
       Modal.confirm({
@@ -784,24 +779,23 @@ export default class SaleOrderPage extends Component {
     }
 
     const params = new URLSearchParams(document.location.search);
-    params.set("start", this.formatDateParam(dates[0]));
-    params.set("end", this.formatDateParam(dates[1]));
+    params.set("start", this.formatDateParam(start));
+    params.set("end", this.formatDateParam(end));
     params.delete("offset");
 
     this.setState({dateFilter, current: 1});
     this.Util.pushParamsToURL(this.pathname,  params.toString());
     this.fetchDashboardSummary(params.get("start"), params.get("end"));
-    this.fetchList();
+    this.fetchList(false, this.state.activeTab, params);
   }
 
-  fetchList(withPagination= false, activeTab = this.state.activeTab) {
+  fetchList(withPagination= false, activeTab = this.state.activeTab, queryParams = null) {
     const allOrdersCountRequestId = ++this.allOrdersCountRequestId;
     let searchKey = "";
     let filter = {};
     let limit = this.pageSize;
-    let ranges = "";
     let offset = this.state.current;
-    const params = new URLSearchParams(window.location.search);
+    const params = queryParams || new URLSearchParams(window.location.search);
 
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -818,7 +812,8 @@ export default class SaleOrderPage extends Component {
     }
 
     this.ensureDefaultDateRange(params);
-    ranges = JSON.stringify({column: "createdAt", value: [params.get("start"), params.get("end")]});
+    const start = params.get("start");
+    const end = params.get("end");
 
     filter = {
       ...filter,
@@ -852,7 +847,7 @@ export default class SaleOrderPage extends Component {
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
     this.setState({loading: true, allOrdersTotal: null});
-    SaleOrderService.get({limit, offset, filter: JSON.stringify(filter), searchKey, rangFilter: ranges})
+    SaleOrderService.get({limit, offset, filter: JSON.stringify(filter), searchKey, start, end})
     .then((response) => {
         if (response.data && response.data.data) {
           this.setState({
@@ -868,7 +863,7 @@ export default class SaleOrderPage extends Component {
     .finally(() => this.setState({loading: false, loadingButton: false}));
 
     if (activeTab !== "allSales") {
-      SaleOrderService.get({limit: 1, offset: 0, filter: "{}", searchKey, rangFilter: ranges})
+      SaleOrderService.get({limit: 1, offset: 0, filter: "{}", searchKey, start, end})
         .then(response => {
           if (allOrdersCountRequestId !== this.allOrdersCountRequestId) return;
           const total = response.data && response.data.pagination && response.data.pagination.total;
@@ -941,19 +936,20 @@ export default class SaleOrderPage extends Component {
       if (willDelete) {
         SaleOrderService.delete(id)
         .then(() => {
-          message.success("Delete success");
+          message.success("Sales Order deleted.");
           this.fetchList();
           this.fetchSummary();
           this.fetchDashboardSummary();
         })
-        .catch(() => message.error("Error!......"));
+        .catch(error => this.Util.sweetAlertMessageV2(
+          "Could not delete Sales Order",
+          getSalesOrderActionErrorMessage(error, "delete"),
+          "error",
+          "Close",
+          0
+        ));
       }
     });
-  }
-
-  async fetchSalesOrderById(id) {
-    const formData = await SaleOrderService.detail(id);
-    this.setState({formData: formData.data});
   }
 
   handleSubmitFilter = (e) => {
@@ -971,8 +967,9 @@ export default class SaleOrderPage extends Component {
           params.set("start", moment(values.registerDate[0]).format("YYYY-MM-DD"));
           params.set("end", moment(values.registerDate[1]).format("YYYY-MM-DD"));
         } else {
-          params.delete("start");
-          params.delete("end");
+          const defaultRange = DATE_FILTERS[DEFAULT_DATE_FILTER].getRange();
+          params.set("start", this.formatDateParam(defaultRange[0]));
+          params.set("end", this.formatDateParam(defaultRange[1]));
         }
 
         if (values.status && values.status >= 0) {
@@ -982,9 +979,10 @@ export default class SaleOrderPage extends Component {
         }
 
         this.Util.pushParamsToURL(this.pathname, params.toString());
+        this.setState({searchValue: values.search || "", dateFilter: this.getDateFilterKeyFromParams(params)});
         this.fetchDashboardSummary(params.get("start"), params.get("end"));
         this.setState({loadingButton: true});
-        this.fetchList();
+        this.fetchList(false, this.state.activeTab, params);
       }
     });
   }
@@ -1055,11 +1053,6 @@ export default class SaleOrderPage extends Component {
             onChange={this.onChangePagination} 
             {...pagination}
           />
-          <div style={{display: "none"}}>
-            <SalesOrderPrint formData={this.state.formData} ref={el => (this.componentRef = el)} />
-            <PackingSlip formData={this.state.formData} ref={el => (this.packingSlipRef = el)} />
-            <DeliveryNote formData={this.state.formData} ref={el => (this.deliveryNoteRef = el)} />
-          </div>
         </div>
         :
         ""
@@ -1069,6 +1062,7 @@ export default class SaleOrderPage extends Component {
   handleSearch = (e) => {
     const queryParams = new URLSearchParams(document.location.search);
     const search = e.target.value ? e.target.value.trim() : "";
+    this.setState({searchValue: e.target.value || ""});
 
     if (search){
       queryParams.set("search", search);
@@ -1085,6 +1079,28 @@ export default class SaleOrderPage extends Component {
 
   handleChangeDate = (dates) => {
     this.applyDateRange(dates, "custom");
+  }
+
+  handleResetFilters = () => {
+    clearTimeout(this.timer);
+    const params = new URLSearchParams(window.location.search);
+    ["search", "status", "workflow", "offset"].forEach(key => params.delete(key));
+    const defaultRange = DATE_FILTERS[DEFAULT_DATE_FILTER].getRange();
+    const start = this.formatDateParam(defaultRange[0]);
+    const end = this.formatDateParam(defaultRange[1]);
+    params.set("start", start);
+    params.set("end", end);
+
+    this.setState({
+      searchValue: "",
+      dateFilter: DEFAULT_DATE_FILTER,
+      activeTab: "allSales",
+      current: 1,
+      loadingButton: true
+    });
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchDashboardSummary(start, end);
+    this.fetchList(false, "allSales", params);
   }
 
   handleDateFilterChange = (dateFilter) => {
@@ -1228,7 +1244,7 @@ export default class SaleOrderPage extends Component {
                   name="search"
                   placeholder="Search order number, customer, or phone"
                   prefix={<Icon type="search" />}
-                  defaultValue={params.get("search") ? params.get("search") : ""}
+                  value={this.state.searchValue}
                   style={{ height: 32, width: 350, maxWidth: "100%" }}
                   allowClear={true}
                   onChange={this.handleSearch}
@@ -1253,6 +1269,12 @@ export default class SaleOrderPage extends Component {
           </Col>
           <Col xs={24} xl={9}>
             <div className="sale-order-toolbar-actions">
+              <Button onClick={this.handleResetFilters}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <RotateCcw size={14} aria-hidden="true" />
+                  <span>Reset filters</span>
+                </span>
+              </Button>
               <Button onClick={this.handleRefresh} loading={this.state.loadingButton}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                   <RefreshCw size={14} aria-hidden="true" />
@@ -1367,7 +1389,6 @@ export default class SaleOrderPage extends Component {
         Icon: ShoppingCart,
         tone: "green",
         value: todayCount === null ? "—" : todayCount,
-        secondary: formatAmounts(today.amountByCurrency) || "—",
         note: this.state.dashboardSummaryError ? dashboardErrorNote : todayComparisonNote,
         noteTone: todayComparisonTone
       },
@@ -1376,7 +1397,6 @@ export default class SaleOrderPage extends Component {
         Icon: MessagesSquare,
         tone: "purple",
         value: getCount(dashboard.chatSocial && dashboard.chatSocial.orderCount) ?? "—",
-        secondary: formatAmounts(dashboard.chatSocial && dashboard.chatSocial.amountByCurrency) || "—",
         details: sourceDetails,
         note: this.state.dashboardSummaryError
           ? dashboardErrorNote
@@ -1452,7 +1472,7 @@ export default class SaleOrderPage extends Component {
                   </div>
                   <div className="sale-order-summary-metric">
                     <strong>{card.value}</strong>
-                    <span>{card.secondary}</span>
+                    {card.secondary ? <span>{card.secondary}</span> : null}
                   </div>
                   {card.details && card.details.length > 0 && <div className="sale-order-summary-details">
                     {card.details.map((detail, index) => (

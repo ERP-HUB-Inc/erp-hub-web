@@ -5,6 +5,24 @@
   color: #18263b;
 }
 
+.sale-order-action-menu .ant-dropdown-menu-item,
+.sale-order-action-menu .ant-dropdown-menu-item:hover,
+.sale-order-action-menu .ant-dropdown-menu-item a,
+.sale-order-action-menu .ant-dropdown-menu-item a:hover,
+.sale-order-action-menu .ant-dropdown-menu-item a:focus,
+.sale-order-action-menu .ant-dropdown-menu-item a:active,
+.sale-order-action-menu .ant-dropdown-menu-item span,
+.sale-order-action-menu .ant-dropdown-menu-item span:hover {
+  text-decoration: none !important;
+}
+
+.sale-order-action-menu .sale-order-unavailable-action,
+.sale-order-action-menu .sale-order-unavailable-action:hover,
+.sale-order-action-menu .sale-order-unavailable-action-label,
+.sale-order-action-menu .sale-order-unavailable-action-label:hover {
+  text-decoration: none !important;
+}
+
 .sale-order-page-header {
   display: flex;
   align-items: flex-start;
@@ -297,6 +315,8 @@
 
 .sale-order-toolbar-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
 }

@@ -1,5 +1,20 @@
 const cents = value => Math.round((Number(value) || 0) * 100);
 
+export function isInventoryTrackingEnabled(item, refreshedVariant) {
+  const product = item && item.product || {};
+  const variant = refreshedVariant || item && item.variant || {};
+  const variantProduct = variant.product || {};
+  const flags = [
+    item && item.enableInventoryTracking,
+    product.enableInventoryTracking,
+    product.productType && product.productType.enableInventoryTracking,
+    variant.enableInventoryTracking,
+    variantProduct.enableInventoryTracking,
+    variantProduct.productType && variantProduct.productType.enableInventoryTracking
+  ];
+  return !flags.some(value => value === false || value === 0 || value === "false");
+}
+
 export function calculateOrderPreview(items, orderDiscount, deliveryFee, discountType = "USD") {
   const units = items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
   const lines = items.map(item => {
