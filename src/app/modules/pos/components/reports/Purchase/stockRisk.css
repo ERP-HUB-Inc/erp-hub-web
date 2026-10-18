@@ -1,0 +1,373 @@
+#purchase-report .stock-risk-tab {
+    margin: 0 -20px -20px;
+    padding: 4px 20px 20px;
+    background: #f3f6fa;
+}
+
+#purchase-report .stock-risk-filter-toolbar,
+#purchase-report .stock-risk-card,
+#purchase-report .stock-risk-table-panel {
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+}
+
+#purchase-report .stock-risk-filter-toolbar {
+    padding: 16px;
+}
+
+#purchase-report .stock-coverage-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+#purchase-report .stock-coverage-filter .ant-select {
+    width: 240px;
+}
+
+#purchase-report .stock-coverage-filter .ant-input-number {
+    width: 80px;
+}
+
+#purchase-report .stock-risk-filter-toolbar .purchase-report-refresh-button {
+    border-color: var(--primary-color, #14b8a6);
+    background: var(--primary-color, #14b8a6);
+    color: #fff;
+}
+
+#purchase-report .stock-risk-filter-toolbar .purchase-report-refresh-button:hover,
+#purchase-report .stock-risk-filter-toolbar .purchase-report-refresh-button:focus {
+    border-color: var(--secondary-cyan, #06b6d4);
+    background: var(--secondary-cyan, #06b6d4);
+    color: #fff;
+}
+
+#purchase-report .stock-risk-cards {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+#purchase-report .stock-risk-card {
+    min-height: 190px;
+    color: #17243b;
+}
+
+#purchase-report .stock-risk-card .ant-card-body {
+    padding: 18px;
+}
+
+#purchase-report .stock-risk-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 34px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+#purchase-report .stock-risk-icon-tile {
+    display: inline-flex;
+    flex: 0 0 30px;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    font-size: 16px;
+}
+
+#purchase-report .stock-risk-card-value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    margin: 12px 0 8px;
+}
+
+#purchase-report .stock-risk-card-value strong {
+    font-size: 30px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+#purchase-report .stock-risk-card-value > span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+#purchase-report .stock-risk-card-detail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+#purchase-report .stock-risk-card.is-excess {
+    border-color: #bce8de;
+    background: #f0fdfa;
+}
+
+#purchase-report .stock-risk-card.is-excess .stock-risk-card-heading,
+#purchase-report .stock-risk-card.is-excess .stock-risk-card-value {
+    color: #0f766e;
+}
+
+#purchase-report .stock-risk-card.is-excess .stock-risk-icon-tile {
+    background: #0f766e;
+    color: #fff;
+}
+
+#purchase-report .stock-risk-capital {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    color: #0f766e;
+    font-size: 12px;
+}
+
+#purchase-report .stock-risk-data-note,
+#purchase-report .stock-risk-secondary {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+#purchase-report .stock-risk-data-note {
+    margin: 0 0 16px;
+}
+
+#purchase-report .stock-risk-table-toolbar,
+#purchase-report .stock-risk-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px;
+}
+
+#purchase-report .stock-risk-category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#purchase-report .stock-risk-category-buttons .ant-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-color: transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: #475569;
+    box-shadow: none;
+    font-size: 12px;
+}
+
+#purchase-report .stock-risk-category-buttons .ant-btn.is-selected {
+    border-color: #cfe1fa;
+    background: #eff6ff;
+    color: #17243b;
+}
+
+#purchase-report .stock-risk-category-buttons .ant-btn:focus-visible,
+#purchase-report .stock-risk-review:focus-visible {
+    outline: 2px solid var(--primary-color, #14b8a6);
+    outline-offset: 2px;
+}
+
+#purchase-report .stock-risk-count {
+    padding: 0 6px;
+    border-radius: 5px;
+    background: #eef2f7;
+    line-height: 20px;
+}
+
+#purchase-report .stock-risk-dot {
+    display: inline-block;
+    flex: 0 0 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+#purchase-report .stock-risk-search {
+    flex: 0 1 250px;
+    margin-left: auto;
+}
+
+#purchase-report .stock-risk-product {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 260px;
+}
+
+#purchase-report .stock-risk-product > div {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+#purchase-report .stock-risk-product-icon {
+    display: inline-flex;
+    flex: 0 0 38px;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 18px;
+}
+
+#purchase-report .stock-risk-product-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+#purchase-report .stock-risk-sku {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+}
+
+#purchase-report .stock-risk-table .ant-table-thead > tr > th {
+    padding: 14px 16px;
+    color: #64748b;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+#purchase-report .stock-risk-table .ant-table-tbody > tr > td {
+    padding: 22px 16px;
+    line-height: 1.6;
+}
+
+#purchase-report .stock-risk-table .ant-table-tbody > tr:nth-child(even) > td {
+    background: #fbfcfe;
+}
+
+#purchase-report .stock-risk-table .ant-table-body {
+    min-height: 240px;
+}
+
+#purchase-report .stock-risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#purchase-report .stock-risk-report .stock-risk-tone.is-healthy,
+#purchase-report .stock-risk-report .stock-risk-card.is-healthy .stock-risk-card-value,
+#purchase-report .stock-risk-report .stock-risk-card.is-healthy .stock-risk-icon-tile,
+#purchase-report .stock-risk-report .stock-risk-badge.is-healthy,
+#purchase-report .stock-risk-report .stock-risk-count.is-healthy,
+#purchase-report .stock-risk-report .stock-risk-dot.is-healthy {
+    color: #0f766e;
+}
+
+#purchase-report .stock-risk-report .stock-risk-tone.is-high,
+#purchase-report .stock-risk-report .stock-risk-card.is-high .stock-risk-card-value,
+#purchase-report .stock-risk-report .stock-risk-card.is-high .stock-risk-icon-tile,
+#purchase-report .stock-risk-report .stock-risk-badge.is-high,
+#purchase-report .stock-risk-report .stock-risk-dot.is-high {
+    color: #92400e;
+}
+
+#purchase-report .stock-risk-report .stock-risk-tone.is-critical,
+#purchase-report .stock-risk-report .stock-risk-card.is-critical .stock-risk-card-value,
+#purchase-report .stock-risk-report .stock-risk-card.is-critical .stock-risk-icon-tile,
+#purchase-report .stock-risk-report .stock-risk-badge.is-critical,
+#purchase-report .stock-risk-report .stock-risk-dot.is-critical {
+    color: #b91c1c;
+}
+
+#purchase-report .stock-risk-badge.is-healthy,
+#purchase-report .stock-risk-count.is-healthy,
+#purchase-report .stock-risk-card.is-healthy .stock-risk-icon-tile {
+    background: #ecfdf5;
+}
+
+#purchase-report .stock-risk-badge.is-high,
+#purchase-report .stock-risk-card.is-high .stock-risk-icon-tile {
+    background: #fffbeb;
+}
+
+#purchase-report .stock-risk-badge.is-critical,
+#purchase-report .stock-risk-card.is-critical .stock-risk-icon-tile {
+    background: #fef2f2;
+}
+
+#purchase-report .stock-risk-review {
+    border-color: #dbe4ee;
+    border-radius: 6px;
+    color: #334155;
+    font-size: 12px;
+}
+
+#purchase-report .stock-risk-review:hover {
+    border-color: var(--primary-color, #14b8a6);
+    color: #0f766e;
+}
+
+#purchase-report .stock-risk-footer {
+    border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 1199px) {
+    #purchase-report .stock-risk-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    #purchase-report .stock-risk-cards {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #purchase-report .stock-coverage-filter {
+        flex-basis: 100%;
+    }
+
+    #purchase-report .stock-coverage-filter .ant-select {
+        flex: 1;
+        min-width: 180px;
+        width: auto;
+    }
+
+    #purchase-report .stock-risk-search {
+        flex-basis: 100%;
+    }
+
+    #purchase-report .stock-risk-table-toolbar,
+    #purchase-report .stock-risk-footer {
+        padding: 12px;
+    }
+}

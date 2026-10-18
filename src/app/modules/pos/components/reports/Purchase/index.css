@@ -11,3 +11,264 @@
     background-color: rgb(255, 255, 255);
     border: none !important;
 }
+
+#purchase-report.purchase-report-page {
+    min-height: 100%;
+    padding: 24px;
+    color: #17152b;
+    background: #f7f7fc;
+}
+
+#purchase-report .purchase-report-header {
+    margin-bottom: 20px;
+}
+
+#purchase-report .purchase-report-header .ant-page-header {
+    padding: 0;
+}
+
+#purchase-report .purchase-report-header .ant-page-header-heading-title {
+    color: #17152b;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#purchase-report .purchase-report-header .ant-page-header-heading-sub-title {
+    color: #8885a7;
+    font-size: 13px;
+}
+
+#purchase-report .product-report-stat-card {
+    min-height: 112px;
+    border: 1px solid rgba(196, 190, 220, 0.7);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(42, 34, 85, 0.04);
+}
+
+#purchase-report .product-report-stat-card .ant-card-body {
+    min-height: 110px;
+}
+
+#purchase-report .product-report-stat-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    border: 1px solid #e8e3f4;
+    border-radius: 14px;
+    background: #f8f6ff;
+    font-size: 18px;
+}
+
+#purchase-report .product-report-statistic .ant-statistic-title {
+    color: #8885a7;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+#purchase-report .product-report-statistic .ant-statistic-content {
+    color: #17152b;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+#purchase-report .product-report-stat-card.is-blue .product-report-stat-icon,
+#purchase-report .product-report-stat-card.is-purple .product-report-stat-icon {
+    border-color: #ded7ff;
+    color: #6c4cff;
+    background: #f1eeff;
+}
+
+#purchase-report .product-report-stat-card.is-green .product-report-stat-icon,
+#purchase-report .product-report-stat-card.is-teal .product-report-stat-icon {
+    border-color: #b8f3e8;
+    color: #00a890;
+    background: #ecfffb;
+}
+
+#purchase-report .product-report-stat-card.is-orange .product-report-stat-icon {
+    border-color: #fed7aa;
+    color: #f5a623;
+    background: #fff7ed;
+}
+
+#purchase-report .product-report-stat-card.is-red .product-report-stat-icon {
+    border-color: #ffd0db;
+    color: #ff5c7a;
+    background: #fff1f5;
+}
+
+#purchase-report .purchase-report-tabs {
+    padding: 0 20px 20px;
+    border: 1px solid rgba(196, 190, 220, 0.7);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(42, 34, 85, 0.04);
+}
+
+#purchase-report .purchase-report-tabs .ant-tabs-bar {
+    margin-bottom: 0;
+    border-bottom-color: #ebe7f5;
+}
+
+#purchase-report .purchase-report-tabs .ant-tabs-tab {
+    margin-right: 18px;
+    padding: 14px 0 12px;
+    color: #8885a7;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#purchase-report .purchase-report-tabs .ant-tabs-tab-active,
+#purchase-report .purchase-report-tabs .ant-tabs-tab:hover {
+    color: #17152b;
+}
+
+#purchase-report .purchase-report-tabs .ant-tabs-ink-bar {
+    height: 2px;
+    background: #6c4cff;
+}
+
+#purchase-report .purchase-report-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0;
+}
+
+#purchase-report .purchase-report-filter-bar .ant-calendar-picker {
+    width: 230px;
+}
+
+#purchase-report .purchase-report-store-filter {
+    width: 190px;
+}
+
+#purchase-report .purchase-report-supplier-filter {
+    width: 200px;
+}
+
+#purchase-report .purchase-report-threshold-filter {
+    width: 145px;
+}
+
+#purchase-report .purchase-report-filter-bar .ant-calendar-picker-input,
+#purchase-report .purchase-report-filter-bar .ant-select-selection,
+#purchase-report .purchase-report-filter-bar .ant-input-number {
+    height: 36px;
+    border-color: #ded9ee;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: none;
+}
+
+#purchase-report .purchase-report-filter-bar .ant-select-selection__rendered {
+    line-height: 34px;
+}
+
+#purchase-report .purchase-report-filter-bar .ant-input-number-input {
+    height: 34px;
+    color: #17152b;
+    font-size: 13px;
+}
+
+#purchase-report .purchase-report-refresh-button {
+    height: 36px;
+    border-color: #ded9ee;
+    border-radius: 10px;
+    color: #17152b;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#purchase-report .purchase-report-refresh-button:hover,
+#purchase-report .purchase-report-refresh-button:focus {
+    border-color: #6c4cff;
+    color: #6c4cff;
+}
+
+#purchase-report .purchase-report-section-heading {
+    margin: 18px 0 14px;
+}
+
+#purchase-report .purchase-report-section-heading h2 {
+    margin-bottom: 4px;
+    color: #17152b;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+#purchase-report .purchase-report-section-heading p {
+    margin-bottom: 0;
+    color: #8885a7;
+    font-size: 13px;
+}
+
+#purchase-report .purchase-report-error,
+#purchase-report .purchase-report-insight {
+    margin-bottom: 16px;
+}
+
+#purchase-report .purchase-report-activity {
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #ebe7f5;
+    border-radius: 12px;
+    background: #faf9ff;
+}
+
+#purchase-report .purchase-report-period-comparison {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0 0 12px;
+    color: #6b6688;
+    font-size: 13px;
+}
+
+#purchase-report .purchase-report-table .ant-table {
+    border: 0;
+    color: #0f172a;
+}
+
+#purchase-report .purchase-report-table .ant-table-content {
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+#purchase-report .purchase-report-table .ant-table-thead > tr > th {
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#purchase-report .purchase-report-table .ant-table-tbody > tr > td {
+    border-bottom: 1px solid #eef2f7;
+    color: #0f172a;
+    font-size: 13px;
+}
+
+#purchase-report .purchase-report-table .ant-table-tbody > tr:hover > td {
+    background: #f8fafc;
+}
+
+#purchase-report .purchase-report-table .ant-pagination {
+    margin: 14px 0 0;
+}
+
+@media (max-width: 767px) {
+    #purchase-report.purchase-report-page {
+        padding: 16px;
+    }
+
+    #purchase-report .purchase-report-filter-bar .ant-calendar-picker,
+    #purchase-report .purchase-report-filter-bar .ant-select,
+    #purchase-report .purchase-report-filter-bar .ant-input-number {
+        width: 100%;
+    }
+}

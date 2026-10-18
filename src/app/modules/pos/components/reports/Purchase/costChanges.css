@@ -1,0 +1,386 @@
+#purchase-report .cost-changes-tab {
+    margin: 0 -20px -20px;
+    padding: 4px 20px 20px;
+    background: #f3f6fa;
+}
+
+#purchase-report .cost-filter-toolbar,
+#purchase-report .cost-table-panel,
+#purchase-report .cost-card {
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+}
+
+#purchase-report .cost-filter-toolbar {
+    padding: 16px;
+}
+
+#purchase-report .cost-variance-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+#purchase-report .cost-variance-filter .ant-select {
+    width: 170px;
+}
+
+#purchase-report .cost-variance-filter .ant-input-number {
+    width: 90px;
+}
+
+#purchase-report .cost-variance-filter > .anticon {
+    color: #64748b;
+}
+
+#purchase-report .cost-changes-tab .purchase-report-section-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+    margin-bottom: 4px;
+}
+
+#purchase-report .cost-changes-tab .purchase-report-section-title h2 {
+    margin-bottom: 0;
+}
+
+#purchase-report .cost-comparison-reference {
+    min-width: 0;
+    color: #64748b;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+#purchase-report .cost-filter-toolbar .purchase-report-refresh-button,
+#purchase-report .cost-price-link {
+    border-color: var(--primary-color, #14b8a6);
+    background: var(--primary-color, #14b8a6);
+    color: #fff;
+}
+
+#purchase-report .cost-filter-toolbar .purchase-report-refresh-button:hover,
+#purchase-report .cost-price-link:hover,
+#purchase-report .cost-price-link:focus {
+    border-color: var(--secondary-cyan, #06b6d4);
+    background: var(--secondary-cyan, #06b6d4);
+    color: #fff;
+}
+
+#purchase-report .cost-hike-alert {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding: 18px;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    background: #fff5f5;
+    color: #7f1d1d;
+}
+
+#purchase-report .cost-alert-icon {
+    color: #c53030;
+    font-size: 22px;
+}
+
+#purchase-report .cost-alert-message {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.7;
+}
+
+#purchase-report .cost-alert-message strong {
+    color: #b91c1c;
+}
+
+#purchase-report .cost-alert-product {
+    color: #0f766e;
+    font-weight: 600;
+}
+
+#purchase-report .cost-alert-message small,
+#purchase-report .cost-changes-table small {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+}
+
+#purchase-report .cost-price-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px;
+}
+
+#purchase-report .cost-card-grid > .ant-col {
+    display: flex;
+    margin-bottom: 16px;
+}
+
+#purchase-report .cost-card-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#purchase-report .cost-card {
+    min-height: 158px;
+    height: 100%;
+    width: 100%;
+}
+
+#purchase-report .cost-card .ant-card-body {
+    padding: 20px;
+}
+
+#purchase-report .cost-card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+#purchase-report .cost-card-heading .anticon {
+    font-size: 18px;
+}
+
+#purchase-report .cost-card-value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0 6px;
+}
+
+#purchase-report .cost-card-value > strong {
+    color: #17243b;
+    font-size: 32px;
+    line-height: 1.2;
+}
+
+#purchase-report .cost-secondary,
+#purchase-report .cost-data-note {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+#purchase-report .cost-data-note {
+    margin: 0 0 16px;
+}
+
+#purchase-report .cost-data-note:last-child {
+    margin: 12px 0 0;
+}
+
+#purchase-report .cost-table-toolbar,
+#purchase-report .cost-table-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px;
+}
+
+#purchase-report .cost-category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#purchase-report .cost-category-buttons .ant-btn {
+    padding: 0 12px;
+    border-color: transparent;
+    border-radius: 7px;
+    color: #475569;
+    background: transparent;
+    box-shadow: none;
+    font-size: 12px;
+}
+
+#purchase-report .cost-category-buttons .ant-btn.is-selected {
+    border-color: #99ded4;
+    color: #0f766e;
+    background: #ecfdf5;
+}
+
+#purchase-report .cost-category-buttons .ant-btn:focus-visible {
+    outline: 2px solid var(--primary-color, #14b8a6);
+    outline-offset: 2px;
+}
+
+#purchase-report .cost-red-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: #c53030;
+}
+
+#purchase-report .cost-product-search {
+    flex: 0 1 240px;
+    margin-left: auto;
+}
+
+#purchase-report .cost-changes-table .ant-table-thead > tr > th {
+    padding: 14px 18px;
+    color: #64748b;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+#purchase-report .cost-changes-table .ant-table-tbody > tr > td {
+    padding: 22px 18px;
+}
+
+#purchase-report .cost-changes-table .ant-table-body {
+    min-height: 240px;
+}
+
+#purchase-report .cost-product {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 280px;
+}
+
+#purchase-report .cost-product-icon {
+    display: flex;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 20px;
+}
+
+#purchase-report .cost-product-description {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#purchase-report .cost-product-name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+#purchase-report .cost-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#purchase-report .cost-changes-report .is-increased {
+    color: #b91c1c;
+}
+
+#purchase-report .cost-changes-report .is-decreased {
+    color: #0f766e;
+}
+
+#purchase-report .cost-margin.is-positive,
+#purchase-report .cost-alert-margin strong.is-positive {
+    color: #0f766e;
+}
+
+#purchase-report .cost-margin.is-negative,
+#purchase-report .cost-alert-margin strong.is-negative {
+    color: #b91c1c;
+}
+
+#purchase-report .cost-margin.is-neutral,
+#purchase-report .cost-alert-margin strong.is-neutral {
+    color: #17243b;
+}
+
+#purchase-report .cost-card.is-increased .cost-card-heading,
+#purchase-report .cost-card.is-increased .cost-card-value > strong {
+    color: #b91c1c;
+}
+
+#purchase-report .cost-status.is-increased,
+#purchase-report .cost-product-icon.is-increased {
+    background: #fef2f2;
+}
+
+#purchase-report .cost-status.is-decreased,
+#purchase-report .cost-product-icon.is-decreased {
+    background: #ecfdf5;
+}
+
+#purchase-report .cost-variance > div {
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+#purchase-report .cost-table-footer {
+    border-top: 1px solid #e2e8f0;
+}
+
+#purchase-report .cost-pagination {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+@media (max-width: 767px) {
+    #purchase-report .cost-variance-filter {
+        flex-basis: 100%;
+    }
+
+    #purchase-report .cost-variance-filter .ant-select {
+        flex: 1;
+        width: auto;
+    }
+
+    #purchase-report .cost-comparison-reference {
+        flex-basis: 100%;
+    }
+
+    #purchase-report .cost-hike-alert {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    #purchase-report .cost-alert-message {
+        flex-basis: calc(100% - 40px);
+    }
+
+    #purchase-report .cost-product-search {
+        flex-basis: 100%;
+    }
+
+    #purchase-report .cost-table-toolbar,
+    #purchase-report .cost-table-footer {
+        padding: 12px;
+    }
+}
+.cost-variance-preset-dropdown .ant-select-dropdown-menu-item-group + .ant-select-dropdown-menu-item-group {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid #e1e7ef;
+}

@@ -77,7 +77,7 @@ const sidebarMenuRoutes = [
   { path: "/accounts-receivable", selectedKey: "52", openKey: "5" },
   { path: "/accounts-payable", selectedKey: "53", openKey: "5" },
   { path: "/reports/sales-report", selectedKey: "61", openKey: "6" },
-  { path: "/reports/purchase", selectedKey: "62", openKey: "6" },
+  { path: "/reports/purchases", selectedKey: "62", openKey: "6" },
   { path: "/reports/stock", selectedKey: "63", openKey: "6" },
   { path: "/reports/items", selectedKey: "64", openKey: "6" },
   { path: "/reports/financial", selectedKey: "65", openKey: "6" },
@@ -413,6 +413,10 @@ export default class SiderDemo extends React.Component {
     });
 
     // Reporting
+    const PurchaseReport = Loadable({
+      loader: () => import("../app/modules/pos/components/reports/Purchase/PurchaseReport"),
+      loading: () => <StartUp />,
+    });
     const SaleReportCenter = Loadable({
       loader: () => import("../pages/Report/index"),
       loading: () => <StartUp />,
@@ -596,7 +600,7 @@ export default class SiderDemo extends React.Component {
                           <Link to="/reports/sales-report">Sales Report</Link>
                         </Menu.Item>
                         <Menu.Item key="62">
-                          <Link to="/reports/purchase">Purchase Report</Link>
+                          <Link to="/reports/purchases">Purchase Report</Link>
                         </Menu.Item>
                         <Menu.Item key="63">
                           <Link to="/reports/stock">Stock Report</Link>
@@ -722,6 +726,7 @@ export default class SiderDemo extends React.Component {
 
                       {/* Report */}
                       <ProtectedRoute path="/reports/items" component={ReportProduct} />
+                      <ProtectedRoute path="/reports/purchases" component={PurchaseReport} />
                       <ProtectedRoute path="/reports/stock" component={ReportStock} />
                       {/* <Route path="/receipt" component={POSPaymentDrawer} /> */}
                       <ProtectedRoute path="/receipt" component={Receipt} />

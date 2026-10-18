@@ -1,0 +1,4 @@
+- Go vendors detail could view items that mostly buy from and the price as well.
+- Can select group or batch of items and preview and pass that to Vendor prepare stock and delivery again.
+- Vendor module should help business owner what items that mostly we bought from them.
+- Should contain purchase history and attachment, total amount bought from that supplier.
