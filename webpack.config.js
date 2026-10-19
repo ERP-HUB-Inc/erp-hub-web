@@ -57,7 +57,7 @@ module.exports = {
     new Dotenv({ path: "./.env" }), // Loads environment variables from .env file
     new HtmlWebpackPlugin({
       title: "ERP HUB", // Title for HTML
-      favicon: "./public/favicon.ico", // Favicon path
+      favicon: "./public/favicon.png", // Favicon path
       template: "./public/index.html", // HTML template
       chunksSortMode: "none", // Keep the order of scripts as in the template
       hash: true // Add a hash to script files for cache busting
