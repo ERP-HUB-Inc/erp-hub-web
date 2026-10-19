@@ -1,0 +1,7 @@
+version: 1
+name: report-records
+interceptRequests: true
+scenarios:
+  - name: default
+    default: true
+    path: default.js

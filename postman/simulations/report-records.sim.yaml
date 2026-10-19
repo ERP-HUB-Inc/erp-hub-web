@@ -1,0 +1,5 @@
+simulation: report-records
+routing: path
+mocks:
+  - routeKey: records
+    path: ../mocks/report-records/config.yaml

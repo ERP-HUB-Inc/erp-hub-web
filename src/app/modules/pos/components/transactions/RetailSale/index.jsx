@@ -250,6 +250,7 @@ export default class RetailSale extends Component {
       categoryId: item.categoryId,
       unitId: item.sellUnitId,
       unitName: item.sellUnitName,
+      sku: variant.sku,
       barcode: variant.barcode,
       price,
       newPrice: newPrice ? newPrice : price,

@@ -329,7 +329,7 @@
 
 #sales-report .sales-report-tabs .ant-tabs-ink-bar {
     height: 2px;
-    background: #6c4cff;
+    background: var(--primary-color, #14b8a6);
 }
 
 #sales-report .sales-report-table .ant-table {

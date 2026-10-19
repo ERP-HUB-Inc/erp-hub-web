@@ -45,7 +45,6 @@ const number = value => Number(value || 0);
 const isMissing = value => value === null || value === undefined;
 export const quantity = value => isMissing(value) ? "-" : number(value).toLocaleString();
 const money = value => isMissing(value) ? "-" : util.formatCurrency(number(value));
-const percent = value => isMissing(value) ? "-" : `${number(value).toFixed(2)}%`;
 const display = value => isMissing(value) || value === "" ? "-" : value;
 
 export const unwrap = response => {
@@ -73,17 +72,24 @@ const textColumn = (title, key, render = display) => ({
   title,
   dataIndex: key,
   key,
+  width: 160,
   render
 });
 
 const numericColumn = (title, key, render = quantity) => ({
   ...textColumn(title, key, render),
-  align: "right"
+  align: "right",
+  width: 140
 });
 
 export const sections = {
   trend: {
     label: "Purchase Trend",
+    tableTitle: "Monthly purchase activity",
+    rowLabel: "periods",
+    searchFields: ["period"],
+    searchPlaceholder: "Search period…",
+    icon: "calendar",
     description: "See monthly orders and received purchases over time.",
     fetch: option => PurchaseService.getPurchaseTrend(option),
     columns: [
@@ -97,6 +103,11 @@ export const sections = {
   },
   products: {
     label: "Purchased Items",
+    tableTitle: "Purchased item details",
+    rowLabel: "items",
+    searchFields: ["itemName", "name", "variantName", "sku"],
+    searchPlaceholder: "Search product, variant, SKU…",
+    icon: "inbox",
     description: "Find the products consuming your purchasing budget.",
     fetch: option => PurchaseService.getPurchaseProducts(option),
     paged: true,
@@ -113,11 +124,16 @@ export const sections = {
   },
   suppliers: {
     label: "Suppliers",
+    tableTitle: "Supplier purchase activity",
+    rowLabel: "suppliers",
+    searchFields: ["supplierName"],
+    searchPlaceholder: "Search supplier…",
+    icon: "team",
     description: "Compare spend, order volume, and purchase share by supplier.",
     fetch: option => PurchaseService.getPurchaseSuppliers(option),
     paged: true,
     columns: [
-      textColumn("Supplier", "supplierName"),
+      { ...textColumn("Supplier", "supplierName"), width: 280 },
       numericColumn("Orders", "orderCount"),
       numericColumn("Quantity", "quantity"),
       numericColumn("Purchase Amount", "purchaseAmount", money),
@@ -137,22 +153,7 @@ export const sections = {
   purchaseVsSales: {
     label: "Purchase vs Sales",
     description: "Compare period activity. A difference in quantities does not represent current stock.",
-    fetch: option => PurchaseService.getPurchaseVsSales(option),
-    paged: true,
-    columns: [
-      { ...textColumn("Product / Variant", "itemName", product), width: 280 },
-      textColumn("SKU", "sku"),
-      numericColumn("Purchased", "purchaseQuantity"),
-      numericColumn("Sold", "salesQuantity"),
-      numericColumn("Quantity Difference", "quantityDifference"),
-      numericColumn("Purchase Amount", "purchaseAmount", money),
-      numericColumn("Sales Amount", "salesAmount", money),
-      numericColumn("Sales Cost", "salesCost", money),
-      numericColumn("Gross Profit", "grossProfit", money),
-      numericColumn("Amount Difference", "amountDifference", money),
-      numericColumn("Purchase / Sales", "purchaseSalesRatio", percent),
-      textColumn("Activity", "activityStatus")
-    ]
+    fetch: option => PurchaseService.getPurchaseVsSales(option)
   }
 };
 
@@ -199,22 +200,6 @@ export const stats = [
     color: "is-red",
     format: money
   }
-];
-export const activityStats = [
-  { title: "Products", key: "productCount", format: quantity },
-  { title: "Purchase Quantity", key: "purchaseQuantity", format: quantity },
-  { title: "Purchase Amount", key: "purchaseAmount", format: money },
-  { title: "Sales Quantity", key: "salesQuantity", format: quantity },
-  { title: "Sales Amount", key: "salesAmount", format: money },
-  { title: "Sales Cost", key: "salesCost", format: money },
-  { title: "Gross Profit", key: "grossProfit", format: money },
-  { title: "Purchase / Sales", key: "purchaseSalesRatio", format: percent },
-  { title: "Quantity Difference", key: "quantityDifference", format: quantity },
-  { title: "Amount Difference", key: "amountDifference", format: money },
-  { title: "Purchase Only", key: "purchaseOnlyProducts", format: quantity },
-  { title: "Sales Only", key: "salesOnlyProducts", format: quantity },
-  { title: "Purchase Ahead", key: "purchaseAheadProducts", format: quantity },
-  { title: "Sales Ahead", key: "salesAheadProducts", format: quantity }
 ];
 
 

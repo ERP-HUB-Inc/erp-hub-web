@@ -2,13 +2,10 @@ import React from "react";
 import { Alert, PageHeader, Tabs } from "antd";
 import moment from "moment";
 import history from "../../../../common/router/history";
-import LocationService from "@services/LocationService";
-import SupplierService from "@services/VendorService";
 import PurchaseService from "../../../services/report/PurchaseService";
 import { getPurchaseReportOptions } from "./purchaseReportOptions";
 import { initialFilters, pathName, rowsOf, sections, unwrap } from "./purchaseReportConfig";
 import {
-  ActivitySummary,
   CostComparisonReference,
   ReportFilters,
   ReportTable,
@@ -16,46 +13,33 @@ import {
 } from "./PurchaseReportParts";
 import CostChangesReport from "./CostChangesReport";
 import StockRiskReport from "./StockRiskReport";
+import PurchaseSalesReport from "./PurchaseSalesReport";
 import "../Item/index.css";
 import "./index.css";
 import "./costChanges.css";
 import "./stockRisk.css";
+import "./purchaseSales.css";
 
 const { TabPane } = Tabs;
-const reportTabClasses = { priceIncrease: "cost-changes-tab", overstock: "stock-risk-tab" };
+const reportTabClasses = {
+  priceIncrease: "cost-changes-tab",
+  overstock: "stock-risk-tab",
+  purchaseVsSales: "purchase-sales-tab"
+};
+const dedicatedReports = {
+  priceIncrease: CostChangesReport,
+  overstock: StockRiskReport,
+  purchaseVsSales: PurchaseSalesReport
+};
 
 export default function PurchaseReport() {
   const [filters, setFilters] = React.useState(initialFilters);
   const [activeTab, setActiveTab] = React.useState("trend");
-  const [locations, setLocations] = React.useState([]);
-  const [suppliers, setSuppliers] = React.useState([]);
   const [summary, setSummary] = React.useState({ data: {}, loading: true, error: "" });
   const [reports, setReports] = React.useState({});
   const [pages, setPages] = React.useState({});
   const [reload, setReload] = React.useState(0);
   const requestId = React.useRef(0);
-
-  React.useEffect(() => {
-    let mounted = true;
-
-    LocationService.get({ limit: 500 })
-      .then(response => {
-        if (mounted && response.data && Array.isArray(response.data.data)) {
-          setLocations(response.data.data);
-        }
-      })
-      .catch(() => {});
-
-    SupplierService.get({ limit: 100 })
-      .then(response => {
-        if (mounted && response.data && Array.isArray(response.data.data)) {
-          setSuppliers(response.data.data);
-        }
-      })
-      .catch(() => {});
-
-    return () => { mounted = false; };
-  }, []);
 
   React.useEffect(() => {
     const id = ++requestId.current;
@@ -149,7 +133,7 @@ export default function PurchaseReport() {
   };
   const section = sections[activeTab];
   const showPurchaseSummary = ["products", "suppliers"].includes(activeTab);
-  const hasDedicatedReport = activeTab === "priceIncrease" || activeTab === "overstock";
+  const DedicatedReport = dedicatedReports[activeTab];
 
   const refresh = () => setReload(value => value + 1);
   const changePage = page => setPages(previous => ({ ...previous, [activeTab]: page }));
@@ -170,12 +154,10 @@ export default function PurchaseReport() {
             key={key}
           >
             {key === activeTab && (
-              <div className={reportTabClasses[key] || ""}>
+              <div className={reportTabClasses[key] || "purchase-overview-tab"}>
                 <ReportFilters
                   activeTab={activeTab}
                   filters={filters}
-                  locations={locations}
-                  suppliers={suppliers}
                   loading={report.loading || (showPurchaseSummary && summary.loading)}
                   onChange={applyFilters}
                   onRefresh={refresh}
@@ -205,7 +187,7 @@ export default function PurchaseReport() {
                   <p>{section.description}</p>
                 </div>
 
-                {report.error && !hasDedicatedReport && (
+                {report.error && !DedicatedReport && (
                   <Alert
                     type="error"
                     showIcon
@@ -214,17 +196,13 @@ export default function PurchaseReport() {
                   />
                 )}
 
-                {activeTab === "purchaseVsSales" && (
-                  <ActivitySummary summary={report.summary} />
-                )}
-
-                {activeTab === "priceIncrease" ? (
-                  <CostChangesReport report={report} filters={filters} onRefresh={refresh} />
-                ) : activeTab === "overstock" ? (
-                  <StockRiskReport report={report} filters={filters} onRefresh={refresh} />
+                {DedicatedReport ? (
+                  <DedicatedReport report={report} filters={filters} onRefresh={refresh} />
                 ) : (
                   <ReportTable
+                    key={activeTab}
                     section={section}
+                    filters={filters}
                     report={report}
                     page={pages[activeTab] || 1}
                     loading={report.loading}

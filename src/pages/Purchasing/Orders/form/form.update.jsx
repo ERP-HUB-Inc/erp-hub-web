@@ -28,7 +28,7 @@ import UnitService from '@services/UnitService';
 import history from "@router/index";
 import Util from "@helper/inventory";
 import { getLocationId } from "@helper/user";
-import { SelectItem, SelectVendor } from "@components/stateful";
+import { SelectPurchaseOrderItem, SelectVendor, PURCHASE_ORDER_ITEM_FILTER } from "@components/stateful";
 import PurchaseOrderCosts from "./PurchaseOrderCosts";
 import { restoreCharges, serializeCharges, validateCharges } from "./purchaseOrderCostUtils";
 
@@ -74,7 +74,17 @@ const PurchaseOrderForm = (props) => {
                 },
               ],
               initialValue: itemId,
-            })(<SelectItem items={items.concat([{id: itemId, name: record.itemName, productVariants: [record.variant]}])} defaultValue={itemId} />)}
+            })(
+              <SelectPurchaseOrderItem
+                items={items}
+                selectedItem={{ id: itemId, name: record.itemName }}
+                defaultValue={itemId}
+                callback={results => setItems(current => Array.from(
+                  new Map(current.concat(results).map(item => [item.id, item])).values()
+                ))}
+                onChange={value => updateRow(record.key, "itemId", value)}
+              />
+            )}
           </Form.Item>
         </div>
       ),
@@ -303,18 +313,24 @@ const PurchaseOrderForm = (props) => {
     }
   }
 
-  const fetchItems = (locationId) => {
-    const option = { limit: 15, offset: 0 };
-    if (locationId) option.locationId = locationId;
+  const fetchItems = async (locationId) => {
+    const option = { limit: 15, offset: 0, filter: PURCHASE_ORDER_ITEM_FILTER };
+    if (locationId != null && locationId !== "") option.locationId = locationId;
 
-    ItemService.get(option)
-    .then(response => {
-      if (response.data) {
-          setItems(response.data.data);
-      }
-    })
-    .finally(() => console.log("hello world"));
-  }
+    try {
+      const response = await ItemService.get(option);
+      const fetchedItems = Array.isArray(response?.data?.data) ? response.data.data : [];
+      setItems(fetchedItems);
+      return fetchedItems;
+    } catch (error) {
+      setItems([]);
+      Modal.error({
+        title: "Could not load items",
+        content: "Please try again to load stock-tracked items for this purchase order.",
+      });
+      return [];
+    }
+  };
 
   const fetchWarehouses = () => {
     LocationService.get()
