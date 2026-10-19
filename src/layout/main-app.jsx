@@ -26,7 +26,11 @@ import Localization from "../app/localization";
 import StartUp from "../app/modules/common/components/StartUp";
 import Util from "../app/modules/common/util";
 import configureStore from "../app/store/configureStore";
-import { ERPHub, LogoTextOnly } from '../components';
+import { LogoTextOnly } from '../components';
+import packageMetadata from '../../package.json';
+import { getSidebarDefaultKeys } from './sidebar-navigation';
+import SidebarHealthStatus from './sidebar-health-status';
+import SidebarToggleButton from './sidebar-toggle-button';
 import OnboardingService, { getResponseData } from '../pages/Onboarding/OnboardingService';
 import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
 import ItemAIGenerator from './item-ai-tool';
@@ -51,7 +55,7 @@ const socket = io("http://127.0.0.1:8100", {
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
-const APP_VERSION = process.env.REACT_APP_VERSION || "2.0.51";
+const APP_VERSION = process.env.REACT_APP_VERSION || packageMetadata.version;
 const HEADER_UNREAD_NOTIFICATION_COUNT = 2;
 const ONBOARDING_SETUP_PATH = "/onboarding/setup";
 const ONBOARDING_WORK_PATHS = [
@@ -60,41 +64,6 @@ const ONBOARDING_WORK_PATHS = [
   "/inventories/stock-io/create",
   "/vendors/create"
 ];
-
-const sidebarMenuRoutes = [
-  { path: "/", selectedKey: "1" },
-  { path: "/sales", selectedKey: "21", openKey: "2" },
-  { path: "/transactions/sale-order", selectedKey: "21", openKey: "2" },
-  { path: "/customers", selectedKey: "24", openKey: "2" },
-  { path: "/customer-profile", selectedKey: "24", openKey: "2" },
-  { path: "/purchase-orders", selectedKey: "31", openKey: "3" },
-  { path: "/vendors", selectedKey: "33", openKey: "3" },
-  { path: "/inventories/items", selectedKey: "41", openKey: "4" },
-  { path: "/inventories/stock-io", selectedKey: "42", openKey: "4" },
-  { path: "/inventories/transfers", selectedKey: "42", openKey: "4" },
-  { path: "/inventories/adjustments", selectedKey: "42", openKey: "4" },
-  { path: "/general-ledger", selectedKey: "51", openKey: "5" },
-  { path: "/accounts-receivable", selectedKey: "52", openKey: "5" },
-  { path: "/accounts-payable", selectedKey: "53", openKey: "5" },
-  { path: "/reports/sales-report", selectedKey: "61", openKey: "6" },
-  { path: "/reports/purchases", selectedKey: "62", openKey: "6" },
-  { path: "/reports/stock", selectedKey: "63", openKey: "6" },
-  { path: "/reports/items", selectedKey: "64", openKey: "6" },
-  { path: "/reports/financial", selectedKey: "65", openKey: "6" },
-  { path: "/settings", selectedKey: "7" },
-];
-
-function getSidebarDefaultKeys(pathname) {
-  const currentPath = pathname || "/";
-  const matchedRoute = sidebarMenuRoutes
-    .filter(route => currentPath === route.path || (route.path !== "/" && currentPath.indexOf(`${route.path}/`) === 0))
-    .sort((firstRoute, secondRoute) => secondRoute.path.length - firstRoute.path.length)[0] || sidebarMenuRoutes[0];
-
-  return {
-    selectedKeys: [matchedRoute.selectedKey],
-    openKeys: matchedRoute.openKey ? [matchedRoute.openKey] : [],
-  };
-}
 
 class OnboardingStatusRoute extends React.Component {
   state = { loading: true, status: null, error: false };
@@ -196,11 +165,163 @@ const OnboardingRoute = ({ component: Component, ...rest }) => (
   />
 );
 
+// Stable route components preserve page state when the sidebar toggles.
+const POS = Loadable({
+  loader: () => import("../app/modules/pos/containers/transactions/SaleWalkin"),
+  loading: () => <StartUp />,
+});
+
+const Dashboard = Loadable({
+  loader: () => import("../pages/Dashboard/ERPSalesDashboard"),
+  loading: () => <StartUp />,
+});
+
+const SalesOrder = Loadable({
+  loader: () => import("../pages/Sales/Order"),
+  loading: () => <StartUp />,
+});
+
+const SalesOrderCreate = Loadable({
+  loader: () => import("../pages/Sales/Order/form.create"),
+  loading: () => <StartUp />,
+});
+
+const SalesOrderEdit = Loadable({
+  loader: () => import("../pages/Sales/Order/form.update"),
+  loading: () => <StartUp />,
+});
+
+const SalesOrderDetail = Loadable({
+  loader: () => import("../app/modules/pos/components/transactions/SaleOrder/detail"),
+  loading: () => <StartUp />,
+});
+
+const Invoice = Loadable({
+  loader: () => import("../app/modules/pos/containers/transactions/Invoice"),
+  loading: () => <StartUp />,
+});
+const InvoiceDetail = Loadable({
+  loader: () => import("../app/modules/pos/components/transactions/Invoice/Detail"),
+  loading: () => <StartUp />,
+});
+const NewInoice = Loadable({
+  loader: () => import("../app/modules/pos/components/transactions/Invoice/FormItem"),
+  loading: () => <StartUp />,
+});
+
+const Quotes = Loadable({
+  loader: () => import("../app/modules/pos/containers/transactions/Quotation"),
+  loading: () => <StartUp />,
+});
+
+const Customers = Loadable({
+  loader: () => import("../app/modules/crm/containers/customers/Customer"),
+  loading: () => <StartUp />,
+});
+const CustomerProfile = Loadable({
+  loader: () => import("../app/modules/crm/components/customers/Customer/Profile"),
+  loading: () => <StartUp />,
+});
+
+// Purchasing
+const PurchaseOrder = Loadable({
+  loader: () => import("../pages/Purchasing/Orders"),
+  loading: () => <StartUp />,
+});
+const NewPurchaseOrder = Loadable({
+  loader: () => import("../pages/Purchasing/Orders/form.create"),
+  loading: () => <StartUp />,
+});
+const UpdatePurchaseOrder = Loadable({
+  loader: () => import("../pages/Purchasing/Orders/form.update"),
+  loading: () => <StartUp />,
+});
+
+const Vendor = Loadable({
+  loader: () => import("../pages/Purchasing/Vendors"),
+  loading: () => <StartUp />,
+});
+
+const Item = Loadable({
+  loader: () => import("../pages/Inventory/Items"),
+  loading: () => <StartUp />,
+});
+const NewItem = Loadable({
+  loader: () => import("../pages/Inventory/Items/form.create"),
+  loading: () => <StartUp />,
+});
+const EditItem = Loadable({
+  loader: () => import("../pages/Inventory/Items/form.update"),
+  loading: () => <StartUp />,
+});
+const ViewItem = Loadable({
+  loader: () => import("../pages/Inventory/Items/form/item.detail"),
+  loading: () => <StartUp />,
+});
+const SplitItem = Loadable({
+  loader: () => import("../pages/Inventory/Items/form/item.split"),
+  loading: () => <StartUp />,
+});
+
+const StockInOut = Loadable({
+  loader: () => import("../pages/Inventory/StockIO"),
+  loading: () => <StartUp />,
+});
+const NewStockInOut = Loadable({
+  loader: () => import("../pages/Inventory/StockIO/form.create"),
+  loading: () => <StartUp />,
+});
+const UpdateStockInOut = Loadable({
+  loader: () => import("../pages/Inventory/StockIO/form.update"),
+  loading: () => <StartUp />,
+});
+
+// Reporting
+const PurchaseReport = Loadable({
+  loader: () => import("../app/modules/pos/components/reports/Purchase/PurchaseReport"),
+  loading: () => <StartUp />,
+});
+const SaleReportCenter = Loadable({
+  loader: () => import("../pages/Report/index"),
+  loading: () => <StartUp />,
+});
+const SaleReport = Loadable({
+  loader: () => import("../app/modules/pos/components/reports/Sale/SalesReport"),
+  loading: () => <StartUp />,
+});
+const FinancialReport = Loadable({
+  loader: () => import("../app/modules/pos/components/reports/Financial/FinancialReport"),
+  loading: () => <StartUp />,
+});
+const ReportStock = Loadable({
+  loader: () => import("../app/modules/pos/containers/reports/StockReport"),
+  loading: () => <StartUp />,
+});
+const ReportProduct = Loadable({
+  loader: () => import("../app/modules/pos/containers/reports/Product"),
+  loading: () => <StartUp />,
+});
+
+// Setting
+const Category = Loadable({
+  loader: () => import("@settings/Modules/Category/index"),
+  loading: () => <StartUp />,
+});
+
+const Brand = Loadable({
+  loader: () => import("@settings/Modules/Brand/index"),
+  loading: () => <StartUp />,
+});
+
 export default class SiderDemo extends React.Component {
+   store = new Localization(configureStore());
+
    state = {
      collapsed: false,
      alertData: null,
-     currentPath: window.location.pathname
+     currentPath: window.location.pathname,
+     currentSearch: window.location.search,
+     sidebarOpenKeys: getSidebarDefaultKeys(window.location.pathname, window.location.search).openKeys
    };
 
    componentDidMount() {
@@ -223,8 +344,13 @@ export default class SiderDemo extends React.Component {
       });
 
       this.unlistenHistory = history.listen(location => {
-        if (location.pathname !== this.state.currentPath) {
-          this.setState({ currentPath: location.pathname });
+        if (location.pathname !== this.state.currentPath || location.search !== this.state.currentSearch) {
+          const nextKeys = getSidebarDefaultKeys(location.pathname, location.search);
+          this.setState(previous => ({
+            currentPath: location.pathname,
+            currentSearch: location.search,
+            sidebarOpenKeys: Array.from(new Set([...previous.sidebarOpenKeys, ...nextKeys.openKeys]))
+          }));
         }
       });
    }
@@ -235,7 +361,7 @@ export default class SiderDemo extends React.Component {
     socket.off("chat-message");
     if (this.unlistenHistory) this.unlistenHistory();
   }
- 
+
    toggle = () => {
      this.setState({
        collapsed: !this.state.collapsed,
@@ -297,164 +423,16 @@ export default class SiderDemo extends React.Component {
       </Menu>
     );
    }
- 
+
    render() {
-    let store = configureStore();
-    store = new Localization(store);
-    
-    const POS = Loadable({
-      loader: () => import("../app/modules/pos/containers/transactions/SaleWalkin"),
-      loading: () => <StartUp />,
-    });
-    
-    const Dashboard = Loadable({
-      loader: () => import("../pages/Dashboard/ERPSalesDashboard"),
-      loading: () => <StartUp />,
-    });
-
-    const SalesOrder = Loadable({
-      loader: () => import("../pages/Sales/Order"),
-      loading: () => <StartUp />,
-    });
-
-    const SalesOrderCreate = Loadable({
-      loader: () => import("../pages/Sales/Order/form.create"),
-      loading: () => <StartUp />,
-    });
-
-    const SalesOrderEdit = Loadable({
-      loader: () => import("../pages/Sales/Order/form.update"),
-      loading: () => <StartUp />,
-    });
-
-    const SalesOrderDetail = Loadable({
-      loader: () => import("../app/modules/pos/components/transactions/SaleOrder/detail"),
-      loading: () => <StartUp />,
-    });
-
-    const Invoice = Loadable({
-      loader: () => import("../app/modules/pos/containers/transactions/Invoice"),
-      loading: () => <StartUp />,
-    });
-    const InvoiceDetail = Loadable({
-      loader: () => import("../app/modules/pos/components/transactions/Invoice/Detail"),
-      loading: () => <StartUp />,
-    });
-    const NewInoice = Loadable({
-      loader: () => import("../app/modules/pos/components/transactions/Invoice/FormItem"),
-      loading: () => <StartUp />,
-    });
-
-    const Quotes = Loadable({
-      loader: () => import("../app/modules/pos/containers/transactions/Quotation"),
-      loading: () => <StartUp />,
-    });
-    
-    const Customers = Loadable({
-      loader: () => import("../app/modules/crm/containers/customers/Customer"),
-      loading: () => <StartUp />,
-    });
-    const CustomerProfile = Loadable({
-      loader: () => import("../app/modules/crm/components/customers/Customer/Profile"),
-      loading: () => <StartUp />,
-    });
-
-    // Purchasing
-    const PurchaseOrder = Loadable({
-      loader: () => import("../pages/Purchasing/Orders"),
-      loading: () => <StartUp />,
-    });
-    const NewPurchaseOrder = Loadable({
-      loader: () => import("../pages/Purchasing/Orders/form.create"),
-      loading: () => <StartUp />,
-    });
-    const UpdatePurchaseOrder = Loadable({
-      loader: () => import("../pages/Purchasing/Orders/form.update"),
-      loading: () => <StartUp />,
-    });
-
-    const Vendor = Loadable({
-      loader: () => import("../pages/Purchasing/Vendors"),
-      loading: () => <StartUp />,
-    });
-
-    const Item = Loadable({
-      loader: () => import("../pages/Inventory/Items"),
-      loading: () => <StartUp />,
-    });
-    const NewItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form.create"),
-      loading: () => <StartUp />,
-    });
-    const EditItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form.update"),
-      loading: () => <StartUp />,
-    });
-    const ViewItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/item.detail"),
-      loading: () => <StartUp />,
-    });
-    const SplitItem = Loadable({
-      loader: () => import("../pages/Inventory/Items/form/item.split"),
-      loading: () => <StartUp />,
-    });
-
-    const StockInOut = Loadable({
-      loader: () => import("../pages/Inventory/StockIO"),
-      loading: () => <StartUp />,
-    });
-    const NewStockInOut = Loadable({
-      loader: () => import("../pages/Inventory/StockIO/form.create"),
-      loading: () => <StartUp />,
-    });
-    const UpdateStockInOut = Loadable({
-      loader: () => import("../pages/Inventory/StockIO/form.update"),
-      loading: () => <StartUp />,
-    });
-
-    // Reporting
-    const PurchaseReport = Loadable({
-      loader: () => import("../app/modules/pos/components/reports/Purchase/PurchaseReport"),
-      loading: () => <StartUp />,
-    });
-    const SaleReportCenter = Loadable({
-      loader: () => import("../pages/Report/index"),
-      loading: () => <StartUp />,
-    });
-    const SaleReport = Loadable({
-      loader: () => import("../app/modules/pos/components/reports/Sale/SalesReport"),
-      loading: () => <StartUp />,
-    });
-    const FinancialReport = Loadable({
-      loader: () => import("../app/modules/pos/components/reports/Financial/FinancialReport"),
-      loading: () => <StartUp />,
-    });
-    const ReportStock = Loadable({
-      loader: () => import("../app/modules/pos/containers/reports/StockReport"),
-      loading: () => <StartUp />,
-    });
-    const ReportProduct = Loadable({
-      loader: () => import("../app/modules/pos/containers/reports/Product"),
-      loading: () => <StartUp />,
-    });
-
-    // Setting
-    const Category = Loadable({
-      loader: () => import("@settings/Modules/Category/index"),
-      loading: () => <StartUp />,
-    });
-
-    const Brand = Loadable({
-      loader: () => import("@settings/Modules/Brand/index"),
-      loading: () => <StartUp />,
-    });
+    const store = this.store;
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
     const hasAuthSession = Boolean((new Util()).getAuthSession());
     const isOnboardingPage = this.state.currentPath.indexOf("/onboarding/") === 0;
     const isFullScreenPage = ["/pos", "/login"].includes(this.state.currentPath) || isOnboardingPage || !hasAuthSession;
-    const sidebarDefaultKeys = getSidebarDefaultKeys(this.state.currentPath);
+    const sidebarDefaultKeys = getSidebarDefaultKeys(this.state.currentPath, this.state.currentSearch);
     const headerUser = this.getHeaderUser();
     const notificationCount = HEADER_UNREAD_NOTIFICATION_COUNT > 9 ? "9+" : HEADER_UNREAD_NOTIFICATION_COUNT;
     const styledContent = {
@@ -471,9 +449,9 @@ export default class SiderDemo extends React.Component {
         <BrowserRouter>
           <Switch>
             <Router history={history}>
-              <Layout id="components-layout-demo-custom-trigger">
+              <Layout id="components-layout-demo-custom-trigger" className={this.state.collapsed ? "market-layout-sidebar-collapsed" : undefined}>
                 {/* {
-                this.state.alertData && 
+                this.state.alertData &&
                 <SystemAlertBanner
                   type="announcement"
                   title="New Inventory Features Released"
@@ -483,143 +461,160 @@ export default class SiderDemo extends React.Component {
                 />
               } */}
                 {!isFullScreenPage ? (
-                  <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: "100vh" }}>
-                    <LogoTextOnly />
+                  <Sider className="market-sidebar" trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: "100vh" }}>
+                    <LogoTextOnly collapsed={this.state.collapsed} />
+                    <nav id="market-sidebar-navigation" className="market-sidebar-navigation" aria-label="Main navigation">
                     {/* <DynamicMenu /> */}
                     <Menu
                       theme={theme}
                       mode="inline"
-                      defaultSelectedKeys={sidebarDefaultKeys.selectedKeys}
-                      defaultOpenKeys={sidebarDefaultKeys.openKeys}
+                      className="market-sidebar-menu"
+                      selectedKeys={sidebarDefaultKeys.selectedKeys}
+                      {...(!this.state.collapsed ? { openKeys: this.state.sidebarOpenKeys } : {})}
+                      onOpenChange={sidebarOpenKeys => {
+                        if (!this.state.collapsed) this.setState({ sidebarOpenKeys });
+                      }}
                     >
-                      <Menu.Item key="1">
-                        <Link to="/">
-                          <Icon type="dashboard" />
-                          <span>Dashboard</span>
-                        </Link>
-                      </Menu.Item>
+                      <Menu.ItemGroup key="operations" title="OPERATIONS & CORE">
+                        <Menu.Item key="1" title="Dashboard">
+                          <Link to="/">
+                            <Icon type="dashboard" />
+                            <span>Dashboard</span>
+                          </Link>
+                        </Menu.Item>
 
-                      <SubMenu
-                        key="2"
-                        title={
-                          <span>
-                            <Icon type="dollar" />
-                            <span>Sales</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="21">
-                          <Link to="/sales">All Sales</Link>
-                        </Menu.Item>
-                        {/* <Menu.Item key="22">
-                          <Link to="/quotes">Quotes</Link>
-                        </Menu.Item> */}
-                        {/* <Menu.Item key="23">
-                          <Link to="/invoices">Invoices</Link>
-                        </Menu.Item> */}
-                        <Menu.Item key="24">
-                          <Link to="/customers">Customers</Link>
-                        </Menu.Item>
-                      </SubMenu>
+                        <SubMenu
+                          key="2"
+                          title={
+                            <span>
+                              <Icon type="dollar" />
+                              <span>Sales</span>
+                            </span>
+                          }
+                        >
+                          <Menu.Item key="21">
+                            <Link to="/sales">All Sales</Link>
+                          </Menu.Item>
+                          {/* <Menu.Item key="22">
+                            <Link to="/quotes">Quotes</Link>
+                          </Menu.Item> */}
+                          {/* <Menu.Item key="23">
+                            <Link to="/invoices">Invoices</Link>
+                          </Menu.Item> */}
+                          <Menu.Item key="24">
+                            <Link to="/customers">Customers</Link>
+                          </Menu.Item>
+                        </SubMenu>
 
-                      <SubMenu
-                        key="3"
-                        title={
-                          <span>
-                            <Icon type="shopping" />
-                            <span>Purchasing</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="31">
-                          <Link to="/purchase-orders">Orders</Link>
-                        </Menu.Item>
-                        {/* <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item> */}
-                        <Menu.Item key="33">
-                          <Link to="/vendors">Vendors</Link>
-                        </Menu.Item>
-                      </SubMenu>
+                        <SubMenu
+                          key="3"
+                          title={
+                            <span>
+                              <Icon type="shopping" />
+                              <span>Purchasing</span>
+                            </span>
+                          }
+                        >
+                          <Menu.Item key="31">
+                            <Link to="/purchase-orders">Orders</Link>
+                          </Menu.Item>
+                          {/* <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item> */}
+                          <Menu.Item key="33">
+                            <Link to="/vendors">Vendors</Link>
+                          </Menu.Item>
+                        </SubMenu>
 
-                      <SubMenu
-                        key="4"
-                        title={
-                          <span>
-                            <Icon type="inbox" />
-                            <span>Inventory</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="41">
-                          <Link to="/inventories/items">Items</Link>
-                        </Menu.Item>
-                        <Menu.Item key="42">
-                          <Link to="/inventories/stock-io">Stock Movement</Link>
-                        </Menu.Item>
-                        <Menu.Item key="43">
-                          <Link to="/inventories/items">Pricing Management</Link>
-                        </Menu.Item>
-                        {/* 
-                          Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
-                          Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
-                          Each movement is logged in the Stock Ledger (history).
-                        */}
-                        {/* <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
-                        <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item> */}
-                      </SubMenu>
+                        <SubMenu
+                          key="4"
+                          title={
+                            <span>
+                              <Icon type="inbox" />
+                              <span>Inventory</span>
+                            </span>
+                          }
+                        >
+                          <Menu.Item key="41">
+                            <Link to="/inventories/items">Items</Link>
+                          </Menu.Item>
+                          <Menu.Item key="42">
+                            <Link to="/inventories/stock-io">Stock Movement</Link>
+                          </Menu.Item>
+                          <Menu.Item key="43">
+                            <Link to="/inventories/items">Pricing Management</Link>
+                          </Menu.Item>
+                          {/*
+                            Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
+                            Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
+                            Each movement is logged in the Stock Ledger (history).
+                          */}
+                          {/* <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
+                          <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item> */}
+                        </SubMenu>
 
-                      <SubMenu
-                        key="5"
-                        title={
-                          <span>
-                            <Icon type="bank" />
-                            <span>Finance</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="51">
-                          <Link to="/general-ledger">General Ledger (GL)</Link>
-                        </Menu.Item>
-                        <Menu.Item key="52">
-                          <Link to="/accounts-receivable">Accounts Receivable (AR)</Link>
-                        </Menu.Item>
-                        <Menu.Item key="53">
-                          <Link to="/accounts-payable">Accounts Payable (AP)</Link>
-                        </Menu.Item>
-                      </SubMenu>
+                        <SubMenu
+                          key="5"
+                          title={
+                            <span>
+                              <Icon type="bank" />
+                              <span>Finance</span>
+                            </span>
+                          }
+                        >
+                          <Menu.Item key="51">
+                            <Link to="/general-ledger">General Ledger (GL)</Link>
+                          </Menu.Item>
+                          <Menu.Item key="52">
+                            <Link to="/accounts-receivable">Accounts Receivable (AR)</Link>
+                          </Menu.Item>
+                          <Menu.Item key="53">
+                            <Link to="/accounts-payable">Accounts Payable (AP)</Link>
+                          </Menu.Item>
+                        </SubMenu>
 
-                      <SubMenu
-                        key="6"
-                        title={
-                          <span>
-                            <Icon type="bar-chart" />
-                            <span>Report</span>
-                          </span>
-                        }
-                      >
-                        <Menu.Item key="61">
-                          <Link to="/reports/sales-report">Sales Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="62">
-                          <Link to="/reports/purchases">Purchase Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="63">
-                          <Link to="/reports/stock">Stock Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="64">
-                          <Link to="/reports/items">Item Report</Link>
-                        </Menu.Item>
-                        <Menu.Item key="65">
-                          <Link to="/reports/financial">Financial Reports</Link>
-                        </Menu.Item>
-                      </SubMenu>
+                        <SubMenu
+                          key="6"
+                          title={
+                            <span>
+                              <Icon type="bar-chart" />
+                              <span>Report</span>
+                            </span>
+                          }
+                        >
+                          <Menu.Item key="61">
+                            <Link to="/reports/sales-report">Sales Report</Link>
+                          </Menu.Item>
+                          <Menu.Item key="62">
+                            <Link to="/reports/purchases">Purchase Report</Link>
+                          </Menu.Item>
+                          <Menu.Item key="63">
+                            <Link to="/reports/stock">Stock Report</Link>
+                          </Menu.Item>
+                          <Menu.Item key="64">
+                            <Link to="/reports/items">Item Report</Link>
+                          </Menu.Item>
+                          <Menu.Item key="65">
+                            <Link to="/reports/financial">Financial Reports</Link>
+                          </Menu.Item>
+                        </SubMenu>
 
-                      <Menu.Item key="7">
-                        <Link to="/settings">
-                          <Icon type="setting" />
-                          <span>Settings</span>
-                        </Link>
-                      </Menu.Item>
+                      </Menu.ItemGroup>
+                      <Menu.ItemGroup key="system" title="SYSTEM & SECURITY">
+                        <Menu.Item key="8" title="User Management">
+                          <Link to="/settings?tab=users">
+                            <Icon type="team" />
+                            <span>User Management</span>
+                          </Link>
+                        </Menu.Item>
+                        <Menu.Item key="7" title="System Setting">
+                          <Link to="/settings">
+                            <Icon type="setting" />
+                            <span>System Setting</span>
+                          </Link>
+                        </Menu.Item>
+                      </Menu.ItemGroup>
                     </Menu>
+                    </nav>
+                    <SidebarHealthStatus collapsed={this.state.collapsed} />
                   </Sider>
                 ) : (
                   <React.Fragment />
@@ -646,6 +641,7 @@ export default class SiderDemo extends React.Component {
                       </div> */}
                       <div className="market-header-left-spacer" />
                       <div className="market-header-right-actions">
+                        <SidebarToggleButton collapsed={this.state.collapsed} onToggle={this.toggle} />
                         <span className="market-header-version">v{APP_VERSION}</span>
                         <Tooltip title="Check for updates">
                           <Button className="market-header-update-button" onClick={this.handleUpdate}>
@@ -796,8 +792,8 @@ const NotificationMenu = () => {
 
   return (
     <div style={{ width: 350, maxHeight: 400, overflow: 'auto' }}>
-      <div style={{ 
-        padding: '12px 16px', 
+      <div style={{
+        padding: '12px 16px',
         borderBottom: '1px solid #f0f0f0',
         fontWeight: 'bold',
         display: 'flex',
@@ -813,8 +809,8 @@ const NotificationMenu = () => {
         itemLayout="horizontal"
         dataSource={notifications}
         renderItem={item => (
-          <List.Item 
-            style={{ 
+          <List.Item
+            style={{
               padding: '12px 16px',
               cursor: 'pointer',
               backgroundColor: item.read ? '#fff' : '#f0f7ff',
@@ -823,7 +819,7 @@ const NotificationMenu = () => {
           >
             <List.Item.Meta
               avatar={
-                <Avatar 
+                <Avatar
                   style={{ backgroundColor: item.read ? '#d9d9d9' : '#1890ff' }}
                   icon={getIcon(item.type)}
                 />
@@ -839,8 +835,8 @@ const NotificationMenu = () => {
           </List.Item>
         )}
       />
-      <div style={{ 
-        padding: '12px 16px', 
+      <div style={{
+        padding: '12px 16px',
         textAlign: 'center',
         borderTop: '1px solid #f0f0f0',
         cursor: 'pointer',

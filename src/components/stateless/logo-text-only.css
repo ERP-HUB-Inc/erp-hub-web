@@ -1,0 +1,41 @@
+.market-sidebar-branding {
+    display: flex;
+    flex: 0 0 64px;
+    align-items: center;
+    gap: 6px;
+    height: 64px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #edf1f7;
+    background: #fff;
+}
+
+.market-sidebar-brand {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+.market-sidebar-brand-logo {
+    display: block;
+    width: 100%;
+    height: 60px;
+    object-fit: contain;
+}
+
+.market-sidebar-branding.is-collapsed {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 8px;
+}
+
+.market-sidebar-branding.is-collapsed .market-sidebar-brand {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+.market-sidebar-branding.is-collapsed .market-sidebar-brand-logo {
+    height: 40px;
+}

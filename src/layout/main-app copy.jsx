@@ -1,69 +1,212 @@
-import React from 'react'
-import Loadable from "react-loadable"
-import { Dropdown, Layout, Menu, Icon, Divider, Badge, Avatar, List } from "antd";
+import SystemAlertBanner from '@components/stateless/system-alert-banner';
+import StockIOAIImport from '@inventories/StockIO/form/form.ai-import';
+import StockIOBulkImport from '@inventories/StockIO/form/form.bulk-import';
+import history from '@router/index';
+import { ColumnSelection } from '@settings/ColumnSelection';
+import OrdersDashboard from '@settings/OrderDashboard';
+import SettingsPage from '@settings/SettingPage';
+import SystemLogs from '@settings/SystemLogs';
+import TabletView from '@settings/TableView';
+import { Avatar, Badge, Button, Divider, Dropdown, Icon, Layout, List, Menu, Tooltip, message } from "antd";
+import { Bell, ChevronDown, RefreshCw } from "lucide-react";
+import React from 'react';
+import ReactGA from "react-ga4";
+import Loadable from "react-loadable";
 import { Provider } from "react-redux";
 import {
   BrowserRouter,
   Link,
+  Redirect,
   Route,
   Router,
   Switch
 } from "react-router-dom";
-import ReactGA from "react-ga4";
-import { io } from "socket.io-client"
-import history from '@router/index';
-import Util from "../app/modules/common/util";
-import configureStore from "../app/store/configureStore";
+import { io } from "socket.io-client";
 import Localization from "../app/localization";
 import StartUp from "../app/modules/common/components/StartUp";
-import './NewSidebar.css'
+import Util from "../app/modules/common/util";
+import configureStore from "../app/store/configureStore";
 import { ERPHub, LogoTextOnly } from '../components';
-import SettingsPage from '@settings/SettingPage';
-import SystemLogs from '@settings/SystemLogs';
-import OrdersDashboard from '@settings/OrderDashboard';
-import TabletView from '@settings/TableView';
-import { ColumnSelection } from '@settings/ColumnSelection';
-import SystemAlertBanner from '@components/stateless/system-alert-banner';
-import StockInUI from './stock-in-summary';
-import ItemManagementUI from './item-management-ai';
-import ItemAIGenerator from './item-ai-tool';
-import StickyFooterPage from './sticky-footer';
+import OnboardingService, { getResponseData } from '../pages/Onboarding/OnboardingService';
 import StockIOForm from '../pages/Inventory/StockIO/form/form.create';
+import ItemAIGenerator from './item-ai-tool';
+import ItemManagementUI from './item-management-ai';
+import './NewSidebar.css';
+import Receipt from './receipt';
+import SalesDashboard from './sales-dashboard';
+import StickyFooterPage from './sticky-footer';
+import StockInUI from './stock-in-summary';
+import VendorDetailPage from './vendor-detail';
+import POSPaymentDrawer from './payment-screen';
+import POSMonitor from './pos-monitor';
+import Login from './login';
+import OnboardingPage from '../pages/Onboarding';
 
-const socket = io("http://202.79.29.108:8100", {
+const socket = io("http://127.0.0.1:8100", {
   query: { userId: "68b302034b4dec462b87b39b", deviceId: "9f7b2a50-4c1e-11ee-be56-0242ac120002" },
-  transports: ["websocket"], // ensures faster connection
+   // ensures faster connection
   reconnectionAttempts: 5,   // optional: auto-retry limit
-  reconnectionDelay: 1000,   // optional: delay between retries
+  reconnectionDelay: 5000,   // optional: delay between retries
 });
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
+const APP_VERSION = process.env.REACT_APP_VERSION || "2.0.51";
+const HEADER_UNREAD_NOTIFICATION_COUNT = 2;
+const ONBOARDING_SETUP_PATH = "/onboarding/setup";
+const ONBOARDING_WORK_PATHS = [
+  "/inventories/items/create",
+  "/inventories/items",
+  "/inventories/stock-io/create",
+  "/vendors/create"
+];
+
+const sidebarMenuRoutes = [
+  { path: "/", selectedKey: "1" },
+  { path: "/sales", selectedKey: "21", openKey: "2" },
+  { path: "/transactions/sale-order", selectedKey: "21", openKey: "2" },
+  { path: "/customers", selectedKey: "24", openKey: "2" },
+  { path: "/customer-profile", selectedKey: "24", openKey: "2" },
+  { path: "/purchase-orders", selectedKey: "31", openKey: "3" },
+  { path: "/vendors", selectedKey: "33", openKey: "3" },
+  { path: "/inventories/items", selectedKey: "41", openKey: "4" },
+  { path: "/inventories/stock-io", selectedKey: "42", openKey: "4" },
+  { path: "/inventories/transfers", selectedKey: "42", openKey: "4" },
+  { path: "/inventories/adjustments", selectedKey: "42", openKey: "4" },
+  { path: "/general-ledger", selectedKey: "51", openKey: "5" },
+  { path: "/accounts-receivable", selectedKey: "52", openKey: "5" },
+  { path: "/accounts-payable", selectedKey: "53", openKey: "5" },
+  { path: "/reports/sales-report", selectedKey: "61", openKey: "6" },
+  { path: "/reports/purchases", selectedKey: "62", openKey: "6" },
+  { path: "/reports/stock", selectedKey: "63", openKey: "6" },
+  { path: "/reports/items", selectedKey: "64", openKey: "6" },
+  { path: "/reports/financial", selectedKey: "65", openKey: "6" },
+  { path: "/settings", selectedKey: "7" },
+];
+
+function getSidebarDefaultKeys(pathname) {
+  const currentPath = pathname || "/";
+  const matchedRoute = sidebarMenuRoutes
+    .filter(route => currentPath === route.path || (route.path !== "/" && currentPath.indexOf(`${route.path}/`) === 0))
+    .sort((firstRoute, secondRoute) => secondRoute.path.length - firstRoute.path.length)[0] || sidebarMenuRoutes[0];
+
+  return {
+    selectedKeys: [matchedRoute.selectedKey],
+    openKeys: matchedRoute.openKey ? [matchedRoute.openKey] : [],
+  };
+}
+
+class OnboardingStatusRoute extends React.Component {
+  state = { loading: true, status: null, error: false };
+
+  componentDidMount() {
+    this.loadStatus();
+  }
+
+  async loadStatus() {
+    this.setState({ loading: true, error: false });
+    try {
+      const response = await OnboardingService.getStatus();
+      const result = getResponseData(response);
+      if (!result || !result.status) throw new Error("Missing onboarding status");
+      this.setState({ status: result.status, loading: false });
+    } catch (error) {
+      this.setState({ error: true, loading: false });
+    }
+  }
+
+  render() {
+    const { component: Component, location, mode } = this.props;
+    const { loading, status, error } = this.state;
+
+    if (loading) return <StartUp />;
+    if (error) {
+      return (
+        <div role="alert" style={{ padding: 32, textAlign: "center" }}>
+          <p>We couldn’t verify your workspace setup.</p>
+          <button type="button" onClick={() => this.loadStatus()}>Retry</button>
+        </div>
+      );
+    }
+
+    const inProgress = status === "IN_PROGRESS";
+    if (mode === "onboarding") {
+      return inProgress ? <Component {...this.props} /> : <Redirect to="/" />;
+    }
+
+    const isOnboardingWorkPath = ONBOARDING_WORK_PATHS.some(path =>
+      location.pathname === path || location.pathname.indexOf(`${path}/`) === 0
+    );
+    if (inProgress && !isOnboardingWorkPath) {
+      return <Redirect to={ONBOARDING_SETUP_PATH} />;
+    }
+
+    return <Component {...this.props} />;
+  }
+}
+
+const ProtectedRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => (
+      (new Util()).getAuthSession()
+        ? <OnboardingStatusRoute {...props} key={props.location.pathname} component={Component} />
+        : <Redirect to={{ pathname: "/login", state: { from: props.location } }} />
+    )}
+  />
+);
+
+class OnboardingTokenHandoff extends React.Component {
+  componentDidMount() {
+    const { token, location, history } = this.props;
+    const query = new URLSearchParams(location.search);
+    const util = new Util();
+
+    util.setAuthSession({ ...(util.getAuthSession() || {}), accessToken: token });
+    query.delete("token");
+    const search = query.toString();
+    history.replace({
+      pathname: location.pathname,
+      search: search ? `?${search}` : "",
+      hash: location.hash
+    });
+  }
+
+  render() {
+    return <StartUp />;
+  }
+}
+
+const OnboardingRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => {
+      const query = new URLSearchParams(props.location.search);
+      const token = query.get("token");
+      const util = new Util();
+
+      if (token) {
+        return <OnboardingTokenHandoff {...props} token={token} />;
+      }
+
+      return util.getAuthSession()
+        ? <OnboardingStatusRoute {...props} key={props.location.pathname} component={Component} mode="onboarding" />
+        : <Redirect to={{ pathname: "/login", state: { from: props.location } }} />;
+    }}
+  />
+);
 
 export default class SiderDemo extends React.Component {
    state = {
      collapsed: false,
-     alertData: null
+     alertData: null,
+     currentPath: window.location.pathname
    };
 
    componentDidMount() {
       ReactGA.initialize("G-1MQDE7W3RC");
       // Send pageview with a custom path
       ReactGA.send({ hitType: "pageview", page: "/landingpage", title: "Landing Page" });
-
-      // socket.on("training-progress", (data) => {
-      //   this.setState(prev => ({
-      //     ...prev.state,
-      //     alertData: {
-      //       type: "announcement",
-      //       title: `Training ${data.modelName} ${data.status}`,
-      //       message: `Dataset: ${data.dataset}, Accuracy: ${data.accuracy}%, Loss: ${data.loss}`,
-      //       link: "/training/results",
-      //       linkText: "View Results",
-      //     },
-      //   }));
-      // });
-
 
       // Handle connection
       socket.on("connect", () => {
@@ -78,12 +221,19 @@ export default class SiderDemo extends React.Component {
       socket.on("contact-synced", (data) => {
         console.log("contact-synced", data);
       });
+
+      this.unlistenHistory = history.listen(location => {
+        if (location.pathname !== this.state.currentPath) {
+          this.setState({ currentPath: location.pathname });
+        }
+      });
    }
 
   componentWillUnmount() {
     socket.off("connect");
     socket.off("disconnect");
     socket.off("chat-message");
+    if (this.unlistenHistory) this.unlistenHistory();
   }
  
    toggle = () => {
@@ -93,7 +243,59 @@ export default class SiderDemo extends React.Component {
    };
 
    onLogout = () => {
-    (new Util()).logout(history)
+    localStorage.removeItem("ACCESS_TOKEN");
+    localStorage.removeItem("STORE_ACCESS_TOKEN");
+    window.location.replace("/login");
+   }
+
+   handleUpdate = () => {
+    message.info("Application update flow is not connected yet.");
+   }
+
+   getHeaderUser() {
+    const user = (new Util()).getCurrentUser() || {};
+    const displayName = user.fullName || user.displayName || user.name || user.userName || user.username || "User";
+    const roleName = user.roleName || user.position || (user.role && user.role.name) || user.roleCode || "Signed in";
+    const avatar = user.photo || user.avatar || user.imageUrl;
+
+    return {
+      displayName,
+      roleName,
+      avatar,
+      initials: this.getInitials(displayName),
+    };
+   }
+
+   getInitials(name) {
+    return String(name || "User")
+      .trim()
+      .split(/\s+/)
+      .map(part => part.charAt(0))
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+   }
+
+   renderUserMenu() {
+    return (
+      <Menu className="market-header-profile-menu">
+        <Menu.Item>
+          <Link to="/profile">
+            <Icon type="user" />
+            <span>Profile</span>
+          </Link>
+        </Menu.Item>
+        <Menu.Item onClick={this.handleUpdate}>
+          <Icon type="redo" />
+          <span>Update Now</span>
+        </Menu.Item>
+        <Divider style={{ marginTop: 5, marginBottom: 5 }} />
+        <Menu.Item onClick={this.onLogout}>
+          <Icon type="logout" />
+          <span>Logout</span>
+        </Menu.Item>
+      </Menu>
+    );
    }
  
    render() {
@@ -106,12 +308,27 @@ export default class SiderDemo extends React.Component {
     });
     
     const Dashboard = Loadable({
-      loader: () => import("../app/modules/common/containers/home"),
+      loader: () => import("../pages/Dashboard/ERPSalesDashboard"),
       loading: () => <StartUp />,
     });
 
     const SalesOrder = Loadable({
-      loader: () => import("../app/modules/pos/components/transactions/SaleOrder"),
+      loader: () => import("../pages/Sales/Order"),
+      loading: () => <StartUp />,
+    });
+
+    const SalesOrderCreate = Loadable({
+      loader: () => import("../pages/Sales/Order/form.create"),
+      loading: () => <StartUp />,
+    });
+
+    const SalesOrderEdit = Loadable({
+      loader: () => import("../pages/Sales/Order/form.update"),
+      loading: () => <StartUp />,
+    });
+
+    const SalesOrderDetail = Loadable({
+      loader: () => import("../app/modules/pos/components/transactions/SaleOrder/detail"),
       loading: () => <StartUp />,
     });
 
@@ -148,7 +365,7 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
     const NewPurchaseOrder = Loadable({
-      loader: () => import("../pages/Purchasing/Orders/form.create.bk"),
+      loader: () => import("../pages/Purchasing/Orders/form.create"),
       loading: () => <StartUp />,
     });
     const UpdatePurchaseOrder = Loadable({
@@ -196,12 +413,28 @@ export default class SiderDemo extends React.Component {
     });
 
     // Reporting
+    const PurchaseReport = Loadable({
+      loader: () => import("../app/modules/pos/components/reports/Purchase/PurchaseReport"),
+      loading: () => <StartUp />,
+    });
     const SaleReportCenter = Loadable({
       loader: () => import("../pages/Report/index"),
       loading: () => <StartUp />,
     });
-    const SaleReportReceipt = Loadable({
-      loader: () => import("../pages/Report/ReportSaleReceipt"),
+    const SaleReport = Loadable({
+      loader: () => import("../app/modules/pos/components/reports/Sale/SalesReport"),
+      loading: () => <StartUp />,
+    });
+    const FinancialReport = Loadable({
+      loader: () => import("../app/modules/pos/components/reports/Financial/FinancialReport"),
+      loading: () => <StartUp />,
+    });
+    const ReportStock = Loadable({
+      loader: () => import("../app/modules/pos/containers/reports/StockReport"),
+      loading: () => <StartUp />,
+    });
+    const ReportProduct = Loadable({
+      loader: () => import("../app/modules/pos/containers/reports/Product"),
       loading: () => <StartUp />,
     });
 
@@ -218,21 +451,28 @@ export default class SiderDemo extends React.Component {
 
     // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
-    const isPOSPage = window.location.pathname === "/pos";
+    const hasAuthSession = Boolean((new Util()).getAuthSession());
+    const isOnboardingPage = this.state.currentPath.indexOf("/onboarding/") === 0;
+    const isFullScreenPage = ["/pos", "/login"].includes(this.state.currentPath) || isOnboardingPage || !hasAuthSession;
+    const sidebarDefaultKeys = getSidebarDefaultKeys(this.state.currentPath);
+    const headerUser = this.getHeaderUser();
+    const notificationCount = HEADER_UNREAD_NOTIFICATION_COUNT > 9 ? "9+" : HEADER_UNREAD_NOTIFICATION_COUNT;
     const styledContent = {
       margin: '0px 0px',
-      marginTop: 52,
+      // marginTop: 52,
       padding: 0,
+      paddingTop: 58,
       height: '100vh'
     }
 
 
-    return (<Provider store={store}>
-      <BrowserRouter>
-        <Switch>
-          <Router history={history}>
-            <Layout id='components-layout-demo-custom-trigger'>
-              {/* {
+    return (
+      <Provider store={store}>
+        <BrowserRouter>
+          <Switch>
+            <Router history={history}>
+              <Layout id="components-layout-demo-custom-trigger">
+                {/* {
                 this.state.alertData && 
                 <SystemAlertBanner
                   type="announcement"
@@ -242,234 +482,274 @@ export default class SiderDemo extends React.Component {
                   linkText="Explore Features"
                 />
               } */}
-              {
-                !isPOSPage ?
-                <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: '100vh' }}>
-                  <LogoTextOnly />
-                  {/* <DynamicMenu /> */}
-                  <Menu theme={theme} mode="inline" defaultSelectedKeys={['1']}>
-                    <Menu.Item key="1">
-                      <Link to="/">
+                {!isFullScreenPage ? (
+                  <Sider trigger={null} collapsible collapsed={this.state.collapsed} theme={theme} width={230} style={{ height: "100vh" }}>
+                    <LogoTextOnly />
+                    {/* <DynamicMenu /> */}
+                    <Menu
+                      theme={theme}
+                      mode="inline"
+                      defaultSelectedKeys={sidebarDefaultKeys.selectedKeys}
+                      defaultOpenKeys={sidebarDefaultKeys.openKeys}
+                    >
+                      <Menu.Item key="1">
+                        <Link to="/">
                           <Icon type="dashboard" />
                           <span>Dashboard</span>
-                      </Link>
-                    </Menu.Item>
+                        </Link>
+                      </Menu.Item>
 
-                    <SubMenu
-                      key="2"
-                      title={
-                        <span>
-                          <Icon type="dollar" />
-                          <span>Sales</span>
-                        </span>
-                      }
-                    >
-                      <Menu.Item key="21"><Link to="/sales">Orders</Link></Menu.Item>
-                      <Menu.Item key="22"><Link to="/quotes">Quotes</Link></Menu.Item>
-                      <Menu.Item key="23"><Link to="/invoices">Invoices</Link></Menu.Item>
-                      <Menu.Item key="24"><Link to="/customers">Customers</Link></Menu.Item>
-                    </SubMenu>
+                      <SubMenu
+                        key="2"
+                        title={
+                          <span>
+                            <Icon type="dollar" />
+                            <span>Sales</span>
+                          </span>
+                        }
+                      >
+                        <Menu.Item key="21">
+                          <Link to="/sales">All Sales</Link>
+                        </Menu.Item>
+                        {/* <Menu.Item key="22">
+                          <Link to="/quotes">Quotes</Link>
+                        </Menu.Item> */}
+                        {/* <Menu.Item key="23">
+                          <Link to="/invoices">Invoices</Link>
+                        </Menu.Item> */}
+                        <Menu.Item key="24">
+                          <Link to="/customers">Customers</Link>
+                        </Menu.Item>
+                      </SubMenu>
 
-                    <SubMenu
-                      key="3"
-                      title={
-                        <span>
-                          <Icon type="shopping" />
-                          <span>Purchasing</span>
-                        </span>
-                      }
-                    >
-                      <Menu.Item key="31"><Link to="/purchase-orders">Orders</Link></Menu.Item>
-                      <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item>
-                      <Menu.Item key="33"><Link to="/vendors">Vendors</Link></Menu.Item>
-                    </SubMenu>
+                      <SubMenu
+                        key="3"
+                        title={
+                          <span>
+                            <Icon type="shopping" />
+                            <span>Purchasing</span>
+                          </span>
+                        }
+                      >
+                        <Menu.Item key="31">
+                          <Link to="/purchase-orders">Orders</Link>
+                        </Menu.Item>
+                        {/* <Menu.Item key="32"><Link to="/rfps">RFPs</Link></Menu.Item> */}
+                        <Menu.Item key="33">
+                          <Link to="/vendors">Vendors</Link>
+                        </Menu.Item>
+                      </SubMenu>
 
-                    <SubMenu
-                      key="4"
-                      title={
-                        <span>
-                          <Icon type="inbox" />
-                          <span>Inventory</span>
-                        </span>
-                      }
-                    >
-                      <Menu.Item key="41"><Link to="/inventories/items">Items</Link></Menu.Item>
-                      <Menu.Item key="42"><Link to="/inventories/stock-io">Stock In/Out</Link></Menu.Item>
-                      {/* 
-                        Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
-                        Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
-                        Each movement is logged in the Stock Ledger (history).
-                      */}
-                      {/* <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
-                      <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item> */}
-                    </SubMenu>
+                      <SubMenu
+                        key="4"
+                        title={
+                          <span>
+                            <Icon type="inbox" />
+                            <span>Inventory</span>
+                          </span>
+                        }
+                      >
+                        <Menu.Item key="41">
+                          <Link to="/inventories/items">Items</Link>
+                        </Menu.Item>
+                        <Menu.Item key="42">
+                          <Link to="/inventories/stock-io">Stock Movement</Link>
+                        </Menu.Item>
+                        <Menu.Item key="43">
+                          <Link to="/inventories/items">Pricing Management</Link>
+                        </Menu.Item>
+                        {/* 
+                          Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
+                          Stock Out: Reduce stock manually with Reason (Sale, Consumption, Damaged, Return).
+                          Each movement is logged in the Stock Ledger (history).
+                        */}
+                        {/* <Menu.Item key="43"><Link to="/inventories/transfers">Transfers</Link></Menu.Item>
+                        <Menu.Item key="44"><Link to="/inventories/adjustments">Adjustment</Link></Menu.Item> */}
+                      </SubMenu>
 
-                    <SubMenu
-                      key="5"
-                      title={
-                        <span>
-                          <Icon type="bank" />
-                          <span>Finance</span>
-                        </span>
-                      }
-                    >
-                      <Menu.Item key="51">
+                      <SubMenu
+                        key="5"
+                        title={
+                          <span>
+                            <Icon type="bank" />
+                            <span>Finance</span>
+                          </span>
+                        }
+                      >
+                        <Menu.Item key="51">
                           <Link to="/general-ledger">General Ledger (GL)</Link>
-                      </Menu.Item>
-                      <Menu.Item key="52">
+                        </Menu.Item>
+                        <Menu.Item key="52">
                           <Link to="/accounts-receivable">Accounts Receivable (AR)</Link>
-                      </Menu.Item>
-                      <Menu.Item key="53">
+                        </Menu.Item>
+                        <Menu.Item key="53">
                           <Link to="/accounts-payable">Accounts Payable (AP)</Link>
-                      </Menu.Item>
-                    </SubMenu>
+                        </Menu.Item>
+                      </SubMenu>
 
-                    <SubMenu
-                      key="6"
-                      title={
-                        <span>
-                          <Icon type="bar-chart" />
-                          <span>Report</span>
-                        </span>
-                      }
-                    >
-                      <Menu.Item key="61">
-                        <Link to="/reports/sales-report-center">Sales Report</Link>
-                      </Menu.Item>
-                      <Menu.Item key="62">
-                          <Link to="/reports/purchase">Purchase Report</Link>
-                      </Menu.Item>
-                      <Menu.Item key="63">
+                      <SubMenu
+                        key="6"
+                        title={
+                          <span>
+                            <Icon type="bar-chart" />
+                            <span>Report</span>
+                          </span>
+                        }
+                      >
+                        <Menu.Item key="61">
+                          <Link to="/reports/sales-report">Sales Report</Link>
+                        </Menu.Item>
+                        <Menu.Item key="62">
+                          <Link to="/reports/purchases">Purchase Report</Link>
+                        </Menu.Item>
+                        <Menu.Item key="63">
                           <Link to="/reports/stock">Stock Report</Link>
-                      </Menu.Item>
-                      <Menu.Item key="64">
-                          <Link to="/reports/product">Product Report</Link>
-                      </Menu.Item>
-                      <Menu.Item key="65">
+                        </Menu.Item>
+                        <Menu.Item key="64">
+                          <Link to="/reports/items">Item Report</Link>
+                        </Menu.Item>
+                        <Menu.Item key="65">
                           <Link to="/reports/financial">Financial Reports</Link>
-                      </Menu.Item>
+                        </Menu.Item>
+                      </SubMenu>
 
-                    </SubMenu>
-
-                    <Menu.Item key="7">
-                      <Link to="/settings">
-                        <Icon type="setting" />
-                        <span>Settings</span>
-                      </Link>
-                    </Menu.Item>
-                  </Menu>
-                </Sider>
-                :
-                <React.Fragment />
-              }
-
-              <Layout>
-                <Header style={{ 
-                  background: '#fff', 
-                  padding: 0, 
-                  position: 'fixed', 
-                  zIndex: 1, 
-                  width: "87%",
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingRight: '24px'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon
-                      className="trigger"
-                      type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                      onClick={this.toggle}
-                    />
-                  </div>
-
-                  <Dropdown overlay={(
-                    <Menu>
-                      <Menu.Item>
-                        <Icon type="user" />
-                        Profile
-                      </Menu.Item>
-                      <Menu.Item>
-                        <Icon type="redo" />
-                        Update Now
-                      </Menu.Item>
-                      <Divider style={{ marginTop: 5, marginBottom: 5 }} />
-                      <Menu.Item onClick={this.onLogout}>
-                        <Icon type="logout" />
-                        Logout
+                      <Menu.Item key="7">
+                        <Link to="/settings">
+                          <Icon type="setting" />
+                          <span>Settings</span>
+                        </Link>
                       </Menu.Item>
                     </Menu>
-                  )} trigger={["hover"]}>
-                    <Link to="#">
-                      Marco JR
-                    </Link>
-                  </Dropdown>
-                </Header>
+                  </Sider>
+                ) : (
+                  <React.Fragment />
+                )}
 
-                <Content
-                  style={isPOSPage ? { height: "100vh"} : styledContent}
-                  id="center-container"
-                >
-                  <Switch>
-                    <Route path="/pos" component={POS} />
-                    <Route path="/sales" component={SalesOrder} />
-                    <Route path="/quotes" component={Quotes} />
-                    
-                    <Route path="/invoices/view/:id" component={InvoiceDetail} />
-                    <Route path="/invoices/create" component={NewInoice} />
-                    <Route path="/invoices/update/:id" component={NewInoice} />
-                    <Route path="/invoices" component={Invoice} />
-                    
-                    <Route path="/customers" component={Customers} />
-                    <Route path="/customer-profile/:id" component={CustomerProfile} />
-                    
-                    <Route path="/purchase-orders/create" component={NewPurchaseOrder} />
-                    <Route path="/purchase-orders/update/:id" component={UpdatePurchaseOrder} />
-                    <Route path="/purchase-orders" component={PurchaseOrder} />
+                <Layout>
+                  {!isFullScreenPage && (
+                    <Header
+                      className="market-app-header"
+                      style={{
+                        background: "#fff",
+                        padding: 0,
+                        position: "fixed",
+                        zIndex: 1,
+                        // width: "87%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        paddingRight: "24px",
+                      }}
+                    >
+                      {/* <div style={{ display: "flex", alignItems: "center" }}>
+                        <Icon className="trigger" type={this.state.collapsed ? "menu-unfold" : "menu-fold"} onClick={this.toggle} />
+                      </div> */}
+                      <div className="market-header-left-spacer" />
+                      <div className="market-header-right-actions">
+                        <span className="market-header-version">v{APP_VERSION}</span>
+                        <Tooltip title="Check for updates">
+                          <Button className="market-header-update-button" onClick={this.handleUpdate}>
+                            <RefreshCw size={14} />
+                            <span>Update</span>
+                          </Button>
+                        </Tooltip>
+                        <Dropdown overlay={<NotificationMenu />} trigger={["click"]} placement="bottomRight">
+                          <button type="button" className="market-header-icon-button" aria-label="Notifications">
+                            <Badge count={notificationCount} className="market-header-notification-badge">
+                              <Bell size={18} />
+                            </Badge>
+                          </button>
+                        </Dropdown>
+                        <Dropdown overlay={this.renderUserMenu()} trigger={["click"]} placement="bottomRight">
+                          <button type="button" className="market-header-user-button">
+                            <Avatar size={34} src={headerUser.avatar} className="market-header-avatar">
+                              {headerUser.initials}
+                            </Avatar>
+                            <span className="market-header-user-copy">
+                              <strong>{headerUser.displayName}</strong>
+                              <span>{headerUser.roleName}</span>
+                            </span>
+                            <ChevronDown size={14} />
+                          </button>
+                        </Dropdown>
+                      </div>
+                    </Header>
+                  )}
 
-                    <Route path="/vendors/create" component={Vendor} />
-                    <Route path="/vendors/update/:id" component={Vendor} />
-                    <Route path="/vendors" component={Vendor} />
+                  <Content
+                    className={isOnboardingPage ? "mc-onboarding-content" : undefined}
+                    style={isOnboardingPage ? { minHeight: "100vh", margin: 0, padding: 0, overflowY: "auto" } : isFullScreenPage ? { height: "100vh" } : styledContent}
+                    id="center-container"
+                  >
+                    <Switch>
+                      <Route path="/login" component={Login} />
+                      <Route exact path="/onboarding/location" render={props => <Redirect to={{ pathname: ONBOARDING_SETUP_PATH, search: props.location.search }} />} />
+                      <OnboardingRoute path="/onboarding/setup" component={OnboardingPage} />
+                      <ProtectedRoute path="/pos" component={POS} />
+                      <ProtectedRoute path="/sales/create" component={SalesOrderCreate} />
+                      <ProtectedRoute path="/sales/update/:id" component={SalesOrderEdit} />
+                      <ProtectedRoute path="/sales" component={SalesOrder} />
+                      <ProtectedRoute path="/transactions/sale-order/detail/:id" component={SalesOrderDetail} />
+                      <ProtectedRoute path="/quotes" component={Quotes} />
+                      <ProtectedRoute path="/invoices/view/:id" component={InvoiceDetail} />
+                      <ProtectedRoute path="/invoices/create" component={NewInoice} />
+                      <ProtectedRoute path="/invoices/update/:id" component={NewInoice} />
+                      <ProtectedRoute path="/invoices" component={Invoice} />
+                      <ProtectedRoute path="/customers" component={Customers} />
+                      <ProtectedRoute path="/customer-profile/:id" component={CustomerProfile} />
+                      <ProtectedRoute path="/purchase-orders/create" component={NewPurchaseOrder} />
+                      <ProtectedRoute path="/purchase-orders/update/:id" component={UpdatePurchaseOrder} />
+                      <ProtectedRoute path="/purchase-orders" component={PurchaseOrder} />
+                      <ProtectedRoute path="/vendors/create" component={Vendor} />
+                      <ProtectedRoute path="/vendors/update/:id" component={Vendor} />
+                      <ProtectedRoute path="/vendors" component={Vendor} />
+                      <ProtectedRoute path="/inventories/items/create" component={NewItem} />
+                      <ProtectedRoute path="/inventories/items/update/:id" component={EditItem} />
+                      <ProtectedRoute path="/inventories/items/view/:id" component={ViewItem} />
+                      <ProtectedRoute path="/inventories/items/split/:productVariantId" component={SplitItem} />
+                      <ProtectedRoute path="/inventories/items" component={Item} />
+                      {/* StockIO Management */}
+                      <ProtectedRoute path="/inventories/stock-io/create" component={NewStockInOut} />
+                      <ProtectedRoute path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
+                      <ProtectedRoute path="/inventories/stock-io/import" component={StockIOBulkImport} />
+                      <ProtectedRoute path="/inventories/stock-io/ai-import" component={StockIOAIImport} />
+                      <ProtectedRoute path="/inventories/stock-io" component={StockInOut} />
+                      <ProtectedRoute path="/inventories/transfers" component={Vendor} />
+                      <ProtectedRoute path="/inventories/adjustments" component={Vendor} />
+                      <ProtectedRoute path="/reports/sales-report-center" component={SaleReportCenter} />
+                      <ProtectedRoute path="/reports/sales-report" component={SaleReport} />
+                      <ProtectedRoute path="/reports/financial" component={FinancialReport} />
+                      <ProtectedRoute path="/settings" component={SettingsPage} />
+                      <ProtectedRoute path="/categories" component={Category} />
+                      <ProtectedRoute path="/brands" component={Brand} />
+                      <ProtectedRoute path="/setting-logs" component={SystemLogs} />
 
-                    <Route path="/inventories/items/create" component={NewItem} />
-                    <Route path="/inventories/items/update/:id" component={EditItem} />
-                    <Route path="/inventories/items/view/:id" component={ViewItem} />
-                    <Route path="/inventories/items/split/:productVariantId" component={SplitItem} />
-                    <Route path="/inventories/items" component={Item} />
-
-                    {/* StockIO Management */}
-                    <Route path="/inventories/stock-io/create" component={NewStockInOut} />
-                    <Route path="/inventories/stock-io/update/:id" component={UpdateStockInOut} />
-                    <Route path="/inventories/stock-io" component={StockInOut} />
-
-                    <Route path="/inventories/transfers" component={Vendor} />
-                    <Route path="/inventories/adjustments" component={Vendor} />
-
-                    <Route path="/reports/sales-report-center" component={SaleReportCenter} />
-                    <Route path="/reports/sales-report-receipt" component={SaleReportReceipt} />
-
-                    <Route path="/settings" component={SettingsPage} />
-                    <Route path="/categories" component={Category} />
-                    <Route path="/brands" component={Brand} />
-                    <Route path="/setting-logs" component={SystemLogs} />
-                    <Route path="/order-dashboards" component={OrdersDashboard} />
-                    <Route path="/table-views" component={TabletView} />
-                    <Route path="/columns" component={ColumnSelection} />
-                    <Route path="/stock-in-ui" component={StockInUI} />
-                    <Route path="/item-ai-ui" component={ItemManagementUI} />
-                    <Route path="/item-ai-generator" component={ItemAIGenerator} />
-                    <Route path="/sticky-footer-page" component={StickyFooterPage} />
-                    <Route path="/stock-io-form" component={StockIOForm} />
-
-                    <Route path="/" component={Dashboard} />
-                  </Switch>
-                </Content>
+                      {/* Report */}
+                      <ProtectedRoute path="/reports/items" component={ReportProduct} />
+                      <ProtectedRoute path="/reports/purchases" component={PurchaseReport} />
+                      <ProtectedRoute path="/reports/stock" component={ReportStock} />
+                      {/* <Route path="/receipt" component={POSPaymentDrawer} /> */}
+                      <ProtectedRoute path="/receipt" component={Receipt} />
+                      <ProtectedRoute path="/SalesDashboard" component={SalesDashboard} />
+                      <ProtectedRoute path="/order-dashboards" component={OrdersDashboard} />
+                      <ProtectedRoute path="/table-views" component={TabletView} />
+                      <ProtectedRoute path="/columns" component={ColumnSelection} />
+                      <ProtectedRoute path="/stock-in-ui" component={POSMonitor} />
+                      <ProtectedRoute path="/item-ai-ui" component={ItemManagementUI} />
+                      <ProtectedRoute path="/item-ai-generator" component={ItemAIGenerator} />
+                      <ProtectedRoute path="/sticky-footer-page" component={StickyFooterPage} />
+                      <ProtectedRoute path="/stock-io-form" component={StockIOForm} />
+                      <ProtectedRoute path="/vendor-detail" component={VendorDetailPage} />
+                      <ProtectedRoute path="/" component={Dashboard} />
+                    </Switch>
+                  </Content>
+                </Layout>
               </Layout>
-            </Layout>
-          </Router>
-        </Switch>
-      </BrowserRouter>
-    </Provider>);
+            </Router>
+          </Switch>
+        </BrowserRouter>
+      </Provider>
+    );
    }
 }
 

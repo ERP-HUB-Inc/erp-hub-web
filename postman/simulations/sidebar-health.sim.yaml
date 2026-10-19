@@ -1,0 +1,5 @@
+simulation: sidebar-health
+routing: path
+mocks:
+  - routeKey: health-checks
+    path: ../mocks/sidebar-health/config.yaml

@@ -1,0 +1,7 @@
+version: 1
+name: sidebar-health
+interceptRequests: true
+scenarios:
+  - name: default
+    default: true
+    path: default.js
