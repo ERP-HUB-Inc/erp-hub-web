@@ -3,7 +3,7 @@ import { Button, Select } from "antd";
 
 // Shared remote search behavior; each record select owns its service and defaults.
 const RemoteRecordSelect = React.forwardRef(({
-  service, limit, allLabel, allValue = 0, defaultValue, value, selectedItem,
+  service, limit, allLabel, allValue = 0, showAll = true, defaultValue, value, selectedItem,
   onChange, style, width = 180, ...selectProps
 }, ref) => {
   const [internalValue, setInternalValue] = React.useState(defaultValue);
@@ -108,7 +108,7 @@ const RemoteRecordSelect = React.forwardRef(({
         </>
       )}
     >
-      <Select.Option value={allValue} key="all">{allLabel}</Select.Option>
+      {showAll && <Select.Option value={allValue} key="all">{allLabel}</Select.Option>}
       {options.filter(item => String(item.id) !== String(allValue)).map(item => (
         <Select.Option value={optionValue(item.id)} key={item.id}>{item.name}</Select.Option>
       ))}

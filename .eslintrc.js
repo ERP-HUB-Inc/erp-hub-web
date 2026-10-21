@@ -16,6 +16,12 @@ module.exports = {
     "rules": {
         "semi": ["error", "always"],
         "quotes": ["error", "double"],
+        "object-curly-newline": ["error", {
+            "ImportDeclaration": {
+                "multiline": true,
+                "minProperties": 2
+            }
+        }],
         "no-trailing-whitespace": 0,
         // "eslint-disable no-script-url": true,
         // "indent": [

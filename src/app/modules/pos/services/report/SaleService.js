@@ -46,6 +46,15 @@ class SaleService extends BaseService {
     });
   }
 
+  getBusinessHealth(option) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/report/sales/intelligence/business-health?${this.bindQueryParam(option)}`,
+      headers: this.header,
+      timeout: SALES_REPORT_TIMEOUT
+    });
+  }
+
   getSalesPerformance(option) {
     this.setHeader();
     return this.GET({
