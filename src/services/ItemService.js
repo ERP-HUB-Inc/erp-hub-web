@@ -37,6 +37,10 @@ class ItemService extends BaseService {
   ) {
     return this.GET({
       url: `${this.baseUrl}?${this.bindQueryParam(option)}`,
+      params: {
+        ...(option.lowStockAlert === true ? { lowStockAlert: true } : {}),
+        ...(option.marginReviewAlert === true ? { marginReviewAlert: true } : {}),
+      },
     });
   }
 
@@ -65,6 +69,15 @@ class ItemService extends BaseService {
     this.setHeader();
     return this.GET({
       url: `${this.baseUrl}/get_form_data`,
+      headers: this.header,
+    });
+  }
+
+  getSummary({ locationId } = {}) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/summary`,
+      params: locationId ? { locationId } : {},
       headers: this.header,
     });
   }
@@ -189,4 +202,4 @@ class ItemService extends BaseService {
   }
 }
 
-export default new ItemService(); 
+export default new ItemService();

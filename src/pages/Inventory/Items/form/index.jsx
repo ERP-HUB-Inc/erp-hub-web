@@ -1,6 +1,8 @@
 import React from "react";
 import {
+   Alert,
    Avatar,
+   Badge,
    Menu,
    Drawer,
    Card,
@@ -54,9 +56,28 @@ import { QuantityValue } from "@components/stateless/quantity.value";
 import { buildStockInPayload } from "../stockio.helper";
 import { getLocationId } from "@helper/user";
 import inventory from "@helper/inventory";
+import ItemSummary from "./item-summary";
+import ItemSellingPrice, { getPriceDifference } from "./item-selling-price";
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
+
+function ItemTabLabel({ label, count, tone = "neutral", icon }) {
+   return (
+      <span className="item-list-tab-label">
+         <span>
+            {icon && <Icon type={icon} />}
+            {label}
+         </span>
+         <Badge
+            className={`item-list-tab-count item-list-tab-count-${tone}`}
+            count={count}
+            overflowCount={Number.MAX_SAFE_INTEGER}
+            showZero
+         />
+      </span>
+   );
+}
 
 export default class ProductList extends Datatable {
    constructor(props) {
@@ -70,10 +91,15 @@ export default class ProductList extends Datatable {
          locations: [],
          products: [],
          pagination: {},
+         tabCounts: {},
+         lowStockAlertCount: null,
+         marginReviewAlertCount: null,
+         listError: "",
          dataSourceToPrint: [],
          stockInItems: {}, // Format: { [productId]: { quantity, unitId, notes, type } }
          unitOptions: [], // Load your unit options here
          activeTab: "item",
+         summaryRefreshKey: 0,
          visibleColumns: {
             item: ["name", "incomingStock", "quantity", "price", "action"],
             stock: ["name", "quantity", "qtyIn", "reorderPoint"]
@@ -230,7 +256,7 @@ export default class ProductList extends Datatable {
           },
         },
         {
-          title: <Translate id="text_retial_price" />,
+          title: "Selling Price & Margin",
           key: "price",
           dataIndex: "price",
           width: 180,
@@ -238,9 +264,12 @@ export default class ProductList extends Datatable {
           sorter: (a, b) => a.price - b.price,
           render: (_, record) => {
             return (
-              <Text strong style={{ fontSize: "16px" }}>
-                {exchangeAndFormatCurrency(Util.getProductPrice(record))}
-              </Text>
+              <ItemSellingPrice
+                enableInventoryTracking={record.enableInventoryTracking}
+                price={Util.getProductPrice(record)}
+                cost={record.productVariants?.[0]?.cost}
+                formatCurrency={exchangeAndFormatCurrency}
+              />
             );
           },
         },
@@ -466,7 +495,14 @@ export default class ProductList extends Datatable {
       this.callBackOnShowEditForm = this.showFormEdit;
       this.fetchingProp = "products";
       this.isShowExpandable = true;
-      this.rowClassName = record => record.productOption !== Enum.PRODUCT_VARIANT ? "standard-product-row" : "";
+      this.rowClassName = record => {
+         const classes = record.productOption !== Enum.PRODUCT_VARIANT ? ["standard-product-row"] : [];
+         const difference = getPriceDifference(Util.getProductPrice(record), record.productVariants?.[0]?.cost);
+         if (record.enableInventoryTracking === true && difference !== null && difference < 0) {
+            classes.push("item-loss-row");
+         }
+         return classes.join(" ");
+      };
       this.componentHasUpdated = false;
       this.service = ProductService;
       this.columnFilterWithKey = ["name", "barcode", "namekm"];
@@ -475,6 +511,7 @@ export default class ProductList extends Datatable {
       this.handleClone = this.handleClone.bind(this);
       this.pathName = "/inventories/items";
       this.timer = null;
+      this.listRequestId = 0;
    }
 
    componentDidMount() {
@@ -607,7 +644,34 @@ export default class ProductList extends Datatable {
       }
    };
 
+   componentWillUnmount() {
+      clearTimeout(this.timer);
+      this.listRequestId += 1;
+   }
+
+   onAlertCountsChange = (lowStockAlertCount, marginReviewAlertCount) => {
+      this.setState({ lowStockAlertCount, marginReviewAlertCount });
+   };
+
+   onChangeTab = (activeTab) => {
+      clearTimeout(this.timer);
+      this.listRequestId += 1;
+      this.setState({
+         activeTab,
+         loading: true,
+         listError: "",
+         products: [],
+         pagination: {},
+         selectedRows: [],
+         selectedRowKeys: [],
+         selectedListIds: [],
+         dataSourceToPrint: []
+      }, () => this.fetchList());
+   };
+
    fetchList(withPagination = false) {
+         const requestId = ++this.listRequestId;
+         const { activeTab } = this.state;
          let search = "";
          let filter = {};
          let filterValue = {};
@@ -625,6 +689,10 @@ export default class ProductList extends Datatable {
          if (params.get("type")) type = Number(params.get("type"));
          if (Object.keys(filterValue).length) filter = JSON.stringify(filterValue);
 
+         const countScope = JSON.stringify({ filter, search, locationId, type });
+         const resetCounts = this.listCountScope !== countScope;
+         this.listCountScope = countScope;
+
          if (!withPagination) {
             offset = 1;
             this.setState({ current: 1 });
@@ -634,18 +702,42 @@ export default class ProductList extends Datatable {
 
          offset = (offset - 1) * limit;
          
-         this.setState({loading: true});
+         this.setState(state => ({
+            loading: true,
+            listError: "",
+            tabCounts: resetCounts ? {} : state.tabCounts,
+            summaryRefreshKey: state.summaryRefreshKey + 1
+         }));
          
-         ProductService.get({ limit, offset, filter, search, locationId, type })
+         ProductService.get({
+            limit, offset, filter, search, locationId, type,
+            ...(activeTab === "low-stock-alerts" ? { lowStockAlert: true } : {}),
+            ...(activeTab === "margin-review" ? { marginReviewAlert: true } : {})
+         })
          .then(response => {
+            if (requestId !== this.listRequestId) return;
             if (response.data) {
-               this.setState({
+               this.setState(state => ({
                   products: response.data.data,
-                  pagination: response.data.pagination
-               });
+                  pagination: response.data.pagination,
+                  tabCounts: {
+                     ...state.tabCounts,
+                     [activeTab]: response.data.pagination?.total
+                  }
+               }));
             }
          })
-         .finally(() => this.setState({loading: false}));
+         .catch(() => {
+            if (requestId !== this.listRequestId) return;
+            this.setState({
+               products: [],
+               pagination: {},
+               listError: "Unable to load items. Use Refresh to try again."
+            });
+         })
+         .finally(() => {
+            if (requestId === this.listRequestId) this.setState({loading: false});
+         });
    }
 
    renderButtonAddNew() {
@@ -1064,6 +1156,65 @@ export default class ProductList extends Datatable {
       );
    }
 
+   renderItemList() {
+      const params = new URLSearchParams(document.location.search);
+
+      return (
+         <React.Fragment>
+            <Row className="item-list-toolbar" gutter={12}>
+               <Col xs={24} xl={18}>
+                  <div className="item-list-filters">
+                     <Input
+                        ref={(input) => { this.searchItemInput = input; }}
+                        defaultValue={params.get("search") || ""}
+                        placeholder={this.CATranslate("text_search_item", this.props.locale)}
+                        form={this.props.form}
+                        onChange={this.onSearch}
+                        suffix={<Icon type="search" />}
+                        style={{ width: 350, marginBottom: 0 }}
+                        allowClear={true}
+                     />
+                     {this.renderProductTypeFilter()}
+                     <SelectCategory
+                        ref={this.SelectCategoryRef}
+                        defaultValue={Number(params.get("categoryId")) || 0}
+                        onChange={this.onChangeCategory}
+                     />
+                     <SelectLocation
+                        ref={this.SelectLocationRef}
+                        defaultValue={Number(params.get("locationId")) || 0}
+                        onChange={this.onChangeLocation}
+                     />
+                  </div>
+               </Col>
+               <Col xs={24} xl={6}>
+                  <div className="item-list-toolbar-actions">
+                     {this.renderRefreshButton()}
+                     {this.renderColumnSettings("item")}
+                  </div>
+               </Col>
+            </Row>
+            {this.state.listError && (
+               <Alert type="error" showIcon message={this.state.listError} style={{ marginBottom: 12 }} />
+            )}
+            <Table
+               rowKey="id"
+               bordered={true}
+               pagination={false}
+               dataSource={this.state.products}
+               columns={this.columns.filter((column) => this.state.visibleColumns.item.includes(column.key))}
+               rowClassName={this.rowClassName}
+               locale={{ emptyText: <Translate id="table_empty_data" /> }}
+               onRow={(record) => ({ onDoubleClick: () => this.handleShowFormEdit(record) })}
+               loading={this.state.loading}
+               size="middle"
+            />
+            <div style={{ marginTop: 15 }}>{this.renderPagination()}</div>
+            <this.clearFloating />
+         </React.Fragment>
+      );
+   }
+
    renderPagination() {
       const { total, limit } = this.state.pagination;
       const pagination = {
@@ -1088,6 +1239,8 @@ export default class ProductList extends Datatable {
     }
 
    render() {
+      const summaryLocationId = new URLSearchParams(document.location.search).get("locationId") || undefined;
+
       return (
         <div className="content-list">
           <EditStock
@@ -1098,11 +1251,7 @@ export default class ProductList extends Datatable {
           <div className="table-wrapper">
             <PageHeader
               title="Items Management"
-              subtitle="Manage all products and services"
-              breadcrumbs={[
-                { text: "Dashboard", href: "/dashboard" },
-                { text: "Items Management" },
-              ]}
+              subtitle="Executive inventory valuation, catalog health, and margin protection overview."
               actions={[
                 // <Button
                 //    type="default"
@@ -1120,9 +1269,9 @@ export default class ProductList extends Datatable {
 
                 {
                   text:
-                    this.state.activeTab === "item"
-                      ? "Import Items"
-                      : "Import Stock IO",
+                    this.state.activeTab === "stock"
+                      ? "Import Stock IO"
+                      : "Import Items",
                   type: "default",
                   icon: "upload",
                   onClick: () => {},
@@ -1144,85 +1293,42 @@ export default class ProductList extends Datatable {
               ]}
             />
 
+            <ItemSummary
+              key={summaryLocationId || "all"}
+              locationId={summaryLocationId}
+              refreshKey={this.state.summaryRefreshKey}
+              onAlertCountsChange={this.onAlertCountsChange}
+              formatCurrency={exchangeAndFormatCurrency}
+            />
+
             {/* TODO: apply memo to both tab content to avoid re-render */}
             <Tabs
-              defaultActiveKey="item"
-              onChange={(activeKey) => this.setState({ activeTab: activeKey })}
+              className="item-management-tabs"
+              activeKey={this.state.activeTab}
+              destroyInactiveTabPane
+              onChange={this.onChangeTab}
             >
+              {[
+                { key: "item", label: "Items", tone: "neutral", count: this.state.tabCounts.item },
+                { key: "low-stock-alerts", label: "Low Stock Alerts", tone: "warning", count: this.state.lowStockAlertCount },
+                { key: "margin-review", label: "Margin Review", tone: "danger", icon: "exclamation", count: this.state.marginReviewAlertCount }
+              ].map(tab => (
+                <TabPane
+                  tab={<ItemTabLabel label={tab.label} count={tab.count} tone={tab.tone} icon={tab.icon} />}
+                  key={tab.key}
+                >
+                  {this.renderItemList()}
+                </TabPane>
+              ))}
               <TabPane
-                tab={`Items(${this.state.pagination.total || 0})`}
-                key="item"
-                style={{ paddingLeft: "40px", paddingRight: "40px" }}
-              >
-                <Row className="item-list-toolbar" gutter={12}>
-                  <Col xs={24} xl={18}>
-                    <div className="item-list-filters">
-                    <Input
-                      ref={(input) => {
-                        this.searchItemInput = input;
-                      }}
-                      placeholder={this.CATranslate(
-                        "text_search_item",
-                        this.props.locale,
-                      )}
-                      form={this.props.form}
-                      onChange={this.onSearch}
-                      suffix={<Icon type="search" />}
-                      style={{ width: 350, marginBottom: 0 }}
-                      allowClear={true}
-                    />
-
-                    {this.renderProductTypeFilter()}
-
-                    <SelectCategory
-                      ref={this.SelectCategoryRef}
-                      onChange={this.onChangeCategory}
-                    />
-
-                    <SelectLocation
-                      ref={this.SelectLocationRef}
-                      onChange={this.onChangeLocation}
-                    />
-
-                    </div>
-                  </Col>
-                  <Col xs={24} xl={6}>
-                    <div className="item-list-toolbar-actions">
-                      {this.renderRefreshButton()}
-                      {this.renderColumnSettings("item")}
-                    </div>
-                  </Col>
-                </Row>
-
-                <Table
-                  rowKey="id"
-                  bordered={true}
-                  pagination={false}
-                  dataSource={this.state.products}
-                  columns={this.columns.filter((column) => this.state.visibleColumns.item.includes(column.key))}
-                  rowClassName={this.rowClassName}
-                  locale={{ emptyText: <Translate id="table_empty_data" /> }}
-                  onRow={(record) => ({
-                    onDoubleClick: () => this.handleShowFormEdit(record),
-                  })}
-                  loading={this.state.loading}
-                  // scroll={{ y: 550, x: 1200 }}
-                  size="middle"
-                />
-
-                <div style={{ marginTop: 15 }}>{this.renderPagination()}</div>
-
-                <this.clearFloating />
-              </TabPane>
-              <TabPane
-                tab="Stock IO"
+                tab="Stock IO / Movement"
                 key="stock"
-                style={{ paddingLeft: "40px", paddingRight: "40px" }}
               >
                 <Row className="item-list-toolbar" gutter={12}>
                   <Col xs={24} xl={18}>
                     <div className="item-list-filters">
                     <Input
+                      defaultValue={new URLSearchParams(document.location.search).get("search") || ""}
                       placeholder={this.CATranslate(
                         "text_search_item",
                         this.props.locale,
@@ -1238,6 +1344,7 @@ export default class ProductList extends Datatable {
 
                     <SelectCategory
                       ref={this.SelectCategoryRef}
+                      defaultValue={Number(new URLSearchParams(document.location.search).get("categoryId")) || 0}
                       onChange={this.onChangeCategory}
                     />
 
@@ -1251,6 +1358,9 @@ export default class ProductList extends Datatable {
                   </Col>
                 </Row>
 
+                {this.state.listError && (
+                  <Alert type="error" showIcon message={this.state.listError} style={{ marginBottom: 12 }} />
+                )}
                 <Table
                   rowKey="id"
                   bordered={true}

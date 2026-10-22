@@ -476,12 +476,12 @@ function ERPSalesDashboard({ history, location }) {
       tone: "red",
       icon: Wallet,
     });
-  const purchaseAlert = priceRows.find((row) => safe(row.changePercent) > 0);
-  if (purchaseAlert)
+  const purchasePriceIssueCount = priceRows.filter((row) => safe(row.changePercent) > 0).length;
+  if (purchasePriceIssueCount > 0)
     insights.push({
       key: "purchase",
-      title: `${purchaseAlert.itemName || purchaseAlert.productName || "A product"} purchase cost increased`,
-      body: `Verified purchase price variance: ${safe(purchaseAlert.changePercent).toFixed(1)}%. Review its cost history.`,
+      title: `${purchasePriceIssueCount} ${purchasePriceIssueCount === 1 ? "item has" : "items have"} purchase price increases`,
+      body: "Review affected items and their purchase cost history for the selected period and branch scope.",
       href: reports.purchases,
       label: "Review purchase prices",
       tone: "amber",
@@ -490,6 +490,16 @@ function ERPSalesDashboard({ history, location }) {
   const goalTarget = goalPerformance.data && goalPerformance.data.target;
   const goalRevenue = safe(goalTarget && goalTarget.targetRevenue);
   const goalPercent = safe(goalTarget && goalTarget.achievementPercent);
+  if (locationId && !goalPerformance.loading && !goalPerformance.error && goalRevenue > 0 && goalPerformance.data.pacing && goalPerformance.data.pacing.status === "BELOW_PACE")
+    insights.push({
+      key: "sales-goal",
+      title: "Sales are behind your monthly target",
+      body: "Month-to-date sales are below the expected pace for this branch's monthly target.",
+      href: reports.sales,
+      label: "View sales report",
+      tone: "amber",
+      icon: Target,
+    });
   let goalDisplay = "Unavailable";
   if (!locationId) goalDisplay = "Select a branch";
   else if (goalPerformance.loading) goalDisplay = "Loading…";
@@ -740,16 +750,16 @@ function ERPSalesDashboard({ history, location }) {
                 <span>{coverage.result < 0 ? `Shortfall: ${currency(coverage.shortfall)}` : `Surplus: ${currency(coverage.result)}`}</span>
               </div>
             )}
-            <p className="dash-explanation">
-              {coverage.result === null
-                ? "Check the financial report for missing inputs."
-                : expenses === 0
-                  ? "An empty expense total does not confirm profitability."
-                  : coverage.result < 0
-                    ? `Gross profit is ${currency(coverage.shortfall)} below recorded operating expenses for this period.`
-                    : "Gross profit exceeds recorded operating expenses for this period."}
-            </p>
-            <Link className="dash-link" to={reports.financial}>
+            {(coverage.result === null || expenses === 0 || coverage.result < 0) && (
+              <p className="dash-explanation">
+                {coverage.result === null
+                  ? "Check the financial report for missing inputs."
+                  : expenses === 0
+                    ? "An empty expense total does not confirm profitability."
+                    : `Gross profit is ${currency(coverage.shortfall)} below recorded operating expenses for this period.`}
+              </p>
+            )}
+            <Link className="dash-link dash-financial-report-link" to={reports.financial}>
               View Financial Report <ArrowRight size={14} />
             </Link>
           </section>

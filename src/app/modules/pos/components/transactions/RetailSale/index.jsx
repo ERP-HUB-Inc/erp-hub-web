@@ -23,6 +23,7 @@ import CategoryAction from "../../../../inventory/actions/products/productsType"
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
 import ItemService from "@services/ItemService";
+import ItemPOSService from "@services/ItemPOSService";
 import ProductVariantConstant from "../../../../inventory/constants/products/productVariant";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
@@ -41,6 +42,7 @@ import EmptyOrder from "./empty.order";
 import { Translate } from "@redux/index";
 import ReceiptV2 from "./receipt-v2";
 import CategoryList from "./category-list";
+import ItemAutoRefresh from "./item-auto-refresh";
 import { StockBadge } from "@components/stateless/stock-badge";
 import { getLocationId } from "@helper/user";
 
@@ -92,12 +94,17 @@ export default class RetailSale extends Component {
     this.productWidth = 0;
     this.service = TransactionService;
     this.timer = null;
+    this.itemsRequestId = 0;
+    this.itemsRequestPending = false;
+    this.itemsRequest = { service: ItemPOSService, filters: {} };
+    this.isUnmounted = false;
     this.orderListRef = null;
     this.discountRef = React.createRef();
     this.orderItemRefs = {};
   }
 
   componentDidMount() {
+    this.isUnmounted = false;
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.handleSetFullScreen();
 
@@ -105,11 +112,7 @@ export default class RetailSale extends Component {
     this.props.dispatch(OpenSaleRegistrationAction.last());
 
     this.props.dispatch(CategoryAction.fetch(15));
-    ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
-      if (response && response.data && response.data.data) {
-        this.setState({ items: response.data.data });
-      }
-    });
+    this.loadItems();
 
     window.addEventListener("keydown", this.handleKeyboardShortcut);
 
@@ -185,25 +188,50 @@ export default class RetailSale extends Component {
   }
 
   componentWillUnmount() {
+    this.isUnmounted = true;
+    clearTimeout(this.timer);
     this.hadDidUpdateCheckDevice = false;
     window.removeEventListener("keydown", this.handleKeyboardShortcut);
   }
 
-  handleOnSelectCategory = (categoryId) => {
-    if (categoryId === this.state.activeCategory || categoryId === "all") {
-      this.setState({ activeCategory: null });
-      ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
-        if (response && response.data && response.data.data) {
+  loadItems = (request = this.itemsRequest) => {
+    this.itemsRequest = request;
+    const requestId = ++this.itemsRequestId;
+    this.itemsRequestPending = true;
+
+    return request.service.get({ limit: 25, locationId: this.Util.getLocationId(), ...request.filters })
+      .then((response) => {
+        if (!this.isUnmounted && requestId === this.itemsRequestId && response && response.data && response.data.data) {
           this.setState({ items: response.data.data });
         }
+      })
+      .catch(() => {
+        if (!this.isUnmounted && requestId === this.itemsRequestId) {
+          this.Message.error("Unable to refresh items. Please try again.");
+        }
+      })
+      .finally(() => {
+        if (requestId === this.itemsRequestId) {
+          this.itemsRequestPending = false;
+        }
       });
+  };
+
+  refreshItems = () => {
+    if (!this.isUnmounted && !this.itemsRequestPending && !this.timer) {
+      this.loadItems();
+    }
+  };
+
+  handleOnSelectCategory = (categoryId) => {
+    clearTimeout(this.timer);
+    this.timer = null;
+    if (categoryId === this.state.activeCategory || categoryId === "all") {
+      this.setState({ activeCategory: null });
+      this.loadItems({ service: ItemService, filters: {} });
     } else {
       this.setState({ activeCategory: categoryId });
-      ItemService.get({ limit: 25, locationId: this.Util.getLocationId(), categoryId }).then((response) => {
-          if (response && response.data && response.data.data) {
-            this.setState({ items: response.data.data });
-          }
-      });
+      this.loadItems({ service: ItemService, filters: { categoryId } });
     }
   }
 
@@ -368,23 +396,18 @@ export default class RetailSale extends Component {
     const search = e.target.value;
     this.setState({ searchText: search });
     clearTimeout(this.timer);
+    this.itemsRequestId += 1;
     this.timer = setTimeout(() => {
-      ItemService.get({ limit: 25, locationId: this.Util.getLocationId(), search: search }).then((response) => {
-        if (response && response.data && response.data.data) {
-          this.setState({ items: response.data.data });
-        }
-      });
+      this.timer = null;
+      this.loadItems({ service: ItemService, filters: { search } });
     }, 1000);
   };
 
   handleOnClearSearch = () => {
     clearTimeout(this.timer);
+    this.timer = null;
     this.setState({ searchText: "" });
-    ItemService.get({ limit: 25, locationId: this.Util.getLocationId() }).then((response) => {
-      if (response && response.data && response.data.data) {
-        this.setState({ items: response.data.data });
-      }
-    });
+    this.loadItems({ service: ItemService, filters: {} });
     this.focusSearchInput();
   }
 
@@ -1221,6 +1244,7 @@ export default class RetailSale extends Component {
             </div>
           </div>
           <div className="action-container">
+            <ItemAutoRefresh onRefresh={this.refreshItems} />
             <div className="pos-header-version">v{APP_VERSION}</div>
             <div className="pos-header-branch">
               <Icon type="environment" />

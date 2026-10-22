@@ -202,10 +202,76 @@
     min-height: 200px;
 }
 
+.item-management-tabs.ant-tabs {
+    margin: 0 16px;
+}
+
+.item-management-tabs > .ant-tabs-bar .ant-tabs-nav-wrap {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+@media (max-width: 767px) {
+    .item-management-tabs.ant-tabs {
+        margin: 0 20px;
+    }
+}
+
 .item-list-toolbar {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.item-selling-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.item-selling-price-margin {
+    color: rgb(17 94 89 / var(--tw-text-opacity, 1));
+    font-size: 12px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.item-selling-price-margin-negative { color: #9f1239; }
+.item-selling-price-margin-neutral { color: #64748b; }
+
+/* Override the legacy !important row stripes while preserving hover and selection. */
+.item-management-tabs .ant-table-tbody > tr.item-loss-row:not(.ant-table-row-selected):not(:hover) > td {
+    background: rgb(255 241 242 / 0.25) !important;
+}
+
+.item-list-tab-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.item-list-tab-count .ant-badge-count {
+    padding: 0 7px;
+    font-weight: 600;
+    box-shadow: none;
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.item-list-tab-count-info .ant-badge-count {
+    background: #e6f7ff;
+    color: #0050b3;
+}
+
+.item-list-tab-count-warning .ant-badge-count {
+    background: #fff7e6;
+    color: #ad4e00;
+}
+
+.item-list-tab-count-danger .ant-badge-count {
+    background: #fff1f0;
+    color: #a8071a;
 }
 
 .item-list-filters {

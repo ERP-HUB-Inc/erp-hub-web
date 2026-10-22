@@ -77,7 +77,7 @@ const SelectCategory = forwardRef((props, ref) => {
 
   return (
     <Select
-      defaultValue={0}
+      defaultValue={props.defaultValue === undefined ? 0 : props.defaultValue}
       placeholder={<Translate id="text_all_categories"/>}
       filterOption={false}
       onChange={handleChange}

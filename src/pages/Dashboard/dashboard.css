@@ -771,6 +771,13 @@
   color: #0f766e;
   white-space: nowrap;
 }
+.dash-financial-report-link {
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #e8f0f3;
+}
 .dash-latest {
   background: #f1f5f9;
   padding: 4px 8px;
