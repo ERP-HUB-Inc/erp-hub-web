@@ -573,7 +573,7 @@ export default class RetailSale extends Component {
       return "out";
     }
 
-    return productStock <= (Number(product.reorderPoint) || 5) ? "low" : "in";
+    return productStock <= Number(product.reorderPoint) ? "low" : "in";
   }
 
   getProductVariantStock(productVariant) {

@@ -1,0 +1,7 @@
+version: 1
+name: item-import
+interceptRequests: true
+scenarios:
+  - name: default
+    default: true
+    path: default.js

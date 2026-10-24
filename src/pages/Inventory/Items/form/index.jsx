@@ -101,7 +101,7 @@ export default class ProductList extends Datatable {
          activeTab: "item",
          summaryRefreshKey: 0,
          visibleColumns: {
-            item: ["name", "incomingStock", "quantity", "price", "action"],
+            item: ["name", "itemType", "incomingStock", "quantity", "price", "action"],
             stock: ["name", "quantity", "qtyIn", "reorderPoint"]
          },
          productTypes: []
@@ -189,35 +189,24 @@ export default class ProductList extends Datatable {
                     <Text type="secondary" style={{ fontSize: "12px" }}>
                       {categoryName}
                     </Text>
-
-                    {/* <Text type="secondary" style={{ fontSize: "12px" }}>
-                      •
-                    </Text>
-                    <Text
-                      type="secondary"
-                      style={{
-                        fontSize: "12px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      {stockCount} {record?.unitOfMeasurement?.name} On Hand
-                    </Text>
-                    {stockCount <= record.reorderPoint && stockCount > 0 && (
-                      <Text
-                        style={{
-                          fontSize: "12px",
-                          color: "#fa8c16",
-                          fontWeight: "500",
-                        }}
-                      >
-                        📉 low
-                      </Text>
-                    )} */}
                   </div>
                 </div>
               </div>
             );
           },
+        },
+        {
+          title: "Type",
+          key: "itemType",
+          dataIndex: "itemType",
+          width: 180,
+          sorter: (a, b) => a.itemType - b.itemType,
+          render: itemType =>
+            itemType && itemType.name && itemType.name.trim() ? (
+              itemType.name
+            ) : (
+              <Text type="secondary">Not set</Text>
+            )
         },
         {
           title: "Incoming Stock",
@@ -1274,7 +1263,11 @@ export default class ProductList extends Datatable {
                       : "Import Items",
                   type: "default",
                   icon: "upload",
-                  onClick: () => {},
+                  onClick: () => history.push(
+                    this.state.activeTab === "stock"
+                      ? "/inventories/stock-io/import"
+                      : "/inventories/items/import"
+                  ),
                 },
                 {
                   text: "Add New Item",

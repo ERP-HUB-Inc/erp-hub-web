@@ -1,0 +1,5 @@
+simulation: item-import
+routing: path
+mocks:
+  - routeKey: catalog
+    path: ../mocks/item-import/config.yaml

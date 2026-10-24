@@ -246,6 +246,10 @@ const Item = Loadable({
   loader: () => import("../pages/Inventory/Items"),
   loading: () => <StartUp />,
 });
+const ImportItem = Loadable({
+  loader: () => import("../pages/Inventory/Items/import"),
+  loading: () => <StartUp />,
+});
 const NewItem = Loadable({
   loader: () => import("../pages/Inventory/Items/form.create"),
   loading: () => <StartUp />,
@@ -699,6 +703,7 @@ export default class SiderDemo extends React.Component {
                       <ProtectedRoute path="/vendors/create" component={Vendor} />
                       <ProtectedRoute path="/vendors/update/:id" component={Vendor} />
                       <ProtectedRoute path="/vendors" component={Vendor} />
+                      <ProtectedRoute path="/inventories/items/import" component={ImportItem} />
                       <ProtectedRoute path="/inventories/items/create" component={NewItem} />
                       <ProtectedRoute path="/inventories/items/update/:id" component={EditItem} />
                       <ProtectedRoute path="/inventories/items/view/:id" component={ViewItem} />

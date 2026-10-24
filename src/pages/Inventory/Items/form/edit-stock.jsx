@@ -150,7 +150,7 @@ class EditStock extends React.Component {
                         >
                            {
                               this.state.locations.map((location, index) => 
-                                 <Select.Option value={location.id} key={index}>{location.name}{this.state.locationId}</Select.Option>
+                                 <Select.Option value={location.id} key={index}>{location.name}</Select.Option>
                               )
                            }
                         </Select>

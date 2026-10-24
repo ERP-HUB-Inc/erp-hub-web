@@ -1,5 +1,5 @@
 import Constant from "../../constants/transactions/openSaleRegisration";
-import OpenSaleRegistrationService from "../../services/transactions/OpenSaleRegistrationService";
+import OpenSaleRegistrationService from "../../services/transactions/ShiftRegistrationService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey, rangFilter) => {

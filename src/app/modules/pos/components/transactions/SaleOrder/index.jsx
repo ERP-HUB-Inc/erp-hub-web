@@ -221,7 +221,7 @@ export default class SaleOrderPage extends Component {
               <div className="sale-order-number-cell">
                 <strong>{number}</strong>
                 <span>{this.Util.formatDate(record.registerDate, "h:mm A • MMM D")}</span>
-                {channel && <small>{channel}</small>}
+                {channel && <small style={{ textTransform: "uppercase" }}>{channel}</small>}
               </div>
             </div>
           );

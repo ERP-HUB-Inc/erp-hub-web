@@ -11,7 +11,7 @@ import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegi
 import TransactionAction from "../../../action/transaction/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import ConstantPaymentMethod from "../../../../pos/constants/settings/paymentMethod";
-import OpenSaleRegistrationService from "../../../../pos/services/transactions/OpenSaleRegistrationService";
+import OpenSaleRegistrationService from "../../../../pos/services/transactions/ShiftRegistrationService";
 
 export default class OpenSaleRegistrationList extends List {
   constructor(props) {

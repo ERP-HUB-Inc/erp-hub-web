@@ -71,7 +71,7 @@
     align-items: baseline;
     flex-wrap: wrap;
     gap: 6px;
-    margin: 12px 0 8px;
+    margin: 8px 0 8px;
 }
 
 .item-summary-value {
@@ -147,7 +147,7 @@
 .item-summary-stock-panels > div,
 .item-summary-pricing-panels > div {
     min-width: 0;
-    min-height: 40px;
+    min-height: 32px;
     padding: 8px 10px;
     border-radius: 8px;
     align-items: center;
