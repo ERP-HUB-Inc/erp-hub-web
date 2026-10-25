@@ -97,10 +97,6 @@
 .item-import-tip:nth-of-type(3) h3 { color: #92400e; }
 .item-import-tip h3 { font-size: 13px; margin: 0 0 4px; }
 .item-import-tip p { font-size: 12px; margin: 0; }
-.item-import-database { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.item-import-database .item-import-upload-icon { width: 48px; height: 48px; border-radius: 12px; }
-.item-import-database > div { flex: 1; }
-.item-import-database strong, .item-import-database .item-import-secondary { display: block; }
 .item-import-secondary { color: #526176; font-size: 12px; }
 .item-import-logs { margin-top: 24px; }
 .item-import-log-actions { display: flex; gap: 8px; }
@@ -115,7 +111,7 @@
 .item-import-navigation { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 .item-import-navigation > span { color: #526176; font-size: 12px; }
 .item-import-mapping { margin-bottom: 24px; }
-.item-import-review-counts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.item-import-review-counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 12px; margin-bottom: 20px; }
 .item-import-review-counts > div { background: #eff4ff; padding: 14px; border-radius: 12px; }
 .item-import-review-counts strong { display: block; font-size: 24px; }
 .item-import-review-counts span { color: #526176; font-size: 11px; }
@@ -138,7 +134,6 @@
   .item-import-layout { grid-template-columns: 1fr; gap: 16px; }
   .item-import-main, .item-import-aside { gap: 16px; }
   .item-import-aside { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .item-import-database { grid-column: 1 / -1; }
 }
 @media (max-width: 640px) {
   .item-import-page { padding: 16px; }

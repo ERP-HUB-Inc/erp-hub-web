@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import VaraintProduct from "../../../components/transactions/RetailSale/varaint.product";
+import VaraintProduct from "../../../components/transactions/RetailSale/item.option.modal";
   
 class VaraintProductForm extends React.Component {
   render() {

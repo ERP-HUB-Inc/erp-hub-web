@@ -1,5 +1,6 @@
 import Constant from "../../constants/products/product";
 import ItemService from "@services/ItemService";
+import ItemPOSService from "@services/ItemPOSService";
 
 export default {
   fetch: (props = {limit, offset, sortField, sortOrder, filter, search, locationId}) => {
@@ -14,7 +15,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT_ATTRIBUTES,
-        payload: ItemService.attributes(id),
+        payload: ItemPOSService.getOptions(id),
       });
     };
   },

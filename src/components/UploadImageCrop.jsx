@@ -1,13 +1,13 @@
 import React from "react";
 import axios from "axios";
-import { Button, Form, Modal, Upload } from "antd";
+import { Button, Form, message, Modal, Upload } from "antd";
 import {Translate} from "react-localize-redux";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
 export class UploadImageCrop extends React.Component {
   state = {
-    crop: {},
+    crop: null,
     fileList: [],
     visible: false,
     previewImage: "",
@@ -16,11 +16,9 @@ export class UploadImageCrop extends React.Component {
     blobImg: null,
     uploading: false,
   };
-  defaultCrop = { unit: "px", x: 20, y: 20, width: 500, height: 500 };
 
   componentDidMount() {
-    this.setState({ crop: this.defaultCrop });
-    if (this.props.fileList.length > 0) {
+    if (this.props.fileList && this.props.fileList[0]) {
       this.validImage(this.props.fileList[0].url, this.initializeImage);
     }
   }
@@ -70,100 +68,90 @@ export class UploadImageCrop extends React.Component {
     });
   }
 
-  handleChange = async ({ fileList }) => {
-    if (fileList.length) {
-      let file = fileList[0];
-      if (!file.url) {
-        file.url = await this.getBase64(file.originFileObj);
-      }
-      this.setState(
-        {
-          visible: true,
-          previewImage: file.url,
-          cropFile: file,
-        },
-        () => {
-          setTimeout(() => {
-            this.generateCropImage(this.state.crop, file);
-          }, 1000);
-        }
-      );
+  handleChange = async ({ file, fileList }) => {
+    if (!fileList.length || (file && file.status === "removed")) return;
+
+    const selectedFile = (file && fileList.find(item => item.uid === file.uid)) ||
+      file || fileList[fileList.length - 1];
+    if (selectedFile.type && !["image/jpeg", "image/png", "image/gif"].includes(selectedFile.type)) {
+      message.error("Please choose a JPG, PNG or GIF image.");
+      return;
+    }
+    try {
+      const url = selectedFile.url || await this.getBase64(selectedFile.originFileObj || selectedFile);
+      this.setState({
+        visible: true,
+        previewImage: url,
+        cropFile: { ...selectedFile, name: selectedFile.name, type: selectedFile.type, url },
+        crop: null,
+        blobImg: null,
+      });
+    } catch (error) {
+      message.error("Unable to read this image. Please choose another file.");
     }
   };
 
-  handleCroppedImage = async (c) => {
-    const cropFile = JSON.parse(JSON.stringify(this.state.cropFile));
-    this.generateCropImage(c, cropFile);
+  handleImageLoad = (event) => {
+    const { width, height } = event.currentTarget;
+    if (!width || !height) return;
+    const size = Math.min(width, height);
+    const crop = {
+      unit: "%",
+      x: (width - size) / width * 50,
+      y: (height - size) / height * 50,
+      width: size / width * 100,
+      height: size / height * 100,
+    };
+    this.setState({ crop }, () => this.generateCropImage(crop, this.state.cropFile));
   };
 
-  generateCropImage(c, cropFile, maxSizeMB = 5) {
-    const TO_RADIANS = Math.PI / 180;
+  handleCroppedImage = (crop) => {
+    this.generateCropImage(crop, this.state.cropFile);
+  };
+
+  generateCropImage(crop, cropFile, maxSizeMB = 5) {
     const image = this.imageRef;
     const canvas = this.canvasPreviewRef;
-    const scale = 1;
-    const rotate = 0;
-
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    const pixelRatio = window.devicePixelRatio;
-
-    canvas.width = Math.floor(c.width * scaleX * pixelRatio);
-    canvas.height = Math.floor(c.height * scaleY * pixelRatio);
-
-    ctx.scale(pixelRatio, pixelRatio);
-    ctx.imageSmoothingQuality = "high";
-
-    const cropX = c.x * scaleX;
-    const cropY = c.y * scaleY;
-
-    const rotateRads = rotate * TO_RADIANS;
-    const centerX = image.naturalWidth / 2;
-    const centerY = image.naturalHeight / 2;
-
-    ctx.save();
-    ctx.translate(-cropX, -cropY);
-    ctx.translate(centerX, centerY);
-    ctx.rotate(rotateRads);
-    ctx.scale(scale, scale);
-    ctx.translate(-centerX, -centerY);
-
-    ctx.drawImage(
-      image,
-      0,
-      0,
-      image.naturalWidth,
-      image.naturalHeight,
-      0,
-      0,
-      image.naturalWidth,
-      image.naturalHeight
-    );
-
-    // Convert to Base64 and then Blob
-    cropFile.url = canvas.toDataURL();
-    const blobImg = this.convertImageURLToBlob(cropFile.url);
-
-    // ✅ Check size in MB
-    const sizeMB = blobImg.size / (1024 * 1024);
-    if (sizeMB > maxSizeMB) {
-      console.warn(
-        `Cropped image is too large: ${sizeMB.toFixed(
-          2
-        )} MB. Maximum allowed: ${maxSizeMB} MB`
-      );
-      // Optional: clear blob and prevent upload
-      this.setState({ cropFile: null, blobImg: null });
+    if (!crop || !cropFile || !canvas || !image || !image.naturalWidth ||
+        !image.naturalHeight || !image.width || !image.height) {
+      this.setState({ blobImg: null });
       return;
     }
 
-    // Save to state if size is ok
-    this.setState({ cropFile, blobImg });
+    // Percent crops remain accurate if the modal changes size.
+    const scaleX = crop.unit === "%" ? image.naturalWidth / 100 : image.naturalWidth / image.width;
+    const scaleY = crop.unit === "%" ? image.naturalHeight / 100 : image.naturalHeight / image.height;
+    const x = Math.max(0, crop.x * scaleX);
+    const y = Math.max(0, crop.y * scaleY);
+    const width = Math.min(crop.width * scaleX, image.naturalWidth - x);
+    const height = Math.min(crop.height * scaleY, image.naturalHeight - y);
+    if (![x, y, width, height].every(Number.isFinite) || width < 1 || height < 1) {
+      this.setState({ blobImg: null });
+      return;
+    }
+
+    try {
+      // Export source pixels, independent of the screen's device pixel ratio.
+      canvas.width = Math.round(width);
+      canvas.height = Math.round(height);
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(image, x, y, width, height, 0, 0, canvas.width, canvas.height);
+      const url = canvas.toDataURL("image/png");
+      const blobImg = this.convertImageURLToBlob(url);
+      if (blobImg.size > maxSizeMB * 1024 * 1024) {
+        this.setState({ blobImg: null });
+        message.error(`Cropped image exceeds ${maxSizeMB} MB. Please select a smaller area.`);
+        return;
+      }
+      this.setState({ cropFile: { ...cropFile, url }, blobImg });
+    } catch (error) {
+      this.setState({ blobImg: null });
+      message.error("Unable to crop this image. Please choose another file.");
+    }
   }
 
-  handleBeforeUpload = (file) => {
+  handleBeforeUpload = () => {
     return false;
   };
 
@@ -182,45 +170,41 @@ export class UploadImageCrop extends React.Component {
 
   handleUpload = async (e) => {
     e.preventDefault();
-    const { cropFile, blobImg } = this.state;
+    const { cropFile, blobImg, uploading } = this.state;
+    if (uploading || !cropFile || !blobImg) return;
 
-    if (!cropFile || !cropFile.url) {
-      console.error("No image selected");
-      return;
-    }
-
-    // 2. Wrap into File
-    const file = new File(
-      [this.state.blobImg],
-      this.state.cropFile.name || "image.png",
-      {
-        type: this.state.blobImg.type || "image/png",
-      }
-    );
-
-    // 3. Append to FormData
     const formData = new FormData();
-    formData.append("file", file);
-
-    // Debug FormData
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
-
+    // The canvas exports PNG, so the filename must match the encoded content.
+    const filename = `${(cropFile.name || "image").replace(/\.[^.]+$/, "")}.png`;
+    formData.append("file", blobImg, filename);
+    this.setState({ uploading: true });
     try {
-      const response = await axios.post(this.props.endPoint, formData);
-      // this.props.responseAfterUpload(response);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      this.setState({
-        fileList: [this.state.cropFile],
-        crop: this.defaultCrop,
-        visible: false,
-        uploading: false,
+      const response = await axios.post(this.props.endPoint, formData, {
+        headers: { Authorization: `Bearer ${this.props.accessToken}` },
       });
+      const uploadedFile = {
+        ...cropFile,
+        name: response.data.filename || filename,
+        status: "done",
+        response: response.data,
+      };
+      this.props.form.setFieldsValue({
+        [this.props.name]: { file: uploadedFile, fileList: [uploadedFile] },
+      });
+      this.setState({
+        fileList: [uploadedFile],
+        cropFile: {},
+        blobImg: null,
+        crop: null,
+        visible: false,
+      });
+      if (this.props.responseAfterUpload) this.props.responseAfterUpload(response);
+    } catch (error) {
+      message.error("Unable to upload the image. Please try again.");
+    } finally {
+      this.setState({ uploading: false });
     }
-  }
+  };
 
   handlePreviewImage = async (file) => {
     if (!file.url && !file.preview) {
@@ -233,29 +217,32 @@ export class UploadImageCrop extends React.Component {
     });
   }
 
-  handleRemove = (file) => {
-    this.setState({
-      fileList: [],
-    });
-    axios({
-      method: "DELETE",
-      url: `${this.props.endPointDelete}/${file.name}`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.props.accessToken}`,
-      },
-    }).then((response) => {
+  handleRemove = async (file) => {
+    try {
+      await axios({
+        method: "DELETE",
+        url: `${this.props.endPointDelete}/${encodeURIComponent(file.name)}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.props.accessToken}`,
+        },
+      });
       this.setState({ fileList: [] });
       this.props.form.setFieldsValue({ [this.props.name]: null });
-    });
+    } catch (error) {
+      message.error("Unable to delete the image. Please try again.");
+    }
+    // Removal is managed here; do not reopen the crop dialog via Upload.onChange.
+    return false;
   };
 
   handleCancel = () => {
-    this.setState({
-      cropFile: {},
-      visible: false,
-      crop: this.defaultCrop,
+    if (this.state.uploading) return;
+    const file = this.state.fileList[0];
+    this.props.form.setFieldsValue({
+      [this.props.name]: file ? { file, fileList: this.state.fileList } : null,
     });
+    this.setState({ cropFile: {}, blobImg: null, visible: false, crop: null });
   };
 
   render() {
@@ -281,6 +268,7 @@ export class UploadImageCrop extends React.Component {
             initialValue: this.props.data,
           })(
             <Upload
+              accept="image/jpeg,image/png,image/gif"
               action={this.props.endPoint}
               listType="picture-card"
               className="upload-image-with-crop"
@@ -322,15 +310,21 @@ export class UploadImageCrop extends React.Component {
             crop={this.state.crop}
             aspect={1}
             keepSelection={true}
-            locked={true}
-            onChange={(crop) => this.setState({ crop })}
+            disabled={this.state.uploading}
+            onChange={(crop, percentCrop) => this.setState({ crop: percentCrop, blobImg: null })}
             onComplete={this.handleCroppedImage}
             style={{ width: "100%" }}
           >
             <img
+              key={this.state.cropFile.uid}
               style={{ width: "100%" }}
               src={this.state.previewImage}
               ref={(ref) => (this.imageRef = ref)}
+              onLoad={this.handleImageLoad}
+              onError={() => {
+                this.setState({ blobImg: null });
+                message.error("Unable to load this image. Please choose another file.");
+              }}
               alt="cropped"
             />
           </ReactCrop>
@@ -338,21 +332,17 @@ export class UploadImageCrop extends React.Component {
           {this.state.cropFile && (
             <canvas
               ref={(ref) => (this.canvasPreviewRef = ref)}
-              style={{
-                width: this.state.crop.width,
-                height: this.state.crop.height,
-                objectFit: "contain",
-                display: "none",
-              }}
+              style={{ display: "none" }}
             />
           )}
 
           <div className="ant-modal-footer">
-            <Button className="danger" onClick={this.handleCancel}>
+            <Button className="danger" disabled={this.state.uploading} onClick={this.handleCancel}>
               <Translate id="text_cancel" />
             </Button>
             <Button
-              htmlType="submit"
+              htmlType="button"
+              disabled={!this.state.blobImg || this.state.uploading}
               loading={this.state.uploading}
               className="info"
               onClick={this.handleUpload}

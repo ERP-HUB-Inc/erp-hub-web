@@ -22,6 +22,22 @@ class ItemPOSService extends BaseService {
       url: `${this.baseUrl}?${this.bindQueryParam(option)}`,
     });
   }
+
+  getOptions(id) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/options/${id}`,
+      headers: this.header,
+    });
+  }
+
+  getVariantByOptionValueId(optionValueId) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/variant_by_option_value/${optionValueId}`,
+      headers: this.header,
+    });
+  }
 }
 
 export default new ItemPOSService(); 

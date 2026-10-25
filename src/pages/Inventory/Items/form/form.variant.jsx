@@ -29,6 +29,7 @@ export default class FormVariant extends BaseModal {
       variantAttributes: [],
       variantAttributeList: [],
       variants: [],
+      deletingVariantId: null,
       variantPagination: {},
       variantSearch: "",
       productVariantArchiveList: [],
@@ -59,7 +60,8 @@ export default class FormVariant extends BaseModal {
           return <>
             <InputText
               name={`variantId[${index}]`}
-              data={record.id}
+              // Numeric IDs are temporary table keys for unsaved rows.
+              data={typeof record.id === "string" ? record.id : ""}
               className="hidden"
               form={this.props.form}
             />
@@ -211,7 +213,11 @@ export default class FormVariant extends BaseModal {
               onChange={(checked) => this.onChangeProductVariantStatus(checked, index, record.quantity)}
               form={this.props.form} /> */}
             <Button
-              loading={index === this.state.productVariantToDelete.productVariantRow && this.props.productVariantCheckStatus.fetching}
+              loading={
+                (this.state.deletingVariantId !== null && this.state.deletingVariantId === record.id) ||
+                (index === this.state.productVariantToDelete.productVariantRow && this.props.productVariantCheckStatus.fetching)
+              }
+              disabled={this.state.deletingVariantId !== null && this.state.deletingVariantId !== record.id}
               type="danger"
               icon="delete"
               shape="circle"
@@ -1161,16 +1167,43 @@ export default class FormVariant extends BaseModal {
     this.props.dispatch(ProductAction.archiveVariant(this.state.productVariantToDelete.id));
   }
 
-  onRemoveVariant = (productVariantRow, record) => {
-    if (record?.id) {
-      record.status = Enum.ARCHIVE;
-      VariantService.checkIsAvailableForArchive(record.id);
-      this.setState(prev => ({ ...prev, variants: prev.variants }));
+  onRemoveVariant = async (productVariantRow, record) => {
+    if (this.state.deletingVariantId !== null) return;
+
+    if (typeof record?.id === "string" && record.id) {
+      this.setState({ deletingVariantId: record.id });
+      try {
+        await VariantService.checkIsAvailableForArchive(record.id);
+        this.setState(prev => ({
+          variants: prev.variants.map(variant => variant.id === record.id ? { ...variant, status: Enum.ARCHIVE } : variant),
+          productVariantArchiveList: [
+            ...prev.productVariantArchiveList.filter(variant => variant.id !== record.id),
+            { id: record.id, status: Enum.ARCHIVE }
+          ]
+        }), () => {
+          if (this.props.callBackGetProductVariant) {
+            this.props.callBackGetProductVariant(this.state.variants);
+          }
+          if (this.props.handleCallBackGetArchiveProductVariant) {
+            this.props.handleCallBackGetArchiveProductVariant(this.state.productVariantArchiveList);
+          }
+        });
+      } catch (error) {
+        const message = [
+          this.Util.getErrorMessageFromState(error?.response || error),
+          error?.response?.data?.message
+        ].find(value => typeof value === "string" && value.trim());
+        this.Message.error(message || "Unable to delete this variant. Please try again.");
+      } finally {
+        this.setState({ deletingVariantId: null });
+      }
     } else {
-      const variants = this.state.variants;
-      variants.splice(productVariantRow, 1);
-      this.setState({ 
-        variants
+      this.setState(prev => ({
+        variants: prev.variants.filter((variant, index) => index !== productVariantRow)
+      }), () => {
+        if (this.props.callBackGetProductVariant) {
+          this.props.callBackGetProductVariant(this.state.variants);
+        }
       });
     }
   }
@@ -1225,7 +1258,11 @@ export default class FormVariant extends BaseModal {
         ...prevState,
         variants: [...prevState.variants, variant]
       }
-    })
+    }, () => {
+      if (this.props.callBackGetProductVariant) {
+        this.props.callBackGetProductVariant(this.state.variants);
+      }
+    });
   }
 
   render() {

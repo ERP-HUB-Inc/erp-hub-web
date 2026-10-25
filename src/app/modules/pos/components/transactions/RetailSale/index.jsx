@@ -258,7 +258,15 @@ export default class RetailSale extends Component {
     }
   }
 
-  appendItemOrder(orderItems, item, variant, newPrice, discount, discountType) {
+  getCustomizationKey(selection = {}) {
+    return JSON.stringify({
+      note: selection.note || "",
+      modifiers: (selection.modifiers || []).map(modifier => ({ id: modifier.id, quantity: modifier.quantity || 1 })).sort((a, b) => String(a.id).localeCompare(String(b.id))),
+      selectedOptions: (selection.selectedOptions || []).map(option => ({ groupId: option.groupId, valueId: option.valueId }))
+    });
+  }
+
+  appendItemOrder(orderItems, item, variant, newPrice, discount, discountType, selection = {}) {
     if (!variant) {
       this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
       return;
@@ -269,6 +277,8 @@ export default class RetailSale extends Component {
     const wholePrice = isNaN(parseFloat(variant.wholePrice)) ? 0 : variant.wholePrice;
     const distributePrice = isNaN(parseFloat(variant.distributePrice)) ? 0 : variant.distributePrice;
 
+    const modifierPrice = (selection.modifiers || []).reduce((total, modifier) => total + (Number(modifier.price) || 0) * (Number(modifier.quantity) || 1), 0);
+    const salePrice = price + modifierPrice;
     orderItems.push({
       itemId: item.id,
       itemName: item.name,
@@ -280,12 +290,12 @@ export default class RetailSale extends Component {
       unitName: item.sellUnitName,
       sku: variant.sku,
       barcode: variant.barcode,
-      price,
-      newPrice: newPrice ? newPrice : price,
-      unitPrice: newPrice ? newPrice : price,
+      price: salePrice,
+      newPrice: newPrice != null ? newPrice + modifierPrice : salePrice,
+      unitPrice: newPrice != null ? newPrice + modifierPrice : salePrice,
       wholePrice,
       distributePrice,
-      quantity: this.state.initialOrderQuantity,
+      quantity: Number(selection.quantity) || this.state.initialOrderQuantity,
       discount,
       discountType,
       enableDescription: item.enableDescription,
@@ -293,8 +303,11 @@ export default class RetailSale extends Component {
       stockQuantity: this.isInventoryTrackingEnabled(item) ? this.getProductVariantStock(variant) : null,
       tax: tax.taxRate / 100,
       taxDescription: tax,
-      description: item.name,
-      options: [],
+      description: selection.note || item.name,
+      note: selection.note || "",
+      selectedOptions: selection.selectedOptions || [],
+      options: selection.modifiers || [],
+      customizationKey: this.getCustomizationKey(selection),
       status: this.Enum.ACTIVE,
     });
   }
@@ -495,6 +508,7 @@ export default class RetailSale extends Component {
   }
 
   handleKeyboardShortcut = (event) => {
+    if (event.target && event.target.closest && event.target.closest(".item-option-modal")) return;
     const key = event.key;
     const normalizedKey = typeof key === "string" ? key.toLowerCase() : "";
     const isTypingTarget = this.isTypingShortcutTarget(event);
@@ -550,6 +564,19 @@ export default class RetailSale extends Component {
     this.setState({ modalContent: null });
   };
 
+  openVariantOptions = product => {
+    this.setState({
+      selectedProduct: product,
+      modalContent: <VaraintProduct
+        product={product}
+        defaultQuantity={this.state.initialOrderQuantity}
+        handleCancel={this.handleCancelVariantProduct}
+        handleAddVariant={(variant, selection) => this.handleOnSelectProduct(product, [variant], false, selection)}
+        formatPrice={value => this.formatCurrency(value)}
+      />
+    });
+  };
+
   getProductStock(product) {
     return Number(Util.countProductQTYCurrentLocation(product, getLocationId())) || 0;
   }
@@ -577,13 +604,14 @@ export default class RetailSale extends Component {
   }
 
   getProductVariantStock(productVariant) {
-    if (!productVariant || !Array.isArray(productVariant.productLocations)) {
-      return 0;
+    if (!productVariant) return 0;
+    const currentLocationId = String(getLocationId() || "");
+    const locations = Array.isArray(productVariant.productLocations) ? productVariant.productLocations : [];
+    const currentLocationStocks = locations.filter(productLocation => String(productLocation.locationId) === currentLocationId);
+    if (currentLocationStocks.length) {
+      return currentLocationStocks.reduce((total, productLocation) => total + (Number(productLocation.quantity) || 0), 0);
     }
-
-    return productVariant.productLocations.reduce((total, productLocation) => {
-      return productLocation.locationId === getLocationId() ? total + (Number(productLocation.quantity) || 0) : total;
-    }, 0);
+    return productVariant.quantity != null && Number.isFinite(Number(productVariant.quantity)) ? Number(productVariant.quantity) : 0;
   }
 
   handleOutOfStockProduct(product) {
@@ -608,30 +636,26 @@ export default class RetailSale extends Component {
     }
   };
 
-  handleOnSelectProduct = async (product, productVariant, isRequestVariantForm = true) => {
+  handleOnSelectProduct = async (product, productVariant, isRequestVariantForm = true, selection = {}) => {
     let freeProducts = [];
     let newPrice = null;
     let { orderItems, initialOrderDiscount, initialOrderDiscountType, isDiscountHasAdded, discountValue } = this.state;
     const isInventoryTrackingEnabled = this.isInventoryTrackingEnabled(product);
 
-    if (isInventoryTrackingEnabled && this.getProductStock(product) <= 0) {
+    const isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
+    if (isInventoryTrackingEnabled && !isProductVariant && this.getProductStock(product) <= 0) {
       this.handleOutOfStockProduct(product);
-      return;
+      return false;
     }
 
     // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
     if (this.openFormSaleRegisration()) {
-      return;
+      return false;
     }
 
-    let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
-
     if (isProductVariant && isRequestVariantForm) {
-      this.setState({
-        selectedProduct: product,
-        modalContent: <VaraintProduct product={product} handleCancel={this.handleCancelVariantProduct} />,
-      });
-      return;
+      this.openVariantOptions(product);
+      return false;
     } else if (productVariant && productVariant.length === 1) {
       productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
       productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
@@ -641,26 +665,30 @@ export default class RetailSale extends Component {
     const stockInCurrentLocation = this.getProductVariantStock(productVariant);
     if (isInventoryTrackingEnabled && stockInCurrentLocation <= 0) {
       this.handleOutOfStockProduct(product);
-      return;
+      return false;
     }
 
     // Checking for promotion
+    const selectedQuantity = Number(selection.quantity) || this.state.initialOrderQuantity || 1;
+    const modifierPrice = (selection.modifiers || []).reduce((total, modifier) => total + (Number(modifier.price) || 0) * (Number(modifier.quantity) || 1), 0);
+    const saleUnitPrice = Number(productVariant.price || 0) + modifierPrice;
+    const customizationKey = this.getCustomizationKey(selection);
     let orderQuantity;
     let orderAmount;
-    const foundOrderProduct = orderItems.find((value) => value.variantId === productVariant.id);
+    const foundOrderProduct = orderItems.find(value => value.variantId === productVariant.id && (value.customizationKey || this.getCustomizationKey({ note: value.note || "", modifiers: value.options || [] })) === customizationKey);
 
     if (foundOrderProduct) {
-      orderQuantity = foundOrderProduct.quantity + 1;
-      orderAmount = orderQuantity * foundOrderProduct.price;
+      orderQuantity = foundOrderProduct.quantity + selectedQuantity;
+      orderAmount = orderQuantity * Number(productVariant.price || 0);
     } else {
-      orderQuantity = 1;
-      orderAmount = orderQuantity * productVariant.price;
+      orderQuantity = selectedQuantity;
+      orderAmount = orderQuantity * Number(productVariant.price || 0);
     }
 
     if (isInventoryTrackingEnabled && orderQuantity > stockInCurrentLocation) {
       const message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
       this.Message.error(`${Util.getProductNameV2(product)} ${message} ${stockInCurrentLocation}`);
-      return;
+      return false;
     }
 
     const promotion = await this.getProductPromotion(productVariant.id, orderQuantity, orderAmount);
@@ -668,7 +696,7 @@ export default class RetailSale extends Component {
       newPrice = promotion.newPrice;
       const saveAmount = productVariant.price - newPrice;
 
-      initialOrderDiscount = SalesUtil.getPercentageByValue(saveAmount, productVariant.price);
+      initialOrderDiscount = SalesUtil.getPercentageByValue(saveAmount, saleUnitPrice);
       isDiscountHasAdded = true;
       discountValue = { type: Enum.DISCOUNT_TYPE.EACH_ITEM };
     } else if (promotion.discountType === "advance") {
@@ -683,18 +711,18 @@ export default class RetailSale extends Component {
     //##End checking promotion
 
     if (orderItems.length === 0) {
-      this.appendItemOrder(orderItems, product, productVariant, newPrice, initialOrderDiscount, initialOrderDiscountType);
+      this.appendItemOrder(orderItems, product, productVariant, newPrice, initialOrderDiscount, initialOrderDiscountType, selection);
     } else {
       let isNotTheSame = true;
       orderItems.forEach((productOrder, productOrderIndex) => {
-        if (productVariant && productOrder.variantId === productVariant.id && productOrder.status === this.Enum.ACTIVE) {
+        if (productVariant && productOrder.variantId === productVariant.id && (productOrder.customizationKey || this.getCustomizationKey({ note: productOrder.note || "", modifiers: productOrder.options || [] })) === customizationKey && productOrder.status === this.Enum.ACTIVE) {
           isNotTheSame = false;
-          orderItems[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
+          orderItems[productOrderIndex]["quantity"] += selectedQuantity;
           orderItems[productOrderIndex]["status"] = this.Enum.ACTIVE;
         }
       });
 
-      if (isNotTheSame) this.appendItemOrder(orderItems, product, productVariant, null, initialOrderDiscount, initialOrderDiscountType);
+      if (isNotTheSame) this.appendItemOrder(orderItems, product, productVariant, null, initialOrderDiscount, initialOrderDiscountType, selection);
     }
 
     this.appendProductTaxList(orderItems);
@@ -714,6 +742,7 @@ export default class RetailSale extends Component {
     setTimeout(() => {
       this.scrollToOrderItem(product.id);
     }, 0);
+    return true;
   };
 
   handleOnScanBarcode = (barcode) => {
@@ -849,6 +878,8 @@ export default class RetailSale extends Component {
 
     if (field === "description") {
       orderProducts[proderOrderRowIndex]["description"] = event.target.value;
+      orderProducts[proderOrderRowIndex]["note"] = event.target.value;
+      orderProducts[proderOrderRowIndex]["customizationKey"] = this.getCustomizationKey({ note: event.target.value, modifiers: orderProducts[proderOrderRowIndex].options || [] });
     }
 
     if (field === "quantity") {
@@ -889,16 +920,14 @@ export default class RetailSale extends Component {
       return;
     }
 
-    if (this.isProductOutOfStock(product)) {
+    const isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
+    if (!isProductVariant && this.isProductOutOfStock(product)) {
       this.handleOutOfStockProduct(product);
       return;
     }
 
-    if (product.productOption === InventoryEnum.PRODUCT_VARIANT && product.productVariants && product.productVariants.length > 0) {
-      this.setState({
-        selectedProduct: product,
-        modalContent: <VaraintProduct product={product} handleCancel={this.handleCancelVariantProduct} />,
-      });
+    if (isProductVariant) {
+      this.openVariantOptions(product);
       return;
     } else {
       this.handleOnSelectProduct(product, productVariants);
@@ -1147,7 +1176,7 @@ export default class RetailSale extends Component {
       <this.InputText
         name={`description[${productOrderIndex}]`}
         label={productOrder.enableDescription ? <Translate id="text_serial_or_imei" /> : "Notes"}
-        // data={productOrder.description}
+        data={productOrder.note || ""}
         className="ca-input-v1"
         handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
         placeholder="Add notes for this item"

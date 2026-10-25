@@ -23,6 +23,7 @@ export class ItemFormUpdate extends BaseComponent {
     this.state = {
       productAttributes: [],
       productVariants: [],
+      variantsInitialized: false,
       productArchiveVariants: [],
       productArchiveAttributes: [],
       exchangeRate: 1,
@@ -76,7 +77,7 @@ export class ItemFormUpdate extends BaseComponent {
   }
 
   handleCallBackGetProductVariant = (productVariants) => {
-    this.setState({productVariants});
+    this.setState({productVariants, variantsInitialized: true});
   }
 
   handleCallBackGetArchiveProductVariant = (productArchiveVariants) => {
@@ -98,6 +99,7 @@ export class ItemFormUpdate extends BaseComponent {
       if (!err) {
         if (
           values.productOption === Enum.PRODUCT_VARIANT &&
+          this.state.variantsInitialized &&
           this.state.productVariants.length === 0
         ) {
           this.Message.error(this.CATranslate("error_require_variant", this.props.locale));
@@ -162,24 +164,40 @@ export class ItemFormUpdate extends BaseComponent {
           values["taxes"] = [{ taxId: values["taxId"] }];
         }
 
-        values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
-
-        values["productVariants"] = values?.variantId?.map((variantId, index) => {
-          return {
-            id: variantId,
-            name: values.variantName[index],
-            price: values.variantRetailPrice[index],
-            wholePrice: values?.variantWholePrice?.[index],
-            distributePrice: values?.variantDistributePrice?.[index],
-            barcode: values.variantBarcode?.[index],
-            sku: values.variantSku?.[index],
-            reorderPoint: values?.variantReorderPoint?.[index],
-            status: values?.variantStatus?.[index],
-          }
-        });
+        // Unopened variants must be omitted so a partial update preserves them.
+        if (this.state.variantsInitialized) {
+          values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
+          const productVariants = values?.variantId?.map((variantId, index) => {
+            return {
+              ...(variantId ? { id: variantId } : {}),
+              name: values.variantName[index],
+              price: values.variantRetailPrice[index],
+              wholePrice: values?.variantWholePrice?.[index],
+              distributePrice: values?.variantDistributePrice?.[index],
+              barcode: values.variantBarcode?.[index],
+              sku: values.variantSku?.[index],
+              reorderPoint: values?.variantReorderPoint?.[index],
+              status: values?.variantStatus?.[index],
+            };
+          }) || [];
+          const archivedVariants = new Map(
+            this.state.productArchiveVariants
+              .filter(variant => typeof variant.id === "string" && variant.id)
+              .map(variant => [variant.id, { id: variant.id, status: Enum.ARCHIVE }])
+          );
+          values["productVariants"] = [
+            ...productVariants.filter(variant => !archivedVariants.has(variant.id)),
+            ...archivedVariants.values()
+          ];
+        } else {
+          delete values.attributes;
+          delete values.productVariants;
+        }
 
         // In case for production non-variant
-        values.productVariantId = this.props.productDetail?.data?.productVariants?.[0]?.id ?? null;
+        if (values.productOption !== Enum.PRODUCT_VARIANT) {
+          values.productVariantId = this.props.productDetail?.data?.productVariants?.[0]?.id ?? null;
+        }
 
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);

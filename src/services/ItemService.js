@@ -38,6 +38,7 @@ class ItemService extends BaseService {
     return this.GET({
       url: `${this.baseUrl}?${this.bindQueryParam(option)}`,
       params: {
+        ...(option.outOfStock === true ? { outOfStock: true } : {}),
         ...(option.lowStockAlert === true ? { lowStockAlert: true } : {}),
         ...(option.marginReviewAlert === true ? { marginReviewAlert: true } : {}),
       },

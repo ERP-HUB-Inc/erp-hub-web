@@ -202,7 +202,7 @@ export default function SalesReport() {
     { title: "Net Sales", value: getMoney(summary.netSales), icon: "rise", iconClassName: "is-green", valueStyle: { color: "#3f8600" } },
     { title: "Orders", value: getQuantity(summary.transactionCount), icon: "shopping-cart", iconClassName: "is-purple" },
     { title: "Items Sold", value: getQuantity(summary.totalQuantity || summary.quantitySold || summary.itemsSold), icon: "inbox", iconClassName: "is-teal" },
-    { title: "Discount", value: getMoney(summary.discount), icon: "tags", iconClassName: "is-orange" },
+    { title: "Discount", value: getMoneyOrEmpty(summary.discount), icon: "tags", iconClassName: "is-orange" },
     { title: "Gross Profit", value: getMoney(summary.grossProfit), icon: "line-chart", iconClassName: "is-red" }
   ];
 
@@ -211,6 +211,7 @@ export default function SalesReport() {
     { title: "Variant", dataIndex: "variantName", key: "variantName", width: 140, render: getEmpty },
     { title: "Qty Sold", dataIndex: "quantitySold", key: "quantitySold", width: 110, align: "right", render: value => getQuantity(value) },
     { title: "Revenue", dataIndex: "salesRevenue", key: "salesRevenue", width: 140, align: "right", sorter: true, render: value => getMoney(value) },
+    { title: "Discount", dataIndex: "discount", key: "discount", width: 140, align: "right", render: getMoneyOrEmpty },
     { title: "Item Cost", dataIndex: "salesCost", key: "salesCost", width: 140, align: "right", render: value => getMoney(value) },
     { title: "Gross Profit", dataIndex: "grossProfit", key: "grossProfit", width: 140, align: "right", render: value => getMoney(value) },
     { title: "Profit Margin", dataIndex: "grossMargin", key: "grossMargin", width: 130, align: "right", render: value => value === null || value === undefined ? "-" : getPercent(value) },
@@ -220,6 +221,7 @@ export default function SalesReport() {
   const trendColumns = [
     { title: "Period", dataIndex: "period", key: "period", width: 140, render: value => getEmpty(value) },
     { title: "Sales Revenue", dataIndex: "salesRevenue", key: "salesRevenue", align: "right", render: value => getMoney(value) },
+    { title: "Discount", dataIndex: "discount", key: "discount", width: 140, align: "right", render: getMoneyOrEmpty },
     { title: "Item Cost", dataIndex: "salesCost", key: "salesCost", align: "right", render: value => getMoney(value) },
     { title: "Gross Profit", dataIndex: "grossProfit", key: "grossProfit", align: "right", render: value => getMoney(value) },
     { title: "Profit Margin", dataIndex: "grossMargin", key: "grossMargin", align: "right", render: value => value === null || value === undefined ? "-" : getPercent(value) },
@@ -443,7 +445,7 @@ export default function SalesReport() {
       <Tabs defaultActiveKey="trend" className="sales-report-tabs">
         <TabPane tab="Sales Trend" key="trend">
           {renderTrendToolbar()}
-          <Table className="sales-report-table" rowKey={(record, index) => record.id || record.period || record.date || index} size="small" loading={loading} dataSource={trend} columns={trendColumns} pagination={false} scroll={{ x: 920 }} />
+          <Table className="sales-report-table" rowKey={(record, index) => record.id || record.period || record.date || index} size="small" loading={loading} dataSource={trend} columns={trendColumns} pagination={false} scroll={{ x: 1060 }} />
         </TabPane>
         <TabPane tab="Best Items" key="products">
           {renderProductsToolbar()}
@@ -454,7 +456,7 @@ export default function SalesReport() {
             loading={loading}
             dataSource={products}
             columns={productColumns}
-            scroll={{ x: 1100 }}
+            scroll={{ x: 1240 }}
             pagination={{
               current: Math.floor(filters.offset / filters.limit) + 1,
               pageSize: filters.limit,

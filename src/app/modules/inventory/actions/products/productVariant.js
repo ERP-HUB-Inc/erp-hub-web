@@ -1,12 +1,13 @@
 import Constant from "../../constants/products/productVariant";
 import ProductVariantService from "../../services/products/ProductVariantService";
+import ItemPOSService from "@services/ItemPOSService";
 
 export default {
   fetchByAttributeValue: (attributeValueId) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT_VARIANT,
-        payload: ProductVariantService.fetchByAttributeValue(attributeValueId)
+        payload: ItemPOSService.getVariantByOptionValueId(attributeValueId)
       });
     };
   },

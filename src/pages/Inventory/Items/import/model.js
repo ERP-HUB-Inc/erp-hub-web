@@ -1,6 +1,9 @@
 // Labels and aliases only. Parsing, field constraints, and row validation belong to the server.
 export const FIELDS = [
+  { key: "groupKey", label: "Variant Group Key", aliases: ["group key", "groupkey"] },
   { key: "name", label: "Product Name", required: true, aliases: ["name", "item name", "ឈ្មោះផលិតផល"] },
+  { key: "attributeName", label: "Variant Attribute", aliases: ["attribute name", "attribute"] },
+  { key: "attributeValue", label: "Variant Value", aliases: ["attribute value", "value"] },
   { key: "barcode", label: "Barcode", required: true, aliases: ["sku / barcode", "លេខកូដ"] },
   { key: "category", label: "Category", aliases: ["ប្រភេទ"] },
   { key: "cost", label: "Buying Cost", required: true, aliases: ["cost", "តំលៃដើម"] },

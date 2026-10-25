@@ -17,7 +17,7 @@ import {
 import Enum from "../../../../pos/enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
-import VariantProduct from "../../../../pos/components/transactions/RetailSale/varaint.product";
+import VariantProduct from "../../../../pos/components/transactions/RetailSale/item.option.modal";
 
 const targetProduct = {
   all: "all",

@@ -134,7 +134,8 @@ export default function ItemSummary({ locationId, refreshKey, formatCurrency, on
     if (onAlertCountsChange) {
       onAlertCountsChange(
         countValue(query.data?.lowStockAlert),
-        countValue(query.data?.marginReviewAlert)
+        countValue(query.data?.marginReviewAlert),
+        countValue(query.data?.stockHealth?.outOfStock)
       );
     }
   }, [query.data, onAlertCountsChange]);

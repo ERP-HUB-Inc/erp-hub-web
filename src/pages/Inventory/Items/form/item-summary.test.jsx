@@ -1,7 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
-import { ItemSummaryCards } from "./item-summary";
+import ItemSummary, { ItemSummaryCards } from "./item-summary";
+import useDashboardQuery from "../../../Dashboard/useDashboardQuery";
+
+jest.mock("../../../Dashboard/useDashboardQuery", () => jest.fn());
 
 // These presentation tests do not make API requests.
 jest.mock("../../../../helper/util", () => jest.fn().mockImplementation(() => ({})));
@@ -27,6 +30,21 @@ const card = label => container.querySelector(`article[aria-label="${label}"]`);
 const value = label => card(label).querySelector(".item-summary-value").textContent;
 const renderCards = query => act(() => {
   ReactDOM.render(<ItemSummaryCards query={{ data, loading: false, error: "", ...query }} formatCurrency={currency} />, container);
+});
+
+test.each([12, 0, null, undefined, -1])("reports the summary out-of-stock count to the tabs: %p", outOfStock => {
+  const onAlertCountsChange = jest.fn();
+  useDashboardQuery.mockReturnValue({
+    data: { lowStockAlert: 2, marginReviewAlert: 3, stockHealth: { outOfStock } },
+    loading: false,
+    error: ""
+  });
+
+  act(() => {
+    ReactDOM.render(<ItemSummary formatCurrency={currency} onAlertCountsChange={onAlertCountsChange} />, container);
+  });
+
+  expect(onAlertCountsChange).toHaveBeenCalledWith(2, 3, outOfStock >= 0 && outOfStock !== null ? outOfStock : null);
 });
 
 test("shows the inventory valuation variant count, preserving zero and unavailable states", () => {

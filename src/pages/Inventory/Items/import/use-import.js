@@ -17,6 +17,12 @@ export default function useImport(history) {
   const [draft, setDraft] = useState(null);
   const [preview, setPreview] = useState(null);
   const [rows, setRows] = useState({ data: [], total: 0 });
+  const [groups, setGroups] = useState({ data: [], total: 0 });
+  const [groupRows, setGroupRows] = useState({});
+  const [groupPage, setGroupPage] = useState(1);
+  const [groupLoading, setGroupLoading] = useState(false);
+  const [groupError, setGroupError] = useState(null);
+  const [groupRowState, setGroupRowState] = useState({});
   const [rowPage, setRowPage] = useState(1);
   const [rowFilter, setRowFilter] = useState("");
   const [rowLoading, setRowLoading] = useState(false);
@@ -71,6 +77,8 @@ export default function useImport(history) {
     currentId.current = next.id;
     setSession(next); setDraft(next.settings); setUncertain(false);
     setRowPage(1); setRowFilter(""); setRows({ data: [], total: 0 });
+    setGroups({ data: [], total: 0 }); setGroupRows({}); setGroupPage(1); setGroupError(null); setGroupRowState({});
+    setRowError(null);
     setPreview(null); setPreviewError(null);
     setStep(nextStep == null ? isRunning(next) || ["completed", "failed", "expired", "discarded"].includes(next.state) ? 3 : next.validationId ? 2 : 1 : nextStep);
     saveURL(next.id);
@@ -113,6 +121,41 @@ export default function useImport(history) {
       .finally(() => { if (active) setRowLoading(false); });
     return () => { active = false; };
   }, [session && session.id, session && session.revision, session && session.validationId, session && session.state, rowPage, rowFilter, dataRefresh]);
+
+  useEffect(() => {
+    if (!session || !session.validationId || !["ready_to_commit", "validation_failed", "completed", "failed", "queued", "processing"].includes(session.state)) return;
+    let active = true;
+    setGroupLoading(true); setGroupError(null);
+    ImportService.groups(session.id, { limit: 10, offset: (groupPage - 1) * 10, variantLimit: 50, variantOffset: 0, ...(rowFilter ? { action: rowFilter } : {}) }).then(result => {
+      if (active && result.revision === session.revision && result.validationId === session.validationId) {
+        setGroups(result);
+        setGroupRows(Object.fromEntries((result.data || []).map(group => [group.id, group.rows || []])));
+        setGroupRowState({});
+      }
+    }).catch(async failure => { if (active) setGroupError(await importFailure(failure)); })
+      .finally(() => { if (active) setGroupLoading(false); });
+    return () => { active = false; };
+  }, [session && session.id, session && session.revision, session && session.validationId, session && session.state, groupPage, rowFilter, dataRefresh]);
+
+  const loadMoreGroupRows = async group => {
+    const currentRows = groupRows[group.id] || group.rows || [];
+    if (!session || !group.groupKey || currentRows.length >= group.variantTotal || groupRowState[group.id]?.loading) return;
+    setGroupRowState(current => ({ ...current, [group.id]: { loading: true } }));
+    try {
+      const result = await ImportService.groups(session.id, { groupKey: group.groupKey, kind: "variant", limit: 1, offset: 0,
+        variantLimit: 50, variantOffset: currentRows.length });
+      if (result.revision !== session.revision || result.validationId !== session.validationId) {
+        setGroupRowState(current => ({ ...current, [group.id]: { loading: false } }));
+        return;
+      }
+      const more = result.data && result.data[0] ? result.data[0].rows || [] : [];
+      setGroupRows(current => ({ ...current, [group.id]: [...(current[group.id] || currentRows), ...more] }));
+      setGroupRowState(current => ({ ...current, [group.id]: { loading: false } }));
+    } catch (failure) {
+      const error = await importFailure(failure);
+      setGroupRowState(current => ({ ...current, [group.id]: { loading: false, error } }));
+    }
+  };
 
   useEffect(() => {
     if (!capabilities || !capabilities.actions.view) return;
@@ -177,7 +220,7 @@ export default function useImport(history) {
     acceptSession(next, 2); setRefreshKey(key => key + 1);
   });
   const commit = () => run("commit", async () => {
-    if (!session || session.state !== "ready_to_commit" || dirty || !session.validationId || !capabilities.actions.commit) return;
+    if (!session || session.state !== "ready_to_commit" || session.proposedCounts?.error !== 0 || dirty || !session.validationId || !capabilities.actions.commit) return;
     try {
       const next = await ImportService.commit(session.id, session.revision, session.validationId);
       if (mounted.current) { setSession(next); setStep(3); setRefreshKey(key => key + 1); }
@@ -191,7 +234,9 @@ export default function useImport(history) {
     acceptSession(next); setDataRefresh(key => key + 1); setRefreshKey(key => key + 1);
   });
   const clear = () => {
-    currentId.current = null; setSession(null); setDraft(null); setPreview(null); setRows({ data: [], total: 0 });
+    currentId.current = null; setSession(null); setDraft(null); setPreview(null); setRows({ data: [], total: 0 }); setGroups({ data: [], total: 0 }); setGroupRows({});
+    setRowPage(1); setRowFilter(""); setRowError(null); setPreviewError(null);
+    setGroupPage(1); setGroupError(null); setGroupRowState({});
     setStep(0); setError(null); setUncertain(false); saveURL(null);
   };
   const discard = () => run("discard", async () => {
@@ -209,6 +254,7 @@ export default function useImport(history) {
   });
 
   return { capabilities, capabilityError, loadCapabilities, session, draft, setDraft, preview, previewError, rows, rowPage, setRowPage, rowFilter, setRowFilter, rowLoading, rowError,
+    groups, groupRows, groupPage, setGroupPage, groupLoading, groupError, groupRowState, loadMoreGroupRows,
     step, setStep, busy, error, uncertain, uploadPercent, dirty, logs, logPage, setLogPage, search, setSearch, logLoading, logError,
     refreshLogs: () => setRefreshKey(key => key + 1), upload, configure, validate, commit, resume, refreshSession, clear, discard, download };
 }

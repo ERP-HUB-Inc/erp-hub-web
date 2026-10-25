@@ -94,6 +94,7 @@ export default class ProductList extends Datatable {
          tabCounts: {},
          lowStockAlertCount: null,
          marginReviewAlertCount: null,
+         outOfStockCount: null,
          listError: "",
          dataSourceToPrint: [],
          stockInItems: {}, // Format: { [productId]: { quantity, unitId, notes, type } }
@@ -638,8 +639,8 @@ export default class ProductList extends Datatable {
       this.listRequestId += 1;
    }
 
-   onAlertCountsChange = (lowStockAlertCount, marginReviewAlertCount) => {
-      this.setState({ lowStockAlertCount, marginReviewAlertCount });
+   onAlertCountsChange = (lowStockAlertCount, marginReviewAlertCount, outOfStockCount) => {
+      this.setState({ lowStockAlertCount, marginReviewAlertCount, outOfStockCount });
    };
 
    onChangeTab = (activeTab) => {
@@ -700,6 +701,7 @@ export default class ProductList extends Datatable {
          
          ProductService.get({
             limit, offset, filter, search, locationId, type,
+            ...(activeTab === "out-of-stock" ? { outOfStock: true } : {}),
             ...(activeTab === "low-stock-alerts" ? { lowStockAlert: true } : {}),
             ...(activeTab === "margin-review" ? { marginReviewAlert: true } : {})
          })
@@ -1303,6 +1305,7 @@ export default class ProductList extends Datatable {
             >
               {[
                 { key: "item", label: "Items", tone: "neutral", count: this.state.tabCounts.item },
+                { key: "out-of-stock", label: "Out of Stock", tone: "danger", count: this.state.outOfStockCount },
                 { key: "low-stock-alerts", label: "Low Stock Alerts", tone: "warning", count: this.state.lowStockAlertCount },
                 { key: "margin-review", label: "Margin Review", tone: "danger", icon: "exclamation", count: this.state.marginReviewAlertCount }
               ].map(tab => (

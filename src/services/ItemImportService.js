@@ -34,6 +34,7 @@ export class ItemImportService extends BaseService {
   configure(id, data) { return this.request("PATCH", `/${encodeURIComponent(id)}`, { data }); }
   validate(id, revision) { return this.request("POST", `/${encodeURIComponent(id)}/validate`, { data: { revision } }); }
   rows(id, params = {}) { return this.request("GET", `/${encodeURIComponent(id)}/rows`, { params: { limit: 10, offset: 0, ...params } }); }
+  groups(id, params = {}) { return this.request("GET", `/${encodeURIComponent(id)}/groups`, { params: { limit: 10, offset: 0, variantLimit: 50, variantOffset: 0, ...params } }); }
   commit(id, revision, validationId) {
     return this.request("POST", `/${encodeURIComponent(id)}/commit`, {
       data: { revision, validationId },
