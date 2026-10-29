@@ -1,0 +1,13 @@
+.unit-setting-name { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.unit-setting-name strong { color: #25364d; font-size: 14px; font-weight: 600; }
+.unit-setting-name .ant-tag { margin: 0; }
+.unit-setting-toolbar { justify-content: flex-start; flex-wrap: wrap; }
+.unit-setting-toolbar .category-listing-search { width: 350px; max-width: 100%; }
+.unit-setting-form fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.unit-setting-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.unit-setting-submit { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+@media (max-width: 767px) {
+  .unit-setting-form-grid { grid-template-columns: 1fr; }
+  .unit-setting-toolbar .category-listing-search { width: 100%; }
+}

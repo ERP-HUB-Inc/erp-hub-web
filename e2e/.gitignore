@@ -1,0 +1,8 @@
+/node_modules/
+/screenshots/
+/videos/
+/downloads/
+/results/
+/.auth/
+/cypress.env.json
+/config.local.json

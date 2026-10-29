@@ -12,7 +12,7 @@ import history from "@router/index";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
 import FormCreateBrand from "@settings/Modules/Brand/form.create";
-import FormCreateCategory from "@settings/Modules/Category/form.create";
+import FormCreateCategory from "@settings/Modules/Category/form.create.modal";
 import FormCreateOption from "@inventories/Option/FormCreate";
 import FormCreateUnit from "@inventories/Unit/FormCreate";
 import FormCreateTax from "@settings/Tax/FormCreate";

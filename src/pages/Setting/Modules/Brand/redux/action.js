@@ -6,7 +6,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_BRAND,
-        payload: BrandService.get(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: BrandService.get({ limit, offset, sortField, sortOrder, filter, search: searchKey })
       });
     };
   },

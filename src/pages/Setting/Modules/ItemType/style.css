@@ -1,0 +1,19 @@
+.item-type-page .category-listing-title { display: block; }
+.item-type-toolbar { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 12px; }
+.item-type-toolbar .ant-input-search { flex: 0 1 360px; width: 100%; min-width: 180px; }
+.item-type-toolbar .category-listing-refresh-button { flex: none; }
+.item-type-actions { display: flex; }
+.item-type-name-cell { min-width: 0; max-width: 280px; }
+.item-type-name-heading { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.item-type-name-heading strong { overflow: hidden; color: #25364d; font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.item-type-description { display: -webkit-box; overflow: hidden; margin-top: 4px; color: #8793a6; font-size: 12px; line-height: 17px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.item-type-code { overflow-wrap: anywhere; }
+.item-type-form { margin-top: 16px; }
+.item-type-form fieldset { min-width: 0; border: 0; padding: 0; margin: 0; }
+.item-type-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.item-type-form .ant-input-number { width: 100%; }
+.item-type-submit { display: none; }
+@media (max-width: 600px) {
+  .item-type-form-grid { grid-template-columns: 1fr; }
+  .item-type-toolbar .ant-input-search { max-width: none; }
+}

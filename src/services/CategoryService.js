@@ -25,6 +25,14 @@ class CategoryService extends BaseService {
          headers: this.header
       });
    }
+
+  getSummaryCards() {
+    return this.GET({
+      url: `${this.baseUrl}/summary/cards`,
+      data: this.data,
+      headers: this.header
+    });
+  }
 }
 
 export default new CategoryService();

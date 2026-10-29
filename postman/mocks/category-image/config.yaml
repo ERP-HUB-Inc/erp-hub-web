@@ -1,0 +1,7 @@
+version: 1
+name: category-image
+interceptRequests: true
+scenarios:
+  - name: default
+    default: true
+    path: default.js

@@ -306,9 +306,43 @@ const ReportProduct = Loadable({
   loading: () => <StartUp />,
 });
 
+const FinanceExpense = Loadable({
+  loader: () => import("../pages/Finance/Expense"),
+  loading: () => <StartUp />,
+});
+
 // Setting
+const ItemType = Loadable({
+  loader: () => import("@settings/Modules/ItemType"),
+  loading: () => <StartUp />,
+});
+
+const UnitSettings = Loadable({
+  loader: () => import("@settings/Modules/Unit"),
+  loading: () => <StartUp />,
+});
+
+const LocationSettings = Loadable({
+  loader: () => import("@settings/Modules/Location"),
+  loading: () => <StartUp />,
+});
+
+const ItemOption = Loadable({
+  loader: () => import("@settings/Modules/ItemOption"),
+  loading: () => <StartUp />,
+});
+
 const Category = Loadable({
   loader: () => import("@settings/Modules/Category/index"),
+  loading: () => <StartUp />,
+});
+const CreateCategory = Loadable({
+  loader: () => import("@settings/Modules/Category/form.create"),
+  loading: () => <StartUp />,
+});
+
+const BrandForm = Loadable({
+  loader: () => import("@settings/Modules/Brand/form.page"),
   loading: () => <StartUp />,
 });
 
@@ -573,6 +607,9 @@ export default class SiderDemo extends React.Component {
                           <Menu.Item key="53">
                             <Link to="/accounts-payable">Accounts Payable (AP)</Link>
                           </Menu.Item>
+                          <Menu.Item key="54">
+                            <Link to="/finance/expenses">Expenses &amp; Money Out</Link>
+                          </Menu.Item>
                         </SubMenu>
 
                         <SubMenu
@@ -717,11 +754,21 @@ export default class SiderDemo extends React.Component {
                       <ProtectedRoute path="/inventories/stock-io" component={StockInOut} />
                       <ProtectedRoute path="/inventories/transfers" component={Vendor} />
                       <ProtectedRoute path="/inventories/adjustments" component={Vendor} />
+                      <ProtectedRoute path="/finance/expenses" component={FinanceExpense} />
                       <ProtectedRoute path="/reports/sales-report-center" component={SaleReportCenter} />
                       <ProtectedRoute path="/reports/sales-report" component={SaleReport} />
                       <ProtectedRoute path="/reports/financial" component={FinancialReport} />
+                      <ProtectedRoute path="/settings/item-types" component={ItemType} />
+                      <ProtectedRoute path="/settings/units" component={UnitSettings} />
+                      <ProtectedRoute path="/settings/locations" component={LocationSettings} />
+                      <ProtectedRoute path="/settings/options" component={ItemOption} />
+                      <ProtectedRoute path="/settings/categories/create" component={CreateCategory} />
+                      <ProtectedRoute path="/settings/categories/:id/edit" component={CreateCategory} />
+                      <ProtectedRoute path="/settings/categories" component={Category} />
+                      <ProtectedRoute path="/settings/brands/create" component={BrandForm} />
+                      <ProtectedRoute path="/settings/brands/:id/edit" component={BrandForm} />
+                      <ProtectedRoute path="/settings/brands" component={Brand} />
                       <ProtectedRoute path="/settings" component={SettingsPage} />
-                      <ProtectedRoute path="/categories" component={Category} />
                       <ProtectedRoute path="/brands" component={Brand} />
                       <ProtectedRoute path="/setting-logs" component={SystemLogs} />
 

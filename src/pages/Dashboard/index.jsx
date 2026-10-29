@@ -18,7 +18,7 @@ import * as _ from "lodash";
 import Util from "@common/util/index";
 import { SelectPeriodOption } from "@components/stateless/select-period-option";
 import InventoryService from "@services/report.inventory";
-import DashboardService from "@services/dashboard";
+import DashboardService from "@services/Dashboard";
 import "./index.css"
 
 Chart.register(...registerables);

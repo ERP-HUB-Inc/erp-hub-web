@@ -1,0 +1,9 @@
+.item-option-name { color: #25364d; font-size: 14px; font-weight: 600; }
+.item-option-toolbar { justify-content: flex-start; flex-wrap: wrap; }
+.item-option-toolbar .category-listing-search { width: 350px; max-width: 100%; }
+.item-option-form fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.item-option-submit { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+@media (max-width: 767px) {
+  .item-option-toolbar .category-listing-search { width: 100%; }
+}

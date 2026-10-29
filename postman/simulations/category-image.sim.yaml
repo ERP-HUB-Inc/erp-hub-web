@@ -1,0 +1,5 @@
+simulation: category-image
+routing: path
+mocks:
+  - routeKey: uploads
+    path: ../mocks/category-image/config.yaml

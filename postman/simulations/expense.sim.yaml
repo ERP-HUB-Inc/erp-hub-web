@@ -1,0 +1,5 @@
+simulation: expense
+routing: path
+mocks:
+  - routeKey: finance
+    path: ../mocks/expense/config.yaml

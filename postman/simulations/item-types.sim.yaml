@@ -1,0 +1,5 @@
+simulation: item-types
+routing: path
+mocks:
+  - routeKey: catalog
+    path: ../mocks/item-types/config.yaml

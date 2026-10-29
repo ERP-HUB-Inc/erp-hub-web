@@ -10,11 +10,16 @@ export default class FormCreate extends BaseModal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if (values["image"]) {
-          values["image"] = this.getImageFromUpload(values, "image");
-        }
-        
-        this.props.dispatch(CategoryAction.add(values)); 
+        const payload = {
+          parentId: values.parentId,
+          name: values.name,
+          label: values.label,
+          description: values.description,
+          isFeature: values.isFeature,
+          image: values.image ? this.getImageFromUpload(values, "image") : values.image
+        };
+
+        this.props.dispatch(CategoryAction.add(payload));
       }
     });
   }

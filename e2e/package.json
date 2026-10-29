@@ -1,0 +1,28 @@
+{
+  "name": "storevein-pos-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser tests for StoreVein POS workflows",
+  "scripts": {
+    "test": "cypress run",
+    "test:config": "node --test config/*.test.cjs",
+    "test:ci": "cypress run --reporter junit --reporter-options \"mochaFile=results/junit/results-[hash].xml,toConsole=true\"",
+    "open": "cypress open",
+    "test:smoke": "cypress run --spec specs/auth/login-page.cy.js",
+    "test:auth": "cypress run --spec 'specs/auth/*.cy.js'",
+    "test:items": "cypress run --spec 'specs/items/*.cy.js'",
+    "test:item-types": "cypress run --spec 'specs/item-types/*.cy.js'",
+    "test:categories": "cypress run --spec 'specs/categories/*.cy.js'",
+    "test:brands": "cypress run --spec 'specs/brands/*.cy.js'",
+    "test:locations": "cypress run --spec 'specs/locations/*.cy.js'",
+    "test:item-options": "cypress run --spec 'specs/item-options/*.cy.js'",
+    "test:purchasing": "cypress run --spec 'specs/purchasing/*.cy.js'",
+    "test:stock": "cypress run --spec 'specs/stock-io/*.cy.js'",
+    "test:pos": "cypress run --spec 'specs/retail-pos/*.cy.js'"
+  },
+  "devDependencies": {
+    "cypress": "15.2.0",
+    "cypress-mochawesome-reporter": "3.8.4"
+  }
+}

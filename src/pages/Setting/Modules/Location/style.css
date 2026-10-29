@@ -1,0 +1,13 @@
+.location-setting-name { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.location-setting-name strong { color: #25364d; font-size: 14px; font-weight: 600; }
+.location-setting-name .ant-tag { margin: 0; }
+.location-setting-toolbar { justify-content: flex-start; flex-wrap: wrap; }
+.location-setting-toolbar .category-listing-search { width: 390px; max-width: 100%; }
+.location-setting-form fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.location-setting-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.location-setting-submit { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+@media (max-width: 767px) {
+  .location-setting-form-grid { grid-template-columns: 1fr; }
+  .location-setting-toolbar .category-listing-search { width: 100%; }
+}

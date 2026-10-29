@@ -13,6 +13,7 @@ export const sidebarMenuRoutes = [
   { path: "/general-ledger", selectedKey: "51", openKey: "5" },
   { path: "/accounts-receivable", selectedKey: "52", openKey: "5" },
   { path: "/accounts-payable", selectedKey: "53", openKey: "5" },
+  { path: "/finance/expenses", selectedKey: "54", openKey: "5" },
   { path: "/reports/sales-report", selectedKey: "61", openKey: "6" },
   { path: "/reports/purchases", selectedKey: "62", openKey: "6" },
   { path: "/reports/stock", selectedKey: "63", openKey: "6" },
