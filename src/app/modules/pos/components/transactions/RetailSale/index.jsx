@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Icon, Input, Row, Divider } from "antd";
+import { Button, Dropdown, Drawer, Icon, Input, Menu, Row, Divider } from "antd";
 import { isMobile, isAndroid, isIOS } from "react-device-detect";
 import sweetalert from "sweetalert";
 import BarcodeReader from "react-barcode-reader";
@@ -16,9 +16,6 @@ import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
 import ExchangeRateService from "../../../services/settings/ExchangeRateService";
-import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
-import CustomerAction from "../../../../crm/actions/customers/customer";
-import CustomerConstant from "../../../../crm/constants/customers/customer";
 import CategoryAction from "../../../../inventory/actions/products/productsType";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
@@ -45,8 +42,12 @@ import CategoryList from "./category-list";
 import ItemAutoRefresh from "./item-auto-refresh";
 import { StockBadge } from "@components/stateless/stock-badge";
 import { getLocationId } from "@helper/user";
+import NewCustomerForm from "./new-customer-form";
+import CustomerSelectorDrawer from "./customer-selector-drawer";
+import POSCustomerService from "../../../services/customers/CustomerService";
 
 const APP_VERSION = process.env.REACT_APP_VERSION || "2.0.51";
+const HELD_ORDERS_STORAGE_KEY = "POS_HELD_ORDERS";
 
 export default class RetailSale extends Component {
   constructor(props) {
@@ -58,6 +59,10 @@ export default class RetailSale extends Component {
       modalContent: null,
       expandRowOrderIndex: null,
       selectedCustomer: null,
+      customerSelectorVisible: false,
+      newCustomerVisible: false,
+      newCustomerSaving: false,
+      newCustomerError: null,
       expandOrderItemRow: [],
       productTaxList: [],
       categories: [],
@@ -67,6 +72,9 @@ export default class RetailSale extends Component {
       searchText: "",
       items: [],
       orderItems: [],
+      heldOrders: [],
+      heldOrdersDrawerVisible: false,
+      priceOverrideEnabled: false,
       discountValue: { type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0 },
       initialOrderQuantity: 1,
       initialOrderDiscount: 0,
@@ -105,6 +113,7 @@ export default class RetailSale extends Component {
 
   componentDidMount() {
     this.isUnmounted = false;
+    this.loadHeldOrders();
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.handleSetFullScreen();
 
@@ -134,11 +143,6 @@ export default class RetailSale extends Component {
   }
 
   componentDidUpdate() {
-    if (this.props.customerAdd.added && this.props.customerAdd.response.data) {
-      this.getSelectedCustomer(this.props.customerAdd.response.data);
-      this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
-    }
-
     if (this.props.open.added) {
       this.props.dispatch(OpenSaleRegistrationAction.last());
       this.props.dispatch(OpenSaleRegistrationAction.reset(ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION));
@@ -390,20 +394,77 @@ export default class RetailSale extends Component {
   }
 
   getSelectedCustomer = (selectedCustomer) => {
-    this.setState({ selectedCustomer });
+    const customer = selectedCustomer ? {
+      ...selectedCustomer,
+      firstName: selectedCustomer.firstName || selectedCustomer.name || "",
+      lastName: selectedCustomer.lastName || "",
+    } : null;
 
-    if (selectedCustomer) {
+    this.setState({ selectedCustomer: customer, customerSelectorVisible: false, newCustomerVisible: false, newCustomerSaving: false });
+    if (customer) {
       this.props.form.setFieldsValue({
-        searchRecord: `${selectedCustomer.firstName} ${selectedCustomer.lastName} ${selectedCustomer.phoneNumber ? " - " + selectedCustomer.phoneNumber : ""}`,
+        searchRecord: `${customer.firstName} ${customer.lastName}${customer.phoneNumber ? " - " + customer.phoneNumber : ""}`,
       });
     } else {
       this.props.form.setFieldsValue({ searchRecord: "" });
     }
 
     this.setState({
-      customerFieldPrice: CRMUtil.getCustomerPriceField(selectedCustomer),
+      customerFieldPrice: CRMUtil.getCustomerPriceField(customer),
     });
   };
+
+  handleOnOpenCustomerSelector = () => {
+    this.setState({ customerSelectorVisible: true });
+  };
+
+  handleOnCloseCustomerSelector = () => {
+    this.setState({ customerSelectorVisible: false });
+  };
+
+  getCustomerDisplayName = () => {
+    if (!this.state.selectedCustomer) {
+      return "Walk-in Customer (Default)";
+    }
+
+    const customer = this.state.selectedCustomer;
+    return [customer.firstName, customer.lastName].filter(Boolean).join(" ") || customer.company || "Customer";
+  };
+
+  renderCustomerPanel = () => {
+    const customerName = this.getCustomerDisplayName();
+
+    return (
+      <div className="pos-customer-panel">
+        <div className="pos-customer-panel-avatar" aria-hidden="true">
+          <span className="icon-person" />
+        </div>
+        <div className="pos-customer-panel-details">
+          <div className="pos-customer-panel-label">Customer</div>
+          <div className="pos-customer-panel-name" title={customerName}>{customerName}</div>
+        </div>
+        <div className="pos-customer-panel-actions">
+          <button type="button" className="pos-customer-panel-action" onClick={this.handleOnOpenCustomerSelector}>
+            Change
+          </button>
+          <span className="pos-customer-panel-separator" aria-hidden="true" />
+          <button type="button" className="pos-customer-panel-action" onClick={this.handleOnAddNewCustomer}>
+            + Add
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  renderCustomerSelector = () => (
+    <CustomerSelectorDrawer
+      visible={this.state.customerSelectorVisible}
+      currentCustomer={this.state.selectedCustomer}
+      onClose={this.handleOnCloseCustomerSelector}
+      onNew={this.handleOnAddNewCustomer}
+      onSelect={this.getSelectedCustomer}
+    />
+  );
 
   onSearch = (e) => {
     const search = e.target.value;
@@ -436,6 +497,172 @@ export default class RetailSale extends Component {
       }),
     );
   }
+
+  getHeldOrders() {
+    const heldOrders = localStorage.getItem(HELD_ORDERS_STORAGE_KEY);
+
+    if (this.Util.isJsonString(heldOrders)) {
+      const parsedOrders = JSON.parse(heldOrders);
+      return Array.isArray(parsedOrders) ? parsedOrders : [];
+    }
+
+    return [];
+  }
+
+  loadHeldOrders = () => {
+    let heldOrders = this.getHeldOrders();
+    const legacyParkReceipt = localStorage.getItem(Enum.PARK_RECEIPT);
+
+    // Migrate the old single held-sale record into the new collection.
+    if (!heldOrders.length && this.Util.isJsonString(legacyParkReceipt)) {
+      const receipt = JSON.parse(legacyParkReceipt);
+      if (receipt && receipt.isParkReceipt && Array.isArray(receipt.orderItems) && receipt.orderItems.length) {
+        heldOrders = [{
+          id: `legacy-${Date.now()}`,
+          createdAt: new Date().toISOString(),
+          orderItems: receipt.orderItems,
+          productTaxList: receipt.productTaxList || [],
+          discountValue: receipt.discountValue || { type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0 },
+          isDiscountHasAdded: Boolean(receipt.isDiscountHasAdded),
+          selectedCustomer: receipt.selectedCustomer || null,
+          customerFieldPrice: receipt.customerFieldPrice || "price",
+        }];
+        localStorage.setItem(HELD_ORDERS_STORAGE_KEY, JSON.stringify(heldOrders));
+      }
+    }
+
+    this.setState({ heldOrders });
+  };
+
+  saveHeldOrders = (heldOrders) => {
+    localStorage.setItem(HELD_ORDERS_STORAGE_KEY, JSON.stringify(heldOrders));
+    this.setState({ heldOrders });
+  };
+
+  handleOnSaveParkReceipt = () => {
+    if (!this.state.orderItems.length) {
+      this.Message.error("Add at least one item before holding the sale.");
+      return;
+    }
+
+    const heldOrder = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      createdAt: new Date().toISOString(),
+      orderItems: JSON.parse(JSON.stringify(this.state.orderItems)),
+      productTaxList: JSON.parse(JSON.stringify(this.state.productTaxList)),
+      discountValue: this.state.discountValue,
+      isDiscountHasAdded: this.state.isDiscountHasAdded,
+      selectedCustomer: this.state.selectedCustomer,
+      customerFieldPrice: this.state.customerFieldPrice,
+    };
+
+    this.saveHeldOrders([heldOrder, ...this.state.heldOrders]);
+    this.handleOnResetOrder();
+    this.Message.success("Sale held successfully.");
+  };
+
+  handleOnPriceOverride = () => {
+    const currentUser = this.Util.getCurrentUser();
+    if (currentUser.isAllowEditPrice !== HREnum.ALLOW_EDIT_SALE_PRODUCT.ALLOW) {
+      this.Message.error("Manager permission is required for price override.");
+      return;
+    }
+
+    this.setState({ priceOverrideEnabled: true });
+    this.Message.success("Price override enabled.");
+  };
+
+  handleOnRestoreHeldOrder = (heldOrderId) => {
+    const heldOrder = this.state.heldOrders.find(order => order.id === heldOrderId);
+    if (!heldOrder) return;
+
+    const remainingOrders = this.state.heldOrders.filter(order => order.id !== heldOrderId);
+    const restoredOrder = {
+      ...heldOrder,
+      selectedReceiptType: Enum.CURRENT_RECEIPT,
+      orderItems: JSON.parse(JSON.stringify(heldOrder.orderItems || [])),
+    };
+
+    delete restoredOrder.id;
+    delete restoredOrder.createdAt;
+    this.saveHeldOrders(remainingOrders);
+    this.setState(restoredOrder, () => {
+      this.saveReceipt(Enum.CURRENT_RECEIPT, this.state.orderItems);
+      this.props.form.setFieldsValue({
+        searchRecord: this.state.selectedCustomer ? `${this.state.selectedCustomer.firstName} ${this.state.selectedCustomer.lastName}` : "",
+      });
+      this.Message.success("Held sale restored.");
+    });
+  };
+
+  handleOnOpenHeldOrders = () => {
+    this.setState({ heldOrdersDrawerVisible: true });
+  };
+
+  handleOnCloseHeldOrders = () => {
+    this.setState({ heldOrdersDrawerVisible: false });
+  };
+
+  handleOnDeleteHeldOrder = (heldOrderId) => {
+    this.saveHeldOrders(this.state.heldOrders.filter(order => order.id !== heldOrderId));
+  };
+
+  formatHeldOrderLabel = (heldOrder) => {
+    const createdAt = new Date(heldOrder.createdAt);
+    const time = Number.isNaN(createdAt.getTime()) ? "" : createdAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const itemCount = _.sumBy(heldOrder.orderItems || [], "quantity");
+    return `Held Sale ${time} (${itemCount} Items)`;
+  };
+
+  renderMoreOptionsMenu = () => (
+    <Menu onClick={({ key }) => {
+      if (key === "discount") {
+        this.handleOnSetupDiscount();
+      } else if (key === "price-override") {
+        this.handleOnPriceOverride();
+      } else if (key === "held-orders") {
+        this.handleOnOpenHeldOrders();
+      }
+    }}>
+      <Menu.Item key="discount">
+        <Icon type="percentage" /> Add Discount
+      </Menu.Item>
+      <Menu.Item key="price-override">
+        <Icon type="edit" /> Price Override <span className="menu-shortcut-badge">Mgr</span>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="held-orders">
+        <Icon type="inbox" /> Held Orders ({this.state.heldOrders.length})
+      </Menu.Item>
+    </Menu>
+  );
+
+  renderHeldOrdersDrawer = () => (
+    <Drawer
+      title={`Held Orders (${this.state.heldOrders.length})`}
+      placement="right"
+      width={380}
+      visible={this.state.heldOrdersDrawerVisible}
+      onClose={this.handleOnCloseHeldOrders}
+    >
+      {this.state.heldOrders.length ? this.state.heldOrders.map(heldOrder => (
+        <div className="held-order-drawer-item" key={heldOrder.id}>
+          <div>
+            <div className="held-order-drawer-title">{this.formatHeldOrderLabel(heldOrder)}</div>
+            <div className="held-order-drawer-summary">
+              {(heldOrder.orderItems || []).map(item => `${item.quantity}x ${item.itemName}`).join(", ")}
+            </div>
+          </div>
+          <Button type="primary" size="small" onClick={() => {
+            this.handleOnCloseHeldOrders();
+            this.handleOnRestoreHeldOrder(heldOrder.id);
+          }}>
+            Restore
+          </Button>
+        </div>
+      )) : <div className="held-order-drawer-empty">No held orders</div>}
+    </Drawer>
+  );
 
   restoreReceipt(key) {
     let receipt = localStorage.getItem(key);
@@ -471,6 +698,7 @@ export default class RetailSale extends Component {
       selectedReceiptType: Enum.CURRENT_RECEIPT,
       expandOrderItemRow: [],
       orderItems: [],
+      priceOverrideEnabled: false,
       productTaxList: [],
       discountValue: {
         type: Enum.DISCOUNT_TYPE.PERCENTAGE,
@@ -482,7 +710,6 @@ export default class RetailSale extends Component {
     });
 
     localStorage.removeItem(Enum.CURRENT_RECEIPT);
-    this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
     this.props.form.setFieldsValue({ searchRecord: "" }); //searchRecord: customer search field
     if (this.discountRef.current) {
       this.discountRef.current.reset();
@@ -490,7 +717,7 @@ export default class RetailSale extends Component {
   }
 
   handleOnNewSale = () => {
-    this.setState({ orderItems: [] });
+    this.setState({ orderItems: [], priceOverrideEnabled: false });
   }
 
   focusSearchInput = () => {
@@ -909,10 +1136,36 @@ export default class RetailSale extends Component {
   };
 
   handleOnAddNewCustomer = () => {
-    this.props.dispatch(CustomerAction.showForm());
     this.setState({
-      modalContent: <FormCreateCustomer />,
+      customerSelectorVisible: false,
+      newCustomerVisible: true,
+      newCustomerSaving: false,
+      newCustomerError: null,
     });
+  };
+
+  handleOnCloseNewCustomer = () => {
+    if (this.state.newCustomerSaving) return;
+    this.setState({ customerSelectorVisible: false, newCustomerVisible: false, newCustomerError: null });
+  };
+
+  handleOnSubmitNewCustomer = (customer) => {
+    this.setState({ newCustomerSaving: true });
+    return POSCustomerService.create(customer)
+      .then(response => {
+        const responseData = response && response.data;
+        const createdCustomer = responseData && responseData.data ? responseData.data : responseData;
+
+        if (!createdCustomer) {
+          throw new Error("The customer was created but no customer record was returned.");
+        }
+
+        this.getSelectedCustomer(createdCustomer);
+        this.Message.success("Customer created and assigned to order.");
+      })
+      .catch(error => {
+        this.setState({ newCustomerSaving: false, newCustomerError: error });
+      });
   };
 
   handleOnSelectProductSearchList = (product, productVariants) => {
@@ -1038,11 +1291,6 @@ export default class RetailSale extends Component {
     history.push("/transactions/saleregister");
   };
 
-  handleOnSaveParkReceipt = () => {
-    this.saveReceipt(Enum.PARK_RECEIPT, this.state.orderItems);
-    this.handleOnResetOrder();
-  }
-
   handleOnRestoreReceipt = (key) => {
     this.restoreReceipt(key);
     this.setState({ selectedReceiptType: key });
@@ -1127,10 +1375,12 @@ export default class RetailSale extends Component {
           <span>Hold Sale</span>
           <span className="payment-keyboard-badge">F6</span>
         </Button>
-        <Button className="payment-secondary-button" onClick={this.handleOnSetupDiscount}>
-          <span className="payment-more-icon">...</span>
-          <span>More Options</span>
-        </Button>
+        <Dropdown overlay={this.renderMoreOptionsMenu()} trigger={["click"]} placement="topRight">
+          <Button className="payment-secondary-button">
+            <span className="payment-more-icon">...</span>
+            <span>More Options</span>
+          </Button>
+        </Dropdown>
       </div>
       <Button type="primary" className="payment-primary-button" onClick={this.handleOnMakePayment}>
         <span className="icon-checked icon-padding-right"></span>
@@ -1330,21 +1580,7 @@ export default class RetailSale extends Component {
                   {this.Util.getCurrentUser().fullName}
                 </div>
               </this.Col> */}
-            {/* {this.Util.getClientCustomerCreditStatus() ===
-              SettingEnum.CUSTOMER_CREDIT_STATUS.ENABLE ? (
-                <CustomerDropDownSearch
-                  customers={this.props.customers}
-                  locale={this.props.locale}
-                  form={this.props.form}
-                  dispatch={this.props.dispatch}
-                  callBack={this.getSelectedCustomer}
-                  disabledCustomer={this.state.disabledCustomer}
-                  handleOnAddNewCustomer={this.handleOnAddNewCustomer}
-                />
-              ) : (
-                ""
-              )} */}
-
+            {this.renderCustomerPanel()}
             <OrderHeader totalQty={this.state.orderItems.reduce((acc, item) => acc + item.quantity, 0)} />
 
             <div className="product-order-list" ref={(el) => (this.orderListRef = el)}>
@@ -1432,7 +1668,7 @@ export default class RetailSale extends Component {
                             precision={2}
                             isAutoSelect={true}
                             isHideTool={true}
-                            disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
+                            disabled={!this.state.priceOverrideEnabled || this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
                             form={this.props.form}
                           />
                           <this.InputNumber
@@ -1576,6 +1812,15 @@ export default class RetailSale extends Component {
         </div>
 
         {this.state.modalContent}
+        {this.renderCustomerSelector()}
+        <NewCustomerForm
+          visible={this.state.newCustomerVisible}
+          loading={this.state.newCustomerSaving}
+          error={this.state.newCustomerError}
+          onCancel={this.handleOnCloseNewCustomer}
+          onSubmit={this.handleOnSubmitNewCustomer}
+        />
+        {this.renderHeldOrdersDrawer()}
 
         <PaymentForm
           handleCancel={() => this.setState({ paymentVisible: false })}

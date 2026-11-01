@@ -124,6 +124,13 @@ const getOrderChannelIcon = record => {
   return Globe2;
 };
 
+const getOrderCustomer = record => record.customer || record;
+const getOrderCustomerName = record => {
+  if (record.customerId === "WALK_IN") return "Walk-In";
+  const customer = getOrderCustomer(record);
+  return [customer.firstName, customer.lastName].filter(Boolean).join(" ") || customer.name || customer.company || "Customer";
+};
+
 const FULFILLMENT_STATUSES = [
   "ORDERED", "PACKED", "SHIPPED", "DELIVERED", "CANCELLED", "CANCELED",
   "PENDING", "READY", "READY_FOR_DISPATCH", "IN_TRANSIT", "OUT_FOR_DELIVERY",
@@ -247,26 +254,31 @@ export default class SaleOrderPage extends Component {
         settingLabel: "text_customer",
         dataIndex: "firstName",
         key: "firstName",
-        render: (firstName, record) => (
-          <div className="sale-order-customer-cell">
-            <strong>{record.customerId === "WALK_IN" ? "Walk-In" : `${firstName || ""} ${record.lastName || ""}`.trim()}</strong>
-            {record.phoneNumber && (
+        render: (firstName, record) => {
+          const customer = getOrderCustomer(record);
+          const phoneNumber = customer.phoneNumber || record.phoneNumber;
+
+          return (
+          <div className="sale-order-customer-cell" title={getOrderCustomerName(record)}>
+            <strong>{getOrderCustomerName(record)}</strong>
+            {phoneNumber && (
               <span className="sale-order-customer-phone">
-                {record.phoneNumber}
+                {phoneNumber}
                 <Button
                   type="link"
                   size="small"
                   className="sale-order-copy-phone"
                   title="Copy phone number"
-                  aria-label={`Copy phone number ${record.phoneNumber}`}
-                  onClick={event => this.copyPhoneNumber(record.phoneNumber, event)}
+                  aria-label={`Copy phone number ${phoneNumber}`}
+                  onClick={event => this.copyPhoneNumber(phoneNumber, event)}
                 >
                   <Icon type="copy" />
                 </Button>
               </span>
             )}
           </div>
-        )
+          );
+        }
       },
       {
         title: "Delivery address",

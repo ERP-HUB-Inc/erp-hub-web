@@ -8,7 +8,7 @@ export function readDashboardFilters(search, profileLocationId, locations) {
   const requestedLocation = params.get("locationId");
 
   return {
-    periodKey: periodOptions.some(([key]) => key === period) ? period : "today",
+    periodKey: periodOptions.some(([key]) => key === period) ? period : "this-month",
     locationId: requestedLocation === "" ? "" : requestedLocation !== null && hasLocation(requestedLocation) ? requestedLocation : defaultLocation,
   };
 }

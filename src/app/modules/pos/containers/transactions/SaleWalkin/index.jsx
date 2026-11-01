@@ -9,11 +9,9 @@ function WalkinSale(props) {
 
 export function mapStateToProps(state) {
   return {
-    customers: state.reducer.customer.request,
     products: state.reducer.product.request,
     productsType: state.reducer.productsType.request,
     productVariant: state.reducer.productVariant.request,
-    customerAdd: state.reducer.customer.add,
     posPay: state.reducer.transaction.posPay,
     productSearch: state.reducer.product.search,
     paymentMethod: state.reducer.paymentMethods.request,

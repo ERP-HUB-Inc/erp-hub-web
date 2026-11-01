@@ -9,8 +9,8 @@ test("restores the selected branch and period from the URL", () => {
   });
 });
 
-test("uses the profile branch and Today when filters are absent", () => {
-  expect(readDashboardFilters("", 1, locations)).toEqual({ locationId: "1", periodKey: "today" });
+test("uses the profile branch and This Month when filters are absent", () => {
+  expect(readDashboardFilters("", 1, locations)).toEqual({ locationId: "1", periodKey: "this-month" });
 });
 
 test("preserves All Branches after a reload even with a profile branch", () => {
@@ -21,7 +21,7 @@ test("preserves All Branches after a reload even with a profile branch", () => {
 test("rejects an unknown URL branch and unsupported period", () => {
   expect(readDashboardFilters("?locationId=99&period=invalid", 1, locations)).toEqual({
     locationId: "1",
-    periodKey: "today",
+    periodKey: "this-month",
   });
 });
 

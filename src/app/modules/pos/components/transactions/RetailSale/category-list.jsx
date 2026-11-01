@@ -70,7 +70,7 @@ const Wrapper = styled.div`
 `;
 
 const Tab = styled.button`
-  height: 68px;
+  height: 56px;
   min-width: 176px;
   max-width: 220px;
   padding: 0 16px 0 12px;
@@ -142,7 +142,7 @@ const TabName = styled.span`
 `;
 
 const TabCount = styled.span`
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   color: #94a3b8;
   line-height: 1.2;
