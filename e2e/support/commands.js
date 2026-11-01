@@ -11,6 +11,14 @@ Cypress.Commands.add("login", ({ expectedPath = routes.dashboard, submitWith = "
     loginPage.fill(credentials);
     loginPage.assertCredentialsEntered(credentials);
     loginPage.submit(submitWith);
+    cy.get("body").should($body => {
+      const currentPath = window.location.pathname;
+      const loginError = $body.find('.signin-error[role="alert"]').text().trim();
+      expect(currentPath === expectedPath || Boolean(loginError), "login redirects or displays an error").to.equal(true);
+    }).then($body => {
+      const loginError = $body.find('.signin-error[role="alert"]').text().trim();
+      if (loginError) throw new Error(`E2E login failed: ${loginError}`);
+    });
     cy.location("pathname", { timeout: 30000 }).should("equal", expectedPath);
     cy.window({ log: false }).should(window => {
       expect(hasAuthSession(window), "valid access token saved in browser session").to.equal(true);

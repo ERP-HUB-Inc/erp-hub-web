@@ -3,7 +3,7 @@ import { filterSettingsModules, responseCount, SETTINGS_MODULES } from './module
 test('empty search preserves the complete five-module catalog', () => {
   expect(filterSettingsModules('   ')).toBe(SETTINGS_MODULES);
   expect(SETTINGS_MODULES).toHaveLength(5);
-  expect(SETTINGS_MODULES[0].entries).toHaveLength(6);
+  expect(SETTINGS_MODULES[0].entries).toHaveLength(5);
   expect(SETTINGS_MODULES.slice(1).every(module => module.entries.length === 5)).toBe(true);
 });
 
@@ -20,6 +20,16 @@ test('searches descriptions, category names, and synonyms', () => {
   expect(filterSettingsModules('general ledger')[0].key).toBe('finance');
   expect(filterSettingsModules('kilogram')[0].entries[0].key).toBe('units');
   expect(filterSettingsModules('no-matching-setting')).toEqual([]);
+});
+
+test('business health coverage search opens its configuration instead of forecasting', () => {
+  const modules = filterSettingsModules('critical coverage');
+  expect(modules).toHaveLength(1);
+  expect(modules[0].key).toBe('insights');
+  expect(modules[0].entries).toEqual([expect.objectContaining({
+    key: 'business-health', title: 'Business Health Configuration', to: '/settings/business-health', permission: 'authenticated'
+  })]);
+  expect(SETTINGS_MODULES.find(module => module.key === 'insights').entries.some(entry => entry.key === 'forecast')).toBe(false);
 });
 
 test.each([0, 112])('reads real paginated totals, including zero: %p', total => {

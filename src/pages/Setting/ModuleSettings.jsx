@@ -82,7 +82,7 @@ export function ModuleSettingsCards({ search, onClearSearch, resources }) {
       {modules.map(module => {
         const ModuleIcon = icons[module.icon];
         const canConfigure = module.permission === 'catalog' && catalogAccess.data === true;
-        return <article className={`settings-module-card settings-module-${module.tone}`} key={module.key} aria-labelledby={`module-${module.key}-title`} hidden={module.key === 'finance'}>
+        return <article className={`settings-module-card settings-module-${module.tone}`} key={module.key} aria-labelledby={`module-${module.key}-title`}>
           <div className="settings-module-body">
             <div className="settings-module-top">
               <div className="settings-module-icon"><ModuleIcon size={25} strokeWidth={1.8} aria-hidden="true" /></div>
@@ -95,7 +95,7 @@ export function ModuleSettingsCards({ search, onClearSearch, resources }) {
             <ul className="settings-module-entries">
               {module.entries.map(entry => {
                 const EntryIcon = icons[entry.icon];
-                const available = entry.to && canConfigure;
+                const available = entry.to && (canConfigure || entry.permission === 'authenticated');
                 const content = <><EntryIcon size={18} strokeWidth={1.7} aria-hidden="true" /><span>{entry.title}</span></>;
                 return <li key={entry.key}>
                   {available ? <Link className="settings-entry-label" to={entry.to}>{content}</Link> : <span className="settings-entry-label settings-entry-readonly" title={entry.to ? 'Editing access is required.' : 'This configuration screen is not available here.'}>{content}</span>}

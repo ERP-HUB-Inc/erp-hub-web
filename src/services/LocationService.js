@@ -20,6 +20,11 @@ class LocationService extends BaseService {
      return this.GET({ url: `${this.baseUrl}/${encodeURIComponent(id)}`, headers: this.header });
    }
 
+   getAccessible({ limit = 100, offset = 0 } = {}) {
+     this.setHeader();
+     return this.GET({ url: `${this.baseUrl}/useracess`, headers: this.header, params: { limit, offset, sortField: 'name', sortOrder: 'ASC' } });
+   }
+
    add(data) {
      this.setHeader();
      return this.POST({ url: this.baseUrl, headers: this.header, data });

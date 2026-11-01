@@ -26,6 +26,10 @@ test('renders the seven available tabs in order and honors the modules URL state
     'Workflows & Automation', 'Reports & Exports', 'System Logs & Audit'
   ]);
   expect(tabs[1].getAttribute('aria-selected')).toBe('true');
+  tabs.forEach(tab => {
+    expect(tab.querySelectorAll('svg')).toHaveLength(1);
+    expect(tab.querySelector('svg').getAttribute('aria-hidden')).toBe('true');
+  });
   expect(container.querySelector('[data-module-content]')).not.toBeNull();
 });
 

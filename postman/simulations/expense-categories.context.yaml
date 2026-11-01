@@ -1,0 +1,23 @@
+purpose:
+  stands_in_for: Expense category endpoints from the adjacent pos-api checkout.
+  unblocks: HTTP verification of the Settings expense categories list, forms, and deletion.
+assumptions:
+  - id: category-contract
+    status: supported
+    claim: The category API accepts name and optional namekh, returns paginated lists and saved entities, and returns affected on deletion.
+    reason: Read the adjacent backend controller, DTO, service, and repository. Both fields allow at most 255 characters; name must not be blank.
+    verification: Local form and Settings tests passed. HTTP simulation tests were added but have not run; the sandbox blocked port binding and the permission request was interrupted. No live API requests were made.
+    source: ../pos-api/src/containers/finance/controllers/ExpenseCategoryController.ts; ../pos-api/src/containers/finance/dto/ExpenseCategoryDto.ts; ../pos-api/src/containers/finance/services/ExpenseCategoryService.ts
+    updated_at: '2026-10-31'
+  - id: business-isolation
+    status: unknown
+    claim: Category listing returns only the authenticated business's records.
+    reason: The backend service passes businessId to the repository, but the inspected list query does not appear to apply it. The local mock does not test authorization or tenant isolation.
+    verification: Source inspection only; backend and live behavior remain unverified. Backend files were not changed.
+    source: ../pos-api/src/containers/finance/repositories/ExpenseCategoryRepository.ts
+    updated_at: '2026-10-31'
+fingerprints:
+  - id: initial-implementation
+    date: '2026-10-31'
+    commit: 293d47f51fa609f4b594aef354655b7cabee85a1 (dirty working tree)
+    cli: 1.73.0

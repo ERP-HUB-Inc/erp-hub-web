@@ -12,9 +12,9 @@ beforeEach(() => {
   container = document.createElement('div'); document.body.appendChild(container); onSave = jest.fn();
 });
 afterEach(() => { act(() => { ReactDOM.unmountComponentAtNode(container); }); container.remove(); jest.restoreAllMocks(); });
-const mount = (recurring = false) => {
+const mount = (recurring = false, props = {}) => {
   let root;
-  act(() => { root = ReactDOM.render(<DecoratedForm record={{}} recurring={recurring} onSave={onSave} onCancel={() => {}} />, container); });
+  act(() => { root = ReactDOM.render(<DecoratedForm record={{}} recurring={recurring} {...props} onSave={onSave} onCancel={() => {}} />, container); });
   form = findRenderedComponentWithType(root, ExpenseForm);
   act(() => form.setState({ loading: false, locations: [{ id: 'branch', name: 'Shop' }], currencies: [{ id: 'usd', code: 'USD' }], categories: [{ name: 'Office Rent' }] }));
 };
@@ -44,4 +44,33 @@ test('recurring form requires a recurrence date and stores frequency without cla
 
 test('upload in progress prevents submission', () => {
   mount(); set({}); act(() => form.setState({ uploading: true })); act(() => form.submit()); expect(onSave).not.toHaveBeenCalled();
+});
+
+
+test('selects the only available branch after choices load', () => {
+  mount();
+  expect(form.props.form.getFieldValue('locationId')).toBe('branch');
+});
+
+test('requires a branch choice when multiple branches are available', () => {
+  mount();
+  act(() => form.setState({ locations: [{ id: 'branch', name: 'Shop' }, { id: 'other', name: 'Other shop' }] }));
+  expect(form.props.form.getFieldValue('locationId')).toBeUndefined();
+});
+
+test('preserves the saved branch when editing', () => {
+  mount(false, { record: { locationId: 'saved-branch' } });
+  expect(form.props.form.getFieldValue('locationId')).toBe('saved-branch');
+});
+
+test('selects the only branch for a new recurring bill and allows clearing it', () => {
+  mount(false, { commitment: true });
+  expect(form.props.form.getFieldValue('locationId')).toBe('branch');
+  act(() => form.props.form.setFieldsValue({ locationId: undefined }));
+  expect(form.props.form.getFieldValue('locationId')).toBeUndefined();
+});
+
+test('preserves all branches when editing an existing recurring bill', () => {
+  mount(false, { commitment: true, record: { id: 'existing', locationId: null } });
+  expect(form.props.form.getFieldValue('locationId')).toBeUndefined();
 });

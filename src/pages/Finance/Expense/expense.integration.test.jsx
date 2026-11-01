@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { act, findRenderedComponentWithType } from 'react-dom/test-utils';
 import axios from 'axios';
+import { Modal, message } from 'antd';
 import moment from 'moment';
 import ExpensePage from './index';
 import { ExpenseForm } from './ExpenseForm';
@@ -110,4 +111,42 @@ httpTest('detail and editing use the stored branch, currency and recurrence with
   const { data } = await axios.get(`${base}/_test/state`);
   expect(data.rows.find(row => row.id === 'fixture-rent').amount).toBe(470);
   expect(data.calls.find(call => call.method === 'PUT').body).not.toHaveProperty('paid');
+});
+
+
+httpTest('expense actions load full details, confirm deletion and refresh rows', async () => {
+  act(() => page.setState({ tab: 'all' }));
+  const fuelRow = Array.from(container.querySelectorAll('tbody tr')).find(row => row.textContent.includes('Fixture fuel'));
+  expect(fuelRow.textContent).toContain('Edit');
+  expect(fuelRow.textContent).toContain('Delete');
+  await act(async () => { await page.openExpenseAction({ id: 'fixture-fuel' }, 'edit'); });
+  expect(page.state.editor.registerDate).toBe('2026-10-02');
+  expect(page.state.editor.locationId).toBe('branch-1');
+  act(() => page.setState({ editor: null }));
+  const confirm = jest.spyOn(Modal, 'confirm').mockImplementation(() => {});
+  try {
+    await act(async () => { await page.openExpenseAction({ id: 'fixture-fuel' }, 'delete'); });
+    expect((await axios.get(`${base}/_test/state`)).data.calls.some(call => call.method === 'DELETE')).toBe(false);
+    await act(async () => { await confirm.mock.calls[0][0].onOk(); });
+    expect(page.state.records.some(row => row.id === 'fixture-fuel')).toBe(false);
+    const state = (await axios.get(`${base}/_test/state`)).data;
+    expect(state.calls.find(call => call.method === 'DELETE').authenticated).toBe(true);
+    expect(state.rows.some(row => row.id === 'fixture-fuel')).toBe(false);
+  } finally { confirm.mockRestore(); }
+});
+
+httpTest('expense actions protect payment and system rows and retain records on delete failure', async () => {
+  await act(async () => {
+    await page.openExpenseAction({ id: 'payment', accountingPayment: true }, 'edit');
+    await page.deleteExpense({ id: 'system', isSystem: 1 });
+  });
+  expect((await axios.get(`${base}/_test/state`)).data.calls.some(call => call.method === 'DELETE')).toBe(false);
+  ExpenseService.baseUrl = `${base}/failure/finance/expenses`;
+  const error = jest.spyOn(message, 'error').mockImplementation(() => {});
+  try {
+    await act(async () => { await expect(page.deleteExpense({ id: 'fixture-fuel' })).rejects.toBeDefined(); });
+    expect(error).toHaveBeenCalled();
+    expect(page.state.records.some(row => row.id === 'fixture-fuel')).toBe(true);
+    expect(page.state.expenseActionId).toBe('');
+  } finally { error.mockRestore(); }
 });

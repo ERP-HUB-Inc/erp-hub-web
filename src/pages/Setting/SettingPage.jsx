@@ -1,12 +1,16 @@
 import React from 'react';
 import { Tabs, Button, Tag, Icon, Input } from 'antd';
-import { ListFilter } from 'lucide-react';
+import { FileBarChart, Grid2X2, History, ListFilter, Plug, Settings, ShieldCheck, Workflow } from 'lucide-react';
 import SystemLogs from './SystemLogs';
 import ModuleSettings from './ModuleSettings';
 import './SettingPage.css';
 
 const { TabPane } = Tabs;
 const SETTING_TABS = ['general', 'modules', 'integration', 'backup', 'workflows', 'reports', 'logs'];
+
+const SettingsTabLabel = ({ icon: TabIcon, children }) => (
+  <span className="settings-tab-label"><TabIcon size={16} aria-hidden="true" /><span>{children}</span></span>
+);
 
 const ERPSettings = ({ history, location }) => {
   const [search, setSearch] = React.useState('');
@@ -55,7 +59,7 @@ const ERPSettings = ({ history, location }) => {
         />
       </header>
       <Tabs className="settings-tabs" activeKey={activeTab} onChange={handleTabChange}>
-        <TabPane tab="General" key="general">
+        <TabPane tab={<SettingsTabLabel icon={Settings}>General</SettingsTabLabel>} key="general">
           <div style={{ padding: '24px 0' }}>
             <h3 style={{ marginBottom: '16px', color: '#262626' }}>Company Information</h3>
             <p style={{ color: '#595959', marginBottom: '24px' }}>
@@ -65,14 +69,14 @@ const ERPSettings = ({ history, location }) => {
           </div>
         </TabPane>
         
-        <TabPane tab="Modules" key="modules">
+        <TabPane tab={<SettingsTabLabel icon={Grid2X2}>Modules</SettingsTabLabel>} key="modules">
           {activeTab === 'modules' && <ModuleSettings search={search} onClearSearch={() => {
             setSearch('');
             if (searchRef.current) searchRef.current.focus();
           }} />}
         </TabPane>
 
-        <TabPane tab="Integration & APIs" key="integration">
+        <TabPane tab={<SettingsTabLabel icon={Plug}>Integration & APIs</SettingsTabLabel>} key="integration">
           <div style={{ padding: '24px 0' }}>
             <h3 style={{ marginBottom: '16px', color: '#262626' }}>Third-Party Integrations</h3>
             <p style={{ color: '#595959', marginBottom: '32px' }}>
@@ -619,7 +623,7 @@ const ERPSettings = ({ history, location }) => {
           </div>
         </TabPane>
         
-        <TabPane tab="Backup & Security" key="backup">
+        <TabPane tab={<SettingsTabLabel icon={ShieldCheck}>Backup & Security</SettingsTabLabel>} key="backup">
           <div style={{ padding: '24px 0' }}>
             <h3 style={{ marginBottom: '16px', color: '#262626' }}>Data Backup & Security</h3>
             <p style={{ color: '#595959', marginBottom: '24px' }}>
@@ -629,7 +633,7 @@ const ERPSettings = ({ history, location }) => {
           </div>
         </TabPane>
         
-        <TabPane tab="Workflows & Automation" key="workflows">
+        <TabPane tab={<SettingsTabLabel icon={Workflow}>Workflows & Automation</SettingsTabLabel>} key="workflows">
           <div style={{ padding: '24px 0' }}>
             <h3 style={{ marginBottom: '16px', color: '#262626' }}>Business Workflows</h3>
             <p style={{ color: '#595959', marginBottom: '24px' }}>
@@ -639,7 +643,7 @@ const ERPSettings = ({ history, location }) => {
           </div>
         </TabPane>
         
-        <TabPane tab="Reports & Exports" key="reports">
+        <TabPane tab={<SettingsTabLabel icon={FileBarChart}>Reports & Exports</SettingsTabLabel>} key="reports">
           <div style={{ padding: '24px 0' }}>
             <h3 style={{ marginBottom: '16px', color: '#262626' }}>Report Settings</h3>
             <p style={{ color: '#595959', marginBottom: '24px' }}>
@@ -649,7 +653,7 @@ const ERPSettings = ({ history, location }) => {
           </div>
         </TabPane>
         
-        <TabPane tab="System Logs & Audit" key="logs">
+        <TabPane tab={<SettingsTabLabel icon={History}>System Logs & Audit</SettingsTabLabel>} key="logs">
           {activeTab === 'logs' && <SystemLogs embedded history={history} location={location} />}
         </TabPane>
       </Tabs>

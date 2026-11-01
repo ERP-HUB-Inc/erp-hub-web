@@ -1,5 +1,6 @@
 import React from "react";
 import {
+   Alert,
    Drawer,
    Form,
    Button,
@@ -13,7 +14,6 @@ import {
    Translate,
    getActiveLanguage
 } from "@redux/index";
-import Util from "@helper/inventory";
 import LocationService from "@services/LocationService";
 import StockAdjustmentService from "@services/StockAdjustmentService";
 
@@ -35,7 +35,9 @@ class EditStock extends React.Component {
       adjustQuantity: 0,
       locations: [],
       locationId: null,
-      product: {}
+      product: {},
+      variant: null,
+      error: ""
    };
 
    shippingDetailRef = React.createRef();
@@ -73,10 +75,14 @@ class EditStock extends React.Component {
       return this.props.locale.translations[key][currentIndex];
     }
 
-   showDrawer = (product) => {
+   showDrawer = (product, variant = product.productVariants?.[0]) => {
       this.setState({
          visible: true,
-         product
+         product,
+         variant: variant || null,
+         reason: "",
+         adjustQuantity: 0,
+         error: ""
       });
    };
 
@@ -87,11 +93,14 @@ class EditStock extends React.Component {
       });
    };
 
-   onSubmit = (event) => {
+   onSubmit = async (event) => {
       event.preventDefault();
-      const {
-         product,
-      } = this.state;
+      if (this.submitting) return;
+      const { product, variant } = this.state;
+      if (!variant?.id) {
+         this.setState({ error: "Choose an item variant before adjusting stock." });
+         return;
+      }
 
       const data = {
          reason: this.state.reason,
@@ -99,23 +108,30 @@ class EditStock extends React.Component {
          status: 1,
          entries: [
             {
-               variantId: Util.getProductVariantId(product),
+               variantId: variant.id,
                itemName: product.name,
-               variantName: "",
-               barcode: Util.getItemBarcode(product),
-               unitId: product.unit ? product.unit.id : null,
+               variantName: variant.name || "",
+               barcode: variant.barcode || "",
+               unitId: product.stockUnit?.id || product.unit?.id || null,
                adjustQuantity: this.state.adjustQuantity
             }
          ]
       };
 
-      this.setState({ submitting: true });
-      StockAdjustmentService.add(data)
-      .then(() => {
+      this.submitting = true;
+      this.setState({ submitting: true, error: "" });
+      try {
+         await StockAdjustmentService.add(data);
          this.onClose();
          this.props.callback();
-      })
-      .finally(() => this.setState({submitting: false}));
+      } catch (error) {
+         const body = error?.response?.data;
+         const reason = body?.error?.message || body?.message;
+         this.setState({ error: typeof reason === "string" ? reason : "Unable to adjust stock. Please try again." });
+      } finally {
+         this.submitting = false;
+         this.setState({ submitting: false });
+      }
    }
 
    onChange = (fieldName, value) => {
@@ -132,11 +148,17 @@ class EditStock extends React.Component {
             visible={this.state.visible}
             bodyStyle={{ paddingBottom: 80 }}
          >
+            <dl className="item-stock-edit-context">
+               <div><dt>Item</dt><dd>{this.state.product.name || "—"}</dd></div>
+               <div><dt>Variant</dt><dd>{this.state.variant?.name || "—"}</dd></div>
+               <div><dt>Barcode</dt><dd>{this.state.variant?.barcode || "—"}</dd></div>
+            </dl>
+            {this.state.error && <Alert type="error" showIcon role="alert" message={this.state.error} style={{ marginBottom: 16 }} />}
             <Form layout="vertical" onSubmit={this.onSubmit}>
                <Row gutter={16}>
                   <Col span={24}>
                      <Form.Item required={true} label={<Translate id="text_reason" />}>
-                        <Input.TextArea rows={4} placeholder={this.CATranslate("text_reason_help")} onChange={(event) => this.onChange("reason", event.target.value)} />
+                        <Input.TextArea value={this.state.reason} rows={4} placeholder={this.CATranslate("text_reason_help")} onChange={(event) => this.onChange("reason", event.target.value)} />
                      </Form.Item>
                   </Col>
                </Row>
@@ -158,7 +180,7 @@ class EditStock extends React.Component {
                   </Col>
                   <Col span={24}>
                      <Form.Item label={<Translate id="text_quantity" />}>
-                        <InputNumber placeholder={this.CATranslate("text_adjust_quantity_help")} onChange={(value) => this.onChange("adjustQuantity", value)} />
+                        <InputNumber value={this.state.adjustQuantity} placeholder={this.CATranslate("text_adjust_quantity_help")} onChange={(value) => this.onChange("adjustQuantity", value)} />
                      </Form.Item>
                   </Col>
                </Row>

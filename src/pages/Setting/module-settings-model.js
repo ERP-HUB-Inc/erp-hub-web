@@ -37,10 +37,10 @@ export const SETTINGS_MODULES = [
   },
   {
     key: 'finance', title: 'Finance Setup', category: 'General ledger', tone: 'purple', icon: 'Landmark',
-    description: 'Configure chart of accounts, tax rates, currencies, fiscal years, and payment accounts.',
+    description: 'Configure expense categories, tax rates, currencies, fiscal years, and payment accounts.',
     action: 'Review',
     entries: [
-      { key: 'accounts', title: 'Chart of Accounts (COA)', icon: 'FileText', keywords: 'general ledger accounting financial' },
+      { key: 'expense-categories', title: 'Expense Categories', icon: 'Tags', to: '/settings/expense-categories', permission: 'authenticated', keywords: 'expense category classification spending financial' },
       { key: 'taxes', title: 'Tax & VAT Configuration', icon: 'ReceiptText', keywords: 'tax value added vat rate', metric: 'taxes' },
       { key: 'currencies', title: 'Multi-Currency Rates', icon: 'Globe2', keywords: 'currency exchange rate usd khr', metric: 'currency' },
       { key: 'payments', title: 'Payment Gateways & Cashiers', icon: 'CreditCard', keywords: 'bank payment wallet cashier gateway' },
@@ -49,14 +49,14 @@ export const SETTINGS_MODULES = [
   },
   {
     key: 'insights', title: 'Business Insights & Health', category: 'Strategy & AI', tone: 'teal', icon: 'ChartNoAxesCombined',
-    description: 'Configure revenue targets, minimum profit margin thresholds, stock risk alert rules, and automated executive forecast models.',
+    description: 'Configure revenue targets, minimum profit margin thresholds, stock risk alert rules, and business health coverage policies.',
     action: 'Configure',
     entries: [
-      { key: 'targets', title: 'Sales Targets & Revenue Goals', icon: 'TrendingUp', keywords: 'target quota branch revenue goal' },
+      { key: 'targets', title: 'Sales Targets & Revenue Goals', icon: 'TrendingUp', to: '/settings/sales-targets', permission: 'authenticated', keywords: 'target quota branch revenue goal' },
       { key: 'margins', title: 'Margin Health & Profit Floors', icon: 'CircleGauge', keywords: 'margin minimum profit floor threshold' },
       { key: 'stock-risk', title: 'Stock Risk & Buffer Policies', icon: 'TriangleAlert', keywords: 'stock risk buffer days policy inventory' },
       { key: 'executive-alerts', title: 'Executive Alert Triggers', icon: 'BellRing', keywords: 'executive alert notification trigger' },
-      { key: 'forecast', title: 'Forecast & AI Run-Rate Model', icon: 'Zap', keywords: 'forecast artificial intelligence ai run rate prediction' }
+      { key: 'business-health', title: 'Business Health Configuration', icon: 'CircleGauge', to: '/settings/business-health', permission: 'authenticated', keywords: 'policy coverage healthy critical threshold configuration' }
     ]
   }
 ];

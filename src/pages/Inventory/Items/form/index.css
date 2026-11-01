@@ -832,3 +832,91 @@
         background: #ffffff;
     }
 }
+
+
+.item-list-aligned-table .ant-table-expanded-row > td {
+    padding: 0;
+}
+
+.item-variants-table .ant-table {
+    border: 0;
+    border-radius: 0;
+}
+
+.item-variant-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-wrap: anywhere;
+}
+
+.item-variant-identity small {
+    color: #6b7280;
+}
+
+
+.item-list-aligned-table {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+}
+
+/* The global table flex layout sizes nested tables to their intrinsic width. */
+.item-list-aligned-table .ant-table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+}
+
+.item-list-aligned-table .ant-table-content,
+.item-list-aligned-table .ant-table-body {
+    flex: initial;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.item-list-aligned-table table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.item-list-aligned-table th,
+.item-list-aligned-table td {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.item-list-aligned-table td > div {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.item-list-aligned-table td[style*="text-align: right"] > div {
+    margin-left: 0;
+    margin-right: 0;
+    flex-wrap: wrap;
+}
+
+
+.item-stock-edit-context {
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+}
+
+.item-stock-edit-context > div {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.item-stock-edit-context dt {
+    color: #6b7280;
+}
+
+.item-stock-edit-context dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}

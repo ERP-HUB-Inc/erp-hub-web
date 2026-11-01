@@ -22,7 +22,7 @@
 .system-settings .settings-page-heading h1 {
   margin: 0 0 10px;
   color: var(--settings-ink);
-  font-size: clamp(30px, 2.6vw, 46px);
+  font-size: 28px;
   font-weight: 750;
   line-height: 1.2;
   letter-spacing: -1.1px;
@@ -58,6 +58,8 @@
 .system-settings .settings-tabs > .ant-tabs-bar .ant-tabs-tab { margin-right: 24px; padding: 15px 0; color: #6b7b90; font-size: 14px; }
 .system-settings .settings-tabs > .ant-tabs-bar .ant-tabs-tab-active { color: #0e8e80; font-weight: 600; }
 .system-settings .settings-tabs > .ant-tabs-bar .ant-tabs-ink-bar { height: 2px; background: var(--settings-teal); }
+.system-settings .settings-tab-label { display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
+.system-settings .settings-tab-label > svg { flex-shrink: 0; }
 .system-settings .settings-module-tab { display: inline-flex; align-items: center; gap: 9px; }
 .system-settings .settings-module-tab-status { padding: 3px 8px; border-radius: 12px; background: #eaf3f2; color: #617e7a; font-size: 10px; font-weight: 600; line-height: 1.4; }
 
@@ -123,7 +125,7 @@
 @media (max-width: 767px) {
   .system-settings { padding: 20px 14px; border-radius: 12px; }
   .system-settings .settings-search { min-width: 0; width: 100%; }
-  .system-settings .settings-page-heading h1 { font-size: 32px; }
+  .system-settings .settings-page-heading h1 { font-size: 26px; }
   .system-settings .settings-sync-status { flex-shrink: 1; max-width: 100%; }
   .system-settings .settings-module-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .system-settings .settings-module-body { padding: 22px 18px 18px; }

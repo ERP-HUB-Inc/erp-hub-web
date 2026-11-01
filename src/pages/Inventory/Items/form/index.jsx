@@ -57,6 +57,10 @@ import { buildStockInPayload } from "../stockio.helper";
 import { getLocationId } from "@helper/user";
 import inventory from "@helper/inventory";
 import ItemSummary from "./item-summary";
+import ItemDeleteConfirm from "./item-delete-confirm";
+import { itemListColumnWidths } from "./item-list-columns";
+import ItemVariants, { hasItemVariants } from "./item-variants";
+import IncomingStock, { incomingStockQuantity } from "./incoming-stock";
 import ItemSellingPrice, { getPriceDifference } from "./item-selling-price";
 
 const { Text } = Typography;
@@ -96,6 +100,10 @@ export default class ProductList extends Datatable {
          marginReviewAlertCount: null,
          outOfStockCount: null,
          listError: "",
+         expandedItemKeys: [],
+         deletingVariantId: null,
+         deleteTarget: null,
+         deleteError: "",
          dataSourceToPrint: [],
          stockInItems: {}, // Format: { [productId]: { quantity, unitId, notes, type } }
          unitOptions: [], // Load your unit options here
@@ -151,7 +159,7 @@ export default class ProductList extends Datatable {
                     backgroundColor: "#f0f0f0",
                   }}
                 />
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div
                     style={{
                       fontWeight: "bold",
@@ -171,10 +179,14 @@ export default class ProductList extends Datatable {
                     }}
                   >
                     <>
-                      {numberOfVariant > 1 ? (
-                        <Tag color="#2db7f5">
-                          {`${numberOfVariant} variants`}
-                        </Tag>
+                      {hasItemVariants(record) ? (
+                        <Button size="small" type="link"
+                          aria-label={`View variants for ${getProductName()}`}
+                          aria-expanded={this.state.expandedItemKeys.includes(record.id)}
+                          onClick={() => this.toggleItemVariants(record)}>
+                          <Icon type={this.state.expandedItemKeys.includes(record.id) ? 'minus-square' : 'plus-square'} />
+                          {numberOfVariant ? `${numberOfVariant} variants` : 'View variants'}
+                        </Button>
                       ) : (
                         <Text
                           type="secondary"
@@ -200,7 +212,7 @@ export default class ProductList extends Datatable {
           title: "Type",
           key: "itemType",
           dataIndex: "itemType",
-          width: 180,
+          width: itemListColumnWidths.itemType,
           sorter: (a, b) => a.itemType - b.itemType,
           render: itemType =>
             itemType && itemType.name && itemType.name.trim() ? (
@@ -213,25 +225,16 @@ export default class ProductList extends Datatable {
           title: "Incoming Stock",
           key: "incomingStock",
           dataIndex: "incomingStock",
-          width: 180,
+          width: itemListColumnWidths.incomingStock,
           align: "right",
-          sorter: (a, b) => a.incomingStock - b.incomingStock,
-          render: (_, record) => {
-            const stockCount = this.getTotalQuantity(record);
-            return (
-              <QuantityValue
-                quantity={stockCount}
-                unit={record?.stockUnit?.name}
-                decimals={0}
-              />
-            );
-          },
+          sorter: (a, b) => (incomingStockQuantity(a.incomingStock) ?? -1) - (incomingStockQuantity(b.incomingStock) ?? -1),
+          render: (quantity, record) => <IncomingStock quantity={quantity} unit={record?.stockUnit?.name} />,
         },
         {
           title: "Stock on Hand",
           key: "quantity",
           dataIndex: "quantity",
-          width: 180,
+          width: itemListColumnWidths.quantity,
           align: "right",
           sorter: (a, b) => a.quantity - b.quantity,
           render: (_, record) => {
@@ -249,7 +252,7 @@ export default class ProductList extends Datatable {
           title: "Selling Price & Margin",
           key: "price",
           dataIndex: "price",
-          width: 180,
+          width: itemListColumnWidths.price,
           align: "right",
           sorter: (a, b) => a.price - b.price,
           render: (_, record) => {
@@ -288,58 +291,18 @@ export default class ProductList extends Datatable {
           key: "action",
           dataIndex: "action",
           align: "center",
-          width: 100,
+          width: itemListColumnWidths.action,
           render: (_, record) => {
             const menu = (
               <Menu>
-                <Menu.Item key={1}>
-                  <Link
-                    to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}
-                  >
-                    <Icon type="eye" style={{ marginRight: 10 }} />{" "}
-                    <Translate id="text_view" />
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key={2}>
-                  <Link
-                    to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}
-                  >
-                    <Icon type="edit" style={{ marginRight: 10 }} />{" "}
-                    <Translate id="text_edit" />
-                  </Link>
-                </Menu.Item>
-                {/* <Menu.Item
-                  key={3}
-                  className={record.isSplittable ? "" : "hidden"}
-                >
-                  <Link
-                    to={`/inventories/items/split/${Util.getProductVariantId(
-                      record
-                    )}?productOption=${record.productOption}`}
-                  >
-                    <Icon type="scissor" style={{ marginRight: 10 }} />{" "}
-                    <Translate id="text_slit_item" />
-                  </Link>
-                </Menu.Item> */}
+                <Menu.Item key={1}><Link to={`/inventories/items/view/${record.id}?productOption=${record.productOption}`}><Icon type="eye" style={{ marginRight: 10 }} /> <Translate id="text_view" /></Link></Menu.Item>
+                <Menu.Item key={2}><Link to={`/inventories/items/update/${record.id}?productOption=${record.productOption}`}><Icon type="edit" style={{ marginRight: 10 }} /> <Translate id="text_edit" /></Link></Menu.Item>
                 <Divider style={{ marginTop: 4, marginBottom: 4 }} />
-                <Menu.Item key={4} onClick={() => this.handleConfirm(record)}>
-                  <Icon type="delete" style={{ marginRight: 10 }} />{" "}
-                  <Translate id="text_delete" />
-                </Menu.Item>
-                <Menu.Item
-                  key={5}
-                  onClick={() => this.editStockRef.showDrawer(record)}
-                >
-                  <Icon type="edit" style={{ marginRight: 10 }} />{" "}
-                  <Translate id="text_edit_stock" />
-                </Menu.Item>
+                <Menu.Item key={4} onClick={() => this.handleConfirm(record)}><Icon type="delete" style={{ marginRight: 10 }} /> <Translate id="text_delete" /></Menu.Item>
+                <Menu.Item key={5} onClick={() => this.editStockRef.showDrawer(record)}><Icon type="edit" style={{ marginRight: 10 }} /> <Translate id="text_edit_stock" /></Menu.Item>
               </Menu>
             );
-            return (
-              <Dropdown overlay={menu} placement="bottomLeft">
-                <Button icon="more" />
-              </Dropdown>
-            );
+            return <Dropdown overlay={menu} placement="bottomLeft"><Button icon="more" /></Dropdown>;
           },
         },
       ];
@@ -695,6 +658,7 @@ export default class ProductList extends Datatable {
          this.setState(state => ({
             loading: true,
             listError: "",
+            expandedItemKeys: [],
             tabCounts: resetCounts ? {} : state.tabCounts,
             summaryRefreshKey: state.summaryRefreshKey + 1
          }));
@@ -774,36 +738,36 @@ export default class ProductList extends Datatable {
       return Object.values(this.state.stockInItems).reduce((sum, item) => sum + item.qtyIn, 0);
    }
 
-   handleDelete() {
-      const product = this.state.selectedRows;
-      if (product) {
-         const quantity = this.getAllQTY(product[0]);
-
-         if (product[0].serialType === Enum.SERIAL_TYPE.SERVICE || quantity <= 0 || true){
-            this.setState({deleting: true});
-            ProductService.archive(this.state.selectedListIds)
-            .then(() => {
-               this.fetchList(true);
-            })
-            .finally(() => this.setState({deleting: false, selectedRowKeys: []}));
-         } else{
-            this.Message.warning(this.CATranslate("error_delete_product", this.props.locale));
-         }
+   async handleDelete() {
+      const { deleteTarget } = this.state;
+      if (!deleteTarget || this.deletePending) return;
+      this.deletePending = true;
+      this.setState({ deleting: true, deleteError: "", deletingVariantId: deleteTarget.kind === "variant" ? deleteTarget.id : null });
+      try {
+         if (deleteTarget.kind === "variant") await ProductService.archiveVariant(deleteTarget.id);
+         else await ProductService.archive(deleteTarget.ids);
+         this.setState({ deleteTarget: null, selectedListIds: [], selectedRowKeys: [], selectedRows: [] });
+         this.fetchList(true);
+      } catch (error) {
+         const body = error?.response?.data;
+         const reason = body?.error?.message || body?.message;
+         this.setState({ deleteError: typeof reason === "string" ? reason : `Unable to delete this ${deleteTarget.kind}. Please try again.` });
+      } finally {
+         this.deletePending = false;
+         this.setState({ deleting: false, deletingVariantId: null });
       }
    }
 
    handleConfirm(record) {
-      this.setState({
-         selectedRows: [record],
-         selectedListIds: [record.id]
-      });
-      this.Util.sweetAlertConfirm(this.CATranslate("text_confirm_delete", this.props.locale))
-      .then(willDelete => {
-         if (willDelete) {
-            this.handleDelete();
-         }
-      });
+      if (this.deletePending) return;
+      const ids = record?.id ? [record.id] : this.state.selectedListIds;
+      if (!ids?.length) return;
+      this.setState({ deleteTarget: { kind: "item", ids, name: record?.name || "" }, deleteError: "" });
    }
+
+   cancelDelete = () => {
+      if (!this.deletePending) this.setState({ deleteTarget: null, deleteError: "" });
+   };
 
    renderButtonImport() {
       return <this.Link to={"/products/import"} className="ant-btn" style={{marginLeft: 15}}>
@@ -1135,17 +1099,29 @@ export default class ProductList extends Datatable {
       this.setState({ dataSourceToPrint: this.mapSelectedListIds(selectedRows) });
    }
 
-   expandedRender(record) {
-      return( 
-         <div className="sub-table">
-            <this.SubTable 
-               columns={this.columnExpend}
-               dataSource={record.productVariants}
-               locale={{ emptyText: <Translate id="placeholder_table_variant_product" /> }}
-            />
-         </div>
-      );
-   }
+   deleteVariant = variant => {
+      if (this.deletePending) return;
+      this.setState({ deleteTarget: { kind: "variant", id: variant.id, name: variant.name || "" }, deleteError: "" });
+   };
+
+   toggleItemVariants = record => {
+      if (!hasItemVariants(record)) return;
+      this.setState(state => ({ expandedItemKeys: state.expandedItemKeys.includes(record.id)
+         ? state.expandedItemKeys.filter(id => id !== record.id)
+         : [...state.expandedItemKeys, record.id] }));
+   };
+
+   expandedRender = record => hasItemVariants(record) && this.state.expandedItemKeys.includes(record.id)
+      ? <ItemVariants key={record.id} itemId={record.id} stockUnit={record.stockUnit?.name} itemType={record.itemType}
+          enableInventoryTracking={record.enableInventoryTracking}
+          onView={() => history.push(`/inventories/items/view/${record.id}?productOption=${record.productOption}`)}
+          onEdit={() => history.push(`/inventories/items/update/${record.id}?productOption=${record.productOption}`)}
+          onDelete={this.deleteVariant}
+          deletingVariantId={this.state.deletingVariantId}
+          onEditStock={variant => this.editStockRef.showDrawer(record, variant)}
+          parentColumns={this.columns.filter(column => this.state.visibleColumns.item.includes(column.key))}
+          formatCurrency={exchangeAndFormatCurrency} />
+      : null;
 
    renderItemList() {
       const params = new URLSearchParams(document.location.search);
@@ -1189,14 +1165,20 @@ export default class ProductList extends Datatable {
                <Alert type="error" showIcon message={this.state.listError} style={{ marginBottom: 12 }} />
             )}
             <Table
+               className="item-list-aligned-table"
+               tableLayout="fixed"
                rowKey="id"
                bordered={true}
                pagination={false}
                dataSource={this.state.products}
                columns={this.columns.filter((column) => this.state.visibleColumns.item.includes(column.key))}
                rowClassName={this.rowClassName}
+               expandedRowKeys={this.state.expandedItemKeys}
+               expandedRowRender={this.expandedRender}
+               onExpand={(_, record) => this.toggleItemVariants(record)}
+               expandIconAsCell={false}
+               expandIcon={() => null}
                locale={{ emptyText: <Translate id="table_empty_data" /> }}
-               onRow={(record) => ({ onDoubleClick: () => this.handleShowFormEdit(record) })}
                loading={this.state.loading}
                size="middle"
             />
@@ -1234,6 +1216,8 @@ export default class ProductList extends Datatable {
 
       return (
         <div className="content-list">
+          <ItemDeleteConfirm target={this.state.deleteTarget} deleting={this.state.deleting}
+            error={this.state.deleteError} onConfirm={this.handleDelete} onCancel={this.cancelDelete} />
           <EditStock
             ref={(f) => (this.editStockRef = f)}
             locale={this.props.locale}

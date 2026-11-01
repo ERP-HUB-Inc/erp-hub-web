@@ -312,6 +312,21 @@ const FinanceExpense = Loadable({
 });
 
 // Setting
+const SalesTargetSettings = Loadable({
+  loader: () => import('@settings/Modules/SalesTarget'),
+  loading: () => <StartUp />,
+});
+
+const BusinessHealthSettings = Loadable({
+  loader: () => import('@settings/Modules/BusinessHealth'),
+  loading: () => <StartUp />,
+});
+
+const ExpenseCategorySettings = Loadable({
+  loader: () => import('@settings/Modules/ExpenseCategory'),
+  loading: () => <StartUp />,
+});
+
 const ItemType = Loadable({
   loader: () => import("@settings/Modules/ItemType"),
   loading: () => <StartUp />,
@@ -598,15 +613,6 @@ export default class SiderDemo extends React.Component {
                             </span>
                           }
                         >
-                          <Menu.Item key="51">
-                            <Link to="/general-ledger">General Ledger (GL)</Link>
-                          </Menu.Item>
-                          <Menu.Item key="52">
-                            <Link to="/accounts-receivable">Accounts Receivable (AR)</Link>
-                          </Menu.Item>
-                          <Menu.Item key="53">
-                            <Link to="/accounts-payable">Accounts Payable (AP)</Link>
-                          </Menu.Item>
                           <Menu.Item key="54">
                             <Link to="/finance/expenses">Expenses &amp; Money Out</Link>
                           </Menu.Item>
@@ -758,6 +764,9 @@ export default class SiderDemo extends React.Component {
                       <ProtectedRoute path="/reports/sales-report-center" component={SaleReportCenter} />
                       <ProtectedRoute path="/reports/sales-report" component={SaleReport} />
                       <ProtectedRoute path="/reports/financial" component={FinancialReport} />
+                      <ProtectedRoute path="/settings/sales-targets" component={SalesTargetSettings} />
+                      <ProtectedRoute path="/settings/business-health" component={BusinessHealthSettings} />
+                      <ProtectedRoute path="/settings/expense-categories" component={ExpenseCategorySettings} />
                       <ProtectedRoute path="/settings/item-types" component={ItemType} />
                       <ProtectedRoute path="/settings/units" component={UnitSettings} />
                       <ProtectedRoute path="/settings/locations" component={LocationSettings} />
