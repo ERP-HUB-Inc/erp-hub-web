@@ -21,10 +21,9 @@ beforeEach(async () => {
 });
 afterEach(() => { act(() => { ReactDOM.unmountComponentAtNode(container); }); container.remove(); });
 
-test('renders branch, target type, period and status with all statuses included by default', () => {
+test('renders branch, target type and period by default', () => {
   expect(container.textContent).toContain('Main branch');
   expect(container.textContent).toContain('October 2026');
-  expect(container.textContent).toContain('Active');
   expect(Service.list).toHaveBeenCalledWith({ limit: 20, offset: 0 });
 });
 

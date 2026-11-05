@@ -28,7 +28,7 @@ afterEach(() => { act(() => { ReactDOM.unmountComponentAtNode(container); }); co
 test('renders five cards and actual metadata without claiming activation or synchronization', () => {
   renderCards();
   expect(container.querySelectorAll('article')).toHaveLength(5);
-  expect(container.querySelectorAll('.settings-module-entries li')).toHaveLength(25);
+  expect(container.querySelectorAll('.settings-module-entries li')).toHaveLength(26);
   ['9 locations', '2 tax rates', 'Average cost', 'KHR'].forEach(text => expect(container.textContent).toContain(text));
   expect(container.textContent).not.toMatch(/\b\d+ (categories|brands)\b/);
   expect(container.textContent).not.toContain('ERP Modules Configuration');
@@ -40,7 +40,7 @@ test('renders five cards and actual metadata without claiming activation or sync
 test('only enables verified configuration links for permitted users', () => {
   renderCards();
   const links = Array.from(container.querySelectorAll('a')).map(link => link.getAttribute('href'));
-  expect(links).toEqual(['/settings/item-types', '/settings/categories', '/settings/brands', '/settings/units', '/settings/options', '/settings/categories', '/settings/locations', '/settings/locations', '/settings/expense-categories', '/settings/sales-targets', '/settings/business-health']);
+  expect(links).toEqual(['/settings/item-types', '/settings/categories', '/settings/brands', '/settings/units', '/settings/options', '/settings/categories', '/settings/locations', '/settings/locations', '/settings/expense-categories', '/settings/exchange-rates', '/settings/sales-targets', '/settings/business-health']);
   expect(container.querySelectorAll('[role="switch"]')).toHaveLength(0);
   expect(container.textContent).not.toContain('Module switches are read only.');
 });
@@ -64,10 +64,10 @@ test('catalog permissions do not restrict the authenticated expense categories s
   const values = resources();
   values.catalogAccess = ready(false);
   renderCards(values);
-  expect(Array.from(container.querySelectorAll('a')).map(link => link.getAttribute('href'))).toEqual(['/settings/expense-categories', '/settings/sales-targets', '/settings/business-health']);
+  expect(Array.from(container.querySelectorAll('a')).map(link => link.getAttribute('href'))).toEqual(['/settings/expense-categories', '/settings/exchange-rates', '/settings/sales-targets', '/settings/business-health']);
   values.catalogAccess = { ...ready(null), loading: true };
   renderCards(values);
-  expect(Array.from(container.querySelectorAll('a')).map(link => link.getAttribute('href'))).toEqual(['/settings/expense-categories', '/settings/sales-targets', '/settings/business-health']);
+  expect(Array.from(container.querySelectorAll('a')).map(link => link.getAttribute('href'))).toEqual(['/settings/expense-categories', '/settings/exchange-rates', '/settings/sales-targets', '/settings/business-health']);
 });
 
 test('resource failures show a clear load message and expose a targeted retry', () => {

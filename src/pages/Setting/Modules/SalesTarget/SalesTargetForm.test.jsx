@@ -40,7 +40,7 @@ test('switching monthly to yearly sends null month and quarter', () => {
   expect(onSave).toHaveBeenCalledWith({ locationId: '1', targetType: 'YEARLY', year: 2026, month: null, quarter: null, targetRevenue: 15000, status: 'INACTIVE' });
 });
 
-test.each([{ targetRevenue: -1 }, { targetRevenue: Infinity }, { targetRevenue: undefined }, { year: 2026.5 }, { year: 0 }, { locationId: 'foreign' }, { status: undefined }])('invalid form prevents submission: %p', values => {
+test.each([{ targetRevenue: -1 }, { targetRevenue: Infinity }, { targetRevenue: undefined }, { year: 2026.5 }, { year: 0 }, { locationId: 'foreign' }])('invalid form prevents submission: %p', values => {
   mount({ record }); set(values); submit(); expect(onSave).not.toHaveBeenCalled();
 });
 

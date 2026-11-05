@@ -7,7 +7,7 @@ export class SalesTargetForm extends React.Component {
     if (event) event.preventDefault();
     if (this.props.busy || !this.props.locations.length) return;
     this.props.form.validateFieldsAndScroll((error, values) => {
-      if (!error) this.props.onSave(targetPayload(values));
+      if (!error) this.props.onSave(targetPayload({ ...values, status: this.props.record.status || 'ACTIVE' }));
     });
   };
 
@@ -45,9 +45,6 @@ export class SalesTargetForm extends React.Component {
               initialValue: record.targetRevenue == null ? undefined : Number(record.targetRevenue),
               rules: [{ validator: (_, value, callback) => callback(typeof value === 'number' && Number.isFinite(value) && value >= 0 ? undefined : 'Enter a finite revenue amount of zero or more.') }]
             })(<InputNumber id="target-revenue" disabled={busy} min={0} placeholder="e.g. 15000" />)}</Form.Item>
-            <Form.Item label="Status" htmlFor="target-status">{getFieldDecorator('status', {
-              initialValue: record.status || 'ACTIVE', rules: [{ required: true, type: 'enum', enum: ['ACTIVE', 'INACTIVE'], message: 'Choose a status.' }]
-            })(<Select id="target-status" disabled={busy}><Select.Option value="ACTIVE">Active</Select.Option><Select.Option value="INACTIVE">Inactive</Select.Option></Select>)}</Form.Item>
           </div>
           <button type="submit" hidden disabled={busy}>Save sales target</button>
         </Form>

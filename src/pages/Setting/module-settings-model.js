@@ -44,7 +44,7 @@ export const SETTINGS_MODULES = [
       { key: 'taxes', title: 'Tax & VAT Configuration', icon: 'ReceiptText', keywords: 'tax value added vat rate', metric: 'taxes' },
       { key: 'currencies', title: 'Multi-Currency Rates', icon: 'Globe2', keywords: 'currency exchange rate usd khr', metric: 'currency' },
       { key: 'payments', title: 'Payment Gateways & Cashiers', icon: 'CreditCard', keywords: 'bank payment wallet cashier gateway' },
-      { key: 'numbering', title: 'Invoice Numbering Sequences', icon: 'Hash', keywords: 'invoice number sequence prefix receipt' }
+      { key: 'exchange-rates', title: 'Exchange Rates', icon: 'Globe2', to: '/settings/exchange-rates', permission: 'authenticated', keywords: 'currency exchange rate usd khr buy sell' }
     ]
   },
   {

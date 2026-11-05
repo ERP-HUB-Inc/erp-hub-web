@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Alert, Button, InputNumber, Modal, Select, Table, Tag, message } from 'antd';
+import { Alert, Button, InputNumber, Modal, Select, Table, message } from 'antd';
 import { ChevronRight, RefreshCw } from 'lucide-react';
 import SalesTargetService from '@services/SalesTargetService';
 import LocationService from '@services/LocationService';
@@ -13,7 +13,7 @@ import './style.css';
 export default class SalesTargetPage extends React.Component {
   state = {
     records: [], total: 0, current: 1, pageSize: 20, filters: {}, loading: true, loadError: '',
-    locations: [], locationsLoading: true, locationsError: '', selectedIds: [],
+    locations: [], locationsLoading: true, locationsError: '',
     editor: null, detailId: null, detailLoading: false, detailError: '', saving: false, saveError: '',
     disableIds: [], disabling: false, disableError: ''
   };
@@ -52,7 +52,7 @@ export default class SalesTargetPage extends React.Component {
   load = async (overrides = {}) => {
     const request = ++this.listRequest;
     const { current, pageSize, filters } = { ...this.state, ...overrides };
-    this.setState({ loading: true, loadError: '', selectedIds: [] });
+    this.setState({ loading: true, loadError: '' });
     try {
       const { data: body } = await SalesTargetService.list({ ...filters, limit: pageSize, offset: (current - 1) * pageSize });
       if (!body || !Array.isArray(body.data) || body.data.some(row => !row || !isTargetId(row.id)) ||
@@ -127,7 +127,7 @@ export default class SalesTargetPage extends React.Component {
       const response = await SalesTargetService.disable(disableIds);
       if (!response.data || response.data.success !== true) throw new Error('Disabling the sales targets could not be confirmed. Refresh before retrying.');
       if (this.unmounted) return;
-      this.setState({ disabling: false, disableIds: [], selectedIds: [], current: 1 });
+      this.setState({ disabling: false, disableIds: [], current: 1 });
       message.success(disableIds.length === 1 ? 'Sales target disabled.' : 'Sales targets disabled.');
       await this.load({ current: 1 });
     } catch (error) {
@@ -145,7 +145,6 @@ export default class SalesTargetPage extends React.Component {
       { title: 'Target Type', dataIndex: 'targetType', key: 'targetType', render: type => TARGET_TYPES[type] || type },
       { title: 'Period', key: 'period', render: (_, row) => periodLabel(row) },
       { title: 'Target Revenue', dataIndex: 'targetRevenue', key: 'targetRevenue', align: 'right', render: value => value != null && value !== '' && Number.isFinite(Number(value)) ? Number(value).toLocaleString(undefined, { maximumFractionDigits: 4 }) : '—' },
-      { title: 'Status', dataIndex: 'status', key: 'status', render: status => <Tag color={status === 'ACTIVE' ? 'green' : undefined}>{status === 'ACTIVE' ? 'Active' : status === 'INACTIVE' ? 'Inactive' : 'Unknown'}</Tag> },
       { title: 'Actions', key: 'actions', width: 190, render: (_, record) => <div className="expense-bill-actions">
         <Button size="small" disabled={editBlocked} onClick={() => this.openEditor(record)}>Edit</Button>
         <Button size="small" type="danger" disabled={busy || Boolean(s.editor) || record.status !== 'ACTIVE'} onClick={() => this.openDisable([record.id])}>Delete</Button>
@@ -160,17 +159,14 @@ export default class SalesTargetPage extends React.Component {
       {s.locationsError && <Alert type="error" showIcon role="alert" message={s.locationsError} description={<Button onClick={this.loadLocations}>Retry branches</Button>} />}
       {!s.locationsLoading && !s.locationsError && !s.locations.length && <Alert type="info" showIcon message="An available branch is required to create or edit sales targets." />}
       <div className="sales-target-toolbar">
-        <div className="sales-target-filter"><label htmlFor="targets-branch-filter">Branch</label><Select id="targets-branch-filter" aria-label="Filter by branch" value={s.filters.locationId} placeholder="All branches" allowClear disabled={s.locationsLoading} onChange={value => this.filter('locationId', value)}>{s.locations.map(row => <Select.Option key={row.id} value={String(row.id)}>{row.name || row.id}</Select.Option>)}</Select></div>
-        <div className="sales-target-filter"><label htmlFor="targets-type-filter">Target type</label><Select id="targets-type-filter" aria-label="Filter by target type" value={s.filters.targetType} placeholder="All periods" allowClear onChange={value => this.filter('targetType', value)}>{Object.keys(TARGET_TYPES).map(type => <Select.Option key={type} value={type}>{TARGET_TYPES[type]}</Select.Option>)}</Select></div>
-        <div className="sales-target-filter"><label htmlFor="targets-year-filter">Year</label><InputNumber id="targets-year-filter" value={s.filters.year} placeholder="All years" min={1} max={9999} onChange={value => this.filter('year', value)} /></div>
-        <div className="sales-target-filter"><label htmlFor="targets-status-filter">Status</label><Select id="targets-status-filter" aria-label="Filter by status" value={s.filters.status} placeholder="All statuses" allowClear onChange={value => this.filter('status', value)}><Select.Option value="ACTIVE">Active</Select.Option><Select.Option value="INACTIVE">Inactive</Select.Option></Select></div>
+        <div className="sales-target-filter"><Select id="targets-type-filter" aria-label="Filter by target type" value={s.filters.targetType} placeholder="All periods" allowClear onChange={value => this.filter('targetType', value)}>{Object.keys(TARGET_TYPES).map(type => <Select.Option key={type} value={type}>{TARGET_TYPES[type]}</Select.Option>)}</Select></div>
+        <div className="sales-target-filter"><InputNumber id="targets-year-filter" aria-label="Filter by year" value={s.filters.year} placeholder="All years" min={1} max={9999} onChange={value => this.filter('year', value)} /></div>
+        <div className="sales-target-filter"><Select id="targets-status-filter" aria-label="Filter by status" value={s.filters.status} placeholder="All statuses" allowClear onChange={value => this.filter('status', value)}><Select.Option value="ACTIVE">Active</Select.Option><Select.Option value="INACTIVE">Inactive</Select.Option></Select></div>
         <Button className="category-listing-refresh-button" loading={s.loading} onClick={() => this.load()}>{!s.loading && <RefreshCw size={14} aria-hidden="true" />}<span>Refresh</span></Button>
-        <Button disabled={!s.selectedIds.length || busy || Boolean(s.editor) || s.loading} onClick={() => this.openDisable(s.selectedIds)}>Disable selected ({s.selectedIds.length})</Button>
       </div>
       {s.loadError && <Alert type="error" showIcon role="alert" message={s.loadError} description={<Button onClick={() => this.load()}>Retry</Button>} />}
       <section className="category-listing-table-card" aria-label="Sales targets">
         <Table rowKey="id" columns={columns} dataSource={s.records} bordered size="middle" loading={s.loading} scroll={{ x: 900 }} onChange={this.changePage}
-          rowSelection={{ selectedRowKeys: s.selectedIds, onChange: selectedIds => this.setState({ selectedIds }), getCheckboxProps: record => ({ disabled: record.status !== 'ACTIVE' || busy || s.loading }) }}
           pagination={{ current: s.current, pageSize: s.pageSize, total: s.total, showSizeChanger: true, pageSizeOptions: ['20', '50', '100'], showTotal: (total, range) => `Showing ${range[0]} to ${range[1]} of ${total} targets` }}
           locale={{ emptyText: s.loadError ? 'Sales targets are unavailable' : 'No sales targets found' }} />
       </section>

@@ -735,6 +735,7 @@ export default class RetailSale extends Component {
   }
 
   handleKeyboardShortcut = (event) => {
+    if (this.state.paymentVisible || event.defaultPrevented || event.isComposing) return;
     if (event.target && event.target.closest && event.target.closest(".item-option-modal")) return;
     const key = event.key;
     const normalizedKey = typeof key === "string" ? key.toLowerCase() : "";

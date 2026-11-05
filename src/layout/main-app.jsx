@@ -327,6 +327,11 @@ const ExpenseCategorySettings = Loadable({
   loading: () => <StartUp />,
 });
 
+const ExchangeRateSettings = Loadable({
+  loader: () => import('@settings/ExchangeRates'),
+  loading: () => <StartUp />,
+});
+
 const ItemType = Loadable({
   loader: () => import("@settings/Modules/ItemType"),
   loading: () => <StartUp />,
@@ -767,6 +772,7 @@ export default class SiderDemo extends React.Component {
                       <ProtectedRoute path="/settings/sales-targets" component={SalesTargetSettings} />
                       <ProtectedRoute path="/settings/business-health" component={BusinessHealthSettings} />
                       <ProtectedRoute path="/settings/expense-categories" component={ExpenseCategorySettings} />
+                      <ProtectedRoute path="/settings/exchange-rates" component={ExchangeRateSettings} />
                       <ProtectedRoute path="/settings/item-types" component={ItemType} />
                       <ProtectedRoute path="/settings/units" component={UnitSettings} />
                       <ProtectedRoute path="/settings/locations" component={LocationSettings} />
