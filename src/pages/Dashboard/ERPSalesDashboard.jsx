@@ -238,7 +238,7 @@ function TargetPanel({ locationId, goalQuery }) {
             <div className="dash-target-number">
               {achievement === null ? "—" : `${achievement.toFixed(1)}%`} <span>achieved</span>
             </div>
-            <span className="dash-target-period">Period · Month to date</span>
+            <span className="dash-target-period">Period · This month</span>
           </div>
           <div className="dash-progress">
             <span style={{ width: `${Math.min(100, Math.max(0, achievement || 0))}%` }} />
@@ -376,14 +376,14 @@ function ERPSalesDashboard({ history, location }) {
   );
   const performance = useDashboardQuery(() => SaleService.getSalesPerformance({ ...base, targetType: "MONTHLY" }), [base && base.fromDate, base && base.toDate, locationId, refreshKey], enabled);
   const businessHealth = useDashboardQuery(() => SaleService.getBusinessHealth(base), [base && base.fromDate, base && base.toDate, locationId, refreshKey], enabled);
-  const mtdRange = dateRange
+  const goalRange = dateRange
     ? {
         fromDate: dateRange.monthStart,
-        toDate: dateRange.today,
+        toDate: dateRange.monthEnd,
         ...(locationId ? { locationId } : {}),
       }
     : null;
-  const goalPerformance = useDashboardQuery(() => SaleService.getSalesPerformance({ ...mtdRange, targetType: "MONTHLY" }), [mtdRange && mtdRange.fromDate, mtdRange && mtdRange.toDate, locationId, refreshKey], enabled && Boolean(locationId));
+  const goalPerformance = useDashboardQuery(() => SaleService.getSalesPerformance({ ...goalRange, targetType: "MONTHLY" }), [goalRange && goalRange.fromDate, goalRange && goalRange.toDate, locationId, refreshKey], enabled && Boolean(locationId));
   const orders = useDashboardQuery(
     () =>
       SaleOrderService.get({
@@ -494,7 +494,7 @@ function ERPSalesDashboard({ history, location }) {
     insights.push({
       key: "sales-goal",
       title: "Sales are behind your monthly target",
-      body: "Month-to-date sales are below the expected pace for this branch's monthly target.",
+      body: "This month's sales are below the expected pace for this branch's monthly target.",
       href: reports.sales,
       label: "View sales report",
       tone: "amber",
@@ -895,7 +895,7 @@ function ERPSalesDashboard({ history, location }) {
       </div>
 
       <Drawer title="Business health and available insights" visible={healthVisible} onClose={() => setHealthVisible(false)} width={460}>
-        <p>Current metrics follow the selected reporting period and branch. Sales goals use month to date.</p>
+        <p>Current metrics follow the selected reporting period and branch. Sales goals use the full current month.</p>
         <WidgetState query={businessHealth}>
           {() => (
             <>

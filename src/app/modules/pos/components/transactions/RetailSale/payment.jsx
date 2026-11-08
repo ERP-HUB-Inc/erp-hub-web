@@ -54,6 +54,8 @@ const paymentStyles = `
 .checkout-return-label {display:flex;align-items:center;gap:7px;flex:1 1 150px;min-width:0;color:#64748b;font-size:12px;line-height:1.6;}.checkout-return-label svg {flex-shrink:0;color:#0d9488;}
 .checkout-return-amount {margin-left:auto;color:#115e59;white-space:nowrap;font:600 15px monospace;font-variant-numeric:tabular-nums;}
 .checkout-dialog .checkout-return-rate {margin-top:7px;line-height:1.7;overflow-wrap:anywhere;}
+.checkout-due .checkout-between:first-child > span {text-transform:uppercase;}
+.checkout-totals b {text-align:right;}
 .checkout-summary-footer {display:flex;gap:7px;align-items:center;border-top:1px solid #e2e8f0;padding-top:15px;margin-top:auto;}.checkout-summary-footer .ant-checkbox-wrapper {font-size:12px;}.checkout-summary-footer>small {margin-left:auto;}
 .checkout-methods {display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}.checkout-methods button {border:1px solid #e2e8f0;border-radius:8px;min-height:76px;padding:10px 8px;background:white;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;color:#475569;}.checkout-methods button strong {font-size:13px;}.checkout-methods em {font-size:10px;font-style:normal;}.checkout-methods .selected {border:1px solid #0d9488;background:#f0fdfa;box-shadow:inset 0 0 0 1px #0d9488;color:#115e59;}
 .checkout-methods button:disabled:not(.selected) {opacity:1;color:#94a3b8;background:#f8fafc;}
@@ -542,10 +544,10 @@ export default class PaymentScreen extends Modal {
                 {this.props.orderItems.map((item, index) => {
                   const price = Number(item[this.props.customerFieldPrice] || 0);
                   const line = SalesUtil.getTotalAmountAfterDiscount(item.quantity, price, item.discount);
-                  return <tr key={item.id || item.productVariantId || index}><td><strong>{item.itemName}</strong>{item.itemNamekh && <small>{item.itemNamekh}</small>}<small>{item.sku || item.code || item.variantName} · {usd(price)}</small></td><td>{item.quantity}</td><td>{Number(item.discount) > 0 ? <span className="checkout-discount">−{item.discount}%</span> : '—'}</td><td><strong>{usd(line)}</strong><small>{khr(convertUSDToKHR(line, exchangeRate.sellRate))}</small></td></tr>;
+                  return <tr key={item.id || item.productVariantId || index}><td><strong>{item.itemName}</strong>{item.itemNamekh && <small>{item.itemNamekh}</small>}<small>{item.sku || item.code || item.variantName} · {usd(price)}</small></td><td>{item.quantity}</td><td>{Number(item.discount) > 0 ? <span className="checkout-discount">−{item.discount}%</span> : '—'}</td><td><strong>{usd(line)}</strong></td></tr>;
                 })}
               </tbody></table></div>
-              <div className="checkout-totals"><div><span>Subtotal / សរុបរង</span><b>{usd(totals.summaryTotal.subTotal)}</b></div><div className="checkout-rose"><span>Discount / បញ្ចុះតម្លៃ</span><b>−{usd(totals.discountAmount)}</b></div><div><span>Tax / ពន្ធ {this.props.summaryTax.taxTitle}</span><b>{usd(totals.taxAmount)}</b></div><div className="checkout-grand"><strong>Grand Total / សរុប</strong><strong>{usd(dueUSD)}<small>{khr(dueKHR)}</small></strong></div></div>
+              <div className="checkout-totals"><div><span>Subtotal / សរុបរង</span><b>{khr(convertUSDToKHR(totals.summaryTotal.subTotal, exchangeRate.sellRate))}</b></div><div className="checkout-rose"><span>Discount / បញ្ចុះតម្លៃ</span><b>−{khr(convertUSDToKHR(totals.discountAmount, exchangeRate.sellRate))}</b></div><div><span>Tax / ពន្ធ {this.props.summaryTax.taxTitle}</span><b>{khr(convertUSDToKHR(totals.taxAmount, exchangeRate.sellRate))}</b></div><div className="checkout-grand"><strong>Grand Total / សរុប</strong><strong>{khr(dueKHR)}<small>{usd(dueUSD)}</small></strong></div></div>
             </div>
             <div className="checkout-change-card">
               <div className="checkout-between"><span>Tendered / ប្រាក់ទទួល</span><strong>{khr(tenderKHR)}<small>≈ {usd(tenderUSD)}</small></strong></div>
@@ -572,7 +574,7 @@ export default class PaymentScreen extends Modal {
             })}</div>
             <div className="checkout-cash-tools">
               <div className="checkout-quick"><div className="checkout-between"><h2>Quick Cash <span>/ ប្រាក់រហ័ស</span></h2><div className="checkout-segment" role="group" aria-label="Quick cash currency">{['KHR', 'USD'].map(code => <button type="button" key={code} data-currency={code} disabled={busy} aria-label={code === 'KHR' ? 'Use Cambodian riel for quick cash' : 'Use US dollars for quick cash'} aria-pressed={currency === code} onClick={() => this.setState({ tenderInputFocus: code })}>{code}</button>)}</div></div>
-                <button type="button" className="checkout-exact" disabled={busy} onClick={() => { form.setFieldsValue({ tenderInCashKHR: 0, tenderInCashUSD: dueUSD }); this.setState({ tenderInputFocus: 'USD' }); }}><span>Exact Cash / ប្រាក់គ្រប់</span><strong>{usd(dueUSD)}<small>{khr(dueKHR)}</small></strong></button>
+                <button type="button" className="checkout-exact" disabled={busy} onClick={() => { form.setFieldsValue({ tenderInCashKHR: 0, tenderInCashUSD: dueUSD }); this.setState({ tenderInputFocus: 'USD' }); }}><span>Exact Cash / ប្រាក់គ្រប់</span><strong>{khr(dueKHR)}<small>{usd(dueUSD)}</small></strong></button>
                 <div className="checkout-quick-grid">{suggestions.map(amount => {
                   const combined = currency === 'KHR' ? convertKHRToUSD(amount, exchangeRate.sellRate) + Number(form.getFieldValue('tenderInCashUSD') || 0) : amount + convertKHRToUSD(Number(form.getFieldValue('tenderInCashKHR') || 0), exchangeRate.sellRate);
                   const suggestedChangeKHR = Math.round(convertUSDToKHR(Math.max(combined - dueUSD, 0), exchangeRate.buyRate) / 100) * 100;

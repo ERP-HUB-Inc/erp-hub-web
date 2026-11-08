@@ -56,6 +56,7 @@ export function resolvePeriod(key, now, timeZone) {
       break;
     case "this-month":
       start.startOf("month");
+      end.endOf("month");
       break;
     case "last-month":
       start.subtract(1, "month").startOf("month");
@@ -96,6 +97,7 @@ export function resolvePeriod(key, now, timeZone) {
     groupBy: days > 90 ? "MONTH" : "DAY",
     today: today.format("YYYY-MM-DD"),
     monthStart: today.clone().startOf("month").format("YYYY-MM-DD"),
+    monthEnd: today.clone().endOf("month").format("YYYY-MM-DD"),
   };
 }
 export function coverageMetrics(profit, expenses) {

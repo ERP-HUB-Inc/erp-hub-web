@@ -13,10 +13,28 @@
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     justify-content: space-between;
     margin-bottom: 12px;
     padding: 12px;
+}
+
+.held-order-drawer-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.held-order-drawer-item > div:first-child {
+    flex: 1 1 160px;
+    min-width: 0;
+}
+
+.held-order-drawer-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
 }
 
 .held-order-drawer-title {
@@ -30,6 +48,7 @@
     line-height: 18px;
     margin-top: 4px;
     max-width: 235px;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

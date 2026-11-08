@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dropdown, Drawer, Icon, Input, Menu, Row, Divider } from "antd";
+import { Button, Dropdown, Drawer, Icon, Input, Menu, Row, Divider, Popconfirm } from "antd";
 import { isMobile, isAndroid, isIOS } from "react-device-detect";
 import sweetalert from "sweetalert";
 import BarcodeReader from "react-barcode-reader";
@@ -514,7 +514,7 @@ export default class RetailSale extends Component {
     const legacyParkReceipt = localStorage.getItem(Enum.PARK_RECEIPT);
 
     // Migrate the old single held-sale record into the new collection.
-    if (!heldOrders.length && this.Util.isJsonString(legacyParkReceipt)) {
+    if (localStorage.getItem(HELD_ORDERS_STORAGE_KEY) === null && !heldOrders.length && this.Util.isJsonString(legacyParkReceipt)) {
       const receipt = JSON.parse(legacyParkReceipt);
       if (receipt && receipt.isParkReceipt && Array.isArray(receipt.orderItems) && receipt.orderItems.length) {
         heldOrders = [{
@@ -604,7 +604,21 @@ export default class RetailSale extends Component {
   };
 
   handleOnDeleteHeldOrder = (heldOrderId) => {
-    this.saveHeldOrders(this.state.heldOrders.filter(order => order.id !== heldOrderId));
+    try {
+      this.saveHeldOrders(this.state.heldOrders.filter(order => order.id !== heldOrderId));
+      this.Message.success("Held order cleared.");
+    } catch (error) {
+      this.Message.error("Unable to clear the held order. Please try again.");
+    }
+  };
+
+  handleOnClearHeldOrders = () => {
+    try {
+      this.saveHeldOrders([]);
+      this.Message.success("All held orders cleared.");
+    } catch (error) {
+      this.Message.error("Unable to clear held orders. Please try again.");
+    }
   };
 
   formatHeldOrderLabel = (heldOrder) => {
@@ -645,6 +659,11 @@ export default class RetailSale extends Component {
       visible={this.state.heldOrdersDrawerVisible}
       onClose={this.handleOnCloseHeldOrders}
     >
+      {this.state.heldOrders.length > 0 && <div className="held-order-drawer-toolbar">
+        <Popconfirm title="Clear all held orders? This cannot be undone." okText="Clear All" cancelText="Cancel" onConfirm={this.handleOnClearHeldOrders}>
+          <Button type="danger" size="small">Clear All</Button>
+        </Popconfirm>
+      </div>}
       {this.state.heldOrders.length ? this.state.heldOrders.map(heldOrder => (
         <div className="held-order-drawer-item" key={heldOrder.id}>
           <div>
@@ -653,12 +672,15 @@ export default class RetailSale extends Component {
               {(heldOrder.orderItems || []).map(item => `${item.quantity}x ${item.itemName}`).join(", ")}
             </div>
           </div>
-          <Button type="primary" size="small" onClick={() => {
+          <div className="held-order-drawer-actions"><Button type="primary" size="small" onClick={() => {
             this.handleOnCloseHeldOrders();
             this.handleOnRestoreHeldOrder(heldOrder.id);
           }}>
             Restore
           </Button>
+          <Popconfirm title="Clear this held order? This cannot be undone." okText="Clear" cancelText="Cancel" onConfirm={() => this.handleOnDeleteHeldOrder(heldOrder.id)}>
+            <Button type="danger" size="small" aria-label={`Clear ${this.formatHeldOrderLabel(heldOrder)}`}>Clear</Button>
+          </Popconfirm></div>
         </div>
       )) : <div className="held-order-drawer-empty">No held orders</div>}
     </Drawer>
