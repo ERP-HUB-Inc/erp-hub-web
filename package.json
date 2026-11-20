@@ -73,7 +73,8 @@
   },
   "scripts": {
     "production": "webpack-dev-server --open",
-    "start:dev": "BROWSER=google-chrome webpack-dev-server --mode development --open",
+    "start:dev": "BROWSER=google-chrome webpack-dev-server --mode development --port 3081 --open",
+    "start:prod": "serve -s build -l 3081",
     "starts": "set PORT=3081 & react-scripts --openssl-legacy-provider start",
     "react:build": "react-scripts build",
     "webpack": "webpack-dev-server --mode development --open",
@@ -129,6 +130,7 @@
     "node-polyfill-webpack-plugin": "^4.1.0",
     "redux-devtools": "^3.7.0",
     "sass-loader": "^16.0.4",
+    "serve": "^14.2.8",
     "style-loader": "^4.0.0",
     "sw-precache-webpack-plugin": "^0.11.5",
     "uglifyjs-webpack-plugin": "^1.1.2",
