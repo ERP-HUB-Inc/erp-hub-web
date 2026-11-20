@@ -22,7 +22,7 @@ import { Checkbox, Popover } from "antd";
 import {
   RefreshCw
 } from "lucide-react";
-import Datatable from "@layout/datatable";
+import Datatable from "@layout/Datatable";
 import { Translate } from "@redux/index";
 import history from "@router/index";
 import StockIOService from "@services/StockIOService";

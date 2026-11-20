@@ -124,7 +124,7 @@ export default class BaseService {
       let host = process.env.REACT_APP_API_HOST;
       let port = process.env.REACT_APP_API_PORT;
 
-      const url = `${host}:${port}/g8w4y-32as9v`;
+      const url = `${host}:${port}/${process.env.REACT_APP_API_PREFIX}`;
       return url;
    }
 

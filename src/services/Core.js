@@ -5,7 +5,7 @@ import Util from "../app/modules/common/util";
 export default class BaseService {
 
    constructor() {
-      this.baseUrl = `${this.generateAPIUrl()}/g8w4y-32as9v`;
+      this.baseUrl = `${this.generateAPIUrl()}/${process.env.REACT_APP_API_PREFIX}`;
       this.version = "v1";
       this.module = "";
       this.Util = new Util();

@@ -1,7 +1,7 @@
 import React from "react";
 import { Divider, Row, Col, Input, Icon, Button, Table, Tag, Avatar, Rate } from "@components/index";
 import VendorService from "@services/VendorService";
-import Datatable from "@layout/datatable";
+import Datatable from "@layout/Datatable";
 import { PageHeader } from "@components/PageHeader";
 import Constant from "../redux/constant";
 import VendorAction from "../redux/action";

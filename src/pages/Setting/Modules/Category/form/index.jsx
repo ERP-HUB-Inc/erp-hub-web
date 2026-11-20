@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Alert, Button, Dropdown, Icon, Input, Menu, Modal, Table, Tooltip, message } from "antd";
 import { Archive, CheckCircle2, ChevronRight, CirclePause, MoreVertical, RefreshCw, Shapes } from "lucide-react";
 import Enum from "@enums/index";
-import Datatable from "@layout/datatable";
+import Datatable from "@layout/Datatable";
 import CategoryService from "@services/CategoryService";
 import { Translate } from "@redux/index";
 import Constant from "../redux/constant";

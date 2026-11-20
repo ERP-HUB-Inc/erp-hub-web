@@ -1,7 +1,7 @@
 import CategoryPage from "./index";
 import CategoryAction from "../redux/action";
 
-jest.mock("@layout/datatable", () => require("react").Component, { virtual: true });
+jest.mock("@layout/Datatable", () => require("react").Component, { virtual: true });
 jest.mock("@services/CategoryService", () => ({}), { virtual: true });
 jest.mock("@enums/index", () => ({ LOCAL_SCHEMA: { PRODUCT_TYPE: "categories" } }), { virtual: true });
 jest.mock("@redux/index", () => ({ Translate: () => null }), { virtual: true });

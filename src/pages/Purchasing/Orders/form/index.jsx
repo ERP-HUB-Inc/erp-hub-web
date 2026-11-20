@@ -19,7 +19,7 @@ import {
   Button,
   Tag
 } from "@components/index";
-import Datatable from "@layout/datatable";
+import Datatable from "@layout/Datatable";
 import { Link } from "react-router-dom";
 import { Translate } from "@redux/index";
 import Enum from "@enums/index";

@@ -1,7 +1,7 @@
 import ProductList from "./index";
 import ProductService from "@services/ItemService";
 
-jest.mock("@layout/datatable", () => {
+jest.mock("@layout/Datatable", () => {
   const React = require("react");
   return class Datatable extends React.Component {};
 }, { virtual: true });

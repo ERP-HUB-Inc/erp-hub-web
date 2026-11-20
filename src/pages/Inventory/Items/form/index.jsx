@@ -32,7 +32,7 @@ import { Translate } from "@redux/index";
 import history from "@router/index";
 import Exchange from "./exchange-money-func";
 import EditStock from "./edit-stock";
-import Datatable from "@layout/datatable";
+import Datatable from "@layout/Datatable";
 import CommonUtil from "@common/util";
 import Util from "@helper/inventory";
 import Enum from "@enums/index";
