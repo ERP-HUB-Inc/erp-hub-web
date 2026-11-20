@@ -14,6 +14,8 @@ import Util from "@helper/inventory";
 
 const { Option } = Select;
 
+const getVariantName = item => item.variantName || item.productVariants?.[0]?.name || "";
+
 const FALLBACK_IMAGE =
   "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='%23f0f0f0'/%3E%3Cg transform='translate(50, 50)'%3E%3Crect x='10' y='15' width='80' height='70' fill='none' stroke='%23bfbfbf' stroke-width='3' rx='4'/%3E%3Cpolygon points='15,75 35,50 55,65 75,45 85,75' fill='%23d9d9d9'/%3E%3Ccircle cx='70' cy='30' r='8' fill='%23bfbfbf'/%3E%3C/g%3E%3Ctext x='100' y='130' font-family='Arial, sans-serif' font-size='12' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
 
@@ -78,6 +80,7 @@ export function SelectPurchaseOrderItem(props) {
       {showSelectedItem && (
         <Option key={selectedItem.id} value={selectedItem.id} disabled>
           {selectedItem.name}
+          {getVariantName(selectedItem) && <small style={{ display: "block", color: "#666" }}>{getVariantName(selectedItem)}</small>}
         </Option>
       )}
       {renderItems.map((item) => (
@@ -113,6 +116,7 @@ export function SelectPurchaseOrderItem(props) {
                 >
                   {item.name}
                 </div>
+                {getVariantName(item) && <small style={{ display: "block", color: "#666" }}>{getVariantName(item)}</small>}
                 <small style={{ color: "#999" }}>
                   SKU: {Util.getItemSku(item)} | Stock:{" "}
                   {Util.getQuantityOnHand(item)} {item.stockUnit ? item.stockUnit.name : "Pcs"}

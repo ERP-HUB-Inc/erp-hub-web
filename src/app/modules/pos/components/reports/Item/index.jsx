@@ -12,26 +12,27 @@ import {
   Drawer,
   Icon,
   Tag,
-  Tabs
+  Tabs,
+  Alert,
+  message
 } from "antd";
 import { Translate } from "react-localize-redux";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import LocationService from "@services/LocationService";
 import ProductService from "../../../services/report/ProductService";
+import ItemService from "@services/ItemService";
 import CategoryService from "@services/CategoryService";
 import BrandService from "@services/BrandService";
-import PrivilegeService from "../../../services/settings/PrivilegeService";
+import { getPricingDraftPreview, getPricingColumns, getPricingVariantId } from "./pricing-management";
 import "./index.css";
 
 const { Option } = Select;
 const { Search } = Input;
 const { TabPane } = Tabs;
-
-const permission_module_code = "report";
-const permission_code = "product_report";
 const util = new Util();
 const pathName = "/reports/product";
+const sortableFields = ["itemName", "sku", "unitCost", "salesPrice", "marketPrice", "marginPercent", "quantityOnHand", "expectedProfit"];
 const defaultFilters = {
   keyword: "",
   locationId: "",
@@ -89,27 +90,34 @@ const statusOptions = [
 const getNumber = value => Number(value || 0);
 const getQuantity = value => getNumber(value).toLocaleString();
 const getMoney = value => util.formatCurrency(getNumber(value));
+const getPricingMoney = value => getNumber(value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 4
+});
 const getEmpty = value => (value === null || value === undefined || value === "" ? "-" : value);
 const getFirstValue = (...values) => values.find(value => value !== null && value !== undefined && value !== "");
 
-const getInitialFilters = () => {
+const getInitialFilters = (pricingManagement = false) => {
   const params = new URLSearchParams(document.location.search);
+  const sortBy = params.get("sortBy");
+  const sortOrder = (params.get("sortOrder") || "").toUpperCase();
+  const validSort = sortableFields.includes(sortBy) && ["ASC", "DESC"].includes(sortOrder);
   return {
     ...defaultFilters,
     keyword: params.get("keyword") || params.get("search") || "",
     locationId: params.get("locationId") || "",
     categoryId: params.get("categoryId") || "",
     brandId: params.get("brandId") || "",
-    status: params.get("status") || "",
-    needsAttention: params.get("needsAttention") === "true" ? true : "",
-    lowStock: params.get("lowStock") || "",
-    pricing: params.get("pricing") || "",
-    profitable: params.get("profitable") || "",
-    loss: params.get("loss") || "",
+    status: pricingManagement ? "" : params.get("status") || "",
+    needsAttention: !pricingManagement && params.get("needsAttention") === "true" ? true : "",
+    lowStock: pricingManagement ? "" : params.get("lowStock") || "",
+    pricing: pricingManagement ? "" : params.get("pricing") || "",
+    profitable: pricingManagement ? "" : params.get("profitable") || "",
+    loss: pricingManagement ? "" : params.get("loss") || "",
     page: Number(params.get("page") || params.get("current")) || defaultFilters.page,
     limit: Number(params.get("limit")) || defaultFilters.limit,
-    sortBy: params.get("sortBy") || "",
-    sortOrder: params.get("sortOrder") || ""
+    sortBy: validSort ? sortBy : "",
+    sortOrder: validSort ? sortOrder : ""
   };
 };
 
@@ -194,9 +202,13 @@ function ReportStatisticCard({ icon, iconClassName, title, value, valueStyle, lo
   );
 }
 
-export default function ReportProduct() {
-  const initialFilters = getInitialFilters();
+export default function ReportProduct({ pricingManagement = false, routePath = pathName }) {
+  const initialFilters = getInitialFilters(pricingManagement);
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [pricingDrafts, setPricingDrafts] = React.useState({});
+  const [savingPriceId, setSavingPriceId] = React.useState(null);
+  const [priceErrors, setPriceErrors] = React.useState({});
   const [filters, setFilters] = React.useState(initialFilters);
   const [quickFilter, setQuickFilter] = React.useState(getQuickFilterKey(initialFilters));
   const [data, setData] = React.useState([]);
@@ -206,37 +218,56 @@ export default function ReportProduct() {
   const [categories, setCategories] = React.useState([]);
   const [brands, setBrands] = React.useState([]);
   const [selectedProduct, setSelectedProduct] = React.useState(null);
-  const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
   const timerRef = useRef(null);
+  const filtersRef = useRef(filters);
+  const requestIdRef = useRef(0);
+  const priceSaveRef = useRef(null);
+  const mountedRef = useRef(true);
 
   const updateURL = nextFilters => {
     const params = new URLSearchParams();
     Object.keys(cleanRequestParams(nextFilters)).forEach(key => params.set(key, nextFilters[key]));
-    history.push({ pathname: pathName, search: `?${params.toString()}` });
+    history.push({ pathname: routePath, search: `?${params.toString()}` });
   };
 
   const fetchReport = nextFilters => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
-    ProductService.getInventoryStockReport(cleanRequestParams(nextFilters))
+    setError("");
+    return ProductService.getInventoryStockReport(cleanRequestParams(nextFilters))
       .then(response => {
+        if (requestId !== requestIdRef.current) return;
         const report = normalizeReportResponse(response);
         setSummary(report.summary);
         setData(report.items);
         setTotal(report.pagination.total);
-        setFilters(prev => ({
-          ...prev,
+        const resolvedFilters = {
+          ...filtersRef.current,
           page: report.pagination.page,
           limit: report.pagination.limit
-        }));
+        };
+        filtersRef.current = resolvedFilters;
+        setFilters(resolvedFilters);
       })
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (requestId !== requestIdRef.current) return;
+        setError("Unable to load the item report. Please try again.");
+        setData([]);
+        setSummary({});
+        setTotal(0);
+      })
+      .finally(() => {
+        if (requestId === requestIdRef.current) setLoading(false);
+      });
   };
 
   const applyFilters = nextValues => {
+    clearTimeout(timerRef.current);
     const nextFilters = {
-      ...filters,
+      ...filtersRef.current,
       ...nextValues
     };
+    filtersRef.current = nextFilters;
     setFilters(nextFilters);
     setQuickFilter(getQuickFilterKey(nextFilters));
     updateURL(nextFilters);
@@ -245,7 +276,8 @@ export default function ReportProduct() {
 
   const onChangeSearch = event => {
     const keyword = event.target.value;
-    setFilters(prev => ({ ...prev, keyword }));
+    filtersRef.current = { ...filtersRef.current, keyword };
+    setFilters(filtersRef.current);
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       applyFilters({ keyword, page: 1 });
@@ -271,11 +303,15 @@ export default function ReportProduct() {
   };
 
   const onChangeTable = (pagination, tableFilters, sorter) => {
-    const nextSortBy = sorter && sorter.field ? sorter.field : filters.sortBy;
-    const nextSortOrder = sorter && sorter.order ? (sorter.order === "ascend" ? "ASC" : "DESC") : filters.sortOrder;
+    const key = sorter && (sorter.columnKey || sorter.field);
+    const activeSort = sortableFields.includes(key) && ["ascend", "descend"].includes(sorter.order);
+    const nextSortBy = activeSort ? key : "";
+    const nextSortOrder = activeSort ? (sorter.order === "ascend" ? "ASC" : "DESC") : "";
+    const current = filtersRef.current;
+    const sortChanged = nextSortBy !== current.sortBy || nextSortOrder !== current.sortOrder;
 
     applyFilters({
-      page: pagination.current,
+      page: sortChanged || pagination.pageSize !== current.limit ? 1 : pagination.current,
       limit: pagination.pageSize,
       sortBy: nextSortBy,
       sortOrder: nextSortOrder
@@ -283,14 +319,8 @@ export default function ReportProduct() {
   };
 
   React.useEffect(() => {
-    PrivilegeService.checkPermission(permission_module_code, permission_code)
-      .then(({ data }) => {
-        setIsHasAccessPermission(data);
-        if (data) {
-          fetchReport(initialFilters);
-        }
-      })
-      .catch(() => setIsHasAccessPermission(false));
+    mountedRef.current = true;
+    fetchReport(initialFilters);
 
     LocationService.get({ limit: 500 })
       .then(response => {
@@ -313,7 +343,11 @@ export default function ReportProduct() {
         }
       });
 
-    return () => clearTimeout(timerRef.current);
+    return () => {
+      clearTimeout(timerRef.current);
+      requestIdRef.current += 1;
+      mountedRef.current = false;
+    };
     //eslint-disable-next-line
   }, []);
 
@@ -322,6 +356,72 @@ export default function ReportProduct() {
     order: filters.sortOrder === "ASC" ? "ascend" : filters.sortOrder === "DESC" ? "descend" : undefined
   };
   const selectedStatusValue = statusOptions.some(option => option.value === filters.status) ? filters.status : "";
+  const changePricingDraft = (row, changes) => {
+    const variantId = getPricingVariantId(row);
+    if (priceSaveRef.current === variantId) return;
+    setPricingDrafts(previous => ({ ...previous, [variantId]: {
+      ...previous[variantId], ...changes,
+      expectedSalesPrice: previous[variantId]?.expectedSalesPrice ?? Number(row.salesPrice),
+      expectedUnitCost: previous[variantId]?.expectedUnitCost ?? Number(row.unitCost)
+    } }));
+  };
+  const changeMargin = (row, margin) => changePricingDraft(row, { source: "margin", margin });
+  const changeSalesPrice = (row, salesPrice) => changePricingDraft(row, { source: "price", salesPrice });
+  const resetMargin = variantId => {
+    if (priceSaveRef.current === variantId) return;
+    setPricingDrafts(previous => {
+      const next = { ...previous };
+      delete next[variantId];
+      return next;
+    });
+    setPriceErrors(previous => {
+      const next = { ...previous };
+      delete next[variantId];
+      return next;
+    });
+  };
+  const savePrice = async row => {
+    const variantId = getPricingVariantId(row);
+    const draft = pricingDrafts[variantId];
+    if (!variantId || !draft || priceSaveRef.current || priceErrors[variantId]?.conflict) return;
+    const preview = getPricingDraftPreview(draft);
+    if (preview.error || !Number.isFinite(draft.expectedSalesPrice)) return;
+    priceSaveRef.current = variantId;
+    setSavingPriceId(variantId);
+    setPriceErrors(previous => ({ ...previous, [variantId]: null }));
+    try {
+      const response = await ItemService.updateSellingPrice(variantId, {
+        salesPrice: preview.price,
+        expectedSalesPrice: draft.expectedSalesPrice,
+        expectedUnitCost: draft.expectedUnitCost
+      });
+      if (!mountedRef.current) return;
+      const saved = response.data.data;
+      setData(previous => previous.map(item => getPricingVariantId(item) === variantId ? { ...item, ...saved } : item));
+      setPricingDrafts(previous => {
+        const next = { ...previous };
+        delete next[variantId];
+        return next;
+      });
+      message.success("Selling price saved.");
+      await fetchReport(filtersRef.current);
+    } catch (saveError) {
+      if (!mountedRef.current) return;
+      const status = saveError.response?.status;
+      const apiError = saveError.response?.data?.error;
+      const conflict = status === 409 || apiError?.code === "PRICE_OR_COST_CHANGED";
+      const errorMessage = conflict
+        ? "Price or cost changed. Refresh the report, then reset this edit before trying again."
+        : status === 403 ? "You do not have permission to update this selling price."
+        : status === 404 ? "This variant is unavailable or does not belong to your business."
+        : apiError?.message || "Unable to save selling price. Please try again.";
+      setPriceErrors(previous => ({ ...previous, [variantId]: { message: errorMessage, conflict } }));
+      if (conflict) await fetchReport(filtersRef.current);
+    } finally {
+      priceSaveRef.current = null;
+      if (mountedRef.current) setSavingPriceId(null);
+    }
+  };
   const statistics = [
     {
       title: "Total Products",
@@ -368,7 +468,7 @@ export default function ReportProduct() {
       dataIndex: "itemName",
       key: "itemName",
       sorter: true,
-      sortOrder: sortedInfo.field === "itemName" && sortedInfo.order,
+      sortOrder: sortedInfo.field === "itemName" ? sortedInfo.order : null,
       render: (itemName, record) => (
         `${record.productName}${record.variantName ? " - " + record.variantName : ""}`
         // getEmpty(itemName)
@@ -379,6 +479,8 @@ export default function ReportProduct() {
       dataIndex: "sku",
       key: "sku",
       width: 140,
+      sorter: true,
+      sortOrder: sortedInfo.field === "sku" ? sortedInfo.order : null,
       render: getEmpty
     },
     {
@@ -388,7 +490,7 @@ export default function ReportProduct() {
       width: 130,
       align: "right",
       sorter: true,
-      sortOrder: sortedInfo.field === "unitCost" && sortedInfo.order,
+      sortOrder: sortedInfo.field === "unitCost" ? sortedInfo.order : null,
       render: getMoney
     },
     {
@@ -398,7 +500,7 @@ export default function ReportProduct() {
       width: 130,
       align: "right",
       sorter: true,
-      sortOrder: sortedInfo.field === "salesPrice" && sortedInfo.order,
+      sortOrder: sortedInfo.field === "salesPrice" ? sortedInfo.order : null,
       render: getMoney
     },
     {
@@ -408,7 +510,7 @@ export default function ReportProduct() {
       width: 130,
       align: "right",
       sorter: true,
-      sortOrder: sortedInfo.field === "marketPrice" && sortedInfo.order,
+      sortOrder: sortedInfo.field === "marketPrice" ? sortedInfo.order : null,
       render: marketPrice => marketPrice === null || marketPrice === undefined || marketPrice === "" ? "-" : getMoney(marketPrice)
     },
     {
@@ -418,7 +520,7 @@ export default function ReportProduct() {
       width: 120,
       align: "right",
       sorter: true,
-      sortOrder: sortedInfo.field === "marginPercent" && sortedInfo.order,
+      sortOrder: sortedInfo.field === "marginPercent" ? sortedInfo.order : null,
       render: (marginPercent, record) => (
         <span style={{ color: record.pricingStatus === "SELLING_BELOW_COST" ? "#cf1322" : record.pricingStatus === "BELOW_TARGET_MARGIN" ? "#fa8c16" : undefined }}>
           {marginPercent === null || marginPercent === undefined ? "-" : `${getNumber(marginPercent).toFixed(1)}%`}
@@ -432,7 +534,7 @@ export default function ReportProduct() {
       width: 130,
       align: "right",
       sorter: true,
-      sortOrder: sortedInfo.field === "quantityOnHand" && sortedInfo.order,
+      sortOrder: sortedInfo.field === "quantityOnHand" ? sortedInfo.order : null,
       render: quantityOnHand => getQuantity(quantityOnHand)
     },
     {
@@ -441,8 +543,6 @@ export default function ReportProduct() {
       key: "stockAge",
       width: 130,
       align: "right",
-      sorter: true,
-      sortOrder: sortedInfo.field === "stockAge" && sortedInfo.order,
       render: (stockAge) => {
         if (stockAge == null) return "-";
 
@@ -456,31 +556,20 @@ export default function ReportProduct() {
 
         return `${(stockAge / 365).toFixed(1)}yr`;
       }
-    },
-    // {
-    //   title: <Translate id="text_action" />,
-    //   key: "action",
-    //   width: 110,
-    //   align: "center",
-    //   render: (text, record) => (
-    //     <Button size="small" onClick={() => setSelectedProduct(record)}>
-    //       View
-    //     </Button>
-    //   )
-    // }
+    }
   ];
 
   return (
     <React.Fragment>
-      <div id="product-report" style={{ padding: 20 }}>
+      <div id={pricingManagement ? "pricing-management" : "product-report"} style={{ padding: 20 }}>
         <PageHeader
           style={{
             paddingLeft: 0,
             paddingRight: 0,
           }}
           backIcon={""}
-          title={<Translate id="text_product_report" />}
-          subTitle="Inventory and pricing insights"
+          title={pricingManagement ? "Pricing Management" : <Translate id="text_product_report" />}
+          subTitle={pricingManagement ? "Set margin or unit price, then save" : "Inventory and pricing insights"}
         />
         <Row gutter={16}>
           {statistics.map(statistic => (
@@ -492,13 +581,13 @@ export default function ReportProduct() {
           ))}
           <Col span={24}>
             <Row type="flex" justify="space-between" align="middle" style={{ marginTop: 15, marginBottom: 15 }}>
-              <Col style={{ display: "none" }}>
+              {!pricingManagement && <Col style={{ display: "none" }}>
                 <Tabs activeKey={quickFilter} onChange={onChangeQuickFilter} type="card">
                   {quickFilters.map(filter => (
                     <TabPane tab={filter.label} key={filter.key} />
                   ))}
                 </Tabs>
-              </Col>
+              </Col>}
               <Col>
                 <Search
                   placeholder="Search item, SKU or barcode"
@@ -543,7 +632,7 @@ export default function ReportProduct() {
                     </Option>
                   ))}
                 </Select>
-                <Select
+                {!pricingManagement && <Select
                   name="status"
                   style={{ width: 190, marginLeft: 10 }}
                   value={selectedStatusValue}
@@ -554,16 +643,25 @@ export default function ReportProduct() {
                       {value.label}
                     </Option>
                   ))}
-                </Select>
+                </Select>}
               </Col>
             </Row>
           </Col>
           <Col span={24}>
+            {pricingManagement && <Button size="small" style={{ marginBottom: 12 }}
+              disabled={!Object.keys(pricingDrafts).length || !!savingPriceId}
+              onClick={() => { setPricingDrafts({}); setPriceErrors({}); }}>Reset all previews</Button>}
+            {error && <Alert type="error" showIcon message={error}
+              description={<Button size="small" onClick={() => fetchReport(filtersRef.current)}>Retry</Button>}
+              style={{ marginBottom: 12 }} />}
             <Table
               rowKey={record => record.id || record.productVariantId || record.productId || record.sku}
               bordered={true}
               dataSource={data}
-              columns={columns}
+              columns={pricingManagement ? getPricingColumns(columns, pricingDrafts, changeMargin, resetMargin, getPricingMoney, sortedInfo, {
+                onSave: savePrice, onPriceChange: changeSalesPrice, savingId: savingPriceId, errors: priceErrors
+              }) : columns}
+              scroll={pricingManagement ? { x: 1200 } : undefined}
               size="small"
               pagination={{
                 current: filters.page,

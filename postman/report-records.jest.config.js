@@ -13,6 +13,8 @@ module.exports = {
     "^axios$": "<rootDir>/node_modules/axios/dist/node/axios.cjs"
   },
   testMatch: [
+    "**/reports/Item/*.test.jsx",
+    "**/services/report/ProductService.test.js",
     "**/Purchase/*.test.js",
     "**/Purchase/PurchaseReportParts.test.jsx",
     "**/stateful/RemoteRecordSelect.integration.jsx"

@@ -67,7 +67,7 @@ class StockIOService extends BaseService {
     if (!id) throw new Error("Missing ID for updateStockOutById()");
     try {
       return this.PUT({
-        url: `${this.baseUrl}/out/${id}`,
+        url: `${this.baseUrl}/${id}`,
         data: payload,
         headers: this.header
       });
@@ -86,7 +86,7 @@ class StockIOService extends BaseService {
     if (!id) throw new Error("Missing ID for updateStockInById()");
     try {
       return this.PUT({
-        url: `${this.baseUrl}/in/${id}`,
+        url: `${this.baseUrl}/${id}`,
         data: payload,
         headers: this.header
       });

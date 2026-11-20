@@ -19,7 +19,7 @@ class ProductService extends BaseService {
   getInventoryStockReport(option) {
     this.setHeader();
     return this.GET({
-      url: `${this.generateAPIUrl()}/report/products?${this.bindQueryParam(option)}`,
+      url: `${this.generateAPIUrl()}/report/products?${new URLSearchParams(option).toString()}`,
       headers: this.header
     });
   }

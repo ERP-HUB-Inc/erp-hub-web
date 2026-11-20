@@ -57,6 +57,15 @@ class ItemService extends BaseService {
     });
   }
 
+  updateSellingPrice(variantId, { salesPrice, expectedSalesPrice, expectedUnitCost }) {
+    this.setHeader();
+    return this.PATCH({
+      url: `${this.baseUrl}/variants/${encodeURIComponent(variantId)}/selling-price`,
+      data: { salesPrice, expectedSalesPrice, expectedUnitCost },
+      headers: this.header,
+    });
+  }
+
   attributes(id) {
     this.setHeader();
     return this.GET({

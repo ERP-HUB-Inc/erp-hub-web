@@ -8,6 +8,7 @@ test.each([
   ["/purchase-orders/create", "31", ["3"]],
   ["/vendors/update/42", "33", ["3"]],
   ["/inventories/items/view/42", "41", ["4"]],
+  ["/inventories/pricing-management", "43", ["4"]],
   ["/inventories/stock-io/create", "42", ["4"]],
   ["/general-ledger", "51", ["5"]],
   ["/accounts-receivable", "52", ["5"]],

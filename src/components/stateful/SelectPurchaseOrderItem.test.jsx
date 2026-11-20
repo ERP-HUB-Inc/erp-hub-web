@@ -12,17 +12,19 @@ jest.mock("../../helper/inventory", () => ({
 }));
 jest.mock("antd", () => {
   const React = require("react");
+  const textOf = node => React.Children.toArray(node).map(child => React.isValidElement(child) ? textOf(child.props.children) : child).join("");
   const Select = ({ children, onSearch, onChange, value, notFoundContent }) => (
     <div>
       <input aria-label="Search" onChange={event => onSearch(event.target.value)} />
       <select value={value || ""} onChange={event => onChange(Number(event.target.value))}>
         <option value="" />
-        {children}
+        {React.Children.toArray(children).map(option => <option key={option.props.value} value={option.props.value} disabled={option.props.disabled}>{textOf(option.props.children)}</option>)}
       </select>
+      {children}
       {notFoundContent}
     </div>
   );
-  Select.Option = ({ value, disabled, children }) => <option value={value} disabled={disabled}>{children}</option>;
+  Select.Option = ({ value, disabled, children }) => <div data-option-value={value} aria-disabled={disabled}>{children}</div>;
   return {
     Select,
     Tooltip: ({ children }) => children,
@@ -135,4 +137,21 @@ test("reports search failures without restoring initial choices", async () => {
   expect(message.error).toHaveBeenCalledWith("Could not load items. Please try again.");
   expect(optionValues()).toEqual([""]);
   expect(container.textContent).not.toContain("Loading");
+});
+
+test("displays the current variant beneath the item name", () => {
+  render({ items: [{ id: 1, name: "Shirt", productVariants: [{ id: "blue", name: "Blue / Large" }] }] });
+  const option = container.querySelector('[data-option-value="1"]');
+  const variant = option.querySelector("small");
+  expect(variant.textContent).toBe("Blue / Large");
+  expect(variant.previousElementSibling.textContent).toBe("Shirt");
+  expect(variant.style.display).toBe("block");
+});
+
+test("displays saved variant names for historical items outside the search results", () => {
+  render({ value: 9, selectedItem: { id: 9, name: "Shirt", variantName: "Red / Small" } });
+  const option = container.querySelector('[data-option-value="9"]');
+  expect(option.querySelector("small").textContent).toBe("Red / Small");
+  expect(option.querySelector("small").style.display).toBe("block");
+  expect(option.getAttribute("aria-disabled")).toBe("true");
 });

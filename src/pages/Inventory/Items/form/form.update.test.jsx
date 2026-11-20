@@ -6,7 +6,7 @@ jest.mock("@settings/Tax/FormCreate", () => () => null, { virtual: true });
 jest.mock("@components/BaseComponent", () => require("react").Component, { virtual: true });
 jest.mock("@router/index", () => ({}), { virtual: true });
 jest.mock("@redux/index", () => ({ Translate: () => null }), { virtual: true });
-jest.mock("@enums/index", () => ({ NO_VARIANT: 0, PRODUCT_VARIANT: 1, ARCHIVE: 3 }), { virtual: true });
+jest.mock("@enums/index", () => ({ NO_VARIANT: 0, PRODUCT_VARIANT: 1, PRODUCT_COMPOSITE: 2, ARCHIVE: 3 }), { virtual: true });
 jest.mock("./form.item", () => () => null);
 jest.mock("./form.item.404", () => () => null);
 jest.mock("../redux/action", () => ({ update: jest.fn(data => ({ type: "UPDATE", payload: data })) }));
@@ -31,6 +31,52 @@ function setup(values = {}) {
 }
 
 beforeEach(() => jest.clearAllMocks());
+
+test("submits a selected UUID product type using productTypeId without sending NaN as type", () => {
+  const id = "22222222-2222-4222-8222-222222222222";
+  const { submit } = setup({ type: id });
+  submit();
+  expect(ProductAction.update).toHaveBeenCalledWith(expect.objectContaining({ productTypeId: id, type: 0 }));
+});
+
+test("preserves legacy numeric product type submission", () => {
+  const { submit } = setup({ type: "1" });
+  submit();
+  expect(ProductAction.update).toHaveBeenCalledWith(expect.objectContaining({ type: 1 }));
+});
+
+test.each([1, "1"])("keeps database productOption %p when a stale hidden field submits zero", savedOption => {
+  const { instance, submit } = setup({ productOption: 0 });
+  instance.props.productDetail.data.productOption = savedOption;
+  submit();
+  const payload = ProductAction.update.mock.calls[0][0];
+  expect(payload.productOption).toBe(1);
+  expect(payload).not.toHaveProperty("productVariantId");
+  expect(payload).not.toHaveProperty("productVariants");
+});
+
+test("keeps the saved variant option when the hidden field is missing", () => {
+  const { instance, submit } = setup({ productOption: undefined });
+  instance.props.productDetail.data.productOption = 1;
+  submit();
+  expect(ProductAction.update).toHaveBeenCalledWith(expect.objectContaining({ productOption: 1 }));
+});
+
+test("supports changing a standard item from productOption zero to one", () => {
+  const { instance, submit } = setup({ productOption: "1" });
+  instance.props.productDetail.data.productOption = 0;
+  submit();
+  expect(ProductAction.update).toHaveBeenCalledWith(expect.objectContaining({ productOption: 1 }));
+});
+
+test("preserving productOption one still validates an initialized empty variant collection", () => {
+  const { instance, submit, dispatch } = setup({ productOption: 0 });
+  instance.props.productDetail.data.productOption = 1;
+  instance.handleCallBackGetProductVariant([]);
+  submit();
+  expect(instance.Message.error).toHaveBeenCalledWith("error_require_variant");
+  expect(dispatch).not.toHaveBeenCalled();
+});
 
 test("saves item details without variant payload or collection errors when variants were never opened", () => {
   const { instance, dispatch, submit } = setup();

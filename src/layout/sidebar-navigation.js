@@ -7,6 +7,7 @@ export const sidebarMenuRoutes = [
   { path: "/purchase-orders", selectedKey: "31", openKey: "3" },
   { path: "/vendors", selectedKey: "33", openKey: "3" },
   { path: "/inventories/items", selectedKey: "41", openKey: "4" },
+  { path: "/inventories/pricing-management", selectedKey: "43", openKey: "4" },
   { path: "/inventories/stock-io", selectedKey: "42", openKey: "4" },
   { path: "/inventories/transfers", selectedKey: "42", openKey: "4" },
   { path: "/inventories/adjustments", selectedKey: "42", openKey: "4" },

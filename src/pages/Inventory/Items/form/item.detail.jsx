@@ -137,6 +137,7 @@ function normalizeStockLocations(stockResponse, item) {
         rows.push({
           id: `${stockGroup.id || groupIndex}-${location.id || location.locationId || locationIndex}`,
           location: location.location || stockGroup.name || EMPTY_VALUE,
+          variantName: location.variantName || stockGroup.name || EMPTY_VALUE,
           zone: location.zone || location.bin || location.code || location.location?.code || EMPTY_VALUE,
           onHand: toNumber(location.quantity),
           reserved: toNumber(location.reservedQuantity || location.reserved),
@@ -150,6 +151,7 @@ function normalizeStockLocations(stockResponse, item) {
     rows.push({
       id: stockGroup.id || groupIndex,
       locationName: stockGroup.location || stockGroup.locationName || stockGroup.name || EMPTY_VALUE,
+      variantName: stockGroup.variantName || EMPTY_VALUE,
       zone: stockGroup.zone || stockGroup.code || EMPTY_VALUE,
       onHand: toNumber(stockGroup.quantity),
       reserved: toNumber(stockGroup.reservedQuantity || stockGroup.reserved),
@@ -159,12 +161,6 @@ function normalizeStockLocations(stockResponse, item) {
   });
 
   return rows;
-}
-
-function getStockStatus(row, reorderPoint) {
-  if (row.available <= 0) return { label: "Out of Stock", color: "red" };
-  if (reorderPoint > 0 && row.available <= reorderPoint) return { label: "Low Stock", color: "orange" };
-  return { label: "In Stock", color: "green" };
 }
 
 function SectionCard({ title, description, action, icon, children, className = "" }) {
@@ -248,7 +244,6 @@ export default function ProductDetail(props) {
   const unitName = getUnitName(data);
   const retailPrice = toNumber(getRetailPrice(data));
   const unitCost = toNumber(getUnitCost(data));
-  const reorderPoint = toNumber(data.reorderPoint);
   const totalOnHand = stockLocations.reduce((total, row) => total + toNumber(row.onHand), 0);
   const totalReserved = stockLocations.reduce((total, row) => total + toNumber(row.reserved), 0);
   const totalAvailable = stockLocations.reduce((total, row) => total + toNumber(row.available), 0);
@@ -327,6 +322,12 @@ export default function ProductDetail(props) {
       render: value => value || EMPTY_VALUE
     },
     {
+      title: "Variant Name",
+      dataIndex: "variantName",
+      key: "variantName",
+      render: value => value || EMPTY_VALUE
+    },
+    {
       title: "Zone / Bin",
       dataIndex: "zone",
       key: "zone",
@@ -352,16 +353,6 @@ export default function ProductDetail(props) {
       key: "available",
       align: "right",
       render: value => toNumber(value).toLocaleString()
-    },
-    {
-      title: "Status",
-      key: "status",
-      width: 120,
-      align: "center",
-      render: (_, record) => {
-        const status = getStockStatus(record, reorderPoint);
-        return <Tag color={status.color}>{status.label}</Tag>;
-      }
     }
   ];
 
@@ -445,7 +436,6 @@ export default function ProductDetail(props) {
                       <strong>{totalOnHand.toLocaleString()} {unitName}</strong>
                       <strong>{totalReserved.toLocaleString()} reserved</strong>
                       <strong>{totalAvailable.toLocaleString()} available</strong>
-                      <span>{EMPTY_VALUE}</span>
                     </div>
                   )}
                 />

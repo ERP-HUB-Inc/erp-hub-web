@@ -29,6 +29,7 @@ import history from "@router/index";
 import Util from "@helper/inventory";
 import { getLocationId } from "@helper/user";
 import { SelectItem } from '@components/stateful';
+import { stockItemSelection, buildStockEntries } from './stock-item-selection';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -44,7 +45,6 @@ const StockIOForm = (props) => {
   const [movementType, setMovementType] = useState('IN');
   const [aiSuggestions, setAiSuggestions] = useState({});
   const [validationWarnings, setValidationWarnings] = useState({});
-  let timeout = null;
 
   const reasons = {
     IN: [
@@ -139,38 +139,35 @@ const StockIOForm = (props) => {
   };
 
   const removeRow = (key) => {
+    const index = stockIOItems.findIndex(item => item.key === key);
+    const fields = {};
+    ["item", "quantity", "unitId", "reason", "batch", "expiry", "notes"].forEach(name => {
+      const values = [...(props.form.getFieldValue(name) || [])];
+      values.splice(index, 1);
+      values.push(undefined);
+      fields[name] = values;
+    });
+    props.form.setFieldsValue(fields);
     setStockIOItems(stockIOItems.filter(item => item.key !== key));
   };
 
   const duplicateRow = (record) => {
     const newItem = {
       ...record,
+      id: undefined,
       key: Date.now(),
       quantity: null
     };
     setStockIOItems([...stockIOItems, newItem]);
   };
 
-  const updateRow = (key, field, value) => {
+  const updateRow = (key, field, value, selectedItem) => {
     const newItems = stockIOItems.map(stockIOItem => {
       if (stockIOItem.key === key) {
         const updated = { ...stockIOItem, [field]: value };
-        if (field === 'itemId' && value) {
-          const selectedItem = items.find(i => i.id === value);
-          if (selectedItem) {
-            updated.itemName = selectedItem.name;
-            updated.sku = Util.getItemSku(selectedItem);
-            updated.unitId = Util.getUnitId(selectedItem);
-            updated.currentStock = selectedItem.currentStock;
-            updated.avgQuantity = selectedItem.avgQuantity;
-            updated.warehouse = selectedItem.warehouse || warehouses[0].id;
-            
-            // AI suggests quantity based on average
-            setAiSuggestions({
-              ...aiSuggestions,
-              [key]: `Typical quantity: ${selectedItem.avgQuantity} units`
-            });
-          }
+        if (field === 'itemId' && selectedItem) {
+          Object.assign(updated, stockItemSelection(selectedItem));
+          updated.warehouse = selectedItem.warehouse || warehouses[0]?.id;
         }
 
         // Validation: Check stock for OUT movements
@@ -226,7 +223,7 @@ const StockIOForm = (props) => {
   const columns = [
     {
       title: "Item",
-      dataIndex: "itemId",
+      dataIndex: "variantId",
       width: 250,
       render: (value, record, index) => (
         <div>
@@ -238,56 +235,19 @@ const StockIOForm = (props) => {
                   message: "Type to search or pick an item",
                 },
               ],
+              initialValue: value,
             })(
               <SelectItem
                 items={items}
-                onChange={(val) => updateRow(record.key, "itemId", val)}
+                selectVariants
+                selectedItem={record.selectedItem}
+                locationId={props.form.getFieldValue("locationId") || getLocationId()}
+                onChange={(variantId, selectedItem) => {
+                  if (!selectedItem) return;
+                  updateRow(record.key, "itemId", selectedItem.id, selectedItem);
+                  props.form.setFieldsValue({ [`unitId[${index}]`]: Util.getUnitId(selectedItem) });
+                }}
               />
-              // <Select
-              //   showSearch
-              //   style={{ width: "100%" }}
-              //   placeholder="Type to search or pick an item"
-              //   onChange={(val) => updateRow(record.key, 'itemId', val)}
-              //   onSearch={onSearchItem}
-              //   filterOption={false}
-              //   notFoundContent={loading ? <Icon type="loading" /> : "No items found"}
-              // >
-              //   {items.map(item => (
-              //     <Option key={item.id} value={item.id}>
-              //       <Tooltip title={item.name} placement="right">
-              //         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              //           <img
-              //             src={item.thumbnail || item.image || '/placeholder-image.png'}
-              //             alt={item.name}
-              //             style={{
-              //               width: '40px',
-              //               height: '40px',
-              //               objectFit: 'cover',
-              //               borderRadius: '4px',
-              //               flexShrink: 0
-              //             }}
-              //             onError={(e) => {
-              //               e.target.src = FALLBACK_IMAGE;
-              //             }}
-              //           />
-              //           <div style={{ flex: 1, minWidth: 0 }}>
-              //             <div style={{
-              //               fontWeight: 500,
-              //               overflow: 'hidden',
-              //               textOverflow: 'ellipsis',
-              //               whiteSpace: 'nowrap'
-              //             }}>
-              //               {item.name}
-              //             </div>
-              //             <small style={{ color: '#999' }}>
-              //               SKU: {Util.getItemSku(item)} | Stock: {Util.getQuantityOnHand(item)}
-              //             </small>
-              //           </div>
-              //         </div>
-              //       </Tooltip>
-              //     </Option>
-              //   ))}
-              // </Select>
             )}
           </Form.Item>
           {aiSuggestions[record.key] && (
@@ -500,23 +460,6 @@ const StockIOForm = (props) => {
     return { totalItems, totalQuantity, warehouseSummary };
   };
 
-  const onSearchItem = search => {
-    const limit = 15;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      setLoading(true);
-      ItemService.get({ limit, search })
-      .then(response => {
-        if (response && response.data) {
-          setItems(response.data.data);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    }, 1000);
-  };
-
   const handleSubmit = async () => {
     try {
       const value = await new Promise((resolve, reject) => {
@@ -525,6 +468,7 @@ const StockIOForm = (props) => {
           resolve(values);
         });
       });
+      const entries = buildStockEntries(value, stockIOItems, units);
       setSubmitting(true);
 
       const payload = {
@@ -533,32 +477,15 @@ const StockIOForm = (props) => {
         locationId: value.locationId,
         date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
         description: value.referenceNo,
-        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
+        quantity: entries.reduce((sum, entry) => sum + entry.quantity, 0),
         amount: 0,
         status: 2,
-        entries: value.item.map((id, index) => {
-          const item = items.find(item => item.id === id);
-          return {
-            itemId: id,
-            itemName: item?.name || "",
-            variantId: Util.getVariantId(item),
-            variantName: Util.getVariantName(item),
-            unitId: value.unitId[index],
-            unitName: units.find(unit => unit.id === value.unitId[index])?.name || "",
-            quantity: value.quantity[index],
-            reason: value.reason[index],
-            batch: value.batch[index],
-            expiryDate: moment(value.expiry[index]).isValid() ? moment(value.expiry[index]).format("YYYY-MM-DD") : null,
-            notes: value.notes[index]
-          };
-        })
+        entries
       };
-      await StockIOService.stockIn(payload);
+      const save = value.movementType === "OUT" ? StockIOService.stockOut.bind(StockIOService) : StockIOService.stockIn.bind(StockIOService);
+      await save(payload);
 
-    } catch (error) {
-      console.error("❌ Stock In Failed:", error);
-    } finally {
-      sweetalert({
+      await sweetalert({
         icon: "success",
         title: props.form.getFieldValue("movementType") === "IN" ? "Stock In Recorded" : "Stock Out Recorded",
         text: "Your stock quantity has been updated.",
@@ -570,6 +497,12 @@ const StockIOForm = (props) => {
         setStockIOItems([]);
         props.form.resetFields();
       });
+    } catch (error) {
+      if (!error.errors) {
+        sweetalert({ icon: "error", title: "Unable to save stock movement", text: error.message || "Please check the entries and try again." });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -582,6 +515,7 @@ const StockIOForm = (props) => {
         });
       });
 
+      const entries = buildStockEntries(value, stockIOItems, units);
       setSubmitting(true);
 
       const payload = {
@@ -590,33 +524,16 @@ const StockIOForm = (props) => {
         locationId: value.locationId,
         date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
         description: value.referenceNo,
-        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
+        quantity: entries.reduce((sum, entry) => sum + entry.quantity, 0),
         amount: 0,
         status: 0,
-        entries: value.item.map((id, index) => {
-          const item = items.find(item => item.id === id);
-          return {
-            itemId: id,
-            itemName: item?.name || "",
-            variantId: Util.getVariantId(item),
-            variantName: Util.getVariantName(item),
-            unitId: Util.getUnitId(item),
-            unitName: Util.getUnitName(item),
-            quantity: value.quantity[index],
-            reason: value.reason[index],
-            batch: value.batch[index],
-            expiry: value.expiry[index],
-            notes: value.notes[index]
-          };
-        })
+        entries
       };
 
-      await StockIOService.stockIn(payload);
+      const save = value.movementType === "OUT" ? StockIOService.stockOut.bind(StockIOService) : StockIOService.stockIn.bind(StockIOService);
+      await save(payload);
 
-    } catch (error) {
-      console.error("❌ Stock In Failed:", error);
-    } finally {
-      sweetalert({
+      await sweetalert({
         icon: "success",
         title: "Stock In Recorded",
         text: "Your stock quantity has been updated.",
@@ -628,6 +545,12 @@ const StockIOForm = (props) => {
         setStockIOItems([]);
         props.form.resetFields();
       });
+    } catch (error) {
+      if (!error.errors) {
+        sweetalert({ icon: "error", title: "Unable to save stock movement", text: error.message || "Please check the entries and try again." });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 

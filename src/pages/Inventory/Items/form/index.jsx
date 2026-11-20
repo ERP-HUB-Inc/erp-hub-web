@@ -60,11 +60,12 @@ import ItemSummary from "./item-summary";
 import ItemDeleteConfirm from "./item-delete-confirm";
 import { itemListColumnWidths } from "./item-list-columns";
 import ItemVariants, { hasItemVariants } from "./item-variants";
-import IncomingStock, { incomingStockQuantity } from "./incoming-stock";
+import IncomingStock from "./incoming-stock";
 import ItemSellingPrice, { getPriceDifference } from "./item-selling-price";
 
 const { Text } = Typography;
 const { TabPane } = Tabs;
+const serverSortFields = ["name", "itemType", "incomingStock", "quantity", "price"];
 
 function ItemTabLabel({ label, count, tone = "neutral", icon }) {
    return (
@@ -108,6 +109,8 @@ export default class ProductList extends Datatable {
          stockInItems: {}, // Format: { [productId]: { quantity, unitId, notes, type } }
          unitOptions: [], // Load your unit options here
          activeTab: "item",
+         tableSort: null,
+         serverSort: null,
          summaryRefreshKey: 0,
          visibleColumns: {
             item: ["name", "itemType", "incomingStock", "quantity", "price", "action"],
@@ -129,7 +132,7 @@ export default class ProductList extends Datatable {
           title: <Translate id="text_item_name" />,
           dataIndex: "name",
           key: "name",
-          sorter: (a, b) => a.name - b.name,
+          sorter: true,
           render: (name, record) => {
             const numberOfVariant = record?.productVariants?.length || 0;
             const categoryName = record?.category?.name || "Uncategorized";
@@ -213,7 +216,7 @@ export default class ProductList extends Datatable {
           key: "itemType",
           dataIndex: "itemType",
           width: itemListColumnWidths.itemType,
-          sorter: (a, b) => a.itemType - b.itemType,
+          sorter: true,
           render: itemType =>
             itemType && itemType.name && itemType.name.trim() ? (
               itemType.name
@@ -227,7 +230,7 @@ export default class ProductList extends Datatable {
           dataIndex: "incomingStock",
           width: itemListColumnWidths.incomingStock,
           align: "right",
-          sorter: (a, b) => (incomingStockQuantity(a.incomingStock) ?? -1) - (incomingStockQuantity(b.incomingStock) ?? -1),
+          sorter: true,
           render: (quantity, record) => <IncomingStock quantity={quantity} unit={record?.stockUnit?.name} />,
         },
         {
@@ -236,7 +239,7 @@ export default class ProductList extends Datatable {
           dataIndex: "quantity",
           width: itemListColumnWidths.quantity,
           align: "right",
-          sorter: (a, b) => a.quantity - b.quantity,
+          sorter: true,
           render: (_, record) => {
             const stockCount = this.getTotalQuantity(record);
             return (
@@ -254,7 +257,7 @@ export default class ProductList extends Datatable {
           dataIndex: "price",
           width: itemListColumnWidths.price,
           align: "right",
-          sorter: (a, b) => a.price - b.price,
+          sorter: true,
           render: (_, record) => {
             return (
               <ItemSellingPrice
@@ -312,7 +315,7 @@ export default class ProductList extends Datatable {
             dataIndex: "name",
             key: "name",
             width: 300,
-            sorter: (a, b) => a.name - b.name,
+            sorter: true,
             render: (name, record) => {
                const numberOfVariant = record?.productVariants?.length || 0;
                const stockCount = this.getTotalQuantity(record);
@@ -376,9 +379,9 @@ export default class ProductList extends Datatable {
          {
             title: "Stock on Hand",
             key: "quantity",
-            dataIndex: "quanity",
+            dataIndex: "quantity",
             width: 60,
-            sorter: (a, b) => a.reorderPoint - b.reorderPoint,
+            sorter: true,
             render: (_, record) => {
                const stockCount = this.getTotalQuantity(record);
                return (
@@ -396,13 +399,16 @@ export default class ProductList extends Datatable {
             dataIndex: "qtyIn",
             width: 120,
             align: "center",
+            sorter: (a, b) => Number(this.state.stockInItems?.[a.id]?.qtyIn || 0) - Number(this.state.stockInItems?.[b.id]?.qtyIn || 0),
             render: (_, record, index) => {
                
                return (
                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <Form.Item style={{margin: 0}}>
                      {
-                        this.props.form.getFieldDecorator(`qtyIn_${index}`, {})
+                        this.props.form.getFieldDecorator(`qtyIn_${record.id}`, {
+                           initialValue: this.state.stockInItems?.[record.id]?.qtyIn ?? undefined
+                        })
                         (
                            <InputNumber
                               style={{ width: '100%' }}
@@ -428,11 +434,9 @@ export default class ProductList extends Datatable {
             key: "reorderPoint",
             dataIndex: "reorderPoint",
             width: 60,
-            sorter: (a, b) => a.reorderPoint - b.reorderPoint,
+            sorter: (a, b) => this.getAdjustedQuantity(a) - this.getAdjustedQuantity(b),
             render: (_, record) => {
-               const currentQty = this.getTotalQuantity(record);
-               const adjustmentValue = this.state.stockInItems?.[record.id]?.qtyIn || 0;
-               const newQty = currentQty + parseFloat(adjustmentValue || 0);
+               const newQty = this.getAdjustedQuantity(record);
                return (
                  <QuantityValue
                    quantity={newQty}
@@ -444,6 +448,11 @@ export default class ProductList extends Datatable {
             }
          },
       ];
+      [...this.columns, ...this.stockColumns].forEach(column => {
+         if (column.sorter) {
+            column.title = <span title={column.sorter === true ? "Sort all matching items" : "Sort items on the current page"}>{column.title}</span>;
+         }
+      });
       this.formCreate = <FormCreate />;
       this.callBackOnShowEditForm = this.showFormEdit;
       this.fetchingProp = "products";
@@ -611,6 +620,8 @@ export default class ProductList extends Datatable {
       this.listRequestId += 1;
       this.setState({
          activeTab,
+         tableSort: null,
+         serverSort: null,
          loading: true,
          listError: "",
          products: [],
@@ -620,6 +631,20 @@ export default class ProductList extends Datatable {
          selectedListIds: [],
          dataSourceToPrint: []
       }, () => this.fetchList());
+   };
+
+   onTableChange = (_, __, sorter = {}) => {
+      const key = sorter.columnKey || sorter.field;
+      const order = sorter.order;
+      const isActive = order === "ascend" || order === "descend";
+      const tableSort = isActive ? { key, order } : null;
+      if (isActive && (key === "qtyIn" || key === "reorderPoint")) {
+         this.setState({ tableSort });
+         return;
+      }
+      if (isActive && !serverSortFields.includes(key)) return;
+      const serverSort = isActive ? { sortField: key, sortOrder: order === "ascend" ? "ASC" : "DESC" } : null;
+      this.setState({ tableSort, serverSort }, () => this.fetchList());
    };
 
    fetchList(withPagination = false) {
@@ -665,6 +690,7 @@ export default class ProductList extends Datatable {
          
          ProductService.get({
             limit, offset, filter, search, locationId, type,
+            ...(this.state.serverSort || {}),
             ...(activeTab === "out-of-stock" ? { outOfStock: true } : {}),
             ...(activeTab === "low-stock-alerts" ? { lowStockAlert: true } : {}),
             ...(activeTab === "margin-review" ? { marginReviewAlert: true } : {})
@@ -730,6 +756,11 @@ export default class ProductList extends Datatable {
       return quantity;
    }
 
+   getAdjustedQuantity(record) {
+      const adjustment = Number(this.state.stockInItems?.[record.id]?.qtyIn || 0);
+      return this.getTotalQuantity(record) + adjustment;
+   }
+
    getAllQTY(record) {
       return Util.getProductQTYLocation(record["productVariants"]);
    }
@@ -790,7 +821,11 @@ export default class ProductList extends Datatable {
    }
 
    getColumnsForTab(tab) {
-      return tab === "stock" ? this.stockColumns : this.columns;
+      const columns = tab === "stock" ? this.stockColumns : this.columns;
+      return columns.map(column => column.sorter ? {
+         ...column,
+         sortOrder: this.state.tableSort?.key === column.key ? this.state.tableSort.order : null
+      } : column);
    }
 
    getRequiredColumnsForTab(tab) {
@@ -1171,7 +1206,8 @@ export default class ProductList extends Datatable {
                bordered={true}
                pagination={false}
                dataSource={this.state.products}
-               columns={this.columns.filter((column) => this.state.visibleColumns.item.includes(column.key))}
+               columns={this.getColumnsForTab("item").filter((column) => this.state.visibleColumns.item.includes(column.key))}
+               onChange={this.onTableChange}
                rowClassName={this.rowClassName}
                expandedRowKeys={this.state.expandedItemKeys}
                expandedRowRender={this.expandedRender}
@@ -1346,7 +1382,8 @@ export default class ProductList extends Datatable {
                   bordered={true}
                   pagination={false}
                   dataSource={this.state.products}
-                  columns={this.stockColumns.filter((column) => this.state.visibleColumns.stock.includes(column.key))}
+                  columns={this.getColumnsForTab("stock").filter((column) => this.state.visibleColumns.stock.includes(column.key))}
+                  onChange={this.onTableChange}
                   rowClassName={this.rowClassName}
                   locale={{ emptyText: <Translate id="table_empty_data" /> }}
                   // expandedRowRender={this.expandedRender}

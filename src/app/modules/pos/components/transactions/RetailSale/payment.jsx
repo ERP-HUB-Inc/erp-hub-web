@@ -1,5 +1,5 @@
 import React from "react";
-import { Wallet, UserRound, X, Banknote, QrCode, CreditCard, Split, Delete, Check, ShieldCheck, Lightbulb } from 'lucide-react';
+import { Wallet, UserRound, X, Banknote, QrCode, CreditCard, Split, Delete, Check, Lightbulb } from 'lucide-react';
 import packageMetadata from '../../../../../../../package.json';
 import { generateQuickCashSuggestions, generateQuickCashSuggestionsUSD } from '@helper/sales';
 import _ from "lodash";
@@ -544,7 +544,7 @@ export default class PaymentScreen extends Modal {
                 {this.props.orderItems.map((item, index) => {
                   const price = Number(item[this.props.customerFieldPrice] || 0);
                   const line = SalesUtil.getTotalAmountAfterDiscount(item.quantity, price, item.discount);
-                  return <tr key={item.id || item.productVariantId || index}><td><strong>{item.itemName}</strong>{item.itemNamekh && <small>{item.itemNamekh}</small>}<small>{item.sku || item.code || item.variantName} · {usd(price)}</small></td><td>{item.quantity}</td><td>{Number(item.discount) > 0 ? <span className="checkout-discount">−{item.discount}%</span> : '—'}</td><td><strong>{usd(line)}</strong></td></tr>;
+                  return <tr key={item.id || item.productVariantId || index}><td><strong>{item.itemName}{item.variantName ? ` - ${item.variantName}` : ''}</strong>{item.itemNamekh && <small>{item.itemNamekh}</small>}<small>{item.sku || item.code} · {usd(price)}</small></td><td>{item.quantity}</td><td>{Number(item.discount) > 0 ? <span className="checkout-discount">−{item.discount}%</span> : '—'}</td><td><strong>{usd(line)}</strong></td></tr>;
                 })}
               </tbody></table></div>
               <div className="checkout-totals"><div><span>Subtotal / សរុបរង</span><b>{khr(convertUSDToKHR(totals.summaryTotal.subTotal, exchangeRate.sellRate))}</b></div><div className="checkout-rose"><span>Discount / បញ្ចុះតម្លៃ</span><b>−{khr(convertUSDToKHR(totals.discountAmount, exchangeRate.sellRate))}</b></div><div><span>Tax / ពន្ធ {this.props.summaryTax.taxTitle}</span><b>{khr(convertUSDToKHR(totals.taxAmount, exchangeRate.sellRate))}</b></div><div className="checkout-grand"><strong>Grand Total / សរុប</strong><strong>{khr(dueKHR)}<small>{usd(dueUSD)}</small></strong></div></div>
@@ -586,7 +586,7 @@ export default class PaymentScreen extends Modal {
             {!this.isTenderValid() && <p role="alert" className="checkout-rose">Enter valid cash amounts and ensure an exchange rate is configured.</p>}
             <div className="checkout-actions"><Button disabled={busy} onClick={() => this.handleCancel()}>Cancel <kbd>Esc</kbd></Button><Button disabled={busy} onClick={this.resetTender}>Reset <kbd>F5</kbd></Button><Button type="primary" loading={this.state.submittingPayment} disabled={busy || !enough || this.props.transaction.paid} onClick={this.handleOnMakePayment}><Check size={21} /> Confirm Payment / ទូទាត់ <kbd>Enter</kbd></Button></div>
             {this.props.transaction.paid && <section className="wrap-email-receipt" aria-label="Receipt actions"><this.InputEmail name="email" placeholder={this.CATranslate('text_email', this.props.locale)} form={form} /><Button loading={this.props.mail.sending} onClick={this.handleOnSendMailReceipt}>Email receipt</Button><Button onClick={this.handleOnCompletePayment}>Done</Button></section>}
-            <footer className="checkout-help"><span><kbd>Enter</kbd> Confirm · <kbd>Esc</kbd> Cancel · <kbd>F5</kbd> Reset</span><span><ShieldCheck size={15} /> Configured exchange rate applied</span></footer>
+            <footer className="checkout-help"><span><kbd>Enter</kbd> Confirm · <kbd>Esc</kbd> Cancel · <kbd>F5</kbd> Reset</span></footer>
           </section>
         </div>
       </AntModal>

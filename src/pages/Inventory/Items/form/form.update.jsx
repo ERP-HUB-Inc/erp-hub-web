@@ -10,6 +10,8 @@ import FormCreateOption from "@inventories/Option/FormCreate";
 import FormCreateTax from "@settings/Tax/FormCreate";
 import BaseComponent from "@components/BaseComponent";
 import FormItem from "./form.item";
+import { getProductTypePayload } from "./product-type-options";
+import { getItemProductOption } from "./product-option";
 import history from "@router/index";
 import { Translate } from "@redux/index";
 import ProductAction from "../redux/action";
@@ -97,6 +99,7 @@ export class ItemFormUpdate extends BaseComponent {
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        values.productOption = getItemProductOption(this.props.productDetail.data.productOption, values.productOption);
         if (
           values.productOption === Enum.PRODUCT_VARIANT &&
           this.state.variantsInitialized &&
@@ -201,6 +204,7 @@ export class ItemFormUpdate extends BaseComponent {
 
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
+        if (values.type !== undefined) Object.assign(values, getProductTypePayload(values.type));
         this.dispatch(ProductAction.update(values));
       }
     });

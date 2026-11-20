@@ -77,7 +77,7 @@ const PurchaseOrderForm = (props) => {
             })(
               <SelectPurchaseOrderItem
                 items={items}
-                selectedItem={{ id: itemId, name: record.itemName }}
+                selectedItem={{ id: itemId, name: record.itemName, variantName: record.variantName || record.variant?.name }}
                 defaultValue={itemId}
                 callback={results => setItems(current => Array.from(
                   new Map(current.concat(results).map(item => [item.id, item])).values()

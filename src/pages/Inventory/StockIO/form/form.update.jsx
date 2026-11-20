@@ -9,7 +9,8 @@ import UnitService from '@services/UnitService';
 import history from "@router/index";
 import Util from "@helper/inventory";
 import { getLocationId } from '@helper/user';
-import { batch } from 'react-redux';
+import { SelectItem } from '@components/stateful';
+import { stockItemSelection, stockEntryRow, buildStockEntries } from './stock-item-selection';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -26,7 +27,6 @@ const StockIOForm = (props) => {
   const [movementType, setMovementType] = useState('IN');
   const [aiSuggestions, setAiSuggestions] = useState({});
   const [validationWarnings, setValidationWarnings] = useState({});
-  let timeout = null;
 
   const reasons = {
     IN: [
@@ -114,23 +114,13 @@ const StockIOForm = (props) => {
 
         props.form.setFieldsValue({
           movementType: stockIOResponse.type,
-          locationId: Number(stockIOResponse.locationId),
+          locationId: stockIOResponse.locationId,
           date: moment(stockIOResponse.date),
         });
 
         setStockIO(stockIOResponse);
-        setStockIOItems(entries.map(entry => ({
-          itemId: entry.itemId,
-          itemName: entry.itemName,
-          sku: entry?.variant?.sku,
-          unitId: entry.unitId,
-          reason: entry.reason,
-          description: entry.description,
-          batch: entry.batch,
-          expiry: entry.expiryDate ? moment(entry.expiryDate) : null,
-          quantity: entry.quantity,
-          currentStock: 100
-        })));
+        setMovementType(stockIOResponse.type);
+        setStockIOItems(entries.map(stockEntryRow));
       }
     });
   }
@@ -154,38 +144,35 @@ const StockIOForm = (props) => {
   };
 
   const removeRow = (key) => {
+    const index = stockIOItems.findIndex(item => item.key === key);
+    const fields = {};
+    ["item", "quantity", "unitId", "reason", "batch", "expiry", "notes"].forEach(name => {
+      const values = [...(props.form.getFieldValue(name) || [])];
+      values.splice(index, 1);
+      values.push(undefined);
+      fields[name] = values;
+    });
+    props.form.setFieldsValue(fields);
     setStockIOItems(stockIOItems.filter(item => item.key !== key));
   };
 
   const duplicateRow = (record) => {
     const newItem = {
       ...record,
+      id: undefined,
       key: Date.now(),
       quantity: null
     };
     setStockIOItems([...stockIOItems, newItem]);
   };
 
-  const updateRow = (key, field, value) => {
+  const updateRow = (key, field, value, selectedItem) => {
     const newItems = stockIOItems.map(stockIOItem => {
       if (stockIOItem.key === key) {
         const updated = { ...stockIOItem, [field]: value };
-        if (field === 'itemId' && value) {
-          const selectedItem = items.find(i => i.id === value);
-          if (selectedItem) {
-            updated.itemName = selectedItem.name;
-            updated.sku = Util.getItemSku(selectedItem);
-            updated.unitId = Util.getUnitId(selectedItem);
-            updated.currentStock = selectedItem.currentStock;
-            updated.avgQuantity = selectedItem.avgQuantity;
-            updated.warehouse = selectedItem.warehouse || warehouses[0].id;
-            
-            // AI suggests quantity based on average
-            setAiSuggestions({
-              ...aiSuggestions,
-              [key]: `Typical quantity: ${selectedItem.avgQuantity} units`
-            });
-          }
+        if (field === 'itemId' && selectedItem) {
+          Object.assign(updated, stockItemSelection(selectedItem));
+          updated.warehouse = selectedItem.warehouse || warehouses[0]?.id;
         }
 
         // Validation: Check stock for OUT movements
@@ -237,12 +224,10 @@ const StockIOForm = (props) => {
     })));
   };
 
-  const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='200' fill='%23f0f0f0'/%3E%3Cg transform='translate(50, 50)'%3E%3Crect x='10' y='15' width='80' height='70' fill='none' stroke='%23bfbfbf' stroke-width='3' rx='4'/%3E%3Cpolygon points='15,75 35,50 55,65 75,45 85,75' fill='%23d9d9d9'/%3E%3Ccircle cx='70' cy='30' r='8' fill='%23bfbfbf'/%3E%3C/g%3E%3Ctext x='100' y='130' font-family='Arial, sans-serif' font-size='12' fill='%23999' text-anchor='middle'%3ENo Image%3C/text%3E%3C/svg%3E";
-
   const columns = [
     {
       title: "Item",
-      dataIndex: 'itemId',
+      dataIndex: 'variantId',
       width: 250,
       render: (value, record, index) => (
         <div>
@@ -257,51 +242,17 @@ const StockIOForm = (props) => {
                 ],
                 initialValue: value
               })(
-                <Select
-                  showSearch
-                  style={{ width: '100%' }}
-                  placeholder="Type to search or pick an item"
-                  onChange={(val) => updateRow(record.key, 'itemId', val)}
-                  onSearch={onSearchItem}
-                  filterOption={false}
-                  notFoundContent={loading ? <Icon type="loading" /> : "No items found"}
-                >
-                  {items.map(item => (
-                    <Option key={item.id} value={item.id}>
-                      <Tooltip title={item.name} placement="right">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <img 
-                            src={item.thumbnail || item.image || '/placeholder-image.png'} 
-                            alt={item.name}
-                            style={{ 
-                              width: '40px', 
-                              height: '40px', 
-                              objectFit: 'cover',
-                              borderRadius: '4px',
-                              flexShrink: 0
-                            }}
-                            onError={(e) => {
-                              e.target.src = FALLBACK_IMAGE;
-                            }}
-                          />
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ 
-                              fontWeight: 500,
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap'
-                            }}>
-                              {item.name}
-                            </div>
-                            <small style={{ color: '#999' }}>
-                              SKU: {Util.getItemSku(item)} | Stock: {Util.getQuantityOnHand(item)}
-                            </small>
-                          </div>
-                        </div>
-                      </Tooltip>
-                    </Option>
-                  ))}
-                </Select>
+              <SelectItem
+                items={items}
+                selectVariants
+                selectedItem={record.selectedItem}
+                locationId={props.form.getFieldValue("locationId") || getLocationId()}
+                onChange={(variantId, selectedItem) => {
+                  if (!selectedItem) return;
+                  updateRow(record.key, "itemId", selectedItem.id, selectedItem);
+                  props.form.setFieldsValue({ [`unitId[${index}]`]: Util.getUnitId(selectedItem) });
+                }}
+              />
               )
             }
           </Form.Item>
@@ -517,23 +468,6 @@ const StockIOForm = (props) => {
     return { totalItems, totalQuantity, warehouseSummary };
   };
 
-  const onSearchItem = search => {
-    const limit = 15;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      setLoading(true);
-      ItemService.get({ limit, search })
-      .then(response => {
-        if (response && response.data) {
-          setItems(response.data.data);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    }, 1000);
-  };
-
   const handleSubmit = async () => {
     try {
       const value = await new Promise((resolve, reject) => {
@@ -543,6 +477,7 @@ const StockIOForm = (props) => {
         });
       });
 
+      const entries = buildStockEntries(value, stockIOItems, units);
       setSubmitting(true);
 
       const payload = {
@@ -551,33 +486,16 @@ const StockIOForm = (props) => {
         locationId: value.locationId,
         date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
         description: value.referenceNo,
-        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
+        quantity: entries.reduce((sum, entry) => sum + entry.quantity, 0),
         amount: 0,
         status: 2,
-        entries: value.item.map((id, index) => {
-          const item = items.find(item => item.id === id);
-          return {
-            itemId: id,
-            itemName: item?.name || "",
-            variantId: Util.getVariantId(item),
-            variantName: Util.getVariantName(item),
-            unitId: Util.getUnitId(item),
-            unitName: Util.getUnitName(item),
-            quantity: value.quantity[index],
-            reason: value.reason[index],
-            batch: value.batch[index],
-            expiry: value.expiry[index],
-            notes: value.notes[index]
-          };
-        })
+        entries
       };
 
-      await StockIOService.stockIn(payload);
+      const save = value.movementType === "OUT" ? StockIOService.updateStockOutById.bind(StockIOService) : StockIOService.updateStockInById.bind(StockIOService);
+      await save(props.match.params.id, payload);
 
-    } catch (error) {
-      console.error("❌ Stock In Failed:", error);
-    } finally {
-      sweetalert({
+      await sweetalert({
         icon: "success",
         title: "Stock In Recorded",
         text: "Your stock quantity has been updated.",
@@ -589,6 +507,12 @@ const StockIOForm = (props) => {
         setStockIOItems([]);
         props.form.resetFields();
       });
+    } catch (error) {
+      if (!error.errors) {
+        sweetalert({ icon: "error", title: "Unable to save stock movement", text: error.message || "Please check the entries and try again." });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -601,6 +525,7 @@ const StockIOForm = (props) => {
         });
       });
 
+      const entries = buildStockEntries(value, stockIOItems, units);
       setSubmitting(true);
 
       const payload = {
@@ -609,33 +534,16 @@ const StockIOForm = (props) => {
         locationId: value.locationId,
         date: moment(value.date).format("YYYY-MM-DD HH:mm:ss"),
         description: value.referenceNo,
-        quantity: value.quantity.reduce((sum, q) => sum + q, 0),
+        quantity: entries.reduce((sum, entry) => sum + entry.quantity, 0),
         amount: 0,
         status: 0,
-        entries: value.item.map((id, index) => {
-          const item = items.find(item => item.id === id);
-          return {
-            itemId: id,
-            itemName: item?.name || "",
-            variantId: Util.getVariantId(item),
-            variantName: Util.getVariantName(item),
-            unitId: Util.getUnitId(item),
-            unitName: Util.getUnitName(item),
-            quantity: value.quantity[index],
-            reason: value.reason[index],
-            batch: value.batch[index],
-            expiry: value.expiry[index],
-            notes: value.notes[index]
-          };
-        })
+        entries
       };
 
-      await StockIOService.stockIn(payload);
+      const save = value.movementType === "OUT" ? StockIOService.updateStockOutById.bind(StockIOService) : StockIOService.updateStockInById.bind(StockIOService);
+      await save(props.match.params.id, payload);
 
-    } catch (error) {
-      console.error("❌ Stock In Failed:", error);
-    } finally {
-      sweetalert({
+      await sweetalert({
         icon: "success",
         title: "Stock In Recorded",
         text: "Your stock quantity has been updated.",
@@ -647,6 +555,12 @@ const StockIOForm = (props) => {
         setStockIOItems([]);
         props.form.resetFields();
       });
+    } catch (error) {
+      if (!error.errors) {
+        sweetalert({ icon: "error", title: "Unable to save stock movement", text: error.message || "Please check the entries and try again." });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 

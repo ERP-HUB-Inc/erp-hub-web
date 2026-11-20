@@ -12,6 +12,32 @@
     margin-bottom: 16px;
 }
 
+.pricing-margin-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+.pricing-margin-editor small {
+    display: block;
+    margin-top: 4px;
+    color: #cf1322;
+}
+
+.pricing-margin-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.pricing-price-preview small {
+    display: block;
+    margin-top: 3px;
+    color: #64748b;
+}
+
 .product-report-stat-card {
     min-height: 88px;
     border: 1px solid #dfe7ff;

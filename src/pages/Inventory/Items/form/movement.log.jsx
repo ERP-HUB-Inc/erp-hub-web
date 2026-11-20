@@ -1,6 +1,6 @@
 import Util from "@common/util";
 import MovementLogService from "@services/MovementLogService";
-import { Card, Col, DatePicker, Row, Select, Table, Tag } from "antd";
+import { Button, Card, Col, DatePicker, Row, Select, Table, Tag, message } from "antd";
 import { ClipboardList } from "lucide-react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -14,9 +14,10 @@ export default function ProductDetailHistory({ id }) {
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [dateRange, setDateRange] = useState(null);
+  const [refreshVersion, setRefreshVersion] = useState(0);
 
   const movementLog = {
-    PURCHASE: "Purchase Receipt",
+    PURCHASE: "Purchase",
     EDIT_COST: "Edit Cost",
     SALE: "Sales Dispatch",
     ADJUSTMENT: "Stock Adjustment",
@@ -35,17 +36,23 @@ export default function ProductDetailHistory({ id }) {
 
   useEffect(
     () => {
+      let active = true;
       setLoading(true);
       MovementLogService.getMovementLogs(id)
         .then((response) => {
-          if (response.data) {
+          if (active && response.data) {
             setMovementLogs(response.data);
           }
         })
-        .finally(() => setLoading(false));
+        .catch(() => {
+          if (active) message.error("Could not load movement logs. Please try again.");
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+      return () => { active = false; };
     },
-    // eslint-disable-next-line
-    [],
+    [id, refreshVersion],
   );
 
   const filteredLogs = movementLogs.filter(log => {
@@ -105,7 +112,7 @@ export default function ProductDetailHistory({ id }) {
       render: (type) => <Tag color="blue">{movementLog[type] || type || "-"}</Tag>,
     },
     {
-      title: "Location / Destination",
+      title: "Destination",
       dataIndex: "locationName",
       key: "locationName",
       render: value => value || "-",
@@ -149,6 +156,7 @@ export default function ProductDetailHistory({ id }) {
         </div>
       )}
       bordered={false}
+      extra={<Button icon="reload" loading={loading} disabled={loading} onClick={() => setRefreshVersion(version => version + 1)}>Refresh</Button>}
       bodyStyle={{ paddingTop: 15 }}
     >
       <Row>

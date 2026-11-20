@@ -8,6 +8,7 @@ import sweetalert from "sweetalert";
 import { Translate } from "@redux/index";
 import BaseComponent from "@components/BaseComponent";
 import FormItem from "./form.item";
+import { getProductTypePayload } from "./product-type-options";
 import history from "@router/index";
 import Enum from "@enums/index";
 import ProductAction from "../redux/action";
@@ -158,6 +159,7 @@ export default class ProductCreate extends BaseComponent {
         values["variantProducts"] = productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
+        if (values.type !== undefined) Object.assign(values, getProductTypePayload(values.type));
         this.dispatch(ProductAction.add(values));
       }
     });

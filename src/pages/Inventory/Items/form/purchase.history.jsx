@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Row, Card, Table, Tag } from "antd";
+import { Button, Col, Row, Card, Table } from "antd";
 import { Link } from "react-router-dom";
 import ProductService from "@services/ItemService";
 import Util from "@helper/util";
@@ -29,12 +29,12 @@ export default function PurchaseHistory({ id }) {
   const columns = [
     {
       title: "PO Number",
-      dataIndex: "number",
-      key: "number",
+      dataIndex: "PONumber",
+      key: "PONumber",
       width: 140,
       render: (value, record) => (
         <Link to={`/stocks/purchase/update/${record.purchaseOrderId}`}>
-          {value || record.purchaseOrderNumber || record.purchaseNumber || "-"}
+          {value || record.number || record.purchaseOrderNumber || record.purchaseNumber || "-"}
         </Link>
       ),
     },
@@ -74,13 +74,6 @@ export default function PurchaseHistory({ id }) {
       width: 140,
       align: "right",
       render: (total) => util.formatCurrency(total ?? 0),
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      width: 120,
-      render: value => <Tag color="green">{value || "Received"}</Tag>,
     },
   ];
   return (

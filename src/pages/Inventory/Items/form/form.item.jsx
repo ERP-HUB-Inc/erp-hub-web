@@ -40,44 +40,8 @@ import BaseModal from "@layout/base-modal";
 import Exchange from "./exchange-money-func";
 import "./index.css";
 import FormVariant from "./form.variant";
-
-const DEFAULT_PRODUCT_TYPES = [
-  {
-    id: 0,
-    code: "PHYSICAL_PRODUCT",
-    name: "Physical Product",
-    enableInventoryTracking: true,
-    sellable: true,
-  },
-  {
-    id: 1,
-    code: "SERVICE",
-    name: "Service",
-    enableInventoryTracking: false,
-    sellable: true,
-  },
-  {
-    id: 2,
-    code: "BUNDLE_COMBO",
-    name: "Bundle / Combo",
-    enableInventoryTracking: true,
-    sellable: true,
-  },
-  {
-    id: 3,
-    code: "RAW_MATERIAL",
-    name: "Raw Material",
-    enableInventoryTracking: true,
-    sellable: false,
-  },
-  {
-    id: 4,
-    code: "NON_STOCK_ITEM",
-    name: "Non-Stock Item",
-    enableInventoryTracking: false,
-    sellable: true,
-  },
-];
+import { DEFAULT_PRODUCT_TYPES, normalizeProductTypes, getDefaultProductTypeId } from "./product-type-options";
+import { getItemProductOption, normalizeProductOption } from "./product-option";
 
 const NON_STOCK_PRODUCT_TYPE_CODES = [
   "SERVICE",
@@ -89,26 +53,6 @@ const NON_STOCK_PRODUCT_TYPE_CODES = [
   "NON_STOCK_ITEM",
   "GIFT_CARD_VOUCHER",
 ];
-
-const normalizeProductTypes = (productTypes = []) => {
-  const safeTypes = Array.isArray(productTypes) && productTypes.length
-    ? productTypes
-    : DEFAULT_PRODUCT_TYPES;
-
-  return safeTypes.map(productType => ({
-    ...productType,
-    id: Number(productType.id),
-    name: productType.name || productType.label || productType.code,
-  }));
-};
-
-const getDefaultProductTypeId = (type) => {
-  if (type === 0 || type === "0") {
-    return 0;
-  }
-
-  return type || type === 0 ? Number(type) : 0;
-};
 
 const buildCategoryTreeData = (categories = []) => {
   if (!Array.isArray(categories)) {
@@ -744,7 +688,7 @@ export default class FormItem extends BaseModal {
       serialType: Enum.SERIAL_TYPE.PRODUCT,
       productsType: [],
       variants: [],
-      productTypeIndex: 0, // for condition three type starndard, variant, composite
+      productTypeIndex: normalizeProductOption(props.formData?.productOption),
       isAutoGenerateBarcode: false,
       isRequireInputBarcode: true,
       isSetFocusBarcode: false,
@@ -757,7 +701,7 @@ export default class FormItem extends BaseModal {
       conditions: [],
       productTypes: DEFAULT_PRODUCT_TYPES,
       categories: [],
-      selectedProductTypeId: getDefaultProductTypeId(props.formData?.type),
+      selectedProductTypeId: getDefaultProductTypeId(props.formData?.productTypeId || props.formData?.type),
       inputVisible: false,
       editCostVisible: false,
       inputValue: "",
@@ -825,7 +769,7 @@ export default class FormItem extends BaseModal {
         serialType: formData.id ? formData.serialType : prevState.serialType,
         tags: formData.tag && formData.tag.length ? formData.tag.split(",") : [],
         variants: formData?.productVariants ? formData.productVariants : [],
-        selectedProductTypeId: getDefaultProductTypeId(formData.type),
+        selectedProductTypeId: getDefaultProductTypeId(formData.productTypeId || formData.type),
       }
     });
 
@@ -853,7 +797,7 @@ export default class FormItem extends BaseModal {
       this.setState({ exchangeRate: 1 });
     }
     
-    if (formData.id && formData.productOption === Enum.PRODUCT_VARIANT) {
+    if (formData.id && normalizeProductOption(formData.productOption) === Enum.PRODUCT_VARIANT) {
       VariantService.getVariantsByItemId({ itemId: formData.id })
       .then(response => {
         if (response?.data) {
@@ -1067,8 +1011,9 @@ export default class FormItem extends BaseModal {
       });
     }
 
-    const productHasVariant = formData.productOption === Enum.PRODUCT_VARIANT;
-    const productNoVariant = formData.productOption === Enum.NO_VARIANT;
+    const productOption = getItemProductOption(formData.productOption, form.getFieldValue("productOption"));
+    const productHasVariant = productOption === Enum.PRODUCT_VARIANT;
+    const productNoVariant = productOption === Enum.NO_VARIANT;
     const selectedTypeId = form.getFieldValue("type") !== undefined
       ? form.getFieldValue("type")
       : this.state.selectedProductTypeId;
@@ -1171,7 +1116,7 @@ export default class FormItem extends BaseModal {
               labelAlign="left"
             >
               {form.getFieldDecorator("type", {
-                initialValue: getDefaultProductTypeId(formData.type),
+                initialValue: getDefaultProductTypeId(formData.productTypeId || formData.type),
                 rules: [{ required: true, message: "Please select product type" }],
               })(
                 <AntSelect
@@ -1315,7 +1260,7 @@ export default class FormItem extends BaseModal {
 
             <InputNumber
               name="productOption"
-              data={formData.productOption || Enum.NO_VARIANT}
+              data={productOption}
               form={form}
               style={{ display: "none" }}
             />

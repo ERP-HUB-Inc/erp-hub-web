@@ -999,7 +999,7 @@ export default class RetailSale extends Component {
     ItemService.getItemByBarcode(barcode, this.Util.getLocationId())
       .then((item) => {
         if (item && item.data) {
-          this.handleOnSelectProduct(item.data, item.data.productVariants);
+          this.handleOnSelectProduct(item.data, item.data.productVariants, false);
         }
       })
       .catch((error) => {
@@ -1352,12 +1352,15 @@ export default class RetailSale extends Component {
         const productStock = this.getProductStock(product);
         const isOutOfStock = this.isProductOutOfStock(product);
         const stockStatus = this.getProductStockStatus(product);
+        const imageUrl = product.imageUrl && product.imageUrl.startsWith("/")
+          ? `${process.env.BASE_URL || "http://localhost:3080"}${product.imageUrl}`
+          : product.imageUrl;
 
         return (
           <div className="product-box" key={index}>
             <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className={`product ${isOutOfStock ? "disabled" : ""}`}>
               <StockBadge status={stockStatus} count={productStock} />
-              <ItemImage src={new CommonUtil().getImageUrl(product?.image) || product?.imageUrl} name={Util.getProductNameV2(product)} height={imageHeight} />
+              <ItemImage src={new CommonUtil().getImageUrl(product?.image) || imageUrl} name={Util.getProductNameV2(product)} height={imageHeight} />
               <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
                 <div
                   style={{

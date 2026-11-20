@@ -301,8 +301,12 @@ const ReportStock = Loadable({
   loader: () => import("../app/modules/pos/containers/reports/StockReport"),
   loading: () => <StartUp />,
 });
-const ReportProduct = Loadable({
+const ReportItem = Loadable({
   loader: () => import("../app/modules/pos/containers/reports/Product"),
+  loading: () => <StartUp />,
+});
+const PricingManagement = Loadable({
+  loader: () => import("../app/modules/pos/containers/reports/Pricing"),
   loading: () => <StartUp />,
 });
 
@@ -598,7 +602,7 @@ export default class SiderDemo extends React.Component {
                             <Link to="/inventories/stock-io">Stock Movement</Link>
                           </Menu.Item>
                           <Menu.Item key="43">
-                            <Link to="/inventories/items">Pricing Management</Link>
+                            <Link to="/inventories/pricing-management">Pricing Management</Link>
                           </Menu.Item>
                           {/*
                             Stock In: Add stock manually with reference fields like Reason (Purchase, Adjustment, Opening Balance, Return).
@@ -751,6 +755,7 @@ export default class SiderDemo extends React.Component {
                       <ProtectedRoute path="/vendors/create" component={Vendor} />
                       <ProtectedRoute path="/vendors/update/:id" component={Vendor} />
                       <ProtectedRoute path="/vendors" component={Vendor} />
+                      <ProtectedRoute path="/inventories/pricing-management" component={PricingManagement} />
                       <ProtectedRoute path="/inventories/items/import" component={ImportItem} />
                       <ProtectedRoute path="/inventories/items/create" component={NewItem} />
                       <ProtectedRoute path="/inventories/items/update/:id" component={EditItem} />
@@ -788,7 +793,7 @@ export default class SiderDemo extends React.Component {
                       <ProtectedRoute path="/setting-logs" component={SystemLogs} />
 
                       {/* Report */}
-                      <ProtectedRoute path="/reports/items" component={ReportProduct} />
+                      <ProtectedRoute path="/reports/items" component={ReportItem} />
                       <ProtectedRoute path="/reports/purchases" component={PurchaseReport} />
                       <ProtectedRoute path="/reports/stock" component={ReportStock} />
                       {/* <Route path="/receipt" component={POSPaymentDrawer} /> */}
