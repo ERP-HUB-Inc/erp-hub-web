@@ -1,0 +1,15 @@
+{
+  "short_name": "storeVein",
+  "name": "POS",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "1254x1254",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
