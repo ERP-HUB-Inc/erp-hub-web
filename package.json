@@ -72,13 +72,13 @@
     "xlsx": "^0.14.0"
   },
   "scripts": {
-    "production": "webpack-dev-server --open",
+    "production": "npm run build",
     "start:dev": "BROWSER=google-chrome webpack-dev-server --mode development --port 3081 --open",
     "start:prod": "serve -s build -l 3081",
     "starts": "set PORT=3081 & react-scripts --openssl-legacy-provider start",
     "react:build": "react-scripts build",
     "webpack": "webpack-dev-server --mode development --open",
-    "build": "npm run prebuild && NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
     "generate-build-version": "node generate-build-version",
     "prebuild": "npm run generate-build-version",
     "test": "react-scripts test --env=jsdom",

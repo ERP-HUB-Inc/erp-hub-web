@@ -7,12 +7,13 @@ const Dotenv = require("dotenv-webpack");
 var DIST_DIR = path.resolve(__dirname, "build");
 var SRC_DIR = path.resolve(__dirname, "src");
 
-module.exports = {
+module.exports = (env, argv = {}) => ({
   entry: SRC_DIR + "/index.jsx?v=1238238", // Entry point with version query string
-  mode: 'development',
+  mode: argv.mode || 'development',
+  devtool: argv.mode === 'production' ? false : 'eval-source-map',
   output: {
     path: DIST_DIR, // Ensure correct output directory
-    filename: "[name].[hash].js", // Use hash for cache busting
+    filename: argv.mode === 'production' ? "[name].[contenthash].js" : "[name].[fullhash].js",
     publicPath: "/" // Set the public path for asset serving
   },
   resolve: {
@@ -120,5 +121,5 @@ module.exports = {
     hot: true, // Enable Hot Module Replacement
     port: 3000 // Port for the development server
   }
-};
+});
 
