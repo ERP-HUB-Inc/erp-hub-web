@@ -69,7 +69,7 @@ export function entity(response) {
 
 // This API does not implement date/recurrence filters. Never filter one server
 // page and present it as the whole period. Refuse oversized/inconsistent snapshots.
-export async function loadSnapshot(getPage, isCurrent = () => true) {
+export async function loadSnapshot(getPage, isCurrent = () => true, { allowNumericIds = false } = {}) {
   const records = [], ids = new Set();
   let expected;
   while (isCurrent()) {
@@ -82,8 +82,10 @@ export async function loadSnapshot(getPage, isCurrent = () => true) {
     if (expected !== undefined && total !== expected) throw new Error('Expenses changed while loading. Please refresh.');
     expected = total;
     for (const record of body.data) {
-      if (!record || typeof record.id !== 'string' || ids.has(record.id)) throw new Error('The expense list changed while loading. Please refresh.');
-      ids.add(record.id); records.push(record);
+      const validId = record && (typeof record.id === 'string' || allowNumericIds && Number.isSafeInteger(record.id));
+      const key = validId && (allowNumericIds ? String(record.id) : record.id);
+      if (!validId || ids.has(key)) throw new Error('The expense list changed while loading. Please refresh.');
+      ids.add(key); records.push(record);
     }
     if (records.length === expected) return records;
     if (!body.data.length || records.length > expected) throw new Error('The expense list is incomplete. Please retry.');

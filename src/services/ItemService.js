@@ -66,6 +66,15 @@ class ItemService extends BaseService {
     });
   }
 
+  updateSellingPricesBatch({ marginAmount, categoryId, items }, idempotencyKey) {
+    this.setHeader();
+    return this.PATCH({
+      url: `${this.baseUrl}/variants/selling-price/batch`,
+      data: { marginAmount, ...(categoryId ? { categoryId } : {}), items },
+      headers: { ...this.header, "Idempotency-Key": idempotencyKey },
+    });
+  }
+
   attributes(id) {
     this.setHeader();
     return this.GET({
@@ -140,7 +149,7 @@ class ItemService extends BaseService {
   editProductCost(productVariantId, newCost) {
     this.setHeader();
     return this.PUT({
-      url: `${this.baseUrl}/edit_cost/${productVariantId}`,
+      url: `${this.baseUrl}/edit_cost/${encodeURIComponent(productVariantId)}`,
       data: { newCost },
       headers: this.header,
     });

@@ -81,6 +81,7 @@ const safe = (value) => numberOrNull(value);
 const currency = (value) => (value == null ? "—" : util.formatCurrency(value, (util.getSetting() || {}).currency || "", (util.getSetting() || {}).currencyPosition || 0));
 const asRows = (response) => rowsOf(response && response.data && response.data.data);
 const displayDate = (value) => (value ? moment.utc(value).format("MMM D, YYYY") : "—");
+const displayChartDate = (value) => (value ? moment.utc(value).format("D MMM") : "—");
 const displayTimestamp = (value, timeZone) => {
   if (!value || !timeZone) return "Date unavailable";
   try {
@@ -687,7 +688,7 @@ function ERPSalesDashboard({ history, location }) {
                     </linearGradient>
                   </defs>
                   <CartesianGrid stroke="#e9eef5" vertical={false} />
-                  <XAxis dataKey="period" tickFormatter={displayDate} tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} minTickGap={24} />
+                  <XAxis dataKey="period" tickFormatter={displayChartDate} tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} minTickGap={24} />
                   <YAxis
                     tickFormatter={(value) => util.formatCurrency(value, (util.getSetting() || {}).currency || "", (util.getSetting() || {}).currencyPosition || 0)}
                     tick={{ fill: "#64748b", fontSize: 12 }}

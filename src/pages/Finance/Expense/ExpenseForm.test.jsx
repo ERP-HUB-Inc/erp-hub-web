@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import { act, findRenderedComponentWithType } from 'react-dom/test-utils';
 import moment from 'moment';
 import DecoratedForm, { ExpenseForm } from './ExpenseForm';
+import LocationService from '@services/LocationService';
+import ExpenseService from '@services/ExpenseService';
+
+jest.mock('@services/LocationService', () => ({ get: jest.fn(), getAccessible: jest.fn() }));
 
 // Form validation checks only: option loading lifecycle is disabled, no HTTP calls.
 let container, form, onSave;
@@ -20,7 +24,7 @@ const mount = (recurring = false, props = {}) => {
 };
 const set = overrides => act(() => form.props.form.setFieldsValue({ name: '  Shop Rent  ', categoryName: 'Office Rent', locationId: 'branch', currencyId: 'usd', amount: 100, registerDate: moment('2026-10-01'), ...overrides }));
 
-test('rejects missing fields, nonpositive amounts and branches outside loaded authorization choices', () => {
+test('rejects missing fields, nonpositive amounts and branches outside the loaded location list', () => {
   mount();
   act(() => form.submit());
   expect(onSave).not.toHaveBeenCalled();
@@ -73,4 +77,64 @@ test('selects the only branch for a new recurring bill and allows clearing it', 
 test('preserves all branches when editing an existing recurring bill', () => {
   mount(false, { commitment: true, record: { id: 'existing', locationId: null } });
   expect(form.props.form.getFieldValue('locationId')).toBeUndefined();
+});
+
+test('loads every page of the general location list without checking location access', async () => {
+  mount(false, { locations: [{ id: 'old', name: 'Branch from expense records' }] });
+  form.loadCategories = jest.fn();
+  LocationService.get.mockReset();
+  LocationService.getAccessible.mockClear();
+  LocationService.get
+    .mockResolvedValueOnce({ data: { data: [{ id: 'branch', name: 'Shop' }], pagination: { total: 2 } } })
+    .mockResolvedValueOnce({ data: { data: [{ id: 'new-branch', name: 'Shop without expenses' }], pagination: { total: 2 } } });
+  jest.spyOn(ExpenseService, 'currencies').mockResolvedValue({ data: { data: [{ id: 'usd', code: 'USD' }], pagination: { total: 1 } } });
+
+  await act(async () => { await form.loadOptions(); });
+
+  expect(LocationService.get.mock.calls).toEqual([[{ limit: 100, offset: 0 }], [{ limit: 100, offset: 1 }]]);
+  expect(LocationService.getAccessible).not.toHaveBeenCalled();
+  expect(form.state.locations.map(row => row.id)).toEqual(['branch', 'new-branch']);
+  expect(form.state.loading).toBe(false);
+  set({ locationId: 'new-branch' });
+  act(() => form.submit());
+  expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ locationId: 'new-branch' }));
+});
+
+test('shows location loading errors and can retry the location list', async () => {
+  mount();
+  form.loadCategories = jest.fn();
+  act(() => form.setState({ locations: [], currencies: [] }));
+  LocationService.get.mockReset();
+  LocationService.get
+    .mockRejectedValueOnce(new Error('Unable to load branches.'))
+    .mockResolvedValueOnce({ data: { data: [], pagination: { total: 0 } } });
+  jest.spyOn(ExpenseService, 'currencies').mockResolvedValue({ data: { data: [{ id: 'usd', code: 'USD' }], pagination: { total: 1 } } });
+
+  await act(async () => { await form.loadOptions(); });
+  expect(form.state.error).toBe('Unable to load branches.');
+  expect(document.body.textContent).toContain('Retry choices');
+  act(() => form.submit());
+  expect(onSave).not.toHaveBeenCalled();
+
+  await act(async () => { await form.loadOptions(); });
+  expect(form.state.error).toBe('');
+  expect(form.state.locations).toEqual([]);
+  expect(form.state.loading).toBe(false);
+});
+
+test('accepts numeric location IDs returned by the location list API', async () => {
+  mount();
+  form.loadCategories = jest.fn();
+  LocationService.get.mockReset();
+  LocationService.get.mockResolvedValue({ data: { data: [{ id: 7, name: 'Shop' }], pagination: { total: 1 } } });
+  jest.spyOn(ExpenseService, 'currencies').mockResolvedValue({ data: { data: [{ id: 'usd', code: 'USD' }], pagination: { total: 1 } } });
+
+  await act(async () => { await form.loadOptions(); });
+
+  expect(form.state.error).toBe('');
+  expect(form.state.locations).toEqual([{ id: 7, name: 'Shop' }]);
+  expect(form.props.form.getFieldValue('locationId')).toBe(7);
+  set({ locationId: 7 });
+  act(() => form.submit());
+  expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ locationId: 7 }));
 });

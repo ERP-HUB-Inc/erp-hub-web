@@ -15,6 +15,7 @@ module.exports = {
   testMatch: [
     "**/reports/Item/*.test.jsx",
     "**/services/report/ProductService.test.js",
+    "**/services/ItemService.batch.test.js",
     "**/Purchase/*.test.js",
     "**/Purchase/PurchaseReportParts.test.jsx",
     "**/stateful/RemoteRecordSelect.integration.jsx"

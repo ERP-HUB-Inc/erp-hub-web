@@ -24,7 +24,7 @@ import ProductService from "../../../services/report/ProductService";
 import ItemService from "@services/ItemService";
 import CategoryService from "@services/CategoryService";
 import BrandService from "@services/BrandService";
-import { getPricingDraftPreview, getPricingColumns, getPricingVariantId } from "./pricing-management";
+import { BatchPricingMargin, calculateCostPlusPreview, createPricingBatchKey, getPricingDraftPreview, getPricingColumns, getPricingVariantId, readPricingBatchResults, validatePricingCost } from "./pricing-management";
 import "./index.css";
 
 const { Option } = Select;
@@ -107,7 +107,7 @@ const getInitialFilters = (pricingManagement = false) => {
     keyword: params.get("keyword") || params.get("search") || "",
     locationId: params.get("locationId") || "",
     categoryId: params.get("categoryId") || "",
-    brandId: params.get("brandId") || "",
+    brandId: pricingManagement ? "" : params.get("brandId") || "",
     status: pricingManagement ? "" : params.get("status") || "",
     needsAttention: !pricingManagement && params.get("needsAttention") === "true" ? true : "",
     lowStock: pricingManagement ? "" : params.get("lowStock") || "",
@@ -209,6 +209,13 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
   const [pricingDrafts, setPricingDrafts] = React.useState({});
   const [savingPriceId, setSavingPriceId] = React.useState(null);
   const [priceErrors, setPriceErrors] = React.useState({});
+  const [costDrafts, setCostDrafts] = React.useState({});
+  const [costErrors, setCostErrors] = React.useState({});
+  const [savingCostId, setSavingCostId] = React.useState(null);
+  const [batchMarginAmount, setBatchMarginAmount] = React.useState(null);
+  const [batchSaving, setBatchSaving] = React.useState(false);
+  const [batchPreview, setBatchPreview] = React.useState(null);
+  const [batchError, setBatchError] = React.useState("");
   const [filters, setFilters] = React.useState(initialFilters);
   const [quickFilter, setQuickFilter] = React.useState(getQuickFilterKey(initialFilters));
   const [data, setData] = React.useState([]);
@@ -222,6 +229,10 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
   const filtersRef = useRef(filters);
   const requestIdRef = useRef(0);
   const priceSaveRef = useRef(null);
+  const costSaveRef = useRef(null);
+  const batchSaveRef = useRef(false);
+  const batchRequestRef = useRef(null);
+  const loadedFiltersRef = useRef(null);
   const mountedRef = useRef(true);
 
   const updateURL = nextFilters => {
@@ -238,6 +249,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
       .then(response => {
         if (requestId !== requestIdRef.current) return;
         const report = normalizeReportResponse(response);
+        loadedFiltersRef.current = { ...nextFilters, page: report.pagination.page, limit: report.pagination.limit };
         setSummary(report.summary);
         setData(report.items);
         setTotal(report.pagination.total);
@@ -262,6 +274,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
   };
 
   const applyFilters = nextValues => {
+    if (batchSaveRef.current || costSaveRef.current) return;
     clearTimeout(timerRef.current);
     const nextFilters = {
       ...filtersRef.current,
@@ -275,6 +288,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
   };
 
   const onChangeSearch = event => {
+    if (batchSaveRef.current || costSaveRef.current) return;
     const keyword = event.target.value;
     filtersRef.current = { ...filtersRef.current, keyword };
     setFilters(filtersRef.current);
@@ -336,7 +350,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
         }
       });
 
-    BrandService.get({ limit: 500 })
+    if (!pricingManagement) BrandService.get({ limit: 500 })
       .then(response => {
         if (response.data && response.data.data) {
           setBrands(response.data.data);
@@ -357,10 +371,11 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
   };
   const selectedStatusValue = statusOptions.some(option => option.value === filters.status) ? filters.status : "";
   const changePricingDraft = (row, changes) => {
+    if (batchSaveRef.current || costSaveRef.current) return;
     const variantId = getPricingVariantId(row);
     if (priceSaveRef.current === variantId) return;
     setPricingDrafts(previous => ({ ...previous, [variantId]: {
-      ...previous[variantId], ...changes,
+      ...previous[variantId], ...changes, batchId: undefined,
       expectedSalesPrice: previous[variantId]?.expectedSalesPrice ?? Number(row.salesPrice),
       expectedUnitCost: previous[variantId]?.expectedUnitCost ?? Number(row.unitCost)
     } }));
@@ -368,6 +383,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
   const changeMargin = (row, margin) => changePricingDraft(row, { source: "margin", margin });
   const changeSalesPrice = (row, salesPrice) => changePricingDraft(row, { source: "price", salesPrice });
   const resetMargin = variantId => {
+    if (batchSaveRef.current || costSaveRef.current) return;
     if (priceSaveRef.current === variantId) return;
     setPricingDrafts(previous => {
       const next = { ...previous };
@@ -383,7 +399,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
   const savePrice = async row => {
     const variantId = getPricingVariantId(row);
     const draft = pricingDrafts[variantId];
-    if (!variantId || !draft || priceSaveRef.current || priceErrors[variantId]?.conflict) return;
+    if (!variantId || !draft || priceSaveRef.current || costSaveRef.current || batchSaveRef.current || Object.prototype.hasOwnProperty.call(costDrafts, variantId) || priceErrors[variantId]?.conflict) return;
     const preview = getPricingDraftPreview(draft);
     if (preview.error || !Number.isFinite(draft.expectedSalesPrice)) return;
     priceSaveRef.current = variantId;
@@ -420,6 +436,126 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
     } finally {
       priceSaveRef.current = null;
       if (mountedRef.current) setSavingPriceId(null);
+    }
+  };
+  const batchDisabled = loading || !!error || !!savingPriceId || !!savingCostId || !data.length ||
+    !loadedFiltersRef.current || Object.keys(filters).some(key => filters[key] !== loadedFiltersRef.current[key]);
+  const previewBatchPrices = () => {
+    if (batchDisabled || batchSaveRef.current || batchMarginAmount == null || !Number.isFinite(Number(batchMarginAmount)) || Number(batchMarginAmount) < 0) return;
+    const additions = {};
+    const batchId = createPricingBatchKey();
+    for (const row of data) {
+      const id = getPricingVariantId(row);
+      const preview = calculateCostPlusPreview(row.unitCost, batchMarginAmount);
+      if (!id || Object.prototype.hasOwnProperty.call(costDrafts, id) || pricingDrafts[id] || priceErrors[id]?.conflict || preview.error || row.salesPrice == null || String(row.salesPrice).trim() === "" || !Number.isFinite(Number(row.salesPrice))) continue;
+      additions[id] = { source: "price", salesPrice: preview.price, expectedSalesPrice: Number(row.salesPrice), expectedUnitCost: Number(row.unitCost), batchId };
+    }
+    setPricingDrafts(previous => ({ ...previous, ...additions }));
+    const count = Object.keys(additions).length;
+    if (count) {
+      setBatchPreview({ id: batchId, marginAmount: Number(batchMarginAmount), categoryId: String(filters.categoryId || "") });
+      setBatchError("");
+    }
+    message[count ? "success" : "warning"](`Previewed ${count} item prices. ${data.length - count} items skipped.`);
+  };
+  const pagePreviews = data.filter(row => {
+    const id = getPricingVariantId(row);
+    const draft = pricingDrafts[id];
+    return id && draft && !Object.prototype.hasOwnProperty.call(costDrafts, id) && batchPreview && draft.batchId === batchPreview.id && batchPreview.categoryId === String(filters.categoryId || "") &&
+      !priceErrors[id]?.conflict && !getPricingDraftPreview(draft).error && Number.isFinite(draft.expectedSalesPrice);
+  });
+  const savePagePreviews = async () => {
+    if (batchDisabled || batchSaveRef.current || !pagePreviews.length) return;
+    batchSaveRef.current = true;
+    setBatchSaving(true);
+    setBatchError("");
+    try {
+      const items = pagePreviews.map(row => {
+        const id = getPricingVariantId(row);
+        const draft = pricingDrafts[id];
+        return { productVariantId: String(id), expectedSalesPrice: draft.expectedSalesPrice, expectedUnitCost: draft.expectedUnitCost };
+      }).sort((a, b) => a.productVariantId.localeCompare(b.productVariantId));
+      if (items.length > 100 || new Set(items.map(item => item.productVariantId.toLowerCase())).size !== items.length) {
+        throw new Error("Choose up to 100 unique variants for a batch.");
+      }
+      const payload = { marginAmount: batchPreview.marginAmount, ...(batchPreview.categoryId ? { categoryId: batchPreview.categoryId } : {}), items };
+      const signature = JSON.stringify(payload);
+      if (!batchRequestRef.current || batchRequestRef.current.signature !== signature) {
+        batchRequestRef.current = { signature, payload, key: createPricingBatchKey() };
+      }
+      const request = batchRequestRef.current;
+      const response = await ItemService.updateSellingPricesBatch(request.payload, request.key);
+      if (!mountedRef.current) return;
+      const results = readPricingBatchResults(response, request.payload.items);
+      const savedResults = new Map(results.filter(result => result.status === "saved").map(result => [result.productVariantId, result]));
+      setData(previous => previous.map(row => {
+        const saved = savedResults.get(String(getPricingVariantId(row)));
+        return saved ? { ...row, unitCost: saved.unitCost, salesPrice: saved.salesPrice, marginPercent: saved.marginPercent } : row;
+      }));
+      setPricingDrafts(previous => {
+        const next = { ...previous };
+        savedResults.forEach((_, id) => { delete next[id]; });
+        return next;
+      });
+      setPriceErrors(previous => {
+        const next = { ...previous };
+        results.forEach(result => {
+          if (result.status === "saved") delete next[result.productVariantId];
+          else next[result.productVariantId] = { message: result.error.message, conflict: result.error.code === "PRICE_OR_COST_CHANGED" };
+        });
+        return next;
+      });
+      batchRequestRef.current = null;
+      message[savedResults.size === items.length ? "success" : "warning"](`Saved ${savedResults.size} of ${items.length} item prices. Unsuccessful previews are kept for review.`);
+      await fetchReport(filtersRef.current);
+    } catch (saveError) {
+      if (!mountedRef.current) return;
+      const status = saveError.response?.status;
+      setBatchError(status === 403 ? "You do not have permission to update selling prices."
+        : saveError.response?.data?.error?.message || saveError.message || "Unable to save batch prices. Retry saving these previews.");
+    } finally {
+      batchSaveRef.current = false;
+      if (mountedRef.current) setBatchSaving(false);
+    }
+  };
+  const changeCost = (row, newCost) => {
+    if (batchSaveRef.current || costSaveRef.current || priceSaveRef.current) return;
+    const id = getPricingVariantId(row);
+    if (!id) return;
+    setCostDrafts(previous => ({ ...previous, [id]: newCost }));
+    setCostErrors(previous => ({ ...previous, [id]: "" }));
+  };
+  const resetCost = id => {
+    if (batchSaveRef.current || costSaveRef.current || priceSaveRef.current) return;
+    setCostDrafts(previous => { const next = { ...previous }; delete next[id]; return next; });
+    setCostErrors(previous => { const next = { ...previous }; delete next[id]; return next; });
+  };
+  const saveCost = async row => {
+    const id = getPricingVariantId(row);
+    if (!id || !Object.prototype.hasOwnProperty.call(costDrafts, id) || validatePricingCost(costDrafts[id]) ||
+      costSaveRef.current || priceSaveRef.current || batchSaveRef.current) return;
+    const newCost = Number(costDrafts[id]);
+    costSaveRef.current = id;
+    setSavingCostId(id);
+    setCostErrors(previous => ({ ...previous, [id]: "" }));
+    try {
+      await ItemService.editProductCost(id, newCost);
+      if (!mountedRef.current) return;
+      setData(previous => previous.map(item => getPricingVariantId(item) === id ? { ...item, unitCost: newCost } : item));
+      setCostDrafts(previous => { const next = { ...previous }; delete next[id]; return next; });
+      setPricingDrafts(previous => { const next = { ...previous }; delete next[id]; return next; });
+      setPriceErrors(previous => { const next = { ...previous }; delete next[id]; return next; });
+      message.success("Unit cost saved. Price previews for this item were cleared.");
+      await fetchReport(filtersRef.current);
+    } catch (saveError) {
+      if (!mountedRef.current) return;
+      const status = saveError.response?.status;
+      setCostErrors(previous => ({ ...previous, [id]: status === 403 ? "You do not have permission to update this unit cost."
+        : status === 404 ? "This variant is unavailable."
+        : saveError.response?.data?.error?.message || "Unable to save unit cost. Please try again." }));
+    } finally {
+      costSaveRef.current = null;
+      if (mountedRef.current) setSavingCostId(null);
     }
   };
   const statistics = [
@@ -590,6 +726,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
               </Col>}
               <Col>
                 <Search
+                  disabled={batchSaving || !!savingCostId}
                   placeholder="Search item, SKU or barcode"
                   onChange={onChangeSearch}
                   style={{ width: 260 }}
@@ -598,6 +735,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
                 />
                 <Select
                   name="locationId"
+                  disabled={batchSaving || !!savingCostId}
                   style={{ width: 170, marginLeft: 10 }}
                   value={filters.locationId}
                   onChange={value => onChangeFilter("locationId", value)}
@@ -610,6 +748,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
                 </Select>
                 <Select
                   name="categoryId"
+                  disabled={batchSaving || !!savingCostId}
                   style={{ width: 170, marginLeft: 10 }}
                   value={filters.categoryId}
                   onChange={value => onChangeFilter("categoryId", value)}
@@ -620,7 +759,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
                     </Option>
                   ))}
                 </Select>
-                <Select
+                {!pricingManagement && <Select
                   name="brandId"
                   style={{ width: 170, marginLeft: 10 }}
                   value={filters.brandId}
@@ -631,7 +770,7 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
                       {value.name}
                     </Option>
                   ))}
-                </Select>
+                </Select>}
                 {!pricingManagement && <Select
                   name="status"
                   style={{ width: 190, marginLeft: 10 }}
@@ -648,9 +787,10 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
             </Row>
           </Col>
           <Col span={24}>
-            {pricingManagement && <Button size="small" style={{ marginBottom: 12 }}
-              disabled={!Object.keys(pricingDrafts).length || !!savingPriceId}
-              onClick={() => { setPricingDrafts({}); setPriceErrors({}); }}>Reset all previews</Button>}
+            {pricingManagement && <BatchPricingMargin amount={batchMarginAmount} onAmountChange={setBatchMarginAmount}
+              onPreview={previewBatchPrices} onSave={savePagePreviews} disabled={batchDisabled} saving={batchSaving}
+              previewCount={pagePreviews.length} previewAmount={batchPreview?.marginAmount} error={batchError}
+              scope={filters.categoryId ? categories.find(category => String(category.id) === String(filters.categoryId))?.name || "Selected category" : "All categories"} />}
             {error && <Alert type="error" showIcon message={error}
               description={<Button size="small" onClick={() => fetchReport(filtersRef.current)}>Retry</Button>}
               style={{ marginBottom: 12 }} />}
@@ -659,11 +799,13 @@ export default function ReportProduct({ pricingManagement = false, routePath = p
               bordered={true}
               dataSource={data}
               columns={pricingManagement ? getPricingColumns(columns, pricingDrafts, changeMargin, resetMargin, getPricingMoney, sortedInfo, {
-                onSave: savePrice, onPriceChange: changeSalesPrice, savingId: savingPriceId, errors: priceErrors
+                onSave: savePrice, onPriceChange: changeSalesPrice, savingId: savingPriceId, errors: priceErrors, busy: batchSaving || !!savingCostId,
+                costDrafts, costErrors, savingCostId, onCostChange: changeCost, onSaveCost: saveCost, onResetCost: resetCost
               }) : columns}
               scroll={pricingManagement ? { x: 1200 } : undefined}
               size="small"
               pagination={{
+                disabled: batchSaving || !!savingCostId,
                 current: filters.page,
                 pageSize: filters.limit,
                 total,

@@ -88,6 +88,15 @@ test('stale loads never return a previous scope snapshot', async () => {
   expect(await loadSnapshot(async () => { active = false; return page([{ id: 'a' }], 1); }, () => active)).toBeNull();
 });
 
+test('accepts numeric IDs only when requested and retains duplicate checks across ID types', async () => {
+  const options = { allowNumericIds: true };
+  const rows = await loadSnapshot(async () => page([{ id: 7 }, { id: '8' }], 2), () => true, options);
+  expect(rows).toEqual([{ id: 7 }, { id: '8' }]);
+  await expect(loadSnapshot(async () => page([{ id: 7 }], 1))).rejects.toThrow('changed');
+  await expect(loadSnapshot(async () => page([{ id: 7 }, { id: '7' }], 2), () => true, options)).rejects.toThrow('changed');
+  await expect(loadSnapshot(async () => page([{ id: null }], 1), () => true, options)).rejects.toThrow('changed');
+});
+
 test('only documented duplicate conflicts request confirmation', () => {
   const details = { duplicates: [{ id: 'existing' }], allowedActions: ['create', 'override'] };
   expect(duplicateDetails({ response: { data: { error: { code: 'DUPLICATE_EXPENSE', details } } } })).toBe(details);

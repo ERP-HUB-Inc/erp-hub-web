@@ -3,6 +3,67 @@ import { Button, InputNumber } from "antd";
 
 export const getPricingVariantId = row => row.productVariantId || row.variantId;
 
+export function validatePricingCost(value) {
+  if (value === null || value === undefined || String(value).trim() === "" || !Number.isFinite(Number(value)) || Number(value) < 0) {
+    return "Enter a unit cost of zero or more.";
+  }
+  if (Number(value) !== Number(Number(value).toFixed(4))) return "Unit cost supports up to four decimal places.";
+  return "";
+}
+
+const hasCostDraft = (saveState, id) => Object.prototype.hasOwnProperty.call(saveState.costDrafts || {}, id);
+
+export function createPricingBatchKey() {
+  return typeof window !== "undefined" && window.crypto && typeof window.crypto.randomUUID === "function"
+    ? window.crypto.randomUUID()
+    : `pricing-batch-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+export function readPricingBatchResults(response, items) {
+  const body = response && response.data && response.data.data;
+  const results = body && body.results;
+  const ids = new Set(items.map(item => item.productVariantId));
+  const invalid = () => { throw new Error("The batch result could not be confirmed. Retry saving to retrieve the original result."); };
+  if (!Array.isArray(results) || results.length !== items.length) invalid();
+  for (const result of results) {
+    if (!result || !ids.delete(result.productVariantId)) invalid();
+    if (result.status === "saved") {
+      if (![result.unitCost, result.salesPrice, result.marginPercent].every(Number.isFinite) || result.salesPrice <= 0) invalid();
+    } else if (result.status !== "failed" || !result.error || typeof result.error.code !== "string" || typeof result.error.message !== "string") invalid();
+  }
+  const saved = results.filter(result => result.status === "saved").length;
+  if (!body.summary || body.summary.requested !== items.length || body.summary.saved !== saved || body.summary.failed !== items.length - saved) invalid();
+  return results;
+}
+
+export function calculateCostPlusPreview(cost, amount) {
+  if (cost === null || cost === undefined || String(cost).trim() === "" || !Number.isFinite(Number(cost)) || Number(cost) < 0) {
+    return { price: null, error: "A valid unit cost is required." };
+  }
+  if (amount === null || amount === undefined || String(amount).trim() === "" || !Number.isFinite(Number(amount)) || Number(amount) < 0) {
+    return { price: null, error: "Enter a margin amount of zero or more." };
+  }
+  const price = Math.round((Number(cost) + Number(amount) + Number.EPSILON) * 10000) / 10000;
+  if (!Number.isFinite(price) || price <= 0) return { price: null, error: "The resulting selling price must be greater than zero." };
+  return { price, error: "" };
+}
+
+export function BatchPricingMargin({ amount, onAmountChange, onPreview, onSave, disabled, saving, previewCount, previewAmount, error, scope }) {
+  const validAmount = amount !== null && amount !== undefined && String(amount).trim() !== "" && Number.isFinite(Number(amount)) && Number(amount) >= 0;
+  return <div className="pricing-batch-margin">
+    <div className="pricing-batch-margin-controls">
+      <label htmlFor="pricing-batch-amount">Add margin amount to unit cost</label>
+      <InputNumber id="pricing-batch-amount" aria-label="Batch margin amount" value={amount}
+        min={0} precision={4} step={0.01} disabled={disabled || saving} onChange={onAmountChange} />
+      <Button disabled={disabled || saving || !validAmount} onClick={onPreview}>Preview batch prices</Button>
+      <Button type="primary" loading={saving} disabled={disabled || saving || !previewCount} onClick={onSave}>Save previews ({previewCount})</Button>
+    </div>
+    <small>Current page · {scope}. Selling price = unit cost + margin amount. Existing edits and items without a valid cost or price are skipped.</small>
+    {previewCount > 0 && <div>Previewed margin amount: {previewAmount}</div>}
+    {error && <div className="pricing-batch-error" role="alert">{error}</div>}
+  </div>;
+}
+
 export function calculatePricingPreview(cost, margin) {
   if (cost === null || cost === undefined || String(cost).trim() === "" || !Number.isFinite(Number(cost)) || Number(cost) <= 0) {
     return { price: null, error: "A unit cost greater than zero is required." };
@@ -43,9 +104,9 @@ export function getPricingColumns(columns, drafts, onChange, onReset, formatMone
     return (
       <div className="pricing-margin-actions">
         <Button size="small" type="primary" loading={saving}
-          disabled={!!error || !!saveState.savingId || !!saveState.errors?.[id]?.conflict}
+          disabled={!!error || !!saveState.savingId || !!saveState.busy || hasCostDraft(saveState, id) || !!saveState.errors?.[id]?.conflict}
           onClick={() => saveState.onSave(row)} aria-label={`Save price for ${label}`}>Save</Button>
-        <Button size="small" disabled={saving} onClick={() => onReset(id)} aria-label={`Reset margin for ${label}`}>Reset</Button>
+        <Button size="small" disabled={saving || saveState.busy} onClick={() => onReset(id)} aria-label={`Reset margin for ${label}`}>Reset</Button>
       </div>
     );
   };
@@ -77,7 +138,7 @@ export function getPricingColumns(columns, drafts, onChange, onReset, formatMone
         aria-invalid={!!errorMessage}
         aria-describedby={errorMessage ? `pricing-margin-error-${id}` : undefined}
         value={draft ? draft.source === "price" ? draft.salesPrice : preview.price ?? undefined : row.salesPrice == null ? undefined : Number(row.salesPrice)}
-        disabled={!id || !validCost || saveState.savingId === id}
+        disabled={!id || !validCost || saveState.savingId === id || saveState.busy || hasCostDraft(saveState, id)}
         precision={4}
         step={0.01}
         onChange={value => saveState.onPriceChange(row, value)}
@@ -99,6 +160,38 @@ export function getPricingColumns(columns, drafts, onChange, onReset, formatMone
     render: value => formatMoney(value)
   });
   return orderedColumns.map(column => {
+    if (column.key === "unitCost") {
+      return {
+        ...column,
+        width: 180,
+        render: (cost, row) => {
+          const id = getPricingVariantId(row);
+          const label = row.itemName || row.productName || row.sku || "item";
+          const active = hasCostDraft(saveState, id);
+          const value = active ? saveState.costDrafts[id] : cost == null ? undefined : Number(cost);
+          const validationError = active ? validatePricingCost(value) : "";
+          const error = active ? validationError || saveState.costErrors?.[id] : "";
+          const saving = saveState.savingCostId === id;
+          const errorId = `pricing-cost-error-${id}`;
+          return <div className="pricing-margin-editor">
+            <InputNumber aria-label={`Unit cost for ${label}`} value={value}
+              aria-invalid={!!error} aria-describedby={error ? errorId : undefined}
+              min={0} precision={4} step={0.01} disabled={!id || !!saveState.savingId || saveState.busy}
+              onChange={newCost => saveState.onCostChange(row, newCost)} />
+            {active && <>
+              <div className="pricing-margin-actions">
+                <Button size="small" type="primary" loading={saving} disabled={!!validationError || !!saveState.savingId || saveState.busy}
+                  onClick={() => saveState.onSaveCost(row)} aria-label={`Save cost for ${label}`}>Save cost</Button>
+                <Button size="small" disabled={!!saveState.savingId || saveState.busy}
+                  onClick={() => saveState.onResetCost(id)} aria-label={`Reset cost for ${label}`}>Reset</Button>
+              </div>
+              <div>Save or reset cost before editing the selling price.</div>
+            </>}
+            {error && <small id={errorId} role="alert">{error}</small>}
+          </div>;
+        }
+      };
+    }
     if (column.key === "salesPrice") {
       return {
         ...column,
@@ -143,7 +236,7 @@ export function getPricingColumns(columns, drafts, onChange, onReset, formatMone
                 aria-invalid={active && !!(error || saveError)}
                 aria-describedby={active && (error || saveError) ? errorId : undefined}
                 value={draft ? draftMargin : margin == null ? undefined : Number(margin)}
-                disabled={!id || !hasValidCost || saving}
+                disabled={!id || !hasValidCost || saving || saveState.busy || hasCostDraft(saveState, id)}
                 precision={2}
                 step={1}
                 onChange={value => onChange(row, value)}

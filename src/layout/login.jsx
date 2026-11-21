@@ -27,24 +27,11 @@ class UserAuthentication extends Component {
   constructor(props) {
     super(props);
     this.state = { loading: false, errorMessage: "" };
-    this.storeInputRef = React.createRef();
     this.userNameInputRef = React.createRef();
   }
 
   componentDidMount() {
-    const { form } = this.props;
-    const savedURL = localStorage.getItem("PRIVATE_URL");
-    if (savedURL) {
-      form.setFieldsValue({ privateURL: savedURL });
-      // slight delay so the ref is mounted
-      setTimeout(() => {
-        this.userNameInputRef.current && this.userNameInputRef.current.focus();
-      }, 100);
-    } else {
-      setTimeout(() => {
-        this.storeInputRef.current && this.storeInputRef.current.focus();
-      }, 100);
-    }
+    this.userNameInputRef.current && this.userNameInputRef.current.focus();
   }
 
   handleSubmit = (e) => {
@@ -200,15 +187,16 @@ class UserAuthentication extends Component {
               ) : null}
 
               {/* Store URL */}
-              <FormItem label="STORE IDENTIFIER">
+              <FormItem label="STORE IDENTIFIER" style={{ display: "none" }}>
                 {getFieldDecorator("privateURL", {
+                  initialValue: "default",
                   rules: [
                     {
                       required: true,
                       message: translateWithFallback("text_private_url_is_required", "Store identifier is required"),
                     },
                   ],
-                })(<Input ref={this.storeInputRef} suffix={<Building2 size={16} />} placeholder="agp-regional-01" />)}
+                })(<Input suffix={<Building2 size={16} />} placeholder="agp-regional-01" />)}
               </FormItem>
 
               {/* Username */}

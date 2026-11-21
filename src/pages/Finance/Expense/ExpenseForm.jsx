@@ -3,6 +3,7 @@ import moment from 'moment';
 import { Alert, Button, Checkbox, DatePicker, Form, Input, InputNumber, Modal, Progress, Select, Spin, Upload } from 'antd';
 import ExpenseService from '@services/ExpenseService';
 import ExpenseCategoryService from '@services/ExpenseCategoryService';
+import LocationService from '@services/LocationService';
 import { businessToday, commitmentFrequencies, errorText, frequencies, loadSnapshot, validAttachment } from './model';
 
 const calendarDateRule = { validator: (_, value, callback) => callback(moment.isMoment(value) && value.isValid() ? undefined : 'Choose a valid calendar date.') };
@@ -10,13 +11,6 @@ const calendarDateRule = { validator: (_, value, callback) => callback(moment.is
 export class ExpenseForm extends React.Component {
   state = { loading: true, error: '', locations: [], currencies: [], categories: [], categoriesLoading: false, categoriesError: '', uploading: false, progress: 0, attachment: this.props.record.attachment || '' };
   componentDidMount() { this.loadOptions(); }
-  componentDidUpdate(previousProps) {
-    if (previousProps.locations === this.props.locations) return;
-    const previousIds = (previousProps.locations || []).map(row => String(row.id)).join(',');
-    const currentLocations = this.props.locations || [];
-    const currentIds = currentLocations.map(row => String(row.id)).join(',');
-    if (previousIds !== currentIds) this.setState({ locations: currentLocations });
-  }
   componentWillUnmount() { this.unmounted = true; this.categoryRequest++; clearTimeout(this.categorySearchTimer); }
 
   categoryRequest = 0;
@@ -52,10 +46,10 @@ export class ExpenseForm extends React.Component {
     this.setState({ loading: true, error: '' });
     try {
       const [locations, currencies] = await Promise.all([
-        Promise.resolve(this.props.locations || []),
+        loadSnapshot(options => LocationService.get(options), () => !this.unmounted, { allowNumericIds: true }),
         loadSnapshot(options => ExpenseService.currencies(options), () => !this.unmounted)
       ]);
-      if (!this.unmounted) this.setState({ locations: this.props.locations || locations, currencies, loading: false }, this.loadCategories);
+      if (!this.unmounted) this.setState({ locations, currencies, loading: false }, this.loadCategories);
     } catch (error) {
       if (!this.unmounted) this.setState({ loading: false, error: errorText(error, 'Unable to load expense choices.') });
     }

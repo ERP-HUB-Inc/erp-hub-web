@@ -6,6 +6,7 @@ import ReportProduct from "./index";
 import PricingManagement from "../../../containers/reports/Pricing";
 import ProductService from "../../../services/report/ProductService";
 import ItemService from "@services/ItemService";
+import BrandService from "@services/BrandService";
 
 jest.mock("antd", () => {
   const React = require("react");
@@ -25,17 +26,17 @@ jest.mock("antd", () => {
     }),
     Button: ({ children, onClick, disabled, ...props }) => React.createElement("button", { onClick, disabled, "aria-label": props["aria-label"] }, children), Drawer: () => null,
     Icon: () => null, Tag: wrapper, Tabs: Object.assign(wrapper, { TabPane: () => null }),
-    Alert: jest.fn(() => null), message: { success: jest.fn() }
+    Alert: jest.fn(() => null), message: { success: jest.fn(), warning: jest.fn() }
   };
 });
 jest.mock("react-localize-redux", () => ({ Translate: () => null }));
 jest.mock("../../../../common/router/history", () => ({ push: ({ pathname, search }) => global.window.history.pushState({}, "", pathname + search) }));
 jest.mock("../../../../common/util", () => jest.fn().mockImplementation(() => ({ formatCurrency: value => `$${value}` })));
 jest.mock("../../../services/report/ProductService", () => ({ getInventoryStockReport: jest.fn() }));
-jest.mock("@services/ItemService", () => ({ updateSellingPrice: jest.fn() }));
+jest.mock("@services/ItemService", () => ({ updateSellingPrice: jest.fn(), updateSellingPricesBatch: jest.fn(), editProductCost: jest.fn() }));
 jest.mock("@services/LocationService", () => ({ get: () => Promise.resolve({ data: { data: [] } }) }));
 jest.mock("@services/CategoryService", () => ({ get: () => Promise.resolve({ data: { data: [] } }) }));
-jest.mock("@services/BrandService", () => ({ get: () => Promise.resolve({ data: { data: [] } }) }));
+jest.mock("@services/BrandService", () => ({ get: jest.fn(() => Promise.resolve({ data: { data: [] } })) }));
 jest.mock("./index.css", () => ({}));
 
 let container;
@@ -56,6 +57,8 @@ const changeTable = (key, order, current = 3, pageSize = 15) => settle(() => las
 
 beforeEach(() => {
   jest.clearAllMocks();
+  ItemService.updateSellingPricesBatch.mockReset();
+  ItemService.editProductCost.mockReset();
   window.history.replaceState({}, "", "/reports/product?page=3&limit=15&keyword=Coffee&locationId=7&categoryId=cat&brandId=brand&status=HEALTHY");
   ProductService.getInventoryStockReport.mockImplementation(params => Promise.resolve(response([], params.page, params.limit)));
   container = document.createElement("div");
@@ -205,9 +208,7 @@ test("pricing previews survive server sorting and filters without changing the r
   expect(window.location.pathname).toBe("/inventories/pricing-management");
   expect(container.querySelector(".pricing-price-preview strong").textContent).toBe("100.00");
   expect(lastProps(Table).dataSource[0].salesPrice).toBe(90);
-  const resetAll = Array.from(container.querySelectorAll("button")).find(button => button.textContent === "Reset all previews");
-  act(() => { Simulate.click(resetAll); });
-  expect(container.querySelector(".pricing-price-preview")).toBeNull();
+  expect(Array.from(container.querySelectorAll("button")).some(button => button.textContent === "Reset all previews")).toBe(false);
 });
 
 test("pricing cannot edit rows with no unit cost or no variant identifier", async () => {
@@ -296,6 +297,22 @@ test("pricing removes status controls and ignores status filters from old URLs",
   expect(request).toEqual(expect.objectContaining({ keyword: "Coffee", locationId: "7" }));
   await changeTable("salesPrice", "ascend");
   expect(new URLSearchParams(window.location.search).has("status")).toBe(false);
+});
+
+test("pricing removes the brand filter and ignores a brand identifier from an old URL", async () => {
+  window.history.replaceState({}, "", "/inventories/pricing-management?brandId=brand&keyword=Coffee");
+  await mountPricing();
+  expect(Select.mock.calls.some(([props]) => props.name === "brandId")).toBe(false);
+  expect(BrandService.get).not.toHaveBeenCalled();
+  expect(ProductService.getInventoryStockReport.mock.calls[0][0]).not.toHaveProperty("brandId");
+  await changeTable("salesPrice", "ascend");
+  expect(new URLSearchParams(window.location.search).has("brandId")).toBe(false);
+});
+
+test("the product report retains its brand filter", async () => {
+  await mount();
+  expect(Select.mock.calls.some(([props]) => props.name === "brandId")).toBe(true);
+  expect(BrandService.get).toHaveBeenCalled();
 });
 
 test("pricing expected profit uses the backend value and supports server sorting", async () => {
@@ -401,4 +418,324 @@ test("a successful save followed by a failed refresh offers report retry without
   await settle(() => lastProps(Alert).description.props.onClick());
   expect(ItemService.updateSellingPrice).toHaveBeenCalledTimes(1);
   expect(container.querySelector('button[aria-label="Save price for Item A"]')).toBeNull();
+});
+
+const buttonWithText = text => Array.from(container.querySelectorAll('button')).find(button => button.textContent.includes(text));
+const enterBatchAmount = value => act(() => {
+  Simulate.change(container.querySelector('input[aria-label="Batch margin amount"]'), { target: { value } });
+});
+const previewBatch = () => act(() => { Simulate.click(buttonWithText('Preview batch prices')); });
+const savedBatchResult = row => ({ productVariantId: row.productVariantId, status: 'saved', previousSalesPrice: row.salesPrice,
+  unitCost: row.unitCost, salesPrice: row.unitCost + 10, marginPercent: 10 });
+const batchResponse = results => ({ data: { data: {
+  summary: { requested: results.length, saved: results.filter(row => row.status === 'saved').length, failed: results.filter(row => row.status === 'failed').length }, results
+} } });
+
+test('batch amount adds a fixed value to each current-page cost and waits for save', async () => {
+  await mountPricing();
+  expect(buttonWithText('Preview batch prices').disabled).toBe(true);
+  enterBatchAmount('10');
+  previewBatch();
+  expect(Array.from(container.querySelectorAll('.pricing-price-preview strong')).map(element => element.textContent)).toEqual(['90.00', '50.00']);
+  expect(buttonWithText('Save previews').textContent).toContain('(2)');
+  expect(container.textContent).toContain('Current page');
+  expect(ItemService.updateSellingPrice).not.toHaveBeenCalled();
+});
+
+test('batch preview preserves existing edits and skips invalid costs or missing variants', async () => {
+  await mountPricing([...pricingRows,
+    { ...pricingRows[0], productVariantId: 'invalid-cost', itemName: 'Invalid cost', unitCost: null },
+    { ...pricingRows[0], productVariantId: undefined, itemName: 'No variant' }
+  ]);
+  editMargin('20');
+  enterBatchAmount('10');
+  previewBatch();
+  expect(container.querySelector('input[aria-label="Selling price for Item A"]').value).toBe('100');
+  expect(container.querySelector('input[aria-label="Selling price for Item B"]').value).toBe('50');
+  expect(container.querySelectorAll('.pricing-price-preview')).toHaveLength(2);
+});
+
+test('batch preview follows the selected category and does not edit items from another category', async () => {
+  await mountPricing();
+  ProductService.getInventoryStockReport.mockImplementation(params => Promise.resolve(response(params.categoryId === 'selected' ? [pricingRows[1]] : pricingRows, params.page, params.limit)));
+  const categorySelect = Select.mock.calls.find(([props]) => props.name === 'categoryId')[0];
+  await settle(() => categorySelect.onChange('selected'));
+  expect(ProductService.getInventoryStockReport).toHaveBeenLastCalledWith(expect.objectContaining({ categoryId: 'selected', page: 1 }));
+  enterBatchAmount('15');
+  previewBatch();
+  expect(container.querySelectorAll('.pricing-price-preview')).toHaveLength(1);
+  expect(container.querySelector('.pricing-price-preview strong').textContent).toBe('55.00');
+  expect(container.querySelector('input[aria-label="Selling price for Item A"]')).toBeNull();
+  ItemService.updateSellingPricesBatch.mockResolvedValueOnce(batchResponse([{ ...savedBatchResult(pricingRows[1]), salesPrice: 55 }]));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch).toHaveBeenCalledTimes(1);
+  expect(ItemService.updateSellingPricesBatch).toHaveBeenCalledWith({ marginAmount: 15, categoryId: 'selected',
+    items: [{ productVariantId: 'variant-b', expectedSalesPrice: 50, expectedUnitCost: 40 }] }, expect.any(String));
+  expect(ItemService.updateSellingPrice).not.toHaveBeenCalled();
+});
+
+test('batch saves current-page previews with the existing price and cost conflict checks', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  ItemService.updateSellingPricesBatch.mockResolvedValueOnce(batchResponse(pricingRows.map(savedBatchResult)));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch).toHaveBeenCalledTimes(1);
+  expect(ItemService.updateSellingPricesBatch).toHaveBeenCalledWith({ marginAmount: 10, categoryId: 'cat', items: [
+    { productVariantId: 'variant-a', expectedSalesPrice: 90, expectedUnitCost: 80 },
+    { productVariantId: 'variant-b', expectedSalesPrice: 50, expectedUnitCost: 40 }
+  ] }, expect.any(String));
+  expect(ItemService.updateSellingPrice).not.toHaveBeenCalled();
+  expect(ProductService.getInventoryStockReport).toHaveBeenCalledTimes(2);
+  expect(container.querySelector('.pricing-price-preview')).toBeNull();
+});
+
+test('a failed batch price remains visible while other items can save', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  ItemService.updateSellingPricesBatch.mockResolvedValueOnce(batchResponse([
+    { productVariantId: 'variant-a', status: 'failed', error: { code: 'PRICE_OR_COST_CHANGED', message: 'Price or cost changed. Refresh before saving.' } },
+    savedBatchResult(pricingRows[1])
+  ]));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch).toHaveBeenCalledTimes(1);
+  expect(container.querySelector('button[aria-label="Save price for Item A"]').disabled).toBe(true);
+  expect(container.querySelector('.pricing-price-preview')).not.toBeNull();
+  expect(container.querySelector('[role="alert"]').textContent).toContain('Price or cost changed');
+  expect(container.querySelector('button[aria-label="Save price for Item B"]')).toBeNull();
+});
+
+test('batch saves lock category changes, repeated saves and row editing until complete', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  let finish;
+  ItemService.updateSellingPricesBatch.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(buttonWithText('Save previews').disabled).toBe(true);
+  expect(container.querySelector('input[aria-label="Margin percentage for Item A"]').disabled).toBe(true);
+  expect(Select.mock.calls.filter(([props]) => props.name === 'categoryId').pop()[0].disabled).toBe(true);
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch).toHaveBeenCalledTimes(1);
+  await settle(() => finish(batchResponse(pricingRows.map(savedBatchResult))));
+  expect(ItemService.updateSellingPricesBatch).toHaveBeenCalledTimes(1);
+});
+
+test('batch preview stays disabled while a category request is in flight or search is pending', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  let finish;
+  ProductService.getInventoryStockReport.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+  const category = Select.mock.calls.find(([props]) => props.name === 'categoryId')[0];
+  await settle(() => category.onChange('selected'));
+  expect(buttonWithText('Preview batch prices').disabled).toBe(true);
+  await settle(() => finish(response([pricingRows[1]], 1)));
+  expect(buttonWithText('Preview batch prices').disabled).toBe(false);
+  jest.useFakeTimers();
+  act(() => lastProps(Input.Search).onChange({ target: { value: 'New search' } }));
+  expect(buttonWithText('Preview batch prices').disabled).toBe(true);
+});
+
+test('retries an unconfirmed batch with exactly the same body and idempotency key', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  ItemService.updateSellingPricesBatch
+    .mockRejectedValueOnce(new Error('Network Error'))
+    .mockResolvedValueOnce(batchResponse(pricingRows.map(savedBatchResult)));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(container.querySelector('[role="alert"]').textContent).toContain('Network Error');
+  expect(container.querySelectorAll('.pricing-price-preview')).toHaveLength(2);
+  const originalRequest = ItemService.updateSellingPricesBatch.mock.calls[0];
+  expect(originalRequest[1]).toEqual(expect.any(String));
+  expect(originalRequest[1].length).toBeGreaterThan(0);
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch.mock.calls[1]).toEqual(originalRequest);
+  expect(container.querySelector('.pricing-price-preview')).toBeNull();
+});
+
+test('a new batch gets a new idempotency key, even with the same amount and items', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  ItemService.updateSellingPricesBatch.mockResolvedValue(batchResponse(pricingRows.map(savedBatchResult)));
+  previewBatch();
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  const firstKey = ItemService.updateSellingPricesBatch.mock.calls[0][1];
+  previewBatch();
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch.mock.calls[1][1]).not.toBe(firstKey);
+});
+
+test('changing the amount after preview does not change the saved batch amount', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  enterBatchAmount('20');
+  expect(container.textContent).toContain('Previewed margin amount: 10');
+  ItemService.updateSellingPricesBatch.mockResolvedValueOnce(batchResponse(pricingRows.map(savedBatchResult)));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch.mock.calls[0][0].marginAmount).toBe(10);
+});
+
+test('manual edits are preserved and excluded from the cost-plus batch request', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  editMargin('20');
+  expect(buttonWithText('Save previews').textContent).toContain('(1)');
+  ItemService.updateSellingPricesBatch.mockResolvedValueOnce(batchResponse([savedBatchResult(pricingRows[1])]));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch.mock.calls[0][0].items.map(item => item.productVariantId)).toEqual(['variant-b']);
+  expect(container.querySelector('input[aria-label="Selling price for Item A"]').value).toBe('100');
+  expect(container.querySelector('button[aria-label="Save price for Item A"]')).not.toBeNull();
+});
+
+test('a batch without a category omits categoryId', async () => {
+  window.history.replaceState({}, '', '/inventories/pricing-management');
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  ItemService.updateSellingPricesBatch.mockResolvedValueOnce(batchResponse(pricingRows.map(savedBatchResult)));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch.mock.calls[0][0]).not.toHaveProperty('categoryId');
+});
+
+test('a malformed batch response keeps every preview and allows an idempotent retry', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  ItemService.updateSellingPricesBatch
+    .mockResolvedValueOnce(batchResponse([savedBatchResult(pricingRows[0])]))
+    .mockResolvedValueOnce(batchResponse(pricingRows.map(savedBatchResult)));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(container.querySelectorAll('.pricing-price-preview')).toHaveLength(2);
+  expect(container.querySelector('[role="alert"]').textContent).toContain('could not be confirmed');
+  const originalRequest = ItemService.updateSellingPricesBatch.mock.calls[0];
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch.mock.calls[1]).toEqual(originalRequest);
+});
+
+test('batch permission errors retain previews and show the denial', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  ItemService.updateSellingPricesBatch.mockRejectedValueOnce({ response: { status: 403 } });
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(container.querySelector('[role="alert"]').textContent).toContain('permission');
+  expect(container.querySelectorAll('.pricing-price-preview')).toHaveLength(2);
+  expect(buttonWithText('Save previews').disabled).toBe(false);
+});
+
+const editUnitCost = value => act(() => {
+  Simulate.change(container.querySelector('input[aria-label="Unit cost for Item A"]'), { target: { value } });
+});
+const saveFirstCost = () => settle(() => Simulate.click(container.querySelector('button[aria-label="Save cost for Item A"]')));
+
+test('cost edits use the variant ID and refresh the report after a successful PUT with no response body', async () => {
+  await mountPricing();
+  editUnitCost('82.1234');
+  expect(ItemService.editProductCost).not.toHaveBeenCalled();
+  ItemService.editProductCost.mockResolvedValueOnce({ status: 204 });
+  ProductService.getInventoryStockReport.mockResolvedValueOnce(response([{ ...pricingRows[0], unitCost: 82.1234 }, pricingRows[1]]));
+  await saveFirstCost();
+  expect(ItemService.editProductCost).toHaveBeenCalledWith('variant-a', 82.1234);
+  expect(ItemService.updateSellingPrice).not.toHaveBeenCalled();
+  expect(ProductService.getInventoryStockReport).toHaveBeenCalledTimes(2);
+  expect(container.querySelector('input[aria-label="Unit cost for Item A"]').value).toBe('82.1234');
+  expect(container.querySelector('button[aria-label="Save cost for Item A"]')).toBeNull();
+});
+
+test.each(['', '-1', '1.12345'])('invalid cost %p cannot be submitted', async cost => {
+  await mountPricing();
+  editUnitCost(cost);
+  expect(container.querySelector('button[aria-label="Save cost for Item A"]').disabled).toBe(true);
+  await saveFirstCost();
+  expect(ItemService.editProductCost).not.toHaveBeenCalled();
+  expect(container.querySelector('[role="alert"]')).not.toBeNull();
+});
+
+test('zero unit cost can be saved and an unsaved cost can be reset without a request', async () => {
+  await mountPricing();
+  editUnitCost('10');
+  act(() => Simulate.click(container.querySelector('button[aria-label="Reset cost for Item A"]')));
+  expect(container.querySelector('input[aria-label="Unit cost for Item A"]').value).toBe('80');
+  expect(ItemService.editProductCost).not.toHaveBeenCalled();
+  editUnitCost('0');
+  ItemService.editProductCost.mockResolvedValueOnce({ status: 200 });
+  await saveFirstCost();
+  expect(ItemService.editProductCost).toHaveBeenCalledWith('variant-a', 0);
+});
+
+test('pending cost edits block row price saving and are excluded from batch pricing', async () => {
+  await mountPricing();
+  editMargin('20');
+  editUnitCost('85');
+  expect(container.querySelector('button[aria-label="Save price for Item A"]').disabled).toBe(true);
+  expect(container.querySelector('input[aria-label="Selling price for Item A"]').disabled).toBe(true);
+  expect(container.querySelector('input[aria-label="Margin percentage for Item A"]').disabled).toBe(true);
+  await settle(() => Simulate.click(container.querySelector('button[aria-label="Save price for Item A"]')));
+  expect(ItemService.updateSellingPrice).not.toHaveBeenCalled();
+  enterBatchAmount('10');
+  previewBatch();
+  expect(buttonWithText('Save previews').textContent).toContain('(1)');
+  ItemService.updateSellingPricesBatch.mockResolvedValueOnce(batchResponse([savedBatchResult(pricingRows[1])]));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(ItemService.updateSellingPricesBatch.mock.calls[0][0].items.map(row => row.productVariantId)).toEqual(['variant-b']);
+});
+
+test('saving a cost clears only that variants old batch preview and new previews use the saved cost', async () => {
+  await mountPricing();
+  enterBatchAmount('10');
+  previewBatch();
+  editUnitCost('85');
+  ItemService.editProductCost.mockResolvedValueOnce({ status: 200 });
+  ProductService.getInventoryStockReport.mockImplementation(params => Promise.resolve(response([{ ...pricingRows[0], unitCost: 85 }, pricingRows[1]], params.page, params.limit)));
+  await saveFirstCost();
+  expect(container.querySelectorAll('.pricing-price-preview')).toHaveLength(1);
+  expect(container.querySelector('button[aria-label="Save price for Item A"]')).toBeNull();
+  expect(container.querySelector('button[aria-label="Save price for Item B"]')).not.toBeNull();
+  previewBatch();
+  expect(container.querySelector('input[aria-label="Selling price for Item A"]').value).toBe('95');
+});
+
+test('cost failures keep the draft and its existing price preview for review and retry', async () => {
+  await mountPricing();
+  editMargin('20');
+  editUnitCost('85');
+  ItemService.editProductCost.mockRejectedValueOnce({ response: { status: 403 } });
+  await saveFirstCost();
+  expect(container.querySelector('[role="alert"]').textContent).toContain('permission');
+  expect(container.querySelector('input[aria-label="Unit cost for Item A"]').value).toBe('85');
+  expect(container.querySelector('.pricing-price-preview strong').textContent).toBe('100.00');
+  expect(container.querySelector('button[aria-label="Save cost for Item A"]').disabled).toBe(false);
+  expect(ProductService.getInventoryStockReport).toHaveBeenCalledTimes(1);
+});
+
+test('cost saves lock other writes and filters and prevent duplicate requests', async () => {
+  await mountPricing();
+  editUnitCost('85');
+  let finish;
+  ItemService.editProductCost.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+  await saveFirstCost();
+  expect(container.querySelector('button[aria-label="Save cost for Item A"]').disabled).toBe(true);
+  expect(container.querySelector('input[aria-label="Unit cost for Item B"]').disabled).toBe(true);
+  expect(buttonWithText('Preview batch prices').disabled).toBe(true);
+  expect(Select.mock.calls.filter(([props]) => props.name === 'categoryId').pop()[0].disabled).toBe(true);
+  await saveFirstCost();
+  expect(ItemService.editProductCost).toHaveBeenCalledTimes(1);
+  await settle(() => finish({ status: 204 }));
+  expect(container.querySelector('button[aria-label="Save cost for Item A"]')).toBeNull();
+});
+
+test('cost editing is disabled for missing variant IDs and during batch saves', async () => {
+  await mountPricing([{ ...pricingRows[0], productVariantId: undefined }, pricingRows[1]]);
+  expect(container.querySelector('input[aria-label="Unit cost for Item A"]').disabled).toBe(true);
+  enterBatchAmount('10');
+  previewBatch();
+  let finish;
+  ItemService.updateSellingPricesBatch.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+  await settle(() => Simulate.click(buttonWithText('Save previews')));
+  expect(container.querySelector('input[aria-label="Unit cost for Item B"]').disabled).toBe(true);
+  await settle(() => finish(batchResponse([savedBatchResult(pricingRows[1])])));
 });

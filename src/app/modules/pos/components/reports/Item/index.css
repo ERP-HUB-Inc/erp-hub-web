@@ -925,3 +925,17 @@
         gap: 4px;
     }
 }
+.pricing-batch-margin {
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+}
+
+.pricing-batch-margin-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
