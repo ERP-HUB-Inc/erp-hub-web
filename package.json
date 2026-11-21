@@ -81,6 +81,7 @@
     "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
     "generate-build-version": "node generate-build-version",
     "prebuild": "npm run generate-build-version",
+    "postbuild": "node scripts/copy-public-assets.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint --fix --ext .js,.jsx ."
