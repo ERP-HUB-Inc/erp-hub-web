@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkstorevein=self.webpackChunkstorevein||[]).push([[8046],{88046:(e,n,t)=>{t.r(n),t.d(n,{default:()=>s});var r=t(87664),a=t.n(r),i=t(33150);function s(){return a().createElement(i.A,{pricingManagement:!0,routePath:"/inventories/pricing-management"})}}}]);

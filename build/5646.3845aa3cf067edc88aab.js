@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkstorevein=self.webpackChunkstorevein||[]).push([[5646],{5646:(e,n,t)=>{t.r(n),t.d(n,{default:()=>a});var r=t(87664),s=t.n(r),u=t(52587);function a(e){return s().createElement(u.A,e)}}}]);
