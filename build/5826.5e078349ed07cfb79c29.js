@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkstorevein=self.webpackChunkstorevein||[]).push([[5826],{5826:(e,n,t)=>{t.r(n),t.d(n,{default:()=>l});var r=t(87664),u=t.n(r),c=t(3310),o=t(25738),a=t(52973);const f=o.A.create((function(e){return{form:e.form}}))((function(e){return u().createElement(a.default,e)})),l=(0,c.Ng)((function(e){return{locale:e.locale}}))(f)}}]);
